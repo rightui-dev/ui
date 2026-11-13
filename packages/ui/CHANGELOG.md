@@ -4,6 +4,14 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.1.0-beta.3] - 2026-11-13
+
+### Documentation and distribution
+
+- Refresh the distributed README with concise platform validation status and official npm installation guidance.
+- Publish from the clean source history; replace the earlier GitHub prereleases with this new version.
+- Component APIs, Contract sources, theme tokens, fonts and the pinned Exact SDK are unchanged from beta.2. No application migration is required.
+
 ## [0.1.0-beta.2] - 2026-11-13
 
 ### Distribution
@@ -25,5 +33,5 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 ### Compatibility
 
 - Exact SDK: `53426cf02bf986a5e781abc4f953d79989c6dc05`; Bun: `1.4.2`.
-- Targets: web, iOS and macOS. Web and targeted macOS checks passed; local iOS compilation is blocked by the required 27.1 SDK. Full catalog visual/accessibility coverage remains incomplete.
+- Targets: web, iOS and macOS. Web and targeted macOS checks passed; iOS validation is incomplete. Full catalog visual/accessibility coverage remains incomplete.
 - No previous published rightui package to migrate from. The earlier untagged `0.1.0` development manifest was never a stable release.

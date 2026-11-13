@@ -6,10 +6,10 @@ This package contains Contract sources, theme tokens and the Geist font. It is u
 
 ## Install
 
-Version: **0.1.0-beta.2**. This is a preview release. Use **Bun exactly 1.4.2** for Exact compilation. From an existing Exact app:
+Version: **0.1.0-beta.3**. This is a preview release. Use **Bun exactly 1.4.2** for Exact compilation. From an existing Exact app:
 
 ```sh
-bun add --exact @rightui/ui@0.1.0-beta.2
+bun add --exact @rightui/ui@0.1.0-beta.3
 mkdir -p assets/fonts
 cp node_modules/@rightui/ui/assets/fonts/Geist.ttf assets/fonts/
 cp node_modules/@rightui/ui/assets/fonts/OFL.txt assets/fonts/
@@ -17,7 +17,7 @@ cp node_modules/@rightui/ui/assets/fonts/OFL.txt assets/fonts/
 
 npm, pnpm and Yarn can also install this package from the npm registry. See the [complete installation guide](https://rightui.dev/docs/installation) for creating an app with the pinned Exact SDK. GitHub access is not required to install the public package.
 
-For an offline install, use the immutable `rightui-ui-0.1.0-beta.2.tgz` archive with `bun add ./rightui-ui-0.1.0-beta.2.tgz`. Source contributors can produce it with `bun run package:ui` from the UI repository.
+For an offline install, use the immutable `rightui-ui-0.1.0-beta.3.tgz` archive with `bun add ./rightui-ui-0.1.0-beta.3.tgz`. Source contributors can produce it with `bun run package:ui` from the UI repository.
 
 ```contract
 font "Geist"
