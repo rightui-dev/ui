@@ -1,6 +1,6 @@
 {
-  "version": "0.1.0-beta.1",
-  "asOf": "2026-11-13",
+  "version": "0.1.0-beta.4",
+  "asOf": "2026-11-14",
   "exactRevision": "53426cf02bf986a5e781abc4f953d79989c6dc05",
   "platforms": [
     {
@@ -163,6 +163,11 @@
     {
       "id": "web-manual-inline-citation",
       "description": "Recorded manual browser check in VALIDATION.md: Inline citations opened on keyboard focus, exposed content and closed with Escape. Limited to the documented sample and gestures.",
+      "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    },
+    {
+      "id": "web-accordion-spacing",
+      "description": "Accordion and AccordionMultiple from the beta.4 archive passed a browser interaction test for single and independent expansion. Focus moved between triggers with ArrowDown. At a 390px viewport, browser measurements confirmed 16px heading, content and chevron insets with no horizontal document overflow; hover retained its underline. These are targeted web checks only.",
       "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
     }
   ],
@@ -353,6 +358,15 @@
       "status": "checked",
       "evidence": [
         "web-manual-inline-citation"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "accordion",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-accordion-spacing"
       ]
     }
   ]

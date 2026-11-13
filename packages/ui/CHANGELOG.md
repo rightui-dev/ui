@@ -4,6 +4,12 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.1.0-beta.4] - 2026-11-13
+
+### Fixed
+
+- Add consistent horizontal padding to Accordion and AccordionMultiple so headings, expanded content and chevrons stay inset from their container edges. Public props and the Exact SDK pin are unchanged.
+
 ## [0.1.0-beta.3] - 2026-11-13
 
 ### Documentation and distribution

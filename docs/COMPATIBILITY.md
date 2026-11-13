@@ -1,6 +1,6 @@
 # Compatibility
 
-124 catalog entries. Evidence recorded on 2026-11-13 against rightui 0.1.0-beta.1 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
+124 catalog entries. Evidence recorded on 2026-11-14 against rightui 0.1.0-beta.4 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
 
 This records validation evidence, not full compatibility certification. Partial checks cover specific examples or interactions, not every variant. Built only means compilation succeeded, without a targeted interaction result.
 
@@ -17,7 +17,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 
 | Component | iOS | macOS | Web | Windows | Android |
 | --- | --- | --- | --- | --- | --- |
-| Accordion | ⚠️ Partial checks | ✅ Partial checks | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Accordion | ⚠️ Partial checks | ✅ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Alert | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Alert Dialog | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Aspect Ratio | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
@@ -182,5 +182,6 @@ iOS validation is incomplete. Windows and Android are not supported.
 - **web-manual-model-selector:** Recorded manual browser check in VALIDATION.md: Model Selector Arrow Down and Enter selected GPT-5 mini and dismissed the menu. Limited to the documented sample and gestures. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 - **web-manual-context:** Recorded manual browser check in VALIDATION.md: Context opened on keyboard focus, exposed content and closed with Escape; its values fit the 256 px popover at desktop and 390 px widths. Limited to the documented sample and gestures. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 - **web-manual-inline-citation:** Recorded manual browser check in VALIDATION.md: Inline citations opened on keyboard focus, exposed content and closed with Escape. Limited to the documented sample and gestures. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
+- **web-accordion-spacing:** Accordion and AccordionMultiple from the beta.4 archive passed a browser interaction test for single and independent expansion. Focus moved between triggers with ArrowDown. At a 390px viewport, browser measurements confirmed 16px heading, content and chevron insets with no horizontal document overflow; hover retained its underline. These are targeted web checks only. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 
 The machine-readable row-to-evidence mapping is in [metadata/compatibility.json](https://github.com/rightui-dev/ui/blob/main/metadata/compatibility.json). A successful build does not certify every interaction.

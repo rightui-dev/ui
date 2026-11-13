@@ -135,12 +135,12 @@ component AccordionMultiple
       for title, i in titles key=title
         column border-bottom=(i == titles.length - 1 ? "none" : "1px solid ui.border")
           button id=(id + "-trigger-" + i.toString()) testId=(id + "-trigger-" + i.toString()) class=Control aria-expanded=expanded.includes(i) aria-controls=(id + "-panel-" + i.toString()) press=toggle(i) key=keys(i) hover=hoverItem(i)
-            display="flex" align-items="flex-start" gap=16 padding="16px 0px" border="0" background-color="transparent" color="ui.foreground"
+            display="flex" align-items="flex-start" gap=16 padding=16 border="0" background-color="transparent" color="ui.foreground"
             text title flex=1 min-width=0 text-align="left" text-decoration=(hovered == i ? "underline" : "none")
             svg width=16 height=16 flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=2 rotate=(expanded.includes(i) ? "180deg" : "0deg") transition=(reduced ? "none" : "rotate 200ms ease-out") aria-hidden=true
               path d="m6 9 6 6 6-6"
           column id=(id + "-panel-" + i.toString()) testId=(expanded.includes(i) ? id + "-panel-" + i.toString() : "") role="region" aria-labelledby=(id + "-trigger-" + i.toString()) aria-hidden=(not expanded.includes(i)) inert=(not expanded.includes(i)) height=(expanded.includes(i) ? "auto" : "0px") overflow="hidden" -exact-layout-transition=(reduced ? "none" : "200ms ease-out")
-            column padding-bottom=16
+            column padding="0px 16px 16px" min-width=0
               match descriptions.at(i)
                 case some(description)
                   text description font-size="0.875rem" line-height=1.5
