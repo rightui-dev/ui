@@ -1,0 +1,25 @@
+use Separator from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Separator(vertical=false)
+      text "Vertical separator" font-size="0.875rem" font-weight=600
+      row height=32 gap=16 align-items="center"
+        text "Library"
+        Separator(vertical=true)
+        text "Exports"
+      text "Menu separators" font-size="0.875rem" font-weight=600
+      column gap=8
+        text "Profile"
+        Separator(vertical=false)
+        text "Settings"
+      text "List separators" font-size="0.875rem" font-weight=600
+      column gap=8
+        text "First project"
+        Separator(vertical=false)
+        text "Second project"

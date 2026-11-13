@@ -1,0 +1,140 @@
+use Control, Field from "../packages/ui/styles.contract"
+use Calendar from "../packages/ui/calendar.contract"
+use Checkbox from "../packages/ui/checkbox.contract"
+use Switch from "../packages/ui/switch.contract"
+use SidebarIcon, SidebarLink, SidebarUser from "./sidebar-parts.contract"
+use sidebarMails, sidebarFiles, sidebarSettings from "./sidebar-data.contract"
+component SidebarMail
+  props
+    id: string
+    compact: bool
+    selected: string
+    reduced: bool
+    choose: action
+  state folder = "Inbox"
+  state search = ""
+  state unread = false
+  action changeFolder(v: string)
+    folder = v
+  action editSearch(v: string)
+    search = v
+  action changeUnread(v: bool)
+    unread = v
+  view
+    row height="100%" min-height=0
+      column width="3rem" min-width="3rem" border-right="1px solid ui.border" padding=4 gap=8 box-sizing="border-box"
+        view width=32 height=32 margin="8px 0px" border-radius=8 background-color="ui.primary" color="ui.primary-foreground" display="flex" align-items="center" justify-content="center"
+          SidebarIcon(name="Command")
+        for item, i in ["Inbox", "Drafts", "Sent", "Junk", "Trash"] key=item
+          SidebarLink(id=id + "-folder-" + i.toString(), label=item, icon=(i == 0 ? "Inbox" : i == 1 ? "File" : i == 2 ? "Send" : i == 3 ? "ArchiveX" : "Trash2"), selected=(folder == item), compact=true, badge="", choose=changeFolder)
+        view flex=1
+        SidebarUser(id=id + "-user", compact=true, reduced=reduced, choose=choose)
+      if not compact
+        column flex=1 min-width=0 min-height=0
+          column gap=14 padding=16 border-bottom="1px solid ui.border"
+            row justify-content="space-between" align-items="center" gap=8
+              text folder font-size="1rem" font-weight=500 color="ui.foreground"
+              Switch(id=id + "-unread", label="Unreads", checked=unread, disabled=false, reduced=reduced, change=changeUnread)
+            input id=(id + "-search") testId=(id + "-search") class=Field value=search input=editSearch placeholder="Type to search..." aria-label="Search mail" min-height=32 padding="6px 8px"
+          scroll flex=1 min-height=0
+            column
+              for mail, i in sidebarMails() key=mail.email
+                if (not unread or i % 2 == 0) and (search == "" or (mail.name + " " + mail.subject + " " + mail.teaser).toLowerCase().includes(search.toLowerCase()))
+                  button id=(id + "-mail-" + i.toString()) testId=(id + "-mail-" + i.toString()) class=Control press=choose(mail.subject)
+                    display="flex" flex-direction="column" align-items="stretch" gap=8 padding=16 border="0" border-bottom="1px solid ui.border" border-radius=0
+                    background-color=(selected == mail.subject ? "ui.muted" : "transparent") color="ui.foreground" font-size="0.875rem" font-weight=400
+                    :hover
+                      background-color="ui.muted"
+                    row justify-content="space-between" gap=8
+                      text mail.name font-size="0.875rem" text-align="left"
+                      text mail.date font-size="0.75rem"
+                    text mail.subject font-size="0.875rem" font-weight=500 text-align="left"
+                    text mail.teaser font-size="0.75rem" line-height=1.4 text-align="left" color="ui.muted-foreground"
+
+component SidebarFiles
+  props
+    id: string
+    selected: string
+    choose: action
+  state opened: string[] = ["/components", "/components/ui"]
+  derive files = sidebarFiles()
+  action toggle(path: string)
+    opened = opened.includes(path) ? opened.filter(v => v != path) : opened.concat([path])
+  view
+    scroll height="100%" min-height=0
+      column padding=8 gap=12
+        text "Changes" padding=8 font-size="0.75rem" font-weight=500 color="ui.muted-foreground"
+        for item, i in ["README.md", "api/hello/route.ts", "app/layout.tsx"] key=item
+          SidebarLink(id=id + "-change-" + i.toString(), label=item, icon="File", selected=(selected == item), compact=false, badge=(i == 1 ? "U" : "M"), choose=choose)
+        text "Files" padding=8 font-size="0.75rem" font-weight=500 color="ui.muted-foreground"
+        column gap=2
+          for file, i in files key=file.path
+            if file.parent == "" or (opened.includes(file.parent) and not files.filter(parent => parent.folder and file.path.startsWith(parent.path + "/")).map(parent => opened.includes(parent.path)).includes(false))
+              row padding-left=(file.depth * 12) min-width=0
+                if file.folder
+                  button id=(id + "-file-" + i.toString()) testId=(id + "-file-" + i.toString()) class=Control press=toggle(file.path)
+                    aria-expanded=opened.includes(file.path) display="flex" align-items="center" gap=6 min-height=32 width="100%" padding="6px 8px" border="0" background-color="transparent" color="ui.foreground"
+                    view rotate=(opened.includes(file.path) ? "90deg" : "0deg")
+                      SidebarIcon(name="ChevronRight")
+                    SidebarIcon(name="Folder")
+                    text file.name text-align="left" font-size="0.875rem" font-weight=400
+                else
+                  SidebarLink(id=id + "-file-" + i.toString(), label=file.name, icon="File", selected=(selected == file.name), compact=false, badge="", choose=choose)
+
+component SidebarCalendar
+  props
+    id: string
+    reduced: bool
+    choose: action
+  state selected = "2024-10-08"
+  state year = 2024
+  state month = 10
+  state hidden: string[] = ["Family", "Travel", "Reminders", "Deadlines"]
+  state expanded: string[] = ["My Calendars"]
+  state adding = false
+  state draft = ""
+  state extra: string[] = []
+  action changeMonth(y: number, m: number)
+    year = y
+    month = m
+  action selectDate(value: string)
+    selected = value
+    choose(value)
+  action toggleGroup(value: string)
+    expanded = expanded.includes(value) ? expanded.filter(v => v != value) : expanded.concat([value])
+  action toggleCalendar(value: string, checked: bool)
+    hidden = checked ? hidden.filter(v => v != value) : hidden.concat([value])
+  action startAdding(label: string)
+    adding = true
+    focus(id + "-new-name")
+  action editName(v: string)
+    draft = v
+  action addCalendar
+    if draft.trim() != "" and not ["Personal", "Work", "Family", "Holidays", "Birthdays", "Travel", "Reminders", "Deadlines"].concat(extra).includes(draft.trim())
+      extra = extra.concat([draft.trim()])
+      draft = ""
+      adding = false
+  view
+    column height="100%" min-height=0
+      view border-bottom="1px solid ui.border"
+        SidebarUser(id=id + "-user", compact=false, reduced=reduced, choose=choose)
+      scroll flex=1 min-height=0
+        column
+          Calendar(id=id + "-calendar", value=selected, year=year, month=month, changeMonth=changeMonth, end="", mode="single", disabled=false, change=selectDate)
+          for group, gi in ["My Calendars", "Favorites", "Other"] key=group
+            column padding=8 border-top="1px solid ui.border" gap=2
+              button id=(id + "-group-" + gi.toString()) testId=(id + "-group-" + gi.toString()) class=Control press=toggleGroup(group) aria-expanded=expanded.includes(group)
+                display="flex" align-items="center" justify-content="space-between" min-height=32 padding="6px 8px" border="0" background-color="transparent" color="ui.foreground" font-size="0.875rem"
+                text group
+                view rotate=(expanded.includes(group) ? "90deg" : "0deg")
+                  SidebarIcon(name="ChevronRight")
+              if expanded.includes(group)
+                for item, i in (gi == 0 ? ["Personal", "Work", "Family"].concat(extra) : gi == 1 ? ["Holidays", "Birthdays"] : ["Travel", "Reminders", "Deadlines"]) key=item
+                  Checkbox(id=id + "-calendar-" + gi.toString() + "-" + i.toString(), label=item, checked=(not hidden.includes(item)), disabled=false, change=toggleCalendar(item))
+      column padding=8 gap=8 border-top="1px solid ui.border"
+        if adding
+          input id=(id + "-new-name") testId=(id + "-new-name") class=Field value=draft input=editName submit=addCalendar placeholder="Calendar name" aria-label="Calendar name"
+          button id=(id + "-add-calendar") testId=(id + "-add-calendar") class=Control press=addCalendar padding="6px 8px" border="1px solid ui.border" background-color="ui.surface" color="ui.foreground"
+            text "Add calendar"
+        else
+          SidebarLink(id=id + "-new", label="New Calendar", icon="Plus", selected=false, compact=false, badge="", choose=startAdding)

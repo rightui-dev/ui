@@ -1,0 +1,18 @@
+use Command, CommandEntry from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  action commandAction(value: string)
+    lastAction = value
+    counter = counter + 1
+  state lastAction = "No action selected"
+  state counter = 0
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Command(id="desktop-command", label="Search commands", entries=[CommandEntry(id="new", label="New project", keywords="create file", shortcut="", disabled=false), CommandEntry(id="settings", label="Settings", keywords="preferences settings", shortcut="", disabled=false), CommandEntry(id="export", label="Export", keywords="video", shortcut="Unavailable", disabled=true)], choose=commandAction)
+      text lastAction role="status" font-size="0.875rem" color="ui.muted-foreground"
+      text "Keyboard shortcuts" font-weight=600
+      Command(id="command-shortcuts", label="Project commands", entries=[CommandEntry(id="shortcut-new", label="New project", keywords="create", shortcut="⌘N", disabled=false)], choose=commandAction)

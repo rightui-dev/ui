@@ -1,0 +1,23 @@
+use ContentMessage, MessageScroller from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state historyLoaded = false
+  state messages: ContentMessage[] = [ContentMessage(id=0, body="Hello, the first preview is ready.", mine=false), ContentMessage(id=1, body="Thank you! Can you add the terrace?", mine=true), ContentMessage(id=2, body="Yes, here is the updated version.", mine=false)]
+  derive thread = historyLoaded ? [ContentMessage(id=-2, body="Brief received: photograph the common areas.", mine=false), ContentMessage(id=-1, body="Morning light will work.", mine=false)].concat(messages) : messages
+  action loadHistory
+    historyLoaded = true
+  action post(v: string)
+    messages = messages.concat([ContentMessage(id=messages.length, body=v, mine=true)])
+  action latest
+    match thread.at(-1)
+      case some(message)
+        scrollIntoView("content-scroller", message.id, block="end")
+      case none
+        preventDefault()
+  view
+    column gap=16 min-width=0 max-width="100%"
+      MessageScroller(id="content-scroller", messages=thread, historyLoaded=historyLoaded, loadHistory=loadHistory, send=post, latest=latest)

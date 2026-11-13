@@ -1,0 +1,75 @@
+use Control from "./styles.contract"
+use uiModalFadeIn, uiModalFadeOut, uiPanelBottomIn, uiPanelBottomOut from "./overlays.contract"
+component Drawer
+  props
+    id: string
+    open: bool
+    title: string
+    description: string
+    reduced: bool
+    focusIds: string[]
+    dismiss: action
+  slot
+  state pointer = -1
+  state start = 0
+  state distance = 0
+  state focused = ""
+  action remember(e: FocusEvent)
+    focused = e.target
+  action begin(e: PointerEvent)
+    if e.button == 0
+      pointer = e.pointerId
+      start = e.clientY
+      distance = 0
+      preventDefault()
+  action move(e: PointerEvent)
+    if e.pointerId == pointer
+      distance = max(0, e.clientY - start)
+  action end(e: PointerEvent)
+    if e.pointerId == pointer
+      let releasedDistance = max(distance, e.clientY - start)
+      pointer = -1
+      distance = 0
+      if releasedDistance > 60
+        dismiss()
+  action handleKeys(k: string)
+    if k == "ArrowDown" or k == "Escape" or k == "Enter" or k == " "
+      preventDefault()
+      stopPropagation()
+      dismiss()
+  action keys(k: string, e: KeyboardEvent)
+    if not e.isComposing
+      if k == "Escape"
+        preventDefault()
+        stopPropagation()
+        dismiss()
+      else if k == "Tab"
+        preventDefault()
+        let targets = [id + "-handle"].concat(focusIds)
+        let index = targets.indexOf(focused)
+        let next = (index < 0 ? (e.shiftKey ? targets.length - 1 : 0) : (index + (e.shiftKey ? targets.length - 1 : 1)) % max(1, targets.length))
+        match targets.at(next)
+          case some(target)
+            focus(target)
+          case none
+            focus(id)
+  view
+    column position="absolute" inset=0 z-index=110 pointer-events="none" justify-content="flex-end"
+      if open
+        view id=(id + "-backdrop") testId=(id + "-backdrop") position="absolute" inset=0 background-color="ui.overlay" pointer-events="auto" aria-hidden=true press=dismiss
+          animation=(reduced ? "none" : "uiModalFadeIn 200ms ease-in-out both")
+          -exact-exit-animation=(reduced ? "none" : "uiModalFadeOut 200ms ease-in-out both")
+      if open
+        column id=id testId=id role="dialog" aria-modal=true aria-labelledby=(id + "-title") aria-describedby=(id + "-description") keycapture=keys focusin=remember
+          position="relative" pointer-events="auto" width="100%" max-height="80%" min-height=0 box-sizing="border-box" background-color="ui.surface" border-top="1px solid ui.border" border-top-left-radius="ui.radius-panel" border-top-right-radius="ui.radius-panel"
+          animation=(reduced ? "none" : "uiPanelBottomIn 500ms ease-in-out both")
+          -exact-exit-animation=(reduced ? "none" : "uiPanelBottomOut 300ms ease-in-out both")
+          column min-height=0 translate=("0px " + distance.toString() + "px")
+            button id=(id + "-handle") testId=(id + "-handle") class=Control autofocus=true aria-label="Drag down or press to close" press=dismiss key=handleKeys align-self="center" width="6.25rem" min-height="1.5rem" height="1.5rem" padding="8px 0px" margin-top=8 border="0" background-color="transparent" touch-action="none" pointerdown=begin pointermove=move pointerup=end
+              view width="6.25rem" height=8 border-radius="ui.radius-full" background-color="ui.muted"
+            scroll min-height=0 flex="1 1 auto"
+              column max-width="24rem" width="100%" align-self="center" box-sizing="border-box" min-width=0
+                column gap=6 padding=16 text-align="center"
+                  text title id=(id + "-title") role="heading" aria-level=2 font-size="1.125rem" font-weight=600 color="ui.foreground"
+                  text description id=(id + "-description") font-size="0.875rem" line-height=1.5 color="ui.muted-foreground"
+                children

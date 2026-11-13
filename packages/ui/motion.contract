@@ -1,0 +1,23 @@
+keyframes uiReveal
+  from opacity=0 translate="0px 4px"
+  to opacity=1 translate="0px 0px"
+
+keyframes uiPopover
+  from opacity=0 scale=0.98
+  to opacity=1 scale=1
+
+keyframes uiSheetRight
+  from opacity=0 translate="32px 0px"
+  to opacity=1 translate="0px 0px"
+
+keyframes uiSheetLeft
+  from opacity=0 translate="-32px 0px"
+  to opacity=1 translate="0px 0px"
+
+keyframes uiSheetTop
+  from opacity=0 translate="0px -32px"
+  to opacity=1 translate="0px 0px"
+
+keyframes uiSheetBottom
+  from opacity=0 translate="0px 32px"
+  to opacity=1 translate="0px 0px"

@@ -1,0 +1,361 @@
+use Demo as Demo0 from "@rightui/registry/examples/accordion"
+use Demo as Demo1 from "@rightui/registry/examples/alert"
+use Demo as Demo2 from "@rightui/registry/examples/alert-dialog"
+use Demo as Demo3 from "@rightui/registry/examples/aspect-ratio"
+use Demo as Demo4 from "@rightui/registry/examples/attachment"
+use Demo as Demo5 from "@rightui/registry/examples/avatar"
+use Demo as Demo6 from "@rightui/registry/examples/badge"
+use Demo as Demo7 from "@rightui/registry/examples/breadcrumb"
+use Demo as Demo8 from "@rightui/registry/examples/bubble"
+use Demo as Demo9 from "@rightui/registry/examples/button"
+use Demo as Demo10 from "@rightui/registry/examples/button-group"
+use Demo as Demo11 from "@rightui/registry/examples/calendar"
+use Demo as Demo12 from "@rightui/registry/examples/card"
+use Demo as Demo13 from "@rightui/registry/examples/carousel"
+use Demo as Demo14 from "@rightui/registry/examples/chart"
+use Demo as Demo15 from "@rightui/registry/examples/checkbox"
+use Demo as Demo16 from "@rightui/registry/examples/code-block"
+use Demo as Demo17 from "@rightui/registry/examples/collapsible"
+use Demo as Demo18 from "@rightui/registry/examples/combobox"
+use Demo as Demo19 from "@rightui/registry/examples/command"
+use Demo as Demo20 from "@rightui/registry/examples/context-menu"
+use Demo as Demo21 from "@rightui/registry/examples/data-table"
+use Demo as Demo22 from "@rightui/registry/examples/date-picker"
+use Demo as Demo23 from "@rightui/registry/examples/dialog"
+use Demo as Demo24 from "@rightui/registry/examples/direction"
+use Demo as Demo25 from "@rightui/registry/examples/drawer"
+use Demo as Demo26 from "@rightui/registry/examples/dropdown-menu"
+use Demo as Demo27 from "@rightui/registry/examples/empty"
+use Demo as Demo28 from "@rightui/registry/examples/field"
+use Demo as Demo29 from "@rightui/registry/examples/hover-card"
+use Demo as Demo30 from "@rightui/registry/examples/input"
+use Demo as Demo31 from "@rightui/registry/examples/input-group"
+use Demo as Demo32 from "@rightui/registry/examples/input-otp"
+use Demo as Demo33 from "@rightui/registry/examples/item"
+use Demo as Demo34 from "@rightui/registry/examples/kbd"
+use Demo as Demo35 from "@rightui/registry/examples/label"
+use Demo as Demo36 from "@rightui/registry/examples/marker"
+use Demo as Demo37 from "@rightui/registry/examples/menubar"
+use Demo as Demo38 from "@rightui/registry/examples/message"
+use Demo as Demo39 from "@rightui/registry/examples/message-scroller"
+use Demo as Demo40 from "@rightui/registry/examples/native-select"
+use Demo as Demo41 from "@rightui/registry/examples/navigation-menu"
+use Demo as Demo42 from "@rightui/registry/examples/pagination"
+use Demo as Demo43 from "@rightui/registry/examples/popover"
+use Demo as Demo44 from "@rightui/registry/examples/progress"
+use Demo as Demo45 from "@rightui/registry/examples/questionnaire"
+use Demo as Demo46 from "@rightui/registry/examples/radio-group"
+use Demo as Demo47 from "@rightui/registry/examples/resizable"
+use Demo as Demo48 from "@rightui/registry/examples/scroll-area"
+use Demo as Demo49 from "@rightui/registry/examples/select"
+use Demo as Demo50 from "@rightui/registry/examples/separator"
+use Demo as Demo51 from "@rightui/registry/examples/sheet"
+use Demo as Demo52 from "@rightui/registry/examples/sidebar"
+use Demo as Demo53 from "@rightui/registry/examples/skeleton"
+use Demo as Demo54 from "@rightui/registry/examples/slider"
+use Demo as Demo55 from "@rightui/registry/examples/spinner"
+use Demo as Demo56 from "@rightui/registry/examples/switch"
+use Demo as Demo57 from "@rightui/registry/examples/table"
+use Demo as Demo58 from "@rightui/registry/examples/tabs"
+use Demo as Demo59 from "@rightui/registry/examples/textarea"
+use Demo as Demo60 from "@rightui/registry/examples/toast"
+use Demo as Demo61 from "@rightui/registry/examples/toggle"
+use Demo as Demo62 from "@rightui/registry/examples/toggle-group"
+use Demo as Demo63 from "@rightui/registry/examples/tooltip"
+use Demo as Demo64 from "@rightui/registry/examples/trace"
+use Demo as Demo65 from "@rightui/registry/examples/typography"
+use Demo as Demo66 from "@rightui/registry/patterns/ai-elements/chain-of-thought"
+use Demo as Demo67 from "@rightui/registry/patterns/ai-elements/chat"
+use Demo as Demo68 from "@rightui/registry/patterns/ai-elements/checkpoint"
+use Demo as Demo69 from "@rightui/registry/patterns/ai-elements/confirmation"
+use Demo as Demo70 from "@rightui/registry/patterns/ai-elements/context"
+use Demo as Demo71 from "@rightui/registry/patterns/ai-elements/file-tree"
+use Demo as Demo72 from "@rightui/registry/patterns/ai-elements/inline-citation"
+use Demo as Demo73 from "@rightui/registry/patterns/ai-elements/message"
+use Demo as Demo74 from "@rightui/registry/patterns/ai-elements/model-selector"
+use Demo as Demo75 from "@rightui/registry/patterns/ai-elements/plan"
+use Demo as Demo76 from "@rightui/registry/patterns/ai-elements/prompt-input"
+use Demo as Demo77 from "@rightui/registry/patterns/ai-elements/queue"
+use Demo as Demo78 from "@rightui/registry/patterns/ai-elements/reasoning"
+use Demo as Demo79 from "@rightui/registry/patterns/ai-elements/sources"
+use Demo as Demo80 from "@rightui/registry/patterns/ai-elements/stack-trace"
+use Demo as Demo81 from "@rightui/registry/patterns/ai-elements/subagent"
+use Demo as Demo82 from "@rightui/registry/patterns/ai-elements/suggestion"
+use Demo as Demo83 from "@rightui/registry/patterns/ai-elements/task"
+use Demo as Demo84 from "@rightui/registry/patterns/ai-elements/terminal"
+use Demo as Demo85 from "@rightui/registry/patterns/ai-elements/test-results"
+use Demo as Demo86 from "@rightui/registry/patterns/ai-elements/tool"
+use Demo as Demo114 from "@rightui/registry/charts/chart-area-interactive"
+use Demo as Demo115 from "@rightui/registry/charts/chart-area-default"
+use Demo as Demo116 from "@rightui/registry/charts/chart-area-linear"
+use Demo as Demo117 from "@rightui/registry/charts/chart-area-step"
+use Demo as Demo118 from "@rightui/registry/charts/chart-area-legend"
+use Demo as Demo119 from "@rightui/registry/charts/chart-area-stacked"
+use Demo as Demo120 from "@rightui/registry/charts/chart-area-stacked-expand"
+use Demo as Demo121 from "@rightui/registry/charts/chart-area-icons"
+use Demo as Demo122 from "@rightui/registry/charts/chart-area-gradient"
+use Demo as Demo123 from "@rightui/registry/charts/chart-area-axes"
+use BlockPreview from "./block-preview.contract"
+
+shape DemoEntry
+  id: string
+  title: string
+  group: string
+  description: string
+
+fn catalog(): DemoEntry[] = [DemoEntry(id="component-accordion", title="Accordion", group="Components", description="Accordion with accessible presentation and local state."), DemoEntry(id="component-alert", title="Alert", group="Components", description="Alert with accessible presentation and local state."), DemoEntry(id="component-alert-dialog", title="Alert Dialog", group="Components", description="Alert Dialog with accessible presentation and local state."), DemoEntry(id="component-aspect-ratio", title="Aspect Ratio", group="Components", description="Aspect Ratio with accessible presentation and local state."), DemoEntry(id="component-attachment", title="Attachment", group="Components", description="Attachment with accessible presentation and local state."), DemoEntry(id="component-avatar", title="Avatar", group="Components", description="Avatar with accessible presentation and local state."), DemoEntry(id="component-badge", title="Badge", group="Components", description="Badge with accessible presentation and local state."), DemoEntry(id="component-breadcrumb", title="Breadcrumb", group="Components", description="Breadcrumb with accessible presentation and local state."), DemoEntry(id="component-bubble", title="Bubble", group="Components", description="Bubble with accessible presentation and local state."), DemoEntry(id="component-button", title="Button", group="Components", description="Button with accessible presentation and local state."), DemoEntry(id="component-button-group", title="Button Group", group="Components", description="Button Group with accessible presentation and local state."), DemoEntry(id="component-calendar", title="Calendar", group="Components", description="Calendar with accessible presentation and local state."), DemoEntry(id="component-card", title="Card", group="Components", description="Card with accessible presentation and local state."), DemoEntry(id="component-carousel", title="Carousel", group="Components", description="Carousel with accessible presentation and local state."), DemoEntry(id="component-chart", title="Chart", group="Components", description="Inspect bar, line, pie, radar and radial charts with sample data."), DemoEntry(id="component-checkbox", title="Checkbox", group="Components", description="Select all items with a controlled mixed state."), DemoEntry(id="component-code-block", title="Code Block", group="Components", description="Code Block with accessible presentation and local state."), DemoEntry(id="component-collapsible", title="Collapsible", group="Components", description="Collapsible with accessible presentation and local state."), DemoEntry(id="component-combobox", title="Combobox", group="Components", description="Combobox with accessible presentation and local state."), DemoEntry(id="component-command", title="Command", group="Components", description="Command with accessible presentation and local state."), DemoEntry(id="component-context-menu", title="Context Menu", group="Components", description="Context Menu with accessible presentation and local state."), DemoEntry(id="component-data-table", title="Data Table", group="Components", description="Filter, sort, select and paginate project budgets."), DemoEntry(id="component-date-picker", title="Date Picker", group="Components", description="Choose a constrained date range with preset shortcuts."), DemoEntry(id="component-dialog", title="Dialog", group="Components", description="Dialog with accessible presentation and local state."), DemoEntry(id="component-direction", title="Direction", group="Components", description="Direction with accessible presentation and local state."), DemoEntry(id="component-drawer", title="Drawer", group="Components", description="Drawer with accessible presentation and local state."), DemoEntry(id="component-dropdown-menu", title="Dropdown Menu", group="Components", description="Dropdown Menu with accessible presentation and local state."), DemoEntry(id="component-empty", title="Empty", group="Components", description="Empty with accessible presentation and local state."), DemoEntry(id="component-field", title="Field", group="Components", description="Field with accessible presentation and local state."), DemoEntry(id="component-hover-card", title="Hover Card", group="Components", description="Hover Card with accessible presentation and local state."), DemoEntry(id="component-input", title="Input", group="Components", description="Input with accessible presentation and local state."), DemoEntry(id="component-input-group", title="Input Group", group="Components", description="Input Group with accessible presentation and local state."), DemoEntry(id="component-input-otp", title="Input OTP", group="Components", description="Input OTP with accessible presentation and local state."), DemoEntry(id="component-item", title="Item", group="Components", description="Item with accessible presentation and local state."), DemoEntry(id="component-kbd", title="Kbd", group="Components", description="Kbd with accessible presentation and local state."), DemoEntry(id="component-label", title="Label", group="Components", description="Label with accessible presentation and local state."), DemoEntry(id="component-marker", title="Marker", group="Components", description="Marker with accessible presentation and local state."), DemoEntry(id="component-menubar", title="Menubar", group="Components", description="Menubar with accessible presentation and local state."), DemoEntry(id="component-message", title="Message", group="Components", description="Message with accessible presentation and local state."), DemoEntry(id="component-message-scroller", title="Message Scroller", group="Components", description="Message Scroller with accessible presentation and local state."), DemoEntry(id="component-native-select", title="Native Select", group="Components", description="Native Select with accessible presentation and local state."), DemoEntry(id="component-navigation-menu", title="Navigation Menu", group="Components", description="Navigation Menu with accessible presentation and local state."), DemoEntry(id="component-pagination", title="Pagination", group="Components", description="Pagination with accessible presentation and local state."), DemoEntry(id="component-popover", title="Popover", group="Components", description="Popover with accessible presentation and local state."), DemoEntry(id="component-progress", title="Progress", group="Components", description="Progress with accessible presentation and local state."), DemoEntry(id="component-questionnaire", title="Questionnaire", group="Components", description="Questionnaire with accessible presentation and local state."), DemoEntry(id="component-radio-group", title="Radio Group", group="Components", description="Radio Group with accessible presentation and local state."), DemoEntry(id="component-resizable", title="Resizable", group="Components", description="Accessible resizable panels with horizontal, vertical and right-to-left layouts."), DemoEntry(id="component-scroll-area", title="Scroll Area", group="Components", description="Scroll Area with accessible presentation and local state."), DemoEntry(id="component-select", title="Select", group="Components", description="Select with accessible presentation and local state."), DemoEntry(id="component-separator", title="Separator", group="Components", description="Separator with accessible presentation and local state."), DemoEntry(id="component-sheet", title="Sheet", group="Components", description="Sheet with accessible presentation and local state."), DemoEntry(id="component-sidebar", title="Sidebar", group="Components", description="Sidebar with accessible presentation and local state."), DemoEntry(id="component-skeleton", title="Skeleton", group="Components", description="Skeleton with accessible presentation and local state."), DemoEntry(id="component-slider", title="Slider", group="Components", description="Adjust a controlled numeric range using two handles."), DemoEntry(id="component-spinner", title="Spinner", group="Components", description="Spinner with accessible presentation and local state."), DemoEntry(id="component-switch", title="Switch", group="Components", description="Switch with accessible presentation and local state."), DemoEntry(id="component-table", title="Table", group="Components", description="Table with accessible presentation and local state."), DemoEntry(id="component-tabs", title="Tabs", group="Components", description="Switch between content panels with default, line and vertical tabs."), DemoEntry(id="component-textarea", title="Textarea", group="Components", description="Textarea with accessible presentation and local state."), DemoEntry(id="component-toast", title="Toast", group="Components", description="Toast with accessible presentation and local state."), DemoEntry(id="component-toggle", title="Toggle", group="Components", description="Toggle with accessible presentation and local state."), DemoEntry(id="component-toggle-group", title="Toggle Group", group="Components", description="Toggle Group with accessible presentation and local state."), DemoEntry(id="component-tooltip", title="Tooltip", group="Components", description="Tooltip with accessible presentation and local state."), DemoEntry(id="component-trace", title="Trace", group="Components", description="Trace with accessible presentation and local state."), DemoEntry(id="component-typography", title="Typography", group="Components", description="Typography with accessible presentation and local state."), DemoEntry(id="ai-chain-of-thought", title="Chain of Thought", group="AI Elements", description="An expandable summary of observable agent steps."), DemoEntry(id="ai-chat", title="Chat", group="AI Elements", description="A local conversation with an editable prompt and response actions."), DemoEntry(id="ai-checkpoint", title="Checkpoint", group="AI Elements", description="Restore a saved point in a local conversation."), DemoEntry(id="ai-confirmation", title="Confirmation", group="AI Elements", description="Review a proposed action and explicitly approve or deny it."), DemoEntry(id="ai-context", title="Context", group="AI Elements", description="Inspect a conversation token budget."), DemoEntry(id="ai-file-tree", title="File Tree", group="AI Elements", description="Explore collapsible folders and inspect a selected file."), DemoEntry(id="ai-inline-citation", title="Inline Citation", group="AI Elements", description="An inline source reference with a hover and focus card."), DemoEntry(id="ai-message", title="Message", group="AI Elements", description="One turn, with a user bubble, Markdown reply and response actions."), DemoEntry(id="ai-model-selector", title="Model Selector", group="AI Elements", description="Choose a sample model and a reasoning effort independently."), DemoEntry(id="ai-plan", title="Plan", group="AI Elements", description="Track a predefined plan and its completion count."), DemoEntry(id="ai-prompt-input", title="Prompt Input", group="AI Elements", description="Compose a message with attachments and a send button."), DemoEntry(id="ai-queue", title="Queue", group="AI Elements", description="Separate remaining work from completed items."), DemoEntry(id="ai-reasoning", title="Reasoning", group="AI Elements", description="Stream a reasoning summary, expand its details and replay the response."), DemoEntry(id="ai-sources", title="Sources", group="AI Elements", description="Expand the source list and follow the original documentation links."), DemoEntry(id="ai-stack-trace", title="Stack Trace", group="AI Elements", description="Inspect an error and expand its stack frames."), DemoEntry(id="ai-subagent", title="Subagent", group="AI Elements", description="Inspect a delegated task, its sample tool calls and result."), DemoEntry(id="ai-suggestion", title="Suggestion", group="AI Elements", description="Choose a prompt suggestion and inspect the selected local prompt."), DemoEntry(id="ai-task", title="Task", group="AI Elements", description="Follow steps discovered as work progresses."), DemoEntry(id="ai-terminal", title="Terminal", group="AI Elements", description="Reveal sample command output one chunk at a time."), DemoEntry(id="ai-test-results", title="Test Results", group="AI Elements", description="Inspect suites, test statuses and failure details."), DemoEntry(id="ai-tool", title="Tool", group="AI Elements", description="Inspect a tool call with structured input and output."), DemoEntry(id="block-dashboard-01", title="A dashboard with sidebar, charts and data table", group="Blocks", description=""), DemoEntry(id="block-sidebar-01", title="Sidebar layout 1", group="Blocks", description=""), DemoEntry(id="block-sidebar-02", title="Sidebar layout 2", group="Blocks", description=""), DemoEntry(id="block-sidebar-03", title="A sidebar with submenus", group="Blocks", description=""), DemoEntry(id="block-sidebar-04", title="Sidebar layout 4", group="Blocks", description=""), DemoEntry(id="block-sidebar-05", title="Sidebar layout 5", group="Blocks", description=""), DemoEntry(id="block-sidebar-06", title="Sidebar layout 6", group="Blocks", description=""), DemoEntry(id="block-sidebar-07", title="A sidebar that collapses to icons", group="Blocks", description=""), DemoEntry(id="block-sidebar-08", title="Sidebar layout 8", group="Blocks", description=""), DemoEntry(id="block-sidebar-09", title="Sidebar layout 9", group="Blocks", description=""), DemoEntry(id="block-sidebar-10", title="Sidebar layout 10", group="Blocks", description=""), DemoEntry(id="block-sidebar-11", title="Sidebar layout 11", group="Blocks", description=""), DemoEntry(id="block-sidebar-12", title="Sidebar layout 12", group="Blocks", description=""), DemoEntry(id="block-sidebar-13", title="Sidebar layout 13", group="Blocks", description=""), DemoEntry(id="block-sidebar-14", title="Sidebar layout 14", group="Blocks", description=""), DemoEntry(id="block-sidebar-15", title="Sidebar layout 15", group="Blocks", description=""), DemoEntry(id="block-sidebar-16", title="Sidebar layout 16", group="Blocks", description=""), DemoEntry(id="block-login-01", title="Login layout 1", group="Blocks", description=""), DemoEntry(id="block-login-02", title="Login layout 2", group="Blocks", description=""), DemoEntry(id="block-login-03", title="A login page with a muted background", group="Blocks", description=""), DemoEntry(id="block-login-04", title="A login page with form and image", group="Blocks", description=""), DemoEntry(id="block-login-05", title="Login layout 5", group="Blocks", description=""), DemoEntry(id="block-signup-01", title="Signup layout 1", group="Blocks", description=""), DemoEntry(id="block-signup-02", title="Signup layout 2", group="Blocks", description=""), DemoEntry(id="block-signup-03", title="Signup layout 3", group="Blocks", description=""), DemoEntry(id="block-signup-04", title="Signup layout 4", group="Blocks", description=""), DemoEntry(id="block-signup-05", title="Signup layout 5", group="Blocks", description=""), DemoEntry(id="chart-chart-area-interactive", title="Area Chart - Interactive", group="Charts", description="An interactive area chart"), DemoEntry(id="chart-chart-area-default", title="Area Chart", group="Charts", description="A simple area chart"), DemoEntry(id="chart-chart-area-linear", title="Area Chart - Linear", group="Charts", description="A linear area chart"), DemoEntry(id="chart-chart-area-step", title="Area Chart - Step", group="Charts", description="A step area chart"), DemoEntry(id="chart-chart-area-legend", title="Area Chart - Legend", group="Charts", description="An area chart with a legend"), DemoEntry(id="chart-chart-area-stacked", title="Area Chart - Stacked", group="Charts", description="A stacked area chart"), DemoEntry(id="chart-chart-area-stacked-expand", title="Area Chart - Stacked Expand", group="Charts", description="A stacked area chart with expand stacking"), DemoEntry(id="chart-chart-area-icons", title="Area Chart - Icons", group="Charts", description="An area chart with icons"), DemoEntry(id="chart-chart-area-gradient", title="Area Chart - Gradient", group="Charts", description="An area chart with gradient fill"), DemoEntry(id="chart-chart-area-axes", title="Area Chart - Axes", group="Charts", description="An area chart with axes")]
+
+component DemoView
+  props
+    id: string
+    width: number
+    reduced: bool
+  view
+    if id == "component-accordion"
+      Demo0(width=width, reduced=reduced)
+    else if id == "component-alert"
+      Demo1(width=width, reduced=reduced)
+    else if id == "component-alert-dialog"
+      Demo2(width=width, reduced=reduced)
+    else if id == "component-aspect-ratio"
+      Demo3(width=width, reduced=reduced)
+    else if id == "component-attachment"
+      Demo4(width=width, reduced=reduced)
+    else if id == "component-avatar"
+      Demo5(width=width, reduced=reduced)
+    else if id == "component-badge"
+      Demo6(width=width, reduced=reduced)
+    else if id == "component-breadcrumb"
+      Demo7(width=width, reduced=reduced)
+    else if id == "component-bubble"
+      Demo8(width=width, reduced=reduced)
+    else if id == "component-button"
+      Demo9(width=width, reduced=reduced)
+    else if id == "component-button-group"
+      Demo10(width=width, reduced=reduced)
+    else if id == "component-calendar"
+      Demo11(width=width, reduced=reduced)
+    else if id == "component-card"
+      Demo12(width=width, reduced=reduced)
+    else if id == "component-carousel"
+      Demo13(width=width, reduced=reduced)
+    else if id == "component-chart"
+      Demo14(width=width, reduced=reduced)
+    else if id == "component-checkbox"
+      Demo15(width=width, reduced=reduced)
+    else if id == "component-code-block"
+      Demo16(width=width, reduced=reduced)
+    else if id == "component-collapsible"
+      Demo17(width=width, reduced=reduced)
+    else if id == "component-combobox"
+      Demo18(width=width, reduced=reduced)
+    else if id == "component-command"
+      Demo19(width=width, reduced=reduced)
+    else if id == "component-context-menu"
+      Demo20(width=width, reduced=reduced)
+    else if id == "component-data-table"
+      Demo21(width=width, reduced=reduced)
+    else if id == "component-date-picker"
+      Demo22(width=width, reduced=reduced)
+    else if id == "component-dialog"
+      Demo23(width=width, reduced=reduced)
+    else if id == "component-direction"
+      Demo24(width=width, reduced=reduced)
+    else if id == "component-drawer"
+      Demo25(width=width, reduced=reduced)
+    else if id == "component-dropdown-menu"
+      Demo26(width=width, reduced=reduced)
+    else if id == "component-empty"
+      Demo27(width=width, reduced=reduced)
+    else if id == "component-field"
+      Demo28(width=width, reduced=reduced)
+    else if id == "component-hover-card"
+      Demo29(width=width, reduced=reduced)
+    else if id == "component-input"
+      Demo30(width=width, reduced=reduced)
+    else if id == "component-input-group"
+      Demo31(width=width, reduced=reduced)
+    else if id == "component-input-otp"
+      Demo32(width=width, reduced=reduced)
+    else if id == "component-item"
+      Demo33(width=width, reduced=reduced)
+    else if id == "component-kbd"
+      Demo34(width=width, reduced=reduced)
+    else if id == "component-label"
+      Demo35(width=width, reduced=reduced)
+    else if id == "component-marker"
+      Demo36(width=width, reduced=reduced)
+    else if id == "component-menubar"
+      Demo37(width=width, reduced=reduced)
+    else if id == "component-message"
+      Demo38(width=width, reduced=reduced)
+    else if id == "component-message-scroller"
+      Demo39(width=width, reduced=reduced)
+    else if id == "component-native-select"
+      Demo40(width=width, reduced=reduced)
+    else if id == "component-navigation-menu"
+      Demo41(width=width, reduced=reduced)
+    else if id == "component-pagination"
+      Demo42(width=width, reduced=reduced)
+    else if id == "component-popover"
+      Demo43(width=width, reduced=reduced)
+    else if id == "component-progress"
+      Demo44(width=width, reduced=reduced)
+    else if id == "component-questionnaire"
+      Demo45(width=width, reduced=reduced)
+    else if id == "component-radio-group"
+      Demo46(width=width, reduced=reduced)
+    else if id == "component-resizable"
+      Demo47(width=width, reduced=reduced)
+    else if id == "component-scroll-area"
+      Demo48(width=width, reduced=reduced)
+    else if id == "component-select"
+      Demo49(width=width, reduced=reduced)
+    else if id == "component-separator"
+      Demo50(width=width, reduced=reduced)
+    else if id == "component-sheet"
+      Demo51(width=width, reduced=reduced)
+    else if id == "component-sidebar"
+      Demo52(width=width, reduced=reduced)
+    else if id == "component-skeleton"
+      Demo53(width=width, reduced=reduced)
+    else if id == "component-slider"
+      Demo54(width=width, reduced=reduced)
+    else if id == "component-spinner"
+      Demo55(width=width, reduced=reduced)
+    else if id == "component-switch"
+      Demo56(width=width, reduced=reduced)
+    else if id == "component-table"
+      Demo57(width=width, reduced=reduced)
+    else if id == "component-tabs"
+      Demo58(width=width, reduced=reduced)
+    else if id == "component-textarea"
+      Demo59(width=width, reduced=reduced)
+    else if id == "component-toast"
+      Demo60(width=width, reduced=reduced)
+    else if id == "component-toggle"
+      Demo61(width=width, reduced=reduced)
+    else if id == "component-toggle-group"
+      Demo62(width=width, reduced=reduced)
+    else if id == "component-tooltip"
+      Demo63(width=width, reduced=reduced)
+    else if id == "component-trace"
+      Demo64(width=width, reduced=reduced)
+    else if id == "component-typography"
+      Demo65(width=width, reduced=reduced)
+    else if id == "ai-chain-of-thought"
+      Demo66(width=width, reduced=reduced)
+    else if id == "ai-chat"
+      Demo67(width=width, reduced=reduced)
+    else if id == "ai-checkpoint"
+      Demo68(width=width, reduced=reduced)
+    else if id == "ai-confirmation"
+      Demo69(width=width, reduced=reduced)
+    else if id == "ai-context"
+      Demo70(width=width, reduced=reduced)
+    else if id == "ai-file-tree"
+      Demo71(width=width, reduced=reduced)
+    else if id == "ai-inline-citation"
+      Demo72(width=width, reduced=reduced)
+    else if id == "ai-message"
+      Demo73(width=width, reduced=reduced)
+    else if id == "ai-model-selector"
+      Demo74(width=width, reduced=reduced)
+    else if id == "ai-plan"
+      Demo75(width=width, reduced=reduced)
+    else if id == "ai-prompt-input"
+      Demo76(width=width, reduced=reduced)
+    else if id == "ai-queue"
+      Demo77(width=width, reduced=reduced)
+    else if id == "ai-reasoning"
+      Demo78(width=width, reduced=reduced)
+    else if id == "ai-sources"
+      Demo79(width=width, reduced=reduced)
+    else if id == "ai-stack-trace"
+      Demo80(width=width, reduced=reduced)
+    else if id == "ai-subagent"
+      Demo81(width=width, reduced=reduced)
+    else if id == "ai-suggestion"
+      Demo82(width=width, reduced=reduced)
+    else if id == "ai-task"
+      Demo83(width=width, reduced=reduced)
+    else if id == "ai-terminal"
+      Demo84(width=width, reduced=reduced)
+    else if id == "ai-test-results"
+      Demo85(width=width, reduced=reduced)
+    else if id == "ai-tool"
+      Demo86(width=width, reduced=reduced)
+    else if id == "block-dashboard-01"
+      BlockPreview(slug="dashboard-01", width=width, reduced=reduced)
+    else if id == "block-sidebar-01"
+      BlockPreview(slug="sidebar-01", width=width, reduced=reduced)
+    else if id == "block-sidebar-02"
+      BlockPreview(slug="sidebar-02", width=width, reduced=reduced)
+    else if id == "block-sidebar-03"
+      BlockPreview(slug="sidebar-03", width=width, reduced=reduced)
+    else if id == "block-sidebar-04"
+      BlockPreview(slug="sidebar-04", width=width, reduced=reduced)
+    else if id == "block-sidebar-05"
+      BlockPreview(slug="sidebar-05", width=width, reduced=reduced)
+    else if id == "block-sidebar-06"
+      BlockPreview(slug="sidebar-06", width=width, reduced=reduced)
+    else if id == "block-sidebar-07"
+      BlockPreview(slug="sidebar-07", width=width, reduced=reduced)
+    else if id == "block-sidebar-08"
+      BlockPreview(slug="sidebar-08", width=width, reduced=reduced)
+    else if id == "block-sidebar-09"
+      BlockPreview(slug="sidebar-09", width=width, reduced=reduced)
+    else if id == "block-sidebar-10"
+      BlockPreview(slug="sidebar-10", width=width, reduced=reduced)
+    else if id == "block-sidebar-11"
+      BlockPreview(slug="sidebar-11", width=width, reduced=reduced)
+    else if id == "block-sidebar-12"
+      BlockPreview(slug="sidebar-12", width=width, reduced=reduced)
+    else if id == "block-sidebar-13"
+      BlockPreview(slug="sidebar-13", width=width, reduced=reduced)
+    else if id == "block-sidebar-14"
+      BlockPreview(slug="sidebar-14", width=width, reduced=reduced)
+    else if id == "block-sidebar-15"
+      BlockPreview(slug="sidebar-15", width=width, reduced=reduced)
+    else if id == "block-sidebar-16"
+      BlockPreview(slug="sidebar-16", width=width, reduced=reduced)
+    else if id == "block-login-01"
+      BlockPreview(slug="login-01", width=width, reduced=reduced)
+    else if id == "block-login-02"
+      BlockPreview(slug="login-02", width=width, reduced=reduced)
+    else if id == "block-login-03"
+      BlockPreview(slug="login-03", width=width, reduced=reduced)
+    else if id == "block-login-04"
+      BlockPreview(slug="login-04", width=width, reduced=reduced)
+    else if id == "block-login-05"
+      BlockPreview(slug="login-05", width=width, reduced=reduced)
+    else if id == "block-signup-01"
+      BlockPreview(slug="signup-01", width=width, reduced=reduced)
+    else if id == "block-signup-02"
+      BlockPreview(slug="signup-02", width=width, reduced=reduced)
+    else if id == "block-signup-03"
+      BlockPreview(slug="signup-03", width=width, reduced=reduced)
+    else if id == "block-signup-04"
+      BlockPreview(slug="signup-04", width=width, reduced=reduced)
+    else if id == "block-signup-05"
+      BlockPreview(slug="signup-05", width=width, reduced=reduced)
+    else if id == "chart-chart-area-interactive"
+      Demo114(width=width, reduced=reduced)
+    else if id == "chart-chart-area-default"
+      Demo115(width=width, reduced=reduced)
+    else if id == "chart-chart-area-linear"
+      Demo116(width=width, reduced=reduced)
+    else if id == "chart-chart-area-step"
+      Demo117(width=width, reduced=reduced)
+    else if id == "chart-chart-area-legend"
+      Demo118(width=width, reduced=reduced)
+    else if id == "chart-chart-area-stacked"
+      Demo119(width=width, reduced=reduced)
+    else if id == "chart-chart-area-stacked-expand"
+      Demo120(width=width, reduced=reduced)
+    else if id == "chart-chart-area-icons"
+      Demo121(width=width, reduced=reduced)
+    else if id == "chart-chart-area-gradient"
+      Demo122(width=width, reduced=reduced)
+    else if id == "chart-chart-area-axes"
+      Demo123(width=width, reduced=reduced)

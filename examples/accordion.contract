@@ -1,0 +1,19 @@
+use Accordion from "@rightui/ui"
+use AccordionMultiple from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state expanded: number[] = [0]
+  action setExpanded(value: number[])
+    expanded = value
+  state singleExpanded = 0
+  action setSingleExpanded(v: number)
+    singleExpanded = v
+  view
+    column gap=16 min-width=0 max-width="100%"
+      AccordionMultiple(id="advanced-accordion", titles=["Is it accessible?", "Is it styled?", "Is it animated?"], descriptions=["Yes. It supports keyboard navigation and exposes each panel state.", "Yes. It follows the shared shadcn design tokens.", "Yes. It uses the same height animation and reduced-motion preference."], expanded=expanded, reduced=reduced, change=setExpanded)
+      text "Single expansion" font-weight=600
+      Accordion(id="single-expansion", titles=["Overview", "Details"], descriptions=["One panel at a time.", "Select a heading to expand."], expanded=singleExpanded, reduced=reduced, change=setSingleExpanded)

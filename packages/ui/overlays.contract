@@ -1,0 +1,125 @@
+use Control from "./styles.contract"
+keyframes uiModalFadeIn
+  from opacity=0
+  to opacity=1
+keyframes uiModalFadeOut
+  to opacity=0
+keyframes uiModalZoomIn
+  from opacity=0 scale=0.95
+  to opacity=1 scale=1
+keyframes uiModalZoomOut
+  to opacity=0 scale=0.95
+keyframes uiPanelRightIn
+  from translate="100% 0px"
+  to translate="0px 0px"
+keyframes uiPanelRightOut
+  to translate="100% 0px"
+keyframes uiPanelLeftIn
+  from translate="-100% 0px"
+  to translate="0px 0px"
+keyframes uiPanelLeftOut
+  to translate="-100% 0px"
+keyframes uiPanelTopIn
+  from translate="0px -100%"
+  to translate="0px 0px"
+keyframes uiPanelTopOut
+  to translate="0px -100%"
+keyframes uiPanelBottomIn
+  from translate="0px 100%"
+  to translate="0px 0px"
+keyframes uiPanelBottomOut
+  to translate="0px 100%"
+
+component ModalFrame
+  props
+    id: string
+    open: bool
+    title: string
+    description: string
+    side: string
+    alert: bool
+    reduced: bool
+    focusIds: string[]
+    dismiss: action
+  slot
+  state focused = ""
+  derive horizontal = side == "left" or side == "right"
+  action remember(e: FocusEvent)
+    focused = e.target
+  action outside
+    if not alert
+      dismiss()
+  action keys(k: string, e: KeyboardEvent)
+    if not e.isComposing
+      if k == "Escape"
+        preventDefault()
+        stopPropagation()
+        dismiss()
+      else if k == "Tab"
+        preventDefault()
+        let targets = (alert ? focusIds : [id + "-close"].concat(focusIds))
+        let index = targets.indexOf(focused)
+        let next = (index < 0 ? (e.shiftKey ? targets.length - 1 : 0) : (index + (e.shiftKey ? targets.length - 1 : 1)) % max(1, targets.length))
+        match targets.at(next)
+          case some(target)
+            focus(target)
+          case none
+            focus(id)
+  view
+    column position="absolute" inset=0 z-index=110 pointer-events="none" padding=(alert ? "16px" : "0px") box-sizing="border-box"
+      align-items=(alert ? "center" : side == "left" ? "flex-start" : side == "right" ? "flex-end" : "stretch") justify-content=(alert ? "center" : side == "bottom" ? "flex-end" : "flex-start")
+      if open
+        view id=(id + "-backdrop") testId=(id + "-backdrop") position="absolute" inset=0 background-color="ui.overlay" pointer-events="auto" aria-hidden=true press=outside
+          animation=(reduced ? "none" : "uiModalFadeIn 200ms ease-in-out both")
+          -exact-exit-animation=(reduced ? "none" : "uiModalFadeOut 200ms ease-in-out both")
+      if open
+        column id=id testId=id role=(alert ? "alertdialog" : "dialog") aria-modal=true aria-labelledby=(id + "-title") aria-describedby=(id + "-description")
+          position="relative" tabindex=-1 keycapture=keys focusin=remember pointer-events="auto"
+          width=(alert ? "100%" : horizontal ? "75%" : "100%") max-width=(alert ? "32rem" : horizontal ? "24rem" : "100%")
+          height=(alert ? "auto" : horizontal ? "100%" : "auto") max-height="100%" min-height=0 box-sizing="border-box"
+          padding=(alert ? "24px" : "0px") gap=(alert ? 16 : 0) background-color="ui.surface" border="1px solid ui.border" border-radius=(alert ? "ui.radius-panel" : "0px") box-shadow="0 10px 15px -3px ui.shadow, 0 4px 6px -4px ui.shadow"
+          animation=(reduced ? "none" : alert ? "uiModalZoomIn 200ms ease-in-out both" : side == "left" ? "uiPanelLeftIn 500ms ease-in-out both" : side == "right" ? "uiPanelRightIn 500ms ease-in-out both" : side == "top" ? "uiPanelTopIn 500ms ease-in-out both" : "uiPanelBottomIn 500ms ease-in-out both")
+          -exact-exit-animation=(reduced ? "none" : alert ? "uiModalZoomOut 200ms ease-in-out both" : side == "left" ? "uiPanelLeftOut 300ms ease-in-out both" : side == "right" ? "uiPanelRightOut 300ms ease-in-out both" : side == "top" ? "uiPanelTopOut 300ms ease-in-out both" : "uiPanelBottomOut 300ms ease-in-out both")
+          if not alert
+            button id=(id + "-close") testId=(id + "-close") class=Control autofocus=true press=dismiss aria-label="Close" position="absolute" top=16 right=16 z-index=1 width=16 height=16 min-height=16 padding=0 border="none" background-color="transparent" color="ui.foreground" opacity=0.7
+              svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+                path d="m6 6 12 12M6 18 18 6"
+          scroll flex="1 1 auto" min-height=0
+            column gap=16 min-width=0 padding=(alert ? "0px" : "16px")
+              column gap=8 padding-right=(alert ? 0 : 24)
+                text title id=(id + "-title") role="heading" aria-level=2 hyphens="auto" font-size=(alert ? "1.125rem" : "1rem") font-weight=600 color="ui.foreground"
+                text description id=(id + "-description") hyphens="auto" font-size="0.875rem" line-height=1.5 color="ui.muted-foreground"
+              children
+
+component Sheet
+  props
+    id: string
+    open: bool
+    title: string
+    description: string
+    side: string
+    reduced: bool
+    focusIds: string[]
+    dismiss: action
+  slot
+  view
+    ModalFrame(id=id, open=open, title=title, description=description, side=side, alert=false, reduced=reduced, focusIds=focusIds, dismiss=dismiss)
+      children
+
+component AlertDialog
+  props
+    id: string
+    open: bool
+    title: string
+    description: string
+    confirmLabel: string
+    reduced: bool
+    dismiss: action
+    confirm: action
+  view
+    ModalFrame(id=id, open=open, title=title, description=description, side="center", alert=true, reduced=reduced, focusIds=[id + "-cancel", id + "-confirm"], dismiss=dismiss)
+      row gap=8 flex-wrap="wrap" justify-content="flex-end"
+        button id=(id + "-cancel") testId=(id + "-cancel") class=Control autofocus=true press=dismiss padding="8px 16px" border="1px solid ui.border" background-color="ui.surface" color="ui.foreground"
+          text "Cancel"
+        button id=(id + "-confirm") testId=(id + "-confirm") class=Control press=confirm padding="8px 16px" border="1px solid ui.border" background-color="ui.primary" color="ui.primary-foreground"
+          text confirmLabel

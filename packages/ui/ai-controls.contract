@@ -1,0 +1,189 @@
+use AdvancedMenuEntry, AdvancedMenuSelection, AdvancedMenuLine from "./menu-advanced.contract"
+use Control from "./styles.contract"
+use ButtonContent, ButtonControl from "./button.contract"
+
+shape ComposerFile
+  id: number
+  name: string
+
+component InputGroupFrame
+  props
+    id: string
+  slot
+  view
+    column id=id gap=0 min-width=0 border="1px solid transparent" border-radius="ui.ai-radius-control" background-color="ui.muted" overflow="hidden"
+      children
+
+component InputGroupAddon
+  props
+    id: string
+  slot
+  view
+    row id=id gap=8 padding="6px 10px 8px" align-items="center" flex-wrap="wrap"
+      children
+
+component ApprovalItem
+  props
+    id: string
+    title: string
+    description: string
+  slot
+  view
+    row id=id gap=12 padding=12 border="1px solid ui.border" border-radius="ui.ai-radius-control" align-items="center" flex-wrap="wrap"
+      view width=32 height=32 flex-shrink=0 display="flex" align-items="center" justify-content="center" border="1px solid ui.border" border-radius=8
+        svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+          path d="m4 6 6 6-6 6M12 18h8"
+      column flex=1 gap=4 min-width=120
+        text title font-weight=500
+        text description color="ui.muted-foreground" font-size="0.875rem"
+      children
+
+component Composer
+  props
+    id: string
+    menus: bool
+    reduced: bool
+    sent: action
+  state textValue = ""
+  state focusWithin = false
+  state files: ComposerFile[] = []
+  state fileSequence = 0
+  state model = "GPT-5"
+  state effort = "Medium"
+  action enterFocus
+    focusWithin = true
+  action leaveFocus(e: FocusEvent)
+    match e.relatedTarget
+      case some(target)
+        if target != id and not target.startsWith(id + "-")
+          focusWithin = false
+      case none
+        focusWithin = false
+  action edit(value: string)
+    textValue = value
+  action picked(items: Picked[])
+    files = files.concat(items.map((item, index) => ComposerFile(id=fileSequence + index, name=item.name)))
+    fileSequence = fileSequence + items.length
+  action attach
+    showPicker(id + "-files")
+  action remove(fileId: number)
+    files = files.filter(item => item.id != fileId)
+  action submit
+    if textValue.trim() != ""
+      sent(textValue.trim() + (files.length > 0 ? " · " + files.map(item => item.name).join(", ") : ""))
+      textValue = ""
+      files = []
+  action keys(k: string, e: KeyboardEvent)
+    if k == "Enter" and not e.shiftKey and not e.isComposing
+      preventDefault()
+      submit()
+  action noop
+    textValue = textValue
+  action check(idValue: string, checked: bool)
+    textValue = textValue
+  action radio(group: string, value: string)
+    if group == "model"
+      model = value
+    else
+      effort = value
+  view
+    column testId=(id + "-focus-frame") min-width=0 border-radius="ui.ai-radius-control" box-shadow=(focusWithin ? "0 0 0 3px ui.ring" : "none") focusin=enterFocus focusout=leaveFocus
+      InputGroupFrame(id=id)
+        input type="file" id=(id + "-files") multiple=true display="none" change=picked
+        if files.length > 0
+          InputGroupAddon(id=id + "-attachments")
+            for file in files key=file.id
+              row gap=10 padding=6 align-items="center" border="1px solid ui.border" border-radius="ui.ai-radius-control" background-color="ui.surface"
+                view width=32 height=32 display="flex" align-items="center" justify-content="center" border-radius=8 background-color="ui.muted"
+                  svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+                    path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h6"
+                text file.name font-size="0.75rem"
+                ButtonContent(id=id + "-remove-" + file.id.toString(), label="Remove " + file.name, variant="ghost", size="icon-xs", disabled=false, press=remove(file.id))
+                  svg width=14 height=14 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+                    path d="m6 6 12 12M6 18 18 6"
+        textarea id=(id + "-field") testId=(id + "-field") value=textValue input=edit key=keys placeholder="Ask the agent to change your code..." aria-label="Message" appearance="none" outline="none" box-shadow="none" min-height=80 padding=12 border="0" background-color="transparent" color="ui.foreground" font-size="0.875rem"
+        InputGroupAddon(id=id + "-toolbar")
+          ButtonControl(id=id + "-attach", label="Attach files", variant="outline", size="icon", disabled=false, pressed=none, describedBy="", press=attach)
+            svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+              path d="M12 5v14M5 12h14"
+          view flex=1
+          if menus
+            CompactAiMenu(id=id + "-model", label=model, prefix="", entries=[AdvancedMenuEntry(id="openai", parent="", label="OpenAI", kind="label", shortcut="", disabled=false, group="", value=""), AdvancedMenuEntry(id="gpt5", parent="", label="GPT-5", kind="radio", shortcut="", disabled=false, group="model", value="GPT-5"), AdvancedMenuEntry(id="mini", parent="", label="GPT-5 mini", kind="radio", shortcut="", disabled=false, group="model", value="GPT-5 mini"), AdvancedMenuEntry(id="provider-separator", parent="", label="", kind="separator", shortcut="", disabled=false, group="", value=""), AdvancedMenuEntry(id="anthropic", parent="", label="Anthropic", kind="label", shortcut="", disabled=false, group="", value=""), AdvancedMenuEntry(id="sonnet", parent="", label="Claude Sonnet 4.5", kind="radio", shortcut="", disabled=false, group="model", value="Claude Sonnet 4.5"), AdvancedMenuEntry(id="haiku", parent="", label="Claude Haiku 4.5", kind="radio", shortcut="", disabled=false, group="model", value="Claude Haiku 4.5")], value=model, reduced=reduced, radio=radio)
+            CompactAiMenu(id=id + "-effort", label=effort, prefix="Effort", entries=[AdvancedMenuEntry(id="heading", parent="", label="Effort", kind="label", shortcut="", disabled=false, group="", value=""), AdvancedMenuEntry(id="low", parent="", label="Low", kind="radio", shortcut="", disabled=false, group="effort", value="Low"), AdvancedMenuEntry(id="medium", parent="", label="Medium", kind="radio", shortcut="", disabled=false, group="effort", value="Medium"), AdvancedMenuEntry(id="high", parent="", label="High", kind="radio", shortcut="", disabled=false, group="effort", value="High")], value=effort, reduced=reduced, radio=radio)
+          ButtonControl(id=id + "-send", label="Send", variant="default", size="icon", disabled=(textValue.trim() == ""), pressed=none, describedBy="", press=submit)
+            svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2
+              path d="M12 19V5m-6 6 6-6 6 6"
+
+component CompactAiMenu
+  props
+    id: string
+    label: string
+    prefix: string
+    entries: AdvancedMenuEntry[]
+    value: string
+    reduced: bool
+    radio: action
+  state expanded = false
+  derive options = entries.filter(item => item.kind == "radio" or item.kind == "item")
+  action open(last: bool)
+    expanded = true
+    showPopover(id + "-menu", source=id)
+    match options.at(last ? options.length - 1 : 0)
+      case some(entry)
+        focus(id + "-item-" + entry.id)
+      case none
+        focus(id + "-menu")
+  action toggle
+    if expanded
+      expanded = false
+      focus(id)
+    else
+      open(false)
+  action changed(e: ToggleEvent)
+    expanded = e.newState == "open"
+  action activate(entry: AdvancedMenuEntry)
+    radio(entry.group, entry.value)
+    expanded = false
+    focus(id)
+  action hover(entry: AdvancedMenuEntry, inside: bool)
+    if inside
+      focus(id + "-item-" + entry.id)
+  action keys(entry: AdvancedMenuEntry, k: string, e: KeyboardEvent)
+    if not e.isComposing
+      if k == "Escape" or k == "Tab"
+        expanded = false
+        if k == "Escape"
+          preventDefault()
+          focus(id)
+      else if k == "Enter" or k == " "
+        preventDefault()
+        activate(entry)
+      else if k == "ArrowDown" or k == "ArrowUp" or k == "Home" or k == "End"
+        preventDefault()
+        let index = options.map(item => item.id).indexOf(entry.id)
+        let next = k == "Home" ? 0 : k == "End" ? options.length - 1 : (index + (k == "ArrowDown" ? 1 : options.length - 1)) % max(1, options.length)
+        match options.at(next)
+          case some(target)
+            focus(id + "-item-" + target.id)
+          case none
+            expanded = false
+  action triggerKeys(k: string)
+    if k == "ArrowDown" or k == "ArrowUp"
+      preventDefault()
+      open(k == "ArrowUp")
+  view
+    row flex-shrink=0
+      button id=id testId=id class=Control press=toggle key=triggerKeys aria-label=(prefix == "Context" ? label : (prefix == "" ? "Model" : prefix) + ": " + label) aria-haspopup="menu" aria-expanded=expanded aria-controls=(id + "-menu") display="flex" align-items="center" gap=8 height=32 min-height=32 width=(prefix == "Context" ? "2rem" : "auto") justify-content="center" padding=(prefix == "Context" ? "0px" : "0 10px") border="1px solid ui.input" border-radius="ui.ai-radius-control" background-color="ui.surface" color="ui.foreground" font-size="0.875rem" font-weight=500
+        if prefix == "Context"
+          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+            path d="M12 5v14M5 12h14"
+        else
+          if prefix != ""
+            text prefix color="ui.muted-foreground"
+          text label
+          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+            path d="m6 9 6 6 6-6"
+      if expanded
+        column id=(id + "-menu") testId=(id + "-menu") popover="auto" toggle=changed role="menu" aria-label=(prefix == "" ? "Model" : prefix) position-area=(prefix == "Context" ? "top span-right" : "bottom span-right") position-try-fallbacks="flip-block, flip-inline" margin=4 width=(prefix == "Context" ? "12rem" : prefix == "" ? "12rem" : "9rem") padding=4 gap=0 border="1px solid ui.border" border-radius="ui.ai-radius-control" background-color="ui.surface" color="ui.foreground" box-shadow="0 4px 12px #00000018"
+          for entry in entries key=entry.id
+            AdvancedMenuLine(radius="ui.ai-radius-item", id=id, entry=entry, checks=[], radios=[AdvancedMenuSelection(group=(prefix == "" ? "model" : "effort"), value=value)], openParents=[], activate=activate(entry), hover=hover(entry), keys=keys(entry))

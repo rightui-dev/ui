@@ -1,0 +1,72 @@
+[
+  {
+    "slug": "chart-area-interactive",
+    "title": "Area Chart - Interactive",
+    "description": "An interactive area chart",
+    "source": "charts/chart-area-interactive.contract",
+    "fullWidth": true
+  },
+  {
+    "slug": "chart-area-default",
+    "title": "Area Chart",
+    "description": "A simple area chart",
+    "source": "charts/chart-area-default.contract",
+    "fullWidth": false
+  },
+  {
+    "slug": "chart-area-linear",
+    "title": "Area Chart - Linear",
+    "description": "A linear area chart",
+    "source": "charts/chart-area-linear.contract",
+    "fullWidth": false
+  },
+  {
+    "slug": "chart-area-step",
+    "title": "Area Chart - Step",
+    "description": "A step area chart",
+    "source": "charts/chart-area-step.contract",
+    "fullWidth": false
+  },
+  {
+    "slug": "chart-area-legend",
+    "title": "Area Chart - Legend",
+    "description": "An area chart with a legend",
+    "source": "charts/chart-area-legend.contract",
+    "fullWidth": false
+  },
+  {
+    "slug": "chart-area-stacked",
+    "title": "Area Chart - Stacked",
+    "description": "A stacked area chart",
+    "source": "charts/chart-area-stacked.contract",
+    "fullWidth": false
+  },
+  {
+    "slug": "chart-area-stacked-expand",
+    "title": "Area Chart - Stacked Expand",
+    "description": "A stacked area chart with expand stacking",
+    "source": "charts/chart-area-stacked-expand.contract",
+    "fullWidth": false
+  },
+  {
+    "slug": "chart-area-icons",
+    "title": "Area Chart - Icons",
+    "description": "An area chart with icons",
+    "source": "charts/chart-area-icons.contract",
+    "fullWidth": false
+  },
+  {
+    "slug": "chart-area-gradient",
+    "title": "Area Chart - Gradient",
+    "description": "An area chart with gradient fill",
+    "source": "charts/chart-area-gradient.contract",
+    "fullWidth": false
+  },
+  {
+    "slug": "chart-area-axes",
+    "title": "Area Chart - Axes",
+    "description": "An area chart with axes",
+    "source": "charts/chart-area-axes.contract",
+    "fullWidth": false
+  }
+]

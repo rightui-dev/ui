@@ -1,0 +1,14 @@
+use Composer from "../../packages/ui/ai-controls.contract"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  state result = "Nothing sent"
+  action sent(value: string)
+    result = "Local submission: " + value
+  view
+    column width="100%" max-width="32rem" padding="24px 0" gap=8
+      Composer(id="ai-model-selector", menus=true, reduced=reduced, sent=sent)
+      if result != "Nothing sent"
+        text result testId="ai-model-selector-result" role="status" font-size="0.875rem"

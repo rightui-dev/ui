@@ -1,0 +1,178 @@
+keyframes traceSweep64
+  from translate="-64px 0px"
+  to translate="64px 0px"
+keyframes traceCounter64
+  from translate="64px 0px"
+  to translate="-64px 0px"
+
+keyframes traceSweep128
+  from translate="-64px 0px"
+  to translate="128px 0px"
+keyframes traceCounter128
+  from translate="64px 0px"
+  to translate="-128px 0px"
+
+keyframes traceSweep256
+  from translate="-64px 0px"
+  to translate="256px 0px"
+keyframes traceCounter256
+  from translate="64px 0px"
+  to translate="-256px 0px"
+
+keyframes traceSweep512
+  from translate="-64px 0px"
+  to translate="512px 0px"
+keyframes traceCounter512
+  from translate="64px 0px"
+  to translate="-512px 0px"
+
+keyframes traceSweep1024
+  from translate="-64px 0px"
+  to translate="1024px 0px"
+keyframes traceCounter1024
+  from translate="64px 0px"
+  to translate="-1024px 0px"
+
+keyframes traceSpin
+  from rotate="0deg"
+  to rotate="360deg"
+
+use Control from "./styles.contract"
+component TraceIcon
+  props
+    icon: string
+    status: string
+    reduced: bool
+  view
+    svg width=16 height=16 flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke=(status == "error" ? "ui.danger" : "currentColor") stroke-width=2 stroke-linecap="round" stroke-linejoin="round" animation=(status == "running" and icon == "check" and not reduced ? "traceSpin 1s linear infinite" : "none") aria-hidden=true
+      if status == "running" and icon == "check"
+        path d="M12 2a10 10 0 1 0 10 10"
+        circle cx=12 cy=12 r=3
+      else if icon == "dot"
+        circle cx=12 cy=12 r=10
+        circle cx=12 cy=12 r=3
+      else if icon == "terminal"
+        path d="m4 17 6-5-6-5M12 19h8"
+      else if icon == "globe"
+        circle cx=12 cy=12 r=10
+        path d="M2 12h20M12 2a18 18 0 0 1 0 20 18 18 0 0 1 0-20"
+      else if icon == "external"
+        path d="M7 17 17 7M7 7h10v10"
+      else if icon == "file"
+        path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8ZM14 2v6h6M10 13l-2 2 2 2M14 13l2 2-2 2"
+      else if icon == "layers"
+        path d="m12 3 10 5-10 5L2 8ZM2 12l10 5 10-5M2 16l10 5 10-5"
+      else if icon == "flask"
+        path d="M9 3h6M10 3v7L4 20a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1l-6-10V3M8 15h8"
+      else if icon == "route"
+        circle cx=6 cy=6 r=3
+        circle cx=18 cy=18 r=3
+        path d="M9 6h8a4 4 0 0 1 0 8H7a4 4 0 0 0 0 8h5"
+      else if icon == "list"
+        path d="m3 6 1 1 2-2M10 6h11M3 12h3M10 12h11M3 18h3M10 18h11"
+      else if icon == "x"
+        path d="m6 6 12 12M6 18 18 6"
+      else if icon == "tick"
+        path d="m5 12 4 4L19 6"
+      else if status == "pending"
+        circle cx=12 cy=12 r=10
+      else if status == "error"
+        circle cx=12 cy=12 r=10
+        path d="M12 8v4M12 16h.01"
+      else
+        circle cx=12 cy=12 r=10
+        path d="m8 12 3 3 5-6"
+component TraceFrame
+  slot
+  view
+    column gap=8 min-width=0
+      children
+style TraceTitleText
+  font-size="0.875rem"
+  line-height=1.5
+  font-weight=400
+  white-space="nowrap"
+
+component TraceTitle
+  props
+    title: string
+    running: bool
+    reduced: bool
+  state width = 64
+  action measure(w: number, h: number)
+    width = w
+  derive band = width <= 64 ? "64" : width <= 128 ? "128" : width <= 256 ? "256" : width <= 512 ? "512" : "1024"
+  view
+    view position="relative" min-width=0 overflow="hidden" resize=measure
+      text title class=TraceTitleText min-width=0 overflow="hidden" text-overflow="ellipsis"
+      if running and not reduced
+        view position="absolute" left=0 top=0 bottom=0 width=64 pointer-events="none" aria-hidden=true mask-image="linear-gradient(to right, transparent 0%, #000000 50%, transparent 100%)" animation=("traceSweep" + band + " 2s linear infinite")
+          text title class=TraceTitleText position="absolute" left=0 top=0 width=width color="ui.trace-shimmer" animation=("traceCounter" + band + " 2s linear infinite")
+
+component TraceLine
+  props
+    title: string
+    icon: string
+    status: string
+    reduced: bool
+  view
+    row gap=8 align-items="center" min-width=0 color=(status == "error" ? "ui.danger" : "ui.muted-foreground") opacity=(status == "pending" ? 0.6 : 1)
+      if icon != "none"
+        TraceIcon(icon=icon, status=status, reduced=reduced)
+      TraceTitle(title=title, running=(status == "running"), reduced=reduced)
+component TraceDisclosure
+  props
+    id: string
+    title: string
+    icon: string
+    status: string
+    open: bool
+    reduced: bool
+    toggle: action
+  slot
+  view
+    column min-width=0
+      button id=id testId=id class=Control press=toggle aria-label=title aria-expanded=open aria-controls=(id + "-content")
+        display="flex" align-items="center" align-self="flex-start" text-align="left" gap=4 padding="4px 8px" margin-left=-8 min-height=28 border="0" border-radius="ui.radius-md" background-color="transparent" color=(status == "error" ? "ui.danger" : "ui.muted-foreground")
+        transition=(reduced ? "none" : "background-color 150ms ease")
+        :hover
+          background-color="ui.muted"
+        TraceLine(title=title, icon=icon, status=status, reduced=reduced)
+        svg width=16 height=16 flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 rotate=(open ? "90deg" : "0deg") transition=(reduced ? "none" : "rotate 200ms ease") aria-hidden=true
+          path d="m9 6 6 6-6 6"
+      column id=(id + "-content") testId=(open ? id + "-content" : "") height=(open ? "auto" : "0px") min-height=0 overflow="hidden" aria-hidden=(not open) inert=(not open)
+        -exact-layout-transition=(reduced ? "none" : "200ms ease-out")
+        column margin="8px 4px 4px 7px" padding-left=16 border-left="1px solid ui.border" gap=8 min-width=0 line-height=1.625
+          children
+component TraceCollapsible
+  props
+    id: string
+    title: string
+    icon: string
+    status: string
+    initiallyOpen: bool
+    reduced: bool
+  slot
+  state open = initiallyOpen
+  action toggle
+    open = not open
+  view
+    TraceDisclosure(id=id, title=title, icon=icon, status=status, open=open, reduced=reduced, toggle=toggle)
+      children
+component TraceSource
+  props
+    title: string
+    href: string
+    reduced: bool
+  view
+    link href=href target="_blank" rel="noreferrer" aria-label=(title + " (opens in a new tab)") color="ui.muted-foreground" text-decoration="none"
+      row gap=4 align-items="center"
+        text title font-size="0.875rem" min-width=0
+        TraceIcon(icon="external", status="", reduced=reduced)
+component CodeBlockContent
+  props
+    id: string
+    code: string
+  view
+    scroll id=id testId=id max-height=256 min-width=0 border-radius="ui.ai-radius-control" background-color="ui.muted" box-shadow="0 0 0 1px ui.border"
+      text code padding=12 color="ui.foreground" font-family="monospace" font-size="0.75rem" line-height=1.625 white-space="pre-wrap" overflow-wrap="break-word"

@@ -1,0 +1,6 @@
+use DashboardBlock from "@rightui/registry/blocks/dashboard"
+
+component Demo
+  view
+    column width="100%"
+      DashboardBlock(narrow=false, reduced=false)

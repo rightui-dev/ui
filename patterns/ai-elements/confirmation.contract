@@ -1,0 +1,66 @@
+use ApprovalItem from "../../packages/ui/ai-controls.contract"
+use ButtonAI as ButtonContent from "@rightui/ui"
+use TraceDisclosure, TraceLine from "../../packages/ui/trace-parts.contract"
+use BubbleFrame from "../../packages/ui/conversation-parts.contract"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  inject
+    rightuiDemoTime: number
+    rightuiRunDemo: action
+  state decision = "Awaiting approval"
+  state started = false
+  state thinkingUntil = 0
+  state answerUntil = 0
+  state reasoningOpen = false
+  derive thinking = started and rightuiDemoTime < thinkingUntil
+  derive answering = answerUntil > rightuiDemoTime
+  action start
+    started = true
+    thinkingUntil = rightuiDemoTime + 1000
+    reasoningOpen = false
+    rightuiRunDemo(1000)
+  action toggleReasoning
+    reasoningOpen = not reasoningOpen
+  action approve
+    decision = "Approved locally. No command executed."
+    answerUntil = rightuiDemoTime + 600
+    rightuiRunDemo(600)
+  action deny
+    decision = "Denied. No command executed."
+    answerUntil = rightuiDemoTime + 600
+    rightuiRunDemo(600)
+  action reset
+    decision = "Awaiting approval"
+    started = false
+    reasoningOpen = false
+  view
+    column gap=16 min-width=0 width="100%" max-width="24rem" min-height=288 padding="24px 0" font-size="0.875rem"
+      BubbleFrame(id="ai-confirmation-user", align="end", variant="muted")
+        text "Clean up the build folder."
+      if started
+        TraceDisclosure(id="ai-confirmation-reasoning", title=(thinking ? "Thinking" : "Thought"), icon="check", status=(thinking ? "running" : "complete"), open=(thinking or reasoningOpen), reduced=reduced, toggle=toggleReasoning)
+          text "The build output lives in dist. Deleting it cannot be undone, so I should ask before I run the command."
+        if not thinking
+          if decision == "Awaiting approval"
+            ApprovalItem(id="ai-confirmation-request", title="Run rm -rf dist?", description="The command runs in this project.")
+              row gap=8
+                ButtonContent(id="ai-confirmation-deny", label="Deny", variant="outline", size="sm", disabled=false, press=deny)
+                  text "Deny"
+                ButtonContent(id="ai-confirmation-approve", label="Approve", variant="default", size="sm", disabled=false, press=approve)
+                  text "Approve"
+          else
+            TraceLine(title=(decision == "Denied. No command executed." ? "Denied rm -rf dist" : answering ? "Running rm -rf dist" : "Ran rm -rf dist"), icon="terminal", status=(answering ? "running" : "complete"), reduced=reduced)
+            if not answering
+              text (decision == "Denied. No command executed." ? "Okay, I left the dist folder in place." : "Removed the dist folder.")
+            text decision testId="ai-confirmation-result" role="status" position="absolute" width=1 height=1 overflow="hidden"
+      if not started
+        row margin-top="auto"
+          ButtonContent(id="ai-confirmation-send", label="Send message", variant="outline", size="sm", disabled=false, press=start)
+            text "Send message"
+      else if not thinking and not answering and decision != "Awaiting approval"
+        row margin-top="auto"
+          ButtonContent(id="ai-confirmation-reset", label="Reset", variant="outline", size="sm", disabled=false, press=reset)
+            text "Reset"

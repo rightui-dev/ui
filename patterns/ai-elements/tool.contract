@@ -1,0 +1,46 @@
+use BubbleFrame from "../../packages/ui/conversation-parts.contract"
+use ButtonAI as ButtonContent from "../../packages/ui/button.contract"
+use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "../../packages/ui/trace-parts.contract"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  inject
+    rightuiDemoTime: number
+    rightuiRunDemo: action
+  state started = -1
+  derive elapsed = started < 0 ? 12700 : max(0, rightuiDemoTime - started)
+  derive busy = elapsed < 2700
+  action replay
+    started = rightuiDemoTime
+    rightuiRunDemo(6700)
+  view
+    column gap=16 min-width=0 min-height=288 max-width="24rem" width="100%" padding="24px 0px"
+      BubbleFrame(id="ai-tool-question", align="end", variant="muted")
+        text "Which package managers are installed?"
+      TraceFrame()
+        if elapsed >= 0
+          if elapsed < 900
+            TraceLine(title="Running node --version", icon="terminal", status="running", reduced=reduced)
+          else
+            TraceCollapsible(id="ai-tool-0", title="Ran node --version", icon="terminal", status="", initiallyOpen=false, reduced=reduced)
+              CodeBlockContent(id="ai-tool-0-output", code="v24.18.0")
+        if elapsed >= 900
+          if elapsed < 1800
+            TraceLine(title="Running npm --version", icon="terminal", status="running", reduced=reduced)
+          else
+            TraceCollapsible(id="ai-tool-1", title="Ran npm --version", icon="terminal", status="", initiallyOpen=false, reduced=reduced)
+              CodeBlockContent(id="ai-tool-1-output", code="11.6.2")
+        if elapsed >= 1800
+          if elapsed < 2700
+            TraceLine(title="Running pnpm --version", icon="terminal", status="running", reduced=reduced)
+          else
+            TraceCollapsible(id="ai-tool-reveal", title="Failed to run pnpm --version", icon="terminal", status="error", initiallyOpen=true, reduced=reduced)
+              CodeBlockContent(id="ai-tool-2-output", code="command not found: pnpm")
+      if elapsed >= 2700
+        text "Node 24 and npm 11 are installed. pnpm is not.".slice(0, started < 0 or reduced ? 46 : floor((elapsed - 2700) / 20)) font-size="0.875rem" line-height=1.625
+      if not busy
+        row margin-top="auto" align-items="flex-start"
+          ButtonContent(id="ai-tool-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
+            text "Replay"

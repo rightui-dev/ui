@@ -1,0 +1,49 @@
+use Dialog, Button, Drawer from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state drawerShown = false
+  state responsiveShown = false
+  action openResponsive
+    responsiveShown = true
+  action closeResponsive
+    responsiveShown = false
+    focus("drawer-responsive-open")
+  state activityGoal = 350
+  derive reduce = reduced
+  action hideDrawer
+    drawerShown = false
+    focus("drawer-open")
+  action adjustGoal(delta: number)
+    activityGoal = max(200, min(500, activityGoal + delta))
+  action openExample
+    drawerShown = true
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Button(id="drawer-open", label="Open drawer", variant="outline", disabled=false, press=openExample)
+      Drawer(id="controls-drawer", open=drawerShown, title="Move Goal", description="Set your daily activity goal.", reduced=reduce, focusIds=["controls-goal-less", "controls-goal-more", "controls-drawer-submit"], dismiss=hideDrawer)
+        column gap=16 align-items="center" padding=16
+          row gap=24 align-items="center" justify-content="center"
+            Button(id="controls-goal-less", label="−", variant="outline", disabled=(activityGoal == 200), press=adjustGoal(-10))
+            column align-items="center"
+              text activityGoal.toString() testId="controls-goal" font-size="3.75rem" font-weight=700
+              text "CALORIES/DAY" font-size="0.75rem" color="ui.muted-foreground"
+            Button(id="controls-goal-more", label="+", variant="outline", disabled=(activityGoal == 500), press=adjustGoal(10))
+          row gap=6 align-items="flex-end" height=80 aria-hidden=true
+            for height, i in [30, 50, 40, 65, 45, 70, 55, 80, 62, 48] key=i
+              view width=20 height=height border-radius=3 background-color="ui.primary"
+          Button(id="controls-drawer-submit", label="Submit", variant="primary", disabled=false, press=hideDrawer)
+        column id="drawer-long-content" max-height=180 overflow="auto" gap=12
+          for section in ["Overview", "Preferences", "Permissions", "Storage", "Notifications", "Accessibility", "Review"] key=section
+            text (section + ": review the project settings before continuing.")
+      text "Responsive dialog" font-weight=600
+      Button(id="drawer-responsive-open", label="Open responsive dialog", variant="outline", disabled=false, press=openResponsive)
+      if narrow
+        Drawer(id="drawer-responsive-small", open=responsiveShown, title="Responsive drawer", description="A drawer on narrow screens, a dialog on wide screens.", reduced=reduced, focusIds=["drawer-responsive-save"], dismiss=closeResponsive)
+          Button(id="drawer-responsive-save", label="Save", variant="primary", disabled=false, press=closeResponsive)
+      else
+        Dialog(id="drawer-responsive-dialog", open=responsiveShown, reduced=reduced, title="Responsive dialog", description="A dialog on wide screens, a drawer on narrow screens.", confirmLabel="Save", focusIds=["drawer-responsive-dialog-cancel", "drawer-responsive-dialog-confirm"], dismiss=closeResponsive, confirm=closeResponsive)
+          text "Resize the viewport to try each presentation."

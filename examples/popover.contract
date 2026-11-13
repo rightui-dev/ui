@@ -1,0 +1,17 @@
+use Input, Popover from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state folder = "Editing"
+  action editFolder(v: string)
+    folder = v
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Popover(id="catalog-popover", label="Folder name", focusId="catalog-folder", reduced=reduced)
+        Input(id="catalog-folder", label="Folder name", value=folder, placeholder="Your folder", error="", disabled=false, edit=editFolder)
+      text "Basic content" font-size="0.875rem" font-weight=600
+      Popover(id="variation-popover-basic", label="About this workspace", focusId="", reduced=reduced)
+        text "A shared space for your project assets."

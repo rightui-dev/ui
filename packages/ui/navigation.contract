@@ -1,0 +1,47 @@
+use Control from "./styles.contract"
+use Button from "./button.contract"
+component Breadcrumb
+  props
+    id: string
+    labels: string[]
+    choose: action
+  view
+    nav id=id testId=id aria-label="Fil d’Ariane"
+      row gap=10 align-items="center" flex-wrap="wrap"
+        for label, i in labels key=label
+          if i > 0
+            svg width=14 height=14 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=1.5 aria-hidden=true
+              path d="m9 5 7 7-7 7"
+          if i == labels.length - 1
+            text label aria-current="page" font-size="0.875rem" color="ui.foreground"
+          else
+            button id=(id + "-" + i.toString()) testId=(id + "-" + i.toString()) class=Control press=choose(i) padding=0 min-height=20 border="0" background-color="transparent" color="ui.muted-foreground"
+              text label font-size="0.875rem"
+
+component Pagination
+  props
+    id: string
+    page: number
+    total: number
+    change: action
+  derive count = max(1, floor(total))
+  derive current = max(1, min(count, floor(page)))
+  derive start = max(1, min(current - 2, count - 4))
+  view
+    nav id=id testId=id aria-label="Pagination"
+      row gap=4 flex-wrap="wrap" align-items="center" justify-content="center"
+        Button(id=id + "-previous", label="Previous", variant="outline", disabled=current == 1, press=change(current - 1))
+        for i in range(min(5, count)) key=i
+          button id=(id + "-page-" + (start + i).toString()) testId=(id + "-page-" + (start + i).toString()) class=Control
+            aria-label=("Page " + (start + i).toString()) aria-current=(current == start + i ? "page" : "false") press=change(start + i)
+            min-width=36 height=36 padding="8px 12px" border=(current == start + i ? "1px solid ui.border" : "1px solid transparent") background-color="ui.background" color="ui.foreground"
+            text (start + i).toString()
+        Button(id=id + "-next", label="Next", variant="outline", disabled=current == count, press=change(current + 1))
+
+component ButtonGroup
+  props
+    label: string
+  slot
+  view
+    row role="group" aria-label=label gap=4 flex-wrap="wrap"
+      children

@@ -1,0 +1,48 @@
+use BubbleFrame from "../../packages/ui/conversation-parts.contract"
+use ButtonAI as ButtonContent from "../../packages/ui/button.contract"
+use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "../../packages/ui/trace-parts.contract"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  inject
+    rightuiDemoTime: number
+    rightuiRunDemo: action
+  state started = -1
+  derive elapsed = started < 0 ? 15600 : max(0, rightuiDemoTime - started)
+  derive busy = elapsed < 5600
+  action replay
+    started = rightuiDemoTime
+    rightuiRunDemo(9600)
+  view
+    column gap=16 min-width=0 min-height=288 max-width="24rem" width="100%" padding="24px 0px"
+      BubbleFrame(id="ai-queue-question", align="end", variant="muted")
+        text "Add dark mode to the settings page."
+      TraceFrame()
+      if elapsed < 5600
+        TraceCollapsible(id="ai-queue-pending", title=((4 - min(4, floor(elapsed / 1400))).toString() + " to do"), icon="list", status="", initiallyOpen=true, reduced=reduced)
+          if elapsed < 1400
+            TraceLine(title="Add a dark variant to the theme tokens", icon=(elapsed >= 0 ? "dot" : "check"), status=(elapsed >= 0 ? "running" : "pending"), reduced=reduced)
+          if elapsed < 2800
+            TraceLine(title="Read the theme from a cookie", icon=(elapsed >= 1400 ? "dot" : "check"), status=(elapsed >= 1400 ? "running" : "pending"), reduced=reduced)
+          if elapsed < 4200
+            TraceLine(title="Add a toggle to the settings page", icon=(elapsed >= 2800 ? "dot" : "check"), status=(elapsed >= 2800 ? "running" : "pending"), reduced=reduced)
+          if elapsed < 5600
+            TraceLine(title="Check contrast on the charts", icon=(elapsed >= 4200 ? "dot" : "check"), status=(elapsed >= 4200 ? "running" : "pending"), reduced=reduced)
+      if elapsed >= 1400
+        TraceCollapsible(id="ai-queue-0", title=(min(4, floor(elapsed / 1400)).toString() + " completed"), icon="list", status="", initiallyOpen=true, reduced=reduced)
+          if elapsed >= 1400
+            TraceLine(title="Add a dark variant to the theme tokens", icon="check", status="", reduced=reduced)
+          if elapsed >= 2800
+            TraceLine(title="Read the theme from a cookie", icon="check", status="", reduced=reduced)
+          if elapsed >= 4200
+            TraceLine(title="Add a toggle to the settings page", icon="check", status="", reduced=reduced)
+          if elapsed >= 5600
+            TraceLine(title="Check contrast on the charts", icon="check", status="", reduced=reduced)
+      if elapsed >= 5600
+        text "Dark mode is in. The toggle is under Settings, Appearance.".slice(0, started < 0 or reduced ? 58 : floor((elapsed - 5600) / 20)) font-size="0.875rem" line-height=1.625
+      if not busy
+        row margin-top="auto" align-items="flex-start"
+          ButtonContent(id="ai-queue-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
+            text "Replay"

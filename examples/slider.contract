@@ -1,0 +1,24 @@
+use RangeSlider, Slider from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state low = 20
+  state high = 80
+  action setRange(lower: number, upper: number)
+    low = lower
+    high = upper
+  state volume = 50
+  action updateVolume(v: number)
+    volume = v
+  view
+    column gap=16 min-width=0 max-width="100%"
+      RangeSlider(id="advanced-range", label="Price range", lower=low, upper=high, minimum=0, maximum=100, step=5, minimumSteps=1, vertical=false, disabled=false, change=setRange)
+      text "Single thumb" font-size="0.875rem" font-weight=600
+      Slider(id="variation-slider-single", label="Volume", value=volume, minimum=0, maximum=100, step=1, disabled=false, change=updateVolume)
+      text "Vertical range" font-size="0.875rem" font-weight=600
+      RangeSlider(id="variation-slider-true-false", label="Vertical range", lower=low, upper=high, minimum=0, maximum=100, step=5, minimumSteps=1, vertical=true, disabled=false, change=setRange)
+      text "Disabled range" font-size="0.875rem" font-weight=600
+      RangeSlider(id="variation-slider-false-true", label="Disabled range", lower=low, upper=high, minimum=0, maximum=100, step=5, minimumSteps=1, vertical=false, disabled=true, change=setRange)

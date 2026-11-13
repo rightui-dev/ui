@@ -1,0 +1,127 @@
+component Tabs
+  props
+    id: string
+    labels: string[]
+    selected: number
+    reduced: bool
+    choose: action
+  view
+    TabStrip(id=id, labels=labels, counts=[], selected=selected, reduced=reduced, choose=choose, variant="default", vertical=false, compact=true, disabledIndices=[], direction="ltr", label="Sections")
+
+component CountedTabs
+  props
+    id: string
+    labels: string[]
+    counts: string[]
+    selected: number
+    reduced: bool
+    choose: action
+  view
+    TabStrip(id=id, labels=labels, counts=counts, selected=selected, reduced=reduced, choose=choose, variant="default", vertical=false, compact=false, disabledIndices=[], direction="ltr", label="Sections")
+
+component TabsAdvanced
+  props
+    id: string
+    label: string
+    labels: string[]
+    counts: string[]
+    selected: number
+    variant: string
+    vertical: bool
+    compact: bool
+    disabledIndices: number[]
+    direction: string
+    reduced: bool
+    choose: action
+  view
+    TabStrip(id=id, labels=labels, counts=counts, selected=selected, reduced=reduced, choose=choose, variant=variant, vertical=vertical, compact=compact, disabledIndices=disabledIndices, direction=direction, label=label)
+
+component TabStrip
+  props
+    id: string
+    label: string
+    labels: string[]
+    counts: string[]
+    selected: number
+    reduced: bool
+    choose: action
+    variant: string
+    vertical: bool
+    compact: bool
+    disabledIndices: number[]
+    direction: string
+  state markerX = 0
+  state markerY = 0
+  state markerWidth = 0
+  state markerHeight = 0
+  state ready = false
+  derive valid = selected >= 0 and selected < labels.length
+  derive enabled = range(labels.length).filter(i => not disabledIndices.includes(i))
+  derive measurementKey = selected.toString() + "|" + labels.map(v => v.length.toString() + ":" + v).join("") + "|" + counts.map(v => v.length.toString() + ":" + v).join("") + "|" + variant + "|" + vertical.toString() + "|" + compact.toString() + "|" + direction
+  action measure(w: number, h: number)
+    if valid
+      let container = frame(id)
+      let target = frame(id + "-" + selected.toString())
+      if container.width > 0 and target.width > 0 and target.height > 0
+        markerX = target.x - container.x
+        markerY = target.y - container.y
+        markerWidth = target.width
+        markerHeight = target.height
+        ready = true
+      else
+        ready = false
+    else
+      ready = false
+  action pick(i: number)
+    if not disabledIndices.includes(i)
+      choose(i)
+  action keys(k: string)
+    let forward = vertical ? k == "ArrowDown" : direction == "rtl" ? k == "ArrowLeft" : k == "ArrowRight"
+    let backward = vertical ? k == "ArrowUp" : direction == "rtl" ? k == "ArrowRight" : k == "ArrowLeft"
+    if enabled.length > 0 and (forward or backward or k == "Home" or k == "End")
+      preventDefault()
+      let current = enabled.indexOf(selected)
+      let position = k == "Home" ? 0 : k == "End" ? enabled.length - 1 : forward ? (current + 1) % enabled.length : (max(0, current) + enabled.length - 1) % enabled.length
+      match enabled.at(position)
+        case some(next)
+          choose(next)
+          focus(id + "-" + next.toString())
+        case none
+          ready = false
+  view
+    scroll id=(id + "-viewport") testId=(id + "-viewport") max-width="calc(100% + 8px)" min-width=0 align-self="flex-start" overflow-x="auto" overflow-y="hidden" padding=4 margin=-4 box-sizing="border-box" -webkit-font-smoothing="antialiased"
+      view id=id testId=id resize=measure position="relative" display="flex" flex-direction=(vertical ? "column" : "row") flex-wrap="nowrap" role="tablist" aria-label=label aria-orientation=(vertical ? "vertical" : "horizontal") direction=direction appearance="none" padding=3 gap=(variant == "line" ? 4 : 0)
+        background-color=(variant == "line" ? "transparent" : "ui.muted") border="0" border-radius=(variant == "line" ? "0px" : "ui.radius-control") width="auto" min-width=0 align-items=(vertical ? "stretch" : "center") height=(vertical ? "auto" : compact ? "2rem" : "2.25rem") box-sizing="border-box"
+        if ready and valid
+          view id=(id + "-indicator") testId=(id + "-indicator") aria-hidden=true pointer-events="none"
+            position="absolute" left=(variant == "line" ? vertical ? markerX + markerWidth + 1 : markerX + 1 : markerX) top=(variant == "line" ? vertical ? markerY + 1 : markerY + markerHeight + 2 : markerY)
+            width=(variant == "line" ? vertical ? 2 : max(0, markerWidth - 2) : markerWidth) height=(variant == "line" ? vertical ? max(0, markerHeight - 2) : 2 : markerHeight)
+            border-radius=(variant == "line" ? "0px" : "ui.radius-item") background-color=(variant == "line" ? "ui.foreground" : "ui.tab-active") border=(variant == "line" ? "0" : "1px solid ui.tab-active-border") box-sizing="border-box"
+            box-shadow=(variant == "line" ? "none" : "0 1px 3px 0 ui.shadow-sm, 0 1px 2px -1px ui.shadow-sm")
+            -exact-layout-transition=(reduced ? "none" : "220ms cubic-bezier(0.2, 0.8, 0.2, 1)")
+        for caption, i in labels key=caption
+          button id=(id + "-" + i.toString()) testId=(id + "-" + i.toString()) appearance="none" disabled=disabledIndices.includes(i)
+            role="tab" aria-selected=(selected == i) aria-controls=(id + "-panel")
+            tabindex=(not disabledIndices.includes(i) and (selected == i or not valid and enabled.indexOf(i) == 0) ? 0 : -1) key=keys press=pick(i)
+            position="relative" flex="0 0 auto" box-sizing="border-box" display="flex" align-items="center" justify-content=(vertical ? "flex-start" : "center") gap="0.375rem"
+            min-width="auto" width="auto" height=(vertical ? compact ? "calc(1.5rem + 2px)" : "calc(1.75rem + 2px)" : compact ? "calc(2rem - 7px)" : "calc(2.25rem - 7px)") min-height=0
+            border="1px solid transparent" border-radius="ui.radius-item" padding=(compact ? "0.125rem 0.375rem" : "0.25rem 0.5rem") white-space="nowrap"
+            background-color=(not ready and selected == i and variant != "line" ? "ui.tab-active" : "transparent") cursor="pointer" pointer-events=(disabledIndices.includes(i) ? "none" : "auto")
+            color=(selected == i ? "ui.foreground" : "ui.tab-inactive") font-size="0.875rem" line-height="1.25rem" font-weight=500
+            transition=(reduced ? "none" : "color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out")
+            :focus-visible
+              border-color="ui.focus"
+              box-shadow="0 0 0 1px ui.focus, 0 0 0 3px ui.ring"
+            :hover
+              color="ui.foreground"
+            :disabled
+              opacity=0.5
+            text caption white-space="nowrap"
+            match counts.at(i)
+              case some(count)
+                if count != ""
+                  text count display="flex" align-items="center" justify-content="center" width="1.25rem" min-width="1.25rem" height="1.25rem" box-sizing="border-box" padding="0 4px" border="1px solid transparent" border-radius="ui.radius-full" background-color="ui.tab-count" color="ui.foreground" font-size="0.75rem" line-height=1.333333 font-weight=500
+              case none
+                view display="none"
+        for revision in [measurementKey] key=revision
+          view resize=measure position="absolute" inset=0 pointer-events="none" aria-hidden=true

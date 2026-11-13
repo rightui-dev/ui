@@ -1,0 +1,74 @@
+use Input, Switch, ResizablePanelGroup, ResizablePanel, ResizableHandle from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state horizontal = 32
+  state vertical = 58
+  state draft = "My edit"
+  action changeHorizontal(v: number)
+    horizontal = v
+  action changeVertical(v: number)
+    vertical = v
+  action editDraft(v: string)
+    draft = v
+  view
+    column gap=24 min-width=0 max-width="100%" box-sizing="border-box"
+      DemoPanels(id="resizable-horizontal", title="Horizontal", orientation="horizontal", initialDir="ltr", initialHandle=false, disabled=false, reduced=reduced)
+      DemoPanels(id="resizable-vertical", title="Vertical", orientation="vertical", initialDir="ltr", initialHandle=false, disabled=false, reduced=reduced)
+      DemoPanels(id="resizable-handle", title="With handle", orientation="horizontal", initialDir="ltr", initialHandle=true, disabled=false, reduced=reduced)
+      DemoPanels(id="resizable-rtl", title="RTL", orientation="horizontal", initialDir="rtl", initialHandle=true, disabled=false, reduced=reduced)
+      text "Nested panels" font-size="1rem" font-weight=600
+      view height=360 width="100%" box-sizing="border-box" border="1px solid ui.border" border-radius=8
+        ResizablePanelGroup(id="split-horizontal", orientation="horizontal", dir="ltr", value=horizontal)
+          ResizablePanel(id="split-sidebar", label="Library", minContentWidth="7rem")
+            text "Library" font-size="0.875rem" font-weight=600 color="ui.foreground" hyphens="auto"
+            for item in ["Project", "Media", "Music", "Exports"] key=item
+              text item font-size="0.8125rem" color="ui.muted-foreground" hyphens="auto"
+          ResizableHandle(id="split-x", groupId="split-horizontal", primaryId="split-sidebar", label="Library width", orientation="horizontal", dir="ltr", value=horizontal, minimum=20, maximum=65, reset=32, withHandle=true, disabled=false, change=changeHorizontal)
+          ResizablePanelGroup(id="split-vertical", orientation="vertical", dir="ltr", value=vertical)
+            ResizablePanel(id="split-editor", label="Editor", minContentWidth="7rem")
+              text "Editor" font-size="0.875rem" font-weight=600 color="ui.foreground"
+              Input(id="split-name", label="Name", value=draft, placeholder="Your project", error="", disabled=false, edit=editDraft)
+            ResizableHandle(id="split-y", groupId="split-vertical", primaryId="split-editor", label="Editor height", orientation="vertical", dir="ltr", value=vertical, minimum=25, maximum=75, reset=58, withHandle=true, disabled=false, change=changeVertical)
+            ResizablePanel(id="split-timeline", label="Timeline", minContentWidth="7rem")
+              text "Timeline" font-size="0.875rem" font-weight=600 color="ui.foreground"
+              text draft testId="split-echo" font-size="0.8125rem" color="ui.muted-foreground" hyphens="auto"
+              view height=24 border-radius=4 background-color="ui.ring"
+      DemoPanels(id="variation-resize-disabled", title="Disabled", orientation="horizontal", initialDir="ltr", initialHandle=true, disabled=true, reduced=reduced)
+
+component DemoPanels
+  props
+    id: string
+    title: string
+    orientation: string
+    initialDir: string
+    initialHandle: bool
+    disabled: bool
+    reduced: bool
+  state ratio = 50
+  state rtl = initialDir == "rtl"
+  state handle = initialHandle
+  action resize(value: number)
+    ratio = value
+  action changeRtl(value: bool)
+    rtl = value
+  action changeHandle(value: bool)
+    handle = value
+  view
+    column gap=12 min-width=0
+      text title font-size="1rem" font-weight=600
+      if id == "resizable-handle"
+        Switch(id=id + "-toggle", label="withHandle", checked=handle, disabled=false, reduced=reduced, change=changeHandle)
+      if id == "resizable-rtl"
+        Switch(id=id + "-toggle", label="Right to left", checked=rtl, disabled=false, reduced=reduced, change=changeRtl)
+      view height=200 width="100%" box-sizing="border-box" border="1px solid ui.border" border-radius=8
+        ResizablePanelGroup(id=id, orientation=orientation, dir=(rtl ? "rtl" : "ltr"), value=ratio)
+          ResizablePanel(id=id + "-first", label="First panel", minContentWidth="0px")
+            text (rtl ? "واحد" : "One") font-size="0.875rem" font-weight=600
+          ResizableHandle(id=id + "-handle", groupId=id, primaryId=id + "-first", label="Resize panels", orientation=orientation, dir=(rtl ? "rtl" : "ltr"), value=ratio, minimum=20, maximum=80, reset=50, withHandle=handle, disabled=disabled, change=resize)
+          ResizablePanel(id=id + "-second", label="Second panel", minContentWidth="0px")
+            text (rtl ? "اثنان" : "Two") font-size="0.875rem" font-weight=600
+      text (ratio.toFixed(0) + "% / " + (100 - ratio).toFixed(0) + "%") testId=(id + "-value") font-size="0.75rem" color="ui.muted-foreground"

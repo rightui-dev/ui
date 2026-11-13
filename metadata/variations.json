@@ -1,0 +1,2925 @@
+{
+  "scope": "66 component families; semantic review of the pinned official examples. Matching names alone do not establish visual or behavior parity.",
+  "upstreamCommit": "dd41d19e2f80ff6891951f7ced74c2c9a650b065",
+  "upstreamRepository": "https://github.com/shadcn-ui/ui",
+  "families": [
+    {
+      "slug": "accordion",
+      "demoSource": "examples/accordion.contract",
+      "demoSha256": "76701d9eb424e9ba47807fa3e3c30527d6e8db1f3135380050563f759b2d4b8a",
+      "upstreamNamedExamples": [
+        "accordion-basic",
+        "accordion-borders",
+        "accordion-card",
+        "accordion-demo",
+        "accordion-disabled",
+        "accordion-multiple",
+        "accordion-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/accordion.mdx",
+        "content/docs/components/radix/accordion.mdx",
+        "content/docs/components/base/accordion.mdx",
+        "registry/new-york-v4/examples/accordion-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Single expansion",
+          "id": "single-expansion"
+        }
+      ],
+      "remainingApiVariations": [
+        "Disabled items",
+        "custom card shell"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "advanced-accordion",
+        "single-expansion"
+      ]
+    },
+    {
+      "slug": "alert",
+      "demoSource": "examples/alert.contract",
+      "demoSha256": "d8e2785926f9cb2c2a464d66b7436b9213b41ee0a1ba8fcc58796732a1fbde64",
+      "upstreamNamedExamples": [
+        "alert-action",
+        "alert-basic",
+        "alert-colors",
+        "alert-demo",
+        "alert-destructive",
+        "alert-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/alert.mdx",
+        "content/docs/components/radix/alert.mdx",
+        "content/docs/components/base/alert.mdx",
+        "registry/new-york-v4/examples/alert-demo.tsx",
+        "registry/new-york-v4/examples/alert-destructive.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Destructive",
+          "id": "alert-destructive"
+        }
+      ],
+      "remainingApiVariations": [
+        "Action slot",
+        "custom colors"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-alert",
+        "alert-destructive"
+      ]
+    },
+    {
+      "slug": "alert-dialog",
+      "demoSource": "examples/alert-dialog.contract",
+      "demoSha256": "c0715daba4124e14a44dd1b1bf07e0abf894e30a2b0845687104ab0f3c8894aa",
+      "upstreamNamedExamples": [
+        "alert-dialog-basic",
+        "alert-dialog-demo",
+        "alert-dialog-destructive",
+        "alert-dialog-media",
+        "alert-dialog-rtl",
+        "alert-dialog-small",
+        "alert-dialog-small-media"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/alert-dialog.mdx",
+        "content/docs/components/radix/alert-dialog.mdx",
+        "content/docs/components/base/alert-dialog.mdx",
+        "registry/new-york-v4/examples/alert-dialog-demo.tsx"
+      ],
+      "demonstratedVariations": [],
+      "remainingApiVariations": [
+        "Small size",
+        "media",
+        "destructive confirmation styling"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "alert-dialog-open",
+        "desktop-confirm"
+      ]
+    },
+    {
+      "slug": "aspect-ratio",
+      "demoSource": "examples/aspect-ratio.contract",
+      "demoSha256": "18fe6f9becf2580204f4a20474d31cb4e65d951882e3b68893d8577d04369f61",
+      "upstreamNamedExamples": [
+        "aspect-ratio-demo",
+        "aspect-ratio-portrait",
+        "aspect-ratio-rtl",
+        "aspect-ratio-square"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/aspect-ratio.mdx",
+        "content/docs/components/radix/aspect-ratio.mdx",
+        "content/docs/components/base/aspect-ratio.mdx",
+        "registry/new-york-v4/examples/aspect-ratio-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Square",
+          "id": "ratio-square"
+        },
+        {
+          "name": "Portrait",
+          "id": "ratio-portrait"
+        }
+      ],
+      "remainingApiVariations": [],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "ratio-square",
+        "ratio-portrait"
+      ]
+    },
+    {
+      "slug": "attachment",
+      "demoSource": "examples/attachment.contract",
+      "demoSha256": "2dfcf880dfa2b98535a13179410ea909c698bd4713e2e277dfa32f3ea3893fa5",
+      "upstreamNamedExamples": [
+        "attachment-demo",
+        "attachment-group",
+        "attachment-image",
+        "attachment-sizes",
+        "attachment-states",
+        "attachment-trigger"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/attachment.mdx",
+        "content/docs/components/radix/attachment.mdx",
+        "content/docs/components/base/attachment.mdx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Uploading",
+          "id": "attachment-uploading"
+        },
+        {
+          "name": "Error",
+          "id": "attachment-error"
+        }
+      ],
+      "remainingApiVariations": [
+        "Image media",
+        "sizes",
+        "group/trigger primitives"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "content-attachment",
+        "attachment-restore",
+        "attachment-uploading",
+        "attachment-error"
+      ]
+    },
+    {
+      "slug": "avatar",
+      "demoSource": "examples/avatar.contract",
+      "demoSha256": "b85df634cccd5245d16359265371316f8fdad187cbad515eb2aa37f6d4b8922b",
+      "upstreamNamedExamples": [
+        "avatar-badge",
+        "avatar-badge-icon",
+        "avatar-basic",
+        "avatar-demo",
+        "avatar-dropdown",
+        "avatar-group",
+        "avatar-group-count",
+        "avatar-group-count-icon",
+        "avatar-rtl",
+        "avatar-size"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/avatar.mdx",
+        "content/docs/components/radix/avatar.mdx",
+        "content/docs/components/base/avatar.mdx",
+        "registry/new-york-v4/examples/avatar-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Size sm",
+          "id": "avatar-sm"
+        },
+        {
+          "name": "Size lg",
+          "id": "avatar-lg"
+        },
+        {
+          "name": "Group with fallback and count",
+          "id": "avatar-group"
+        }
+      ],
+      "remainingApiVariations": [
+        "Dropdown trigger composition"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "composition-avatar-",
+        "composition-avatar-badge-",
+        "avatar-sm",
+        "avatar-lg",
+        "avatar-group",
+        "avatar-group-first",
+        "avatar-fallback",
+        "avatar-count"
+      ]
+    },
+    {
+      "slug": "badge",
+      "demoSource": "examples/badge.contract",
+      "demoSha256": "4ce4d249548c1453c2aa2026a564cd2f4a2b638b06420a65890eb0a0811ffbf8",
+      "upstreamNamedExamples": [
+        "badge-colors",
+        "badge-demo",
+        "badge-icon",
+        "badge-link",
+        "badge-rtl",
+        "badge-spinner",
+        "badge-variants"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/badge.mdx",
+        "content/docs/components/radix/badge.mdx",
+        "content/docs/components/base/badge.mdx",
+        "registry/new-york-v4/examples/badge-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Default"
+        },
+        {
+          "name": "Secondary"
+        },
+        {
+          "name": "Destructive"
+        },
+        {
+          "name": "Outline"
+        },
+        {
+          "name": "Ghost"
+        },
+        {
+          "name": "Link"
+        }
+      ],
+      "remainingApiVariations": [
+        "Icon/spinner slots",
+        "link href",
+        "custom colors"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": []
+    },
+    {
+      "slug": "breadcrumb",
+      "demoSource": "examples/breadcrumb.contract",
+      "demoSha256": "f125e78dc9be92f64d087a6ad159887dc6d94f56772fee2bde44dfeb4bedc096",
+      "upstreamNamedExamples": [
+        "breadcrumb-basic",
+        "breadcrumb-demo",
+        "breadcrumb-dropdown",
+        "breadcrumb-ellipsis",
+        "breadcrumb-link",
+        "breadcrumb-rtl",
+        "breadcrumb-separator"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/breadcrumb.mdx",
+        "content/docs/components/radix/breadcrumb.mdx",
+        "content/docs/components/base/breadcrumb.mdx",
+        "registry/new-york-v4/examples/breadcrumb-dropdown.tsx",
+        "registry/new-york-v4/examples/breadcrumb-ellipsis.tsx",
+        "registry/new-york-v4/examples/breadcrumb-link.tsx",
+        "registry/new-york-v4/examples/breadcrumb-demo.tsx",
+        "registry/new-york-v4/examples/breadcrumb-separator.tsx"
+      ],
+      "demonstratedVariations": [],
+      "remainingApiVariations": [
+        "Custom separator",
+        "collapsed ellipsis",
+        "dropdown",
+        "href links"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-breadcrumb"
+      ]
+    },
+    {
+      "slug": "bubble",
+      "demoSource": "examples/bubble.contract",
+      "demoSha256": "205b98ae850b9e8fc9d1860c28205b789673b7ade5ac37a47749786edb0c7bcc",
+      "upstreamNamedExamples": [
+        "bubble-alignment",
+        "bubble-collapsible",
+        "bubble-demo",
+        "bubble-group-demo",
+        "bubble-link-button",
+        "bubble-popover",
+        "bubble-reactions",
+        "bubble-tooltip",
+        "bubble-variants"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/bubble.mdx",
+        "content/docs/components/radix/bubble.mdx",
+        "content/docs/components/base/bubble.mdx"
+      ],
+      "demonstratedVariations": [],
+      "remainingApiVariations": [
+        "Reactions",
+        "grouped bubbles",
+        "interactive content"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "content-bubble-in"
+      ]
+    },
+    {
+      "slug": "button",
+      "demoSource": "examples/button.contract",
+      "demoSha256": "55dba13e4b983bf585bf9b14a2aaa8a53060ee3923c2cfea1301616619ec03b0",
+      "upstreamNamedExamples": [
+        "button-aschild",
+        "button-default",
+        "button-demo",
+        "button-destructive",
+        "button-ghost",
+        "button-group-demo",
+        "button-icon",
+        "button-link",
+        "button-outline",
+        "button-render",
+        "button-rounded",
+        "button-rtl",
+        "button-secondary",
+        "button-size",
+        "button-spinner",
+        "button-with-icon"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/button.mdx",
+        "content/docs/components/radix/button.mdx",
+        "content/docs/components/base/button.mdx",
+        "registry/new-york-v4/examples/button-rounded.tsx",
+        "registry/new-york-v4/examples/button-with-icon.tsx",
+        "registry/new-york-v4/examples/button-secondary.tsx",
+        "registry/new-york-v4/examples/button-ghost.tsx",
+        "registry/new-york-v4/examples/button-default.tsx",
+        "registry/new-york-v4/examples/button-demo.tsx",
+        "registry/new-york-v4/examples/button-icon.tsx",
+        "registry/new-york-v4/examples/button-outline.tsx",
+        "registry/new-york-v4/examples/button-group-demo.tsx",
+        "registry/new-york-v4/examples/button-link.tsx",
+        "registry/new-york-v4/examples/button-destructive.tsx",
+        "registry/new-york-v4/examples/button-size.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Small, default and large"
+        },
+        {
+          "name": "Icon only"
+        },
+        {
+          "name": "Icon with text"
+        },
+        {
+          "name": "Loading"
+        }
+      ],
+      "remainingApiVariations": [
+        "Rounded/custom shape options"
+      ],
+      "frameworkSpecificDifferences": [
+        "React asChild: Exact uses slots"
+      ],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "button-",
+        "button-disabled",
+        "button-size-",
+        "button-icon",
+        "button-with-icon",
+        "button-loading",
+        "button-loading-spinner"
+      ]
+    },
+    {
+      "slug": "button-group",
+      "demoSource": "examples/button-group.contract",
+      "demoSha256": "edd0ab0a0369663f86f0e601282c9112c43022601bc3694c5742ccb6274f2c05",
+      "upstreamNamedExamples": [
+        "button-group-demo",
+        "button-group-dropdown",
+        "button-group-input",
+        "button-group-input-group",
+        "button-group-nested",
+        "button-group-orientation",
+        "button-group-popover",
+        "button-group-rtl",
+        "button-group-select",
+        "button-group-separator",
+        "button-group-size",
+        "button-group-split"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/button-group.mdx",
+        "content/docs/components/radix/button-group.mdx",
+        "content/docs/components/base/button-group.mdx",
+        "registry/new-york-v4/examples/button-group-dropdown.tsx",
+        "registry/new-york-v4/examples/button-group-orientation.tsx",
+        "registry/new-york-v4/examples/button-group-nested.tsx",
+        "registry/new-york-v4/examples/button-group-size.tsx",
+        "registry/new-york-v4/examples/button-group-input-group.tsx",
+        "registry/new-york-v4/examples/button-group-popover.tsx",
+        "registry/new-york-v4/examples/button-group-select.tsx",
+        "registry/new-york-v4/examples/button-group-separator.tsx",
+        "registry/new-york-v4/examples/button-group-input.tsx",
+        "registry/new-york-v4/examples/button-group-demo.tsx",
+        "registry/new-york-v4/examples/button-group-split.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Separated nested groups",
+          "id": "group-nested-add"
+        }
+      ],
+      "remainingApiVariations": [
+        "Vertical orientation"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-create",
+        "catalog-remove",
+        "group-nested-add",
+        "group-nested-remove"
+      ]
+    },
+    {
+      "slug": "calendar",
+      "demoSource": "examples/calendar.contract",
+      "demoSha256": "32e705849e13d26180e82d74f3eceb04b474b310469386f33f7b010a1dbc76cc",
+      "upstreamNamedExamples": [
+        "calendar-basic",
+        "calendar-booked-dates",
+        "calendar-caption",
+        "calendar-custom-days",
+        "calendar-demo",
+        "calendar-hijri",
+        "calendar-presets",
+        "calendar-range",
+        "calendar-rtl",
+        "calendar-time",
+        "calendar-week-numbers"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/calendar.mdx",
+        "content/docs/components/radix/calendar.mdx",
+        "content/docs/components/base/calendar.mdx",
+        "registry/new-york-v4/examples/calendar-demo.tsx",
+        "registry/new-york-v4/examples/calendar-hijri.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Multiple selection",
+          "id": "dates-multiple"
+        },
+        {
+          "name": "Single with constraints"
+        },
+        {
+          "name": "Range"
+        },
+        {
+          "name": "Disabled"
+        },
+        {
+          "name": "Multiple selection"
+        }
+      ],
+      "remainingApiVariations": [
+        "Multi-month view",
+        "Week numbers",
+        "Custom day rendering and size",
+        "Time selection"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "dates-single",
+        "dates-range",
+        "dates-disabled",
+        "dates-multiple"
+      ]
+    },
+    {
+      "slug": "card",
+      "demoSource": "examples/card.contract",
+      "demoSha256": "58c73d3cadd6022c3102aec0b4d8a45e164b00b85633ab2af8d3707984f2667a",
+      "upstreamNamedExamples": [
+        "card-demo",
+        "card-edge-to-edge",
+        "card-image",
+        "card-rtl",
+        "card-small",
+        "card-spacing"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/card.mdx",
+        "content/docs/components/radix/card.mdx",
+        "content/docs/components/base/card.mdx",
+        "registry/new-york-v4/examples/card-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Image content",
+          "id": "card-image"
+        }
+      ],
+      "remainingApiVariations": [
+        "Small size and configurable spacing"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "composition-card",
+        "composition-card-header",
+        "composition-title",
+        "composition-description",
+        "composition-card-action",
+        "composition-reset",
+        "composition-content",
+        "composition-fields",
+        "composition-legend",
+        "composition-help",
+        "composition-group",
+        "composition-name-field",
+        "composition-name-label",
+        "composition-name",
+        "composition-name-help",
+        "composition-name-error",
+        "composition-separator",
+        "composition-email-field",
+        "composition-email-content",
+        "composition-email-label",
+        "composition-email-help",
+        "composition-email",
+        "composition-email-error",
+        "composition-footer",
+        "composition-disable",
+        "composition-save",
+        "card-image",
+        "card-image-content"
+      ]
+    },
+    {
+      "slug": "carousel",
+      "demoSource": "examples/carousel.contract",
+      "demoSha256": "34dd1f56969fa20d6ea5f63b7193c3af7d1a5d52b67366a6569bdec0e61c8107",
+      "upstreamNamedExamples": [
+        "carousel-api",
+        "carousel-demo",
+        "carousel-orientation",
+        "carousel-plugin",
+        "carousel-rtl",
+        "carousel-size",
+        "carousel-spacing"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/carousel.mdx",
+        "content/docs/components/radix/carousel.mdx",
+        "content/docs/components/base/carousel.mdx",
+        "registry/new-york-v4/examples/carousel-demo.tsx",
+        "registry/new-york-v4/examples/carousel-size.tsx",
+        "registry/new-york-v4/examples/carousel-spacing.tsx",
+        "registry/new-york-v4/examples/carousel-plugin.tsx",
+        "registry/new-york-v4/examples/carousel-orientation.tsx",
+        "registry/new-york-v4/examples/carousel-api.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Vertical without looping",
+          "id": "carousel-vertical"
+        },
+        {
+          "name": "Custom slide content",
+          "id": "carousel-custom"
+        }
+      ],
+      "remainingApiVariations": [],
+      "frameworkSpecificDifferences": [
+        "Embla plugins/events compatibility"
+      ],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "workspace",
+        "typography",
+        "theme",
+        "layout-images",
+        "carousel-vertical",
+        "carousel-custom",
+        "carousel-note-"
+      ]
+    },
+    {
+      "slug": "chart",
+      "demoSource": "examples/chart.contract",
+      "demoSha256": "cd47894933e36182cab3e16281c96131dc073cb14d30c2adbdc59d6180945d59",
+      "upstreamNamedExamples": [
+        "chart-demo",
+        "chart-example",
+        "chart-example-axis",
+        "chart-example-grid",
+        "chart-example-legend",
+        "chart-example-tooltip",
+        "chart-rtl",
+        "chart-tooltip"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/chart.mdx",
+        "content/docs/components/radix/chart.mdx",
+        "content/docs/components/base/chart.mdx",
+        "registry/bases/radix/examples/chart-example.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Explicit maximum without legend",
+          "id": "radar-fixed"
+        }
+      ],
+      "remainingApiVariations": [],
+      "frameworkSpecificDifferences": [
+        "Recharts config/tooltip API parity"
+      ],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "desktop",
+        "mobile",
+        "jan",
+        "feb",
+        "mar",
+        "apr",
+        "may",
+        "jun",
+        "jan",
+        "feb",
+        "mar",
+        "apr",
+        "may",
+        "jun",
+        "chrome",
+        "safari",
+        "firefox",
+        "edge",
+        "other",
+        "parity-empty",
+        "parity-line",
+        "parity-donut",
+        "parity-pie",
+        "parity-radar",
+        "parity-sweep",
+        "parity-radial",
+        "data-chart",
+        "area-chart",
+        "radar-fixed"
+      ]
+    },
+    {
+      "slug": "checkbox",
+      "demoSource": "examples/checkbox.contract",
+      "demoSha256": "c6e52d36b27942aa372edf6b01621b6d755bd8af52ed455fc79310d8e1d06583",
+      "upstreamNamedExamples": [
+        "checkbox-basic",
+        "checkbox-demo",
+        "checkbox-description",
+        "checkbox-disabled",
+        "checkbox-group",
+        "checkbox-invalid",
+        "checkbox-rtl",
+        "checkbox-table"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/checkbox.mdx",
+        "content/docs/components/radix/checkbox.mdx",
+        "content/docs/components/base/checkbox.mdx",
+        "registry/new-york-v4/examples/checkbox-demo.tsx",
+        "registry/new-york-v4/examples/checkbox-disabled.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Controlled and disabled",
+          "id": "checkbox-controlled"
+        }
+      ],
+      "remainingApiVariations": [
+        "Invalid state"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "advanced-mixed",
+        "checkbox-controlled",
+        "checkbox-disabled"
+      ]
+    },
+    {
+      "slug": "code-block",
+      "demoSource": "examples/code-block.contract",
+      "demoSha256": "fa8bfb5f403229dc1fe83bb7017e8b46008b2eaa92970197b082ad3ba705fecf",
+      "upstreamNamedExamples": [
+        "code-block-actions",
+        "code-block-ansi",
+        "code-block-basic",
+        "code-block-chat",
+        "code-block-demo",
+        "code-block-destructive",
+        "code-block-diff",
+        "code-block-floating-actions",
+        "code-block-header",
+        "code-block-height",
+        "code-block-highlighted-lines",
+        "code-block-highlighting",
+        "code-block-languages",
+        "code-block-line-numbers",
+        "code-block-markdown",
+        "code-block-rtl",
+        "code-block-show-more",
+        "code-block-show-more-scroll",
+        "code-block-size",
+        "code-block-start-line",
+        "code-block-streaming",
+        "code-block-tabs",
+        "code-block-trace",
+        "code-block-typeset",
+        "code-block-wrap"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/code-block.mdx",
+        "content/docs/components/radix/code-block.mdx",
+        "content/docs/components/base/code-block.mdx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Plain code without numbers",
+          "id": "code-plain"
+        }
+      ],
+      "remainingApiVariations": [
+        "Start line",
+        "highlighted lines",
+        "wrap",
+        "max-height",
+        "collapse",
+        "action slots"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "content-codeblock",
+        "code-plain"
+      ]
+    },
+    {
+      "slug": "collapsible",
+      "demoSource": "examples/collapsible.contract",
+      "demoSha256": "3cd9973b59af3de29dc3aad552373ff2591b87671d4aa4179cb7ed34c1076eb9",
+      "upstreamNamedExamples": [
+        "collapsible-basic",
+        "collapsible-demo",
+        "collapsible-file-tree",
+        "collapsible-rtl",
+        "collapsible-settings"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/collapsible.mdx",
+        "content/docs/components/radix/collapsible.mdx",
+        "content/docs/components/base/collapsible.mdx",
+        "registry/new-york-v4/examples/collapsible-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Settings and nested files",
+          "id": "settings-panel"
+        }
+      ],
+      "remainingApiVariations": [],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "collapsible-open",
+        "catalog-details",
+        "catalog-details-alert",
+        "settings-panel",
+        "settings-enabled",
+        "files-root",
+        "files-source"
+      ]
+    },
+    {
+      "slug": "combobox",
+      "demoSource": "examples/combobox.contract",
+      "demoSha256": "819a085e7589ae65356eee7280881643337e909a9c10fe9d0c47e1333262d8c1",
+      "upstreamNamedExamples": [
+        "combobox-auto-highlight",
+        "combobox-basic",
+        "combobox-clear",
+        "combobox-custom",
+        "combobox-demo",
+        "combobox-disabled",
+        "combobox-groups",
+        "combobox-input-group",
+        "combobox-invalid",
+        "combobox-multiple",
+        "combobox-popup",
+        "combobox-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/combobox.mdx",
+        "content/docs/components/radix/combobox.mdx",
+        "content/docs/components/base/combobox.mdx",
+        "registry/new-york-v4/examples/combobox-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Disabled",
+          "id": "combobox-disabled"
+        }
+      ],
+      "remainingApiVariations": [
+        "Multiple selection",
+        "groups",
+        "clear button",
+        "custom items",
+        "invalid",
+        "auto highlight"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-platform",
+        "combobox-disabled"
+      ]
+    },
+    {
+      "slug": "command",
+      "demoSource": "examples/command.contract",
+      "demoSha256": "484c2a93b8e1edc2880c2d9002363e1fb76e837d63eaa68070ee6b8f27fa7b1f",
+      "upstreamNamedExamples": [
+        "command-basic",
+        "command-demo",
+        "command-groups",
+        "command-rtl",
+        "command-scrollable",
+        "command-shortcuts"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/command.mdx",
+        "content/docs/components/radix/command.mdx",
+        "content/docs/components/base/command.mdx",
+        "registry/new-york-v4/examples/command-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Keyboard shortcuts",
+          "id": "command-shortcuts"
+        }
+      ],
+      "remainingApiVariations": [
+        "Groups"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "desktop-command",
+        "new",
+        "settings",
+        "export",
+        "command-shortcuts",
+        "shortcut-new"
+      ]
+    },
+    {
+      "slug": "context-menu",
+      "demoSource": "examples/context-menu.contract",
+      "demoSha256": "2aeb30bb3b830365cb7398d51bad271edf05ba7f7d3a3aa2b691c270a1c36bb4",
+      "upstreamNamedExamples": [
+        "context-menu-basic",
+        "context-menu-checkboxes",
+        "context-menu-demo",
+        "context-menu-destructive",
+        "context-menu-groups",
+        "context-menu-icons",
+        "context-menu-radio",
+        "context-menu-rtl",
+        "context-menu-shortcuts",
+        "context-menu-sides",
+        "context-menu-submenu"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/context-menu.mdx",
+        "content/docs/components/radix/context-menu.mdx",
+        "content/docs/components/base/context-menu.mdx",
+        "registry/new-york-v4/examples/context-menu-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Destructive action",
+          "id": "context-destructive"
+        }
+      ],
+      "remainingApiVariations": [
+        "Icons"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "parity-context",
+        "back",
+        "forward",
+        "reload",
+        "tools",
+        "save",
+        "shortcut",
+        "developer",
+        "context-separator",
+        "bookmarks",
+        "urls",
+        "people-separator",
+        "people-label",
+        "people",
+        "pedro",
+        "colm",
+        "context-destructive",
+        "delete-project"
+      ]
+    },
+    {
+      "slug": "data-table",
+      "demoSource": "examples/data-table.contract",
+      "demoSha256": "3c1fb5dca414b2449f824ce9c4c99e041095b2f765b07f9613df65e1e0dd54ba",
+      "upstreamNamedExamples": [
+        "data-table-demo",
+        "data-table-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/data-table.mdx",
+        "content/docs/components/radix/data-table.mdx",
+        "content/docs/components/base/data-table.mdx",
+        "registry/new-york-v4/examples/data-table-demo.tsx"
+      ],
+      "demonstratedVariations": [],
+      "remainingApiVariations": [],
+      "frameworkSpecificDifferences": [
+        "TanStack adapter/framework integration"
+      ],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "advanced-grid",
+        "name",
+        "status",
+        "budget",
+        "g1",
+        "g2",
+        "g3",
+        "g4",
+        "g5",
+        "g6",
+        "g7",
+        "g8"
+      ]
+    },
+    {
+      "slug": "date-picker",
+      "demoSource": "examples/date-picker.contract",
+      "demoSha256": "1fd1ce2147b847941357265e062830fd7557fcbb03ddfd58da01d2247bc7af16",
+      "upstreamNamedExamples": [
+        "date-picker-basic",
+        "date-picker-demo",
+        "date-picker-dob",
+        "date-picker-input",
+        "date-picker-natural-language",
+        "date-picker-range",
+        "date-picker-rtl",
+        "date-picker-time"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/date-picker.mdx",
+        "content/docs/components/radix/date-picker.mdx",
+        "content/docs/components/base/date-picker.mdx",
+        "registry/new-york-v4/examples/date-picker-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Single date",
+          "id": "date-single-picker"
+        }
+      ],
+      "remainingApiVariations": [
+        "Time picker",
+        "natural-language parsing",
+        "date-of-birth selectors"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "dates-range",
+        "date-single-picker"
+      ]
+    },
+    {
+      "slug": "dialog",
+      "demoSource": "examples/dialog.contract",
+      "demoSha256": "bde3d4100509d55e2692f62c7fbe583ef511e854dafba3d10cc23af49676a1cf",
+      "upstreamNamedExamples": [
+        "dialog-close-button",
+        "dialog-demo",
+        "dialog-no-close-button",
+        "dialog-rtl",
+        "dialog-scrollable-content",
+        "dialog-sticky-footer"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/dialog.mdx",
+        "content/docs/components/radix/dialog.mdx",
+        "content/docs/components/base/dialog.mdx",
+        "registry/new-york-v4/examples/dialog-close-button.tsx",
+        "registry/new-york-v4/examples/dialog-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Scrollable content",
+          "id": "dialog-long-content"
+        }
+      ],
+      "remainingApiVariations": [
+        "Hide close",
+        "custom close",
+        "sticky footer"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "dialog-open",
+        "save-dialog",
+        "dialog-long-content"
+      ]
+    },
+    {
+      "slug": "direction",
+      "demoSource": "examples/direction.contract",
+      "demoSha256": "58bf3bde3920625470e5446678523d9896df22244b84799bbf3203858f80a892",
+      "upstreamNamedExamples": [
+        "card-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/direction.mdx",
+        "content/docs/components/radix/direction.mdx",
+        "content/docs/components/base/direction.mdx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Nested direction",
+          "id": "direction-outer"
+        }
+      ],
+      "remainingApiVariations": [],
+      "frameworkSpecificDifferences": [
+        "React useDirection hook"
+      ],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "controls-direction",
+        "direction-outer",
+        "direction-inner"
+      ]
+    },
+    {
+      "slug": "drawer",
+      "demoSource": "examples/drawer.contract",
+      "demoSha256": "fa075137dfe00e9029f5dd9f472331b734e6185fdf0c139a610f3f95963a0b4e",
+      "upstreamNamedExamples": [
+        "drawer-demo",
+        "drawer-dialog",
+        "drawer-nested",
+        "drawer-non-modal",
+        "drawer-rtl",
+        "drawer-scrollable-content",
+        "drawer-sides",
+        "drawer-snap-points",
+        "drawer-swipe-handle"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/drawer.mdx",
+        "content/docs/components/radix/drawer.mdx",
+        "content/docs/components/base/drawer.mdx",
+        "registry/new-york-v4/examples/drawer-demo.tsx",
+        "registry/new-york-v4/examples/drawer-dialog.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Scrollable content",
+          "id": "drawer-long-content"
+        },
+        {
+          "name": "Responsive dialog",
+          "id": "drawer-responsive-dialog"
+        }
+      ],
+      "remainingApiVariations": [
+        "Side selection"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "drawer-open",
+        "controls-drawer",
+        "controls-goal-less",
+        "controls-goal-more",
+        "controls-drawer-submit",
+        "drawer-long-content",
+        "drawer-responsive-open",
+        "drawer-responsive-small",
+        "drawer-responsive-save",
+        "drawer-responsive-dialog"
+      ]
+    },
+    {
+      "slug": "dropdown-menu",
+      "demoSource": "examples/dropdown-menu.contract",
+      "demoSha256": "770db9ece72843b2d4af9bb2c3fe078a4a25b2902a96facab9b588a396e07910",
+      "upstreamNamedExamples": [
+        "dropdown-menu-avatar",
+        "dropdown-menu-basic",
+        "dropdown-menu-checkboxes",
+        "dropdown-menu-checkboxes-icons",
+        "dropdown-menu-complex",
+        "dropdown-menu-demo",
+        "dropdown-menu-destructive",
+        "dropdown-menu-icons",
+        "dropdown-menu-radio-group",
+        "dropdown-menu-radio-icons",
+        "dropdown-menu-rtl",
+        "dropdown-menu-shortcuts",
+        "dropdown-menu-submenu"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/dropdown-menu.mdx",
+        "content/docs/components/radix/dropdown-menu.mdx",
+        "content/docs/components/base/dropdown-menu.mdx",
+        "registry/new-york-v4/examples/dropdown-menu-checkboxes.tsx",
+        "registry/new-york-v4/examples/dropdown-menu-radio-group.tsx",
+        "registry/new-york-v4/examples/dropdown-menu-demo.tsx"
+      ],
+      "demonstratedVariations": [],
+      "remainingApiVariations": [
+        "Entry icons",
+        "avatar/custom trigger"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "parity-dropdown",
+        "account-label",
+        "account-separator",
+        "account-group",
+        "profile",
+        "billing",
+        "settings",
+        "invite",
+        "email",
+        "messages",
+        "invite-separator",
+        "advanced",
+        "link",
+        "calendar",
+        "appearance-separator",
+        "appearance",
+        "status",
+        "activity",
+        "panel",
+        "position-separator",
+        "position-label",
+        "position",
+        "top",
+        "bottom",
+        "logout-separator",
+        "logout"
+      ]
+    },
+    {
+      "slug": "empty",
+      "demoSource": "examples/empty.contract",
+      "demoSha256": "70e1bcf0f0ecfa4fe9ee0a9ae6d6a12cf18e6b427768b7c17121f8ff9c59c5f0",
+      "upstreamNamedExamples": [
+        "empty-avatar",
+        "empty-avatar-group",
+        "empty-background",
+        "empty-demo",
+        "empty-input-group",
+        "empty-outline",
+        "empty-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/empty.mdx",
+        "content/docs/components/radix/empty.mdx",
+        "content/docs/components/base/empty.mdx",
+        "registry/new-york-v4/examples/empty-background.tsx",
+        "registry/new-york-v4/examples/empty-avatar-group.tsx",
+        "registry/new-york-v4/examples/empty-input-group.tsx",
+        "registry/new-york-v4/examples/empty-avatar.tsx",
+        "registry/new-york-v4/examples/empty-outline.tsx",
+        "registry/new-york-v4/examples/empty-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Search empty items",
+          "id": "empty-search"
+        }
+      ],
+      "remainingApiVariations": [
+        "Custom media",
+        "background/border variants"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-empty",
+        "catalog-empty-add",
+        "empty-search",
+        "empty-search-input"
+      ]
+    },
+    {
+      "slug": "field",
+      "demoSource": "examples/field.contract",
+      "demoSha256": "1b6ac7a4830c5e5e1f916e80c91c3a23fd552c90b402619f48dab25de278c48b",
+      "upstreamNamedExamples": [
+        "field-checkbox",
+        "field-choice-card",
+        "field-demo",
+        "field-fieldset",
+        "field-group",
+        "field-input",
+        "field-radio",
+        "field-responsive",
+        "field-rtl",
+        "field-select",
+        "field-slider",
+        "field-switch",
+        "field-textarea"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/field.mdx",
+        "content/docs/components/radix/field.mdx",
+        "content/docs/components/base/field.mdx",
+        "registry/new-york-v4/examples/field-choice-card.tsx",
+        "registry/new-york-v4/examples/field-textarea.tsx",
+        "registry/new-york-v4/examples/field-fieldset.tsx",
+        "registry/new-york-v4/examples/field-checkbox.tsx",
+        "registry/new-york-v4/examples/field-slider.tsx",
+        "registry/new-york-v4/examples/field-group.tsx",
+        "registry/new-york-v4/examples/field-radio.tsx",
+        "registry/new-york-v4/examples/field-switch.tsx",
+        "registry/new-york-v4/examples/field-input.tsx",
+        "registry/new-york-v4/examples/field-demo.tsx",
+        "registry/new-york-v4/examples/field-select.tsx",
+        "registry/new-york-v4/examples/field-responsive.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Responsive checkbox",
+          "id": "field-checkbox"
+        },
+        {
+          "name": "Responsive switch",
+          "id": "field-switch"
+        },
+        {
+          "name": "Responsive radio",
+          "id": "field-radio"
+        },
+        {
+          "name": "Responsive slider",
+          "id": "field-slider"
+        }
+      ],
+      "remainingApiVariations": [],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "composition-fields",
+        "composition-legend",
+        "composition-help",
+        "composition-group",
+        "composition-name-field",
+        "composition-name-label",
+        "composition-name",
+        "composition-name-help",
+        "composition-name-error",
+        "composition-separator",
+        "composition-email-field",
+        "composition-email-content",
+        "composition-email-label",
+        "composition-email-help",
+        "composition-email",
+        "composition-email-error",
+        "field-checkbox",
+        "field-checkbox-label",
+        "field-check-control",
+        "field-switch",
+        "field-switch-label",
+        "field-switch-control",
+        "field-radio",
+        "field-radio-label",
+        "field-radio-control",
+        "field-slider",
+        "field-slider-label",
+        "field-slider-control"
+      ]
+    },
+    {
+      "slug": "hover-card",
+      "demoSource": "examples/hover-card.contract",
+      "demoSha256": "50989f6b58ce4be492875d352c9e8b23d7220055d27b121c35523afa4f79cb91",
+      "upstreamNamedExamples": [
+        "hover-card-demo",
+        "hover-card-rtl",
+        "hover-card-sides"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/hover-card.mdx",
+        "content/docs/components/radix/hover-card.mdx",
+        "content/docs/components/base/hover-card.mdx",
+        "registry/new-york-v4/examples/hover-card-demo.tsx"
+      ],
+      "demonstratedVariations": [],
+      "remainingApiVariations": [
+        "Side positioning",
+        "open/close delays"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "controls-hover",
+        "controls-hover-profile"
+      ]
+    },
+    {
+      "slug": "input",
+      "demoSource": "examples/input.contract",
+      "demoSha256": "f8d0bdd64d62f338bd8bf9386e180627d8a18172e2dd88dec4e56773f7f8dc2d",
+      "upstreamNamedExamples": [
+        "input-badge",
+        "input-basic",
+        "input-button-group",
+        "input-demo",
+        "input-disabled",
+        "input-field",
+        "input-fieldgroup",
+        "input-file",
+        "input-form",
+        "input-grid",
+        "input-inline",
+        "input-input-group",
+        "input-invalid",
+        "input-required",
+        "input-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/input.mdx",
+        "content/docs/components/radix/input.mdx",
+        "content/docs/components/base/input.mdx",
+        "registry/new-york-v4/examples/input-disabled.tsx",
+        "registry/new-york-v4/examples/input-file.tsx",
+        "registry/new-york-v4/examples/input-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Grouped inline fields and action",
+          "id": "input-inline-group"
+        },
+        {
+          "name": "Invalid"
+        },
+        {
+          "name": "Disabled"
+        }
+      ],
+      "remainingApiVariations": [
+        "File type",
+        "required",
+        "badge slot"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-folder",
+        "catalog-input-invalid",
+        "catalog-input-disabled",
+        "input-inline-group",
+        "input-inline-name",
+        "input-inline-save"
+      ]
+    },
+    {
+      "slug": "input-group",
+      "demoSource": "examples/input-group.contract",
+      "demoSha256": "3a32354119a88b9955ccf615dcf0419fdbf63e18fa3992152ef74bf2be1e6592",
+      "upstreamNamedExamples": [
+        "input-group-block-end",
+        "input-group-block-start",
+        "input-group-button",
+        "input-group-custom",
+        "input-group-demo",
+        "input-group-dropdown",
+        "input-group-icon",
+        "input-group-inline-end",
+        "input-group-inline-start",
+        "input-group-kbd",
+        "input-group-rtl",
+        "input-group-spinner",
+        "input-group-text",
+        "input-group-textarea"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/input-group.mdx",
+        "content/docs/components/radix/input-group.mdx",
+        "content/docs/components/base/input-group.mdx",
+        "registry/new-york-v4/examples/input-group-custom.tsx",
+        "registry/new-york-v4/examples/input-group-text.tsx",
+        "registry/new-york-v4/examples/input-group-spinner.tsx",
+        "registry/new-york-v4/examples/input-group-textarea.tsx",
+        "registry/new-york-v4/examples/input-group-dropdown.tsx",
+        "registry/new-york-v4/examples/input-group-demo.tsx",
+        "registry/new-york-v4/examples/input-group-button.tsx",
+        "registry/new-york-v4/examples/input-group-icon.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Prefix only",
+          "id": "input-group-prefix-only"
+        },
+        {
+          "name": "Suffix only",
+          "id": "input-group-suffix-only"
+        },
+        {
+          "name": "Disabled",
+          "id": "input-group-disabled"
+        }
+      ],
+      "remainingApiVariations": [
+        "Icon/kbd/spinner/dropdown slots",
+        "block alignment",
+        "textarea/custom input"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "controls-search",
+        "input-group-prefix-only",
+        "input-group-suffix-only",
+        "input-group-disabled"
+      ]
+    },
+    {
+      "slug": "input-otp",
+      "demoSource": "examples/input-otp.contract",
+      "demoSha256": "6d3faae8d83667e934cc32c2c1513536f32e791bb89e7e03efe75c0783d454b8",
+      "upstreamNamedExamples": [
+        "input-otp-alphanumeric",
+        "input-otp-controlled",
+        "input-otp-demo",
+        "input-otp-disabled",
+        "input-otp-form",
+        "input-otp-four-digits",
+        "input-otp-invalid",
+        "input-otp-pattern",
+        "input-otp-rtl",
+        "input-otp-separator"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/input-otp.mdx",
+        "content/docs/components/radix/input-otp.mdx",
+        "content/docs/components/base/input-otp.mdx",
+        "registry/new-york-v4/examples/input-otp-controlled.tsx",
+        "registry/new-york-v4/examples/input-otp-pattern.tsx",
+        "registry/new-york-v4/examples/input-otp-demo.tsx",
+        "registry/new-york-v4/examples/input-otp-separator.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Four digits and disabled",
+          "id": "otp-four"
+        }
+      ],
+      "remainingApiVariations": [
+        "Alphanumeric/custom pattern",
+        "separator",
+        "invalid"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "controls-otp",
+        "otp-four",
+        "otp-disabled"
+      ]
+    },
+    {
+      "slug": "item",
+      "demoSource": "examples/item.contract",
+      "demoSha256": "69def008b1fca77842ef6844a99e4fba2df2183648e024b9d6724317e37d9d80",
+      "upstreamNamedExamples": [
+        "item-avatar",
+        "item-demo",
+        "item-dropdown",
+        "item-group",
+        "item-header",
+        "item-icon",
+        "item-image",
+        "item-link",
+        "item-rtl",
+        "item-size",
+        "item-variant"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/item.mdx",
+        "content/docs/components/radix/item.mdx",
+        "content/docs/components/base/item.mdx",
+        "registry/new-york-v4/examples/item-link.tsx",
+        "registry/new-york-v4/examples/item-size.tsx",
+        "registry/new-york-v4/examples/item-image.tsx",
+        "registry/new-york-v4/examples/item-icon.tsx",
+        "registry/new-york-v4/examples/item-dropdown.tsx",
+        "registry/new-york-v4/examples/item-demo.tsx",
+        "registry/new-york-v4/examples/item-variant.tsx",
+        "registry/new-york-v4/examples/item-group.tsx",
+        "registry/new-york-v4/examples/item-header.tsx",
+        "registry/new-york-v4/examples/item-avatar.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Icon media",
+          "id": "variation-item-icon"
+        },
+        {
+          "name": "Image media",
+          "id": "variation-item-image"
+        },
+        {
+          "name": "Grouped items with header",
+          "id": "variation-item-group-first"
+        },
+        {
+          "name": "Link action",
+          "id": "variation-item-link"
+        },
+        {
+          "name": "Dropdown action",
+          "id": "variation-item-dropdown"
+        }
+      ],
+      "remainingApiVariations": [
+        "variant/size props; media/header/footer/action subparts and link root"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-item",
+        "catalog-avatar",
+        "variation-item-icon",
+        "variation-item-image",
+        "variation-item-group-first",
+        "variation-item-group-second",
+        "variation-item-link",
+        "variation-item-dropdown",
+        "variation-item-menu",
+        "variation-item-archive"
+      ]
+    },
+    {
+      "slug": "kbd",
+      "demoSource": "examples/kbd.contract",
+      "demoSha256": "5310f9bc385a79549ec0200975a8b229d077b342cacf750eaecd11a327d248bf",
+      "upstreamNamedExamples": [
+        "kbd-button",
+        "kbd-demo",
+        "kbd-group",
+        "kbd-input-group",
+        "kbd-rtl",
+        "kbd-tooltip"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/kbd.mdx",
+        "content/docs/components/radix/kbd.mdx",
+        "content/docs/components/base/kbd.mdx",
+        "registry/new-york-v4/examples/kbd-button.tsx",
+        "registry/new-york-v4/examples/kbd-group.tsx",
+        "registry/new-york-v4/examples/kbd-demo.tsx",
+        "registry/new-york-v4/examples/kbd-input-group.tsx",
+        "registry/new-york-v4/examples/kbd-tooltip.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Shortcut group",
+          "id": "kbd-section"
+        },
+        {
+          "name": "Button shortcut",
+          "id": "variation-kbd-button"
+        }
+      ],
+      "remainingApiVariations": [
+        "KbdGroup dedicated API; arbitrary tooltip/button child slots"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "variation-kbd-button"
+      ]
+    },
+    {
+      "slug": "label",
+      "demoSource": "examples/label.contract",
+      "demoSha256": "e06165856b32c601b0db24e84698211156084dd2c8c52c215210a4c44af2ed9b",
+      "upstreamNamedExamples": [
+        "field-demo",
+        "label-demo",
+        "label-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/label.mdx",
+        "content/docs/components/radix/label.mdx",
+        "content/docs/components/base/label.mdx",
+        "registry/new-york-v4/examples/label-demo.tsx",
+        "registry/new-york-v4/examples/field-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Label inside a field",
+          "id": "variation-label-field"
+        }
+      ],
+      "remainingApiVariations": [
+        "htmlFor association prop"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-quality-label",
+        "variation-label-field",
+        "variation-label-required"
+      ]
+    },
+    {
+      "slug": "marker",
+      "demoSource": "examples/marker.contract",
+      "demoSha256": "07d70671fdf66dc287fa261ce0e019a581d3132b14cdca9414272fbeb73561f5",
+      "upstreamNamedExamples": [
+        "marker-border",
+        "marker-demo",
+        "marker-icon",
+        "marker-link-button",
+        "marker-separator",
+        "marker-shimmer",
+        "marker-status",
+        "marker-variants"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/marker.mdx",
+        "content/docs/components/radix/marker.mdx",
+        "content/docs/components/base/marker.mdx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Border",
+          "id": "variation-marker-border"
+        },
+        {
+          "name": "Plain",
+          "id": "variation-marker-plain"
+        }
+      ],
+      "remainingApiVariations": [
+        "status/progress semantics, shimmer, icon/content slots, link/button root"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "content-marker",
+        "variation-marker-border",
+        "variation-marker-plain"
+      ]
+    },
+    {
+      "slug": "menubar",
+      "demoSource": "examples/menubar.contract",
+      "demoSha256": "5229d9f72577a57b0c908c03cb9dce91d0ee317d92e40765c07b2eef18d63db7",
+      "upstreamNamedExamples": [
+        "menubar-checkbox",
+        "menubar-demo",
+        "menubar-icons",
+        "menubar-radio",
+        "menubar-rtl",
+        "menubar-submenu"
+      ],
+      "upstreamSources": [
+        "content/docs/components/radix/menubar.mdx",
+        "content/docs/components/base/menubar.mdx",
+        "registry/new-york-v4/examples/menubar-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Additional person radio menu",
+          "id": "parity-menubar"
+        }
+      ],
+      "remainingApiVariations": [
+        "entry icon and explicit RTL direction"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "parity-menubar",
+        "file",
+        "new-tab",
+        "new-window",
+        "incognito",
+        "file-separator",
+        "share",
+        "share-email",
+        "share-messages",
+        "share-notes",
+        "print-separator",
+        "print",
+        "edit",
+        "undo",
+        "redo",
+        "edit-separator",
+        "find",
+        "find-web",
+        "find-next",
+        "find-previous",
+        "view",
+        "bookmarks",
+        "status",
+        "view-separator",
+        "zoom",
+        "zoom-group",
+        "zoom-100",
+        "zoom-125",
+        "zoom-150",
+        "variation-person",
+        "variation-person-pedro",
+        "variation-person-alex"
+      ]
+    },
+    {
+      "slug": "message",
+      "demoSource": "examples/message.contract",
+      "demoSha256": "0320e1c121e9dbfea16a4c20449f1bed72b4a7185a9ec4d52d5fa3121658aa81",
+      "upstreamNamedExamples": [
+        "message-actions",
+        "message-attachment",
+        "message-avatar",
+        "message-demo",
+        "message-group",
+        "message-header-footer"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/message.mdx",
+        "content/docs/components/radix/message.mdx",
+        "content/docs/components/base/message.mdx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Outgoing grouped messages and action",
+          "id": "variation-message-out"
+        }
+      ],
+      "remainingApiVariations": [
+        "image avatar src and optional header/footer subparts"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "content-message-in",
+        "content-bubble-in",
+        "content-attachment",
+        "content-attachment-restore",
+        "variation-message-out",
+        "variation-message-out-first",
+        "variation-message-out-second",
+        "variation-message-action"
+      ]
+    },
+    {
+      "slug": "message-scroller",
+      "demoSource": "examples/message-scroller.contract",
+      "demoSha256": "a9b8f0d26f4dfa1b5515e39ead71cabcfeb4ba99548d4f823a41dc97a9d4955f",
+      "upstreamNamedExamples": [
+        "message-scroller-anchoring",
+        "message-scroller-animation",
+        "message-scroller-commands",
+        "message-scroller-demo",
+        "message-scroller-group-chat",
+        "message-scroller-load-history",
+        "message-scroller-opening-position",
+        "message-scroller-previous-context",
+        "message-scroller-scrollable",
+        "message-scroller-streaming",
+        "message-scroller-visibility"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/message-scroller.mdx",
+        "content/docs/components/radix/message-scroller.mdx",
+        "content/docs/components/base/message-scroller.mdx"
+      ],
+      "demonstratedVariations": [],
+      "remainingApiVariations": [
+        "turn anchors, streaming live edge, saved-thread initial position, scroll-state callbacks, virtualization, arbitrary jump targets"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "content-scroller"
+      ]
+    },
+    {
+      "slug": "native-select",
+      "demoSource": "examples/native-select.contract",
+      "demoSha256": "2b1eee2c2943689f43b83bc91731c7223914ebd354c2a327ff05659d5363bd37",
+      "upstreamNamedExamples": [
+        "native-select-demo",
+        "native-select-disabled",
+        "native-select-groups",
+        "native-select-invalid",
+        "native-select-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/native-select.mdx",
+        "content/docs/components/radix/native-select.mdx",
+        "content/docs/components/base/native-select.mdx",
+        "registry/new-york-v4/examples/native-select-groups.tsx",
+        "registry/new-york-v4/examples/native-select-invalid.tsx",
+        "registry/new-york-v4/examples/native-select-disabled.tsx",
+        "registry/new-york-v4/examples/native-select-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Disabled",
+          "id": "variation-native-select-disabled"
+        }
+      ],
+      "remainingApiVariations": [
+        "option groups, invalid state, per-option disabled"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "controls-native",
+        "variation-native-select-disabled"
+      ]
+    },
+    {
+      "slug": "navigation-menu",
+      "demoSource": "examples/navigation-menu.contract",
+      "demoSha256": "28248ebf5d89acfcfd397dd283812cbdb07f20507ddc98c89c3a8ee9c25bea8a",
+      "upstreamNamedExamples": [
+        "navigation-menu-demo",
+        "navigation-menu-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/radix/navigation-menu.mdx",
+        "content/docs/components/base/navigation-menu.mdx",
+        "registry/new-york-v4/examples/navigation-menu-demo.tsx"
+      ],
+      "demonstratedVariations": [],
+      "remainingApiVariations": [
+        "nested trigger/content menus and viewport, active state, RTL prop"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "controls-navigation",
+        "intro",
+        "forms",
+        "introduction",
+        "forms"
+      ]
+    },
+    {
+      "slug": "pagination",
+      "demoSource": "examples/pagination.contract",
+      "demoSha256": "12ac3f9d8df811475bc3be83be146a29d91738d0717c6aedd52d9b32c60f0c44",
+      "upstreamNamedExamples": [
+        "pagination-demo",
+        "pagination-icons-only",
+        "pagination-rtl",
+        "pagination-simple"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/pagination.mdx",
+        "content/docs/components/radix/pagination.mdx",
+        "content/docs/components/base/pagination.mdx",
+        "registry/new-york-v4/examples/pagination-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Last page boundary",
+          "id": "variation-pagination-last"
+        }
+      ],
+      "remainingApiVariations": [
+        "simple/icons-only layout, ellipsis and link href customization"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-pages",
+        "variation-pagination-last"
+      ]
+    },
+    {
+      "slug": "popover",
+      "demoSource": "examples/popover.contract",
+      "demoSha256": "d9985c1abad4ea0fc75a6975ca412c1bb211e6839e80bd38d07802d6db84efd1",
+      "upstreamNamedExamples": [
+        "popover-alignments",
+        "popover-basic",
+        "popover-demo",
+        "popover-form",
+        "popover-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/popover.mdx",
+        "content/docs/components/radix/popover.mdx",
+        "content/docs/components/base/popover.mdx",
+        "registry/new-york-v4/examples/popover-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Basic content",
+          "id": "variation-popover-basic"
+        }
+      ],
+      "remainingApiVariations": [
+        "alignment/side controls"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-popover",
+        "catalog-folder",
+        "variation-popover-basic"
+      ]
+    },
+    {
+      "slug": "progress",
+      "demoSource": "examples/progress.contract",
+      "demoSha256": "f1023e965c7baac950a35b31d007d8712642adb986914dc0bd29e3b80b3c3ece",
+      "upstreamNamedExamples": [
+        "progress-controlled",
+        "progress-demo",
+        "progress-label",
+        "progress-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/progress.mdx",
+        "content/docs/components/radix/progress.mdx",
+        "content/docs/components/base/progress.mdx",
+        "registry/new-york-v4/examples/progress-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Controlled progress",
+          "id": "variation-progress-control"
+        }
+      ],
+      "remainingApiVariations": [
+        "RTL direction prop"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-progress",
+        "variation-progress-control"
+      ]
+    },
+    {
+      "slug": "questionnaire",
+      "demoSource": "examples/questionnaire.contract",
+      "demoSha256": "2d50f49729bb89fefa92ed7b74f1e19c73aaa0f14c6f03a98ce1bf3b91bb3d50",
+      "upstreamNamedExamples": [
+        "questionnaire-animated",
+        "questionnaire-card",
+        "questionnaire-conditional",
+        "questionnaire-controlled",
+        "questionnaire-demo",
+        "questionnaire-dialog",
+        "questionnaire-freeform",
+        "questionnaire-multiple",
+        "questionnaire-navigation-state",
+        "questionnaire-progress",
+        "questionnaire-resume",
+        "questionnaire-shortcuts",
+        "questionnaire-skip",
+        "questionnaire-validation"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/questionnaire.mdx",
+        "content/docs/components/radix/questionnaire.mdx",
+        "content/docs/components/base/questionnaire.mdx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Card questionnaire",
+          "id": "variation-questionnaire-card"
+        },
+        {
+          "name": "Dialog questionnaire",
+          "id": "variation-questionnaire-open"
+        }
+      ],
+      "remainingApiVariations": [
+        "controlled answers/current item, resume, conditional questions, validation callback, shortcuts, custom progress/rendering"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "content-questionnaire",
+        "format",
+        "contenus",
+        "precisions",
+        "variation-questionnaire-card",
+        "variation-questionnaire-card-form",
+        "format",
+        "contenus",
+        "precisions",
+        "variation-questionnaire-open",
+        "variation-questionnaire-dialog",
+        "variation-questionnaire-dialog-form",
+        "format",
+        "contenus",
+        "precisions"
+      ]
+    },
+    {
+      "slug": "radio-group",
+      "demoSource": "examples/radio-group.contract",
+      "demoSha256": "0de1a4e9fa25fd7921257c26784f525d546b40686cbb31b56e95b2e1db2f6475",
+      "upstreamNamedExamples": [
+        "radio-group-choice-card",
+        "radio-group-demo",
+        "radio-group-description",
+        "radio-group-disabled",
+        "radio-group-fieldset",
+        "radio-group-invalid",
+        "radio-group-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/radio-group.mdx",
+        "content/docs/components/radix/radio-group.mdx",
+        "content/docs/components/base/radio-group.mdx",
+        "registry/new-york-v4/examples/radio-group-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Disabled",
+          "id": "variation-radio-group-disabled"
+        },
+        {
+          "name": "Description",
+          "id": "catalog-quality-hint"
+        }
+      ],
+      "remainingApiVariations": [
+        "per-option description/card slots, invalid state, per-item disabled"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-quality",
+        "variation-radio-group-disabled",
+        "catalog-quality-hint"
+      ]
+    },
+    {
+      "slug": "resizable",
+      "demoSource": "examples/resizable.contract",
+      "demoSha256": "ff8d7d5d73fda6cba8aaff998661b5883bb5efbf9eef68ce0f9faee464d5d336",
+      "upstreamNamedExamples": [
+        "resizable-demo",
+        "resizable-handle",
+        "resizable-rtl",
+        "resizable-vertical"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/resizable.mdx",
+        "content/docs/components/radix/resizable.mdx",
+        "content/docs/components/base/resizable.mdx",
+        "registry/new-york-v4/examples/resizable-vertical.tsx",
+        "registry/new-york-v4/examples/resizable-demo.tsx",
+        "registry/new-york-v4/examples/resizable-handle.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Horizontal"
+        },
+        {
+          "name": "Vertical"
+        },
+        {
+          "name": "With handle toggle"
+        },
+        {
+          "name": "RTL toggle"
+        },
+        {
+          "name": "Nested panels"
+        },
+        {
+          "name": "Disabled"
+        }
+      ],
+      "remainingApiVariations": [],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "documented-options",
+      "demoIds": [
+        "resizable-horizontal",
+        "resizable-vertical",
+        "resizable-handle",
+        "resizable-rtl",
+        "split-horizontal",
+        "split-sidebar",
+        "split-x",
+        "split-vertical",
+        "split-editor",
+        "split-name",
+        "split-y",
+        "split-timeline",
+        "variation-resize-disabled"
+      ]
+    },
+    {
+      "slug": "scroll-area",
+      "demoSource": "examples/scroll-area.contract",
+      "demoSha256": "a2d967de5933a926d42b2027d5a77d7ed7f6e9c7adb44e2108dcd44f3229ec46",
+      "upstreamNamedExamples": [
+        "scroll-area-demo",
+        "scroll-area-horizontal-demo",
+        "scroll-area-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/scroll-area.mdx",
+        "content/docs/components/radix/scroll-area.mdx",
+        "content/docs/components/base/scroll-area.mdx",
+        "registry/new-york-v4/examples/scroll-area-demo.tsx",
+        "registry/new-york-v4/examples/scroll-area-horizontal-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Horizontal scrolling",
+          "id": "variation-scroll-horizontal"
+        }
+      ],
+      "remainingApiVariations": [
+        "explicit RTL direction"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "layout-scroll-vertical",
+        "variation-scroll-horizontal"
+      ]
+    },
+    {
+      "slug": "select",
+      "demoSource": "examples/select.contract",
+      "demoSha256": "13a373643dbaae466e4c705864f8acba1a3baf77972d117162fe05f68d8f2a96",
+      "upstreamNamedExamples": [
+        "select-align-item",
+        "select-autocomplete",
+        "select-demo",
+        "select-disabled",
+        "select-groups",
+        "select-invalid",
+        "select-rtl",
+        "select-scrollable"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/select.mdx",
+        "content/docs/components/radix/select.mdx",
+        "content/docs/components/base/select.mdx",
+        "registry/new-york-v4/examples/select-demo.tsx",
+        "registry/new-york-v4/examples/select-scrollable.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Disabled",
+          "id": "variation-select-disabled"
+        },
+        {
+          "name": "Scrollable options",
+          "id": "variation-select-long"
+        }
+      ],
+      "remainingApiVariations": [
+        "groups, per-item disabled, invalid, item alignment, searchable aria select"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "preset",
+        "variation-select-disabled",
+        "variation-select-long"
+      ]
+    },
+    {
+      "slug": "separator",
+      "demoSource": "examples/separator.contract",
+      "demoSha256": "e206f8b71d1852b949e42f35036c215d838972d6641a1c4d31aaee4fca155fb0",
+      "upstreamNamedExamples": [
+        "separator-demo",
+        "separator-list",
+        "separator-menu",
+        "separator-rtl",
+        "separator-vertical"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/separator.mdx",
+        "content/docs/components/radix/separator.mdx",
+        "content/docs/components/base/separator.mdx",
+        "registry/new-york-v4/examples/separator-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Vertical separator",
+          "id": "separator-section"
+        },
+        {
+          "name": "Menu separators",
+          "id": "separator-section"
+        },
+        {
+          "name": "List separators",
+          "id": "separator-section"
+        }
+      ],
+      "remainingApiVariations": [],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": []
+    },
+    {
+      "slug": "sheet",
+      "demoSource": "examples/sheet.contract",
+      "demoSha256": "0e0a6680fc998af78c783366dbc03248feedaf7505f8110d87a3e4a124ef959d",
+      "upstreamNamedExamples": [
+        "sheet-demo",
+        "sheet-no-close-button",
+        "sheet-rtl",
+        "sheet-side"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/sheet.mdx",
+        "content/docs/components/radix/sheet.mdx",
+        "content/docs/components/base/sheet.mdx",
+        "registry/new-york-v4/examples/sheet-side.tsx",
+        "registry/new-york-v4/examples/sheet-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Left sheet",
+          "id": "variation-sheet-left"
+        },
+        {
+          "name": "Top sheet",
+          "id": "variation-sheet-top"
+        },
+        {
+          "name": "Bottom sheet",
+          "id": "variation-sheet-bottom"
+        }
+      ],
+      "remainingApiVariations": [
+        "hide close button prop"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "sheet-open",
+        "desktop-sheet",
+        "desktop-sheet-name",
+        "desktop-sheet-save",
+        "variation-sheet-left",
+        "variation-sheet-top",
+        "variation-sheet-bottom"
+      ]
+    },
+    {
+      "slug": "sidebar",
+      "demoSource": "examples/sidebar.contract",
+      "demoSha256": "73614bc288fbf0c5285eea6bcc11e50079b03598662e4f8d52342de2a48d9040",
+      "upstreamNamedExamples": [
+        "sidebar-demo"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/sidebar.mdx",
+        "content/docs/components/radix/sidebar.mdx",
+        "content/docs/components/base/sidebar.mdx",
+        "registry/new-york-v4/internal/sidebar-demo.tsx"
+      ],
+      "demonstratedVariations": [],
+      "remainingApiVariations": [
+        "header/footer/groups/submenus/actions/badges/skeleton slots, mobile offcanvas/variant/side configuration"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "desktop-sidebar",
+        "projects",
+        "media",
+        "favorites"
+      ]
+    },
+    {
+      "slug": "skeleton",
+      "demoSource": "examples/skeleton.contract",
+      "demoSha256": "8cdac0a5aa95b113518f7413329ab8dd121a2996806b36232e34f35eba862e8a",
+      "upstreamNamedExamples": [
+        "skeleton-avatar",
+        "skeleton-card",
+        "skeleton-demo",
+        "skeleton-form",
+        "skeleton-rtl",
+        "skeleton-table",
+        "skeleton-text"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/skeleton.mdx",
+        "content/docs/components/radix/skeleton.mdx",
+        "content/docs/components/base/skeleton.mdx",
+        "registry/new-york-v4/examples/skeleton-card.tsx",
+        "registry/new-york-v4/examples/skeleton-demo.tsx"
+      ],
+      "demonstratedVariations": [],
+      "remainingApiVariations": [
+        "shape/width/height props for avatar/card/text/form/table"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-skeleton"
+      ]
+    },
+    {
+      "slug": "slider",
+      "demoSource": "examples/slider.contract",
+      "demoSha256": "896eaa0cdd1f39a6fa324fdbefaf0d8a5b6de2e143fbc81b1344b63ca2563d3f",
+      "upstreamNamedExamples": [
+        "slider-controlled",
+        "slider-demo",
+        "slider-disabled",
+        "slider-multiple",
+        "slider-range",
+        "slider-rtl",
+        "slider-vertical"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/slider.mdx",
+        "content/docs/components/radix/slider.mdx",
+        "content/docs/components/base/slider.mdx",
+        "registry/new-york-v4/examples/slider-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Single thumb",
+          "id": "variation-slider-single"
+        },
+        {
+          "name": "Vertical range",
+          "id": "variation-slider-true-false"
+        },
+        {
+          "name": "Disabled range",
+          "id": "variation-slider-false-true"
+        }
+      ],
+      "remainingApiVariations": [
+        "arbitrary 3+ thumbs, explicit RTL"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "advanced-range",
+        "variation-slider-single",
+        "variation-slider-true-false",
+        "variation-slider-false-true"
+      ]
+    },
+    {
+      "slug": "spinner",
+      "demoSource": "examples/spinner.contract",
+      "demoSha256": "feef8c9e60c2a1ca9824cd96faba43ec08a6bc911a33d1ae8a39cdc51d4fbf49",
+      "upstreamNamedExamples": [
+        "spinner-badge",
+        "spinner-button",
+        "spinner-custom",
+        "spinner-demo",
+        "spinner-empty",
+        "spinner-input-group",
+        "spinner-rtl",
+        "spinner-size"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/spinner.mdx",
+        "content/docs/components/radix/spinner.mdx",
+        "content/docs/components/base/spinner.mdx",
+        "registry/new-york-v4/examples/spinner-button.tsx",
+        "registry/new-york-v4/examples/spinner-badge.tsx",
+        "registry/new-york-v4/examples/spinner-demo.tsx",
+        "registry/new-york-v4/examples/spinner-custom.tsx",
+        "registry/new-york-v4/examples/spinner-input-group.tsx",
+        "registry/new-york-v4/examples/spinner-size.tsx",
+        "registry/new-york-v4/examples/spinner-empty.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Loading empty state",
+          "id": "variation-spinner-empty"
+        }
+      ],
+      "remainingApiVariations": [
+        "size/custom icon props, childless icon-only rendering"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-spinner",
+        "variation-spinner-empty",
+        "variation-spinner-loading"
+      ]
+    },
+    {
+      "slug": "switch",
+      "demoSource": "examples/switch.contract",
+      "demoSha256": "8894b8bc3f4fadbd95db58a31fc02d2cc6a2963b39e18382a107e33f7bab0531",
+      "upstreamNamedExamples": [
+        "switch-choice-card",
+        "switch-demo",
+        "switch-description",
+        "switch-disabled",
+        "switch-invalid",
+        "switch-rtl",
+        "switch-sizes"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/switch.mdx",
+        "content/docs/components/radix/switch.mdx",
+        "content/docs/components/base/switch.mdx",
+        "registry/new-york-v4/examples/switch-demo.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Disabled",
+          "id": "variation-switch-disabled"
+        },
+        {
+          "name": "Description",
+          "id": "variation-switch-description"
+        }
+      ],
+      "remainingApiVariations": [
+        "size, invalid state and choice-card root"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "notifications",
+        "variation-switch-disabled",
+        "variation-switch-description",
+        "variation-switch-described"
+      ]
+    },
+    {
+      "slug": "table",
+      "demoSource": "examples/table.contract",
+      "demoSha256": "dc9a16fc13e435fa0d205eb28739e952f1c7d26d4158fd6c6bc413dfd92486f3",
+      "upstreamNamedExamples": [
+        "table-actions",
+        "table-demo",
+        "table-footer",
+        "table-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/table.mdx",
+        "content/docs/components/radix/table.mdx",
+        "content/docs/components/base/table.mdx",
+        "registry/new-york-v4/examples/table-demo.tsx"
+      ],
+      "demonstratedVariations": [],
+      "remainingApiVariations": [
+        "caption/footer, rich cell/action slots, sorting/filtering/selection/pagination data-table API"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-table",
+        "interview",
+        "presentation",
+        "trailer"
+      ]
+    },
+    {
+      "slug": "tabs",
+      "demoSource": "examples/tabs.contract",
+      "demoSha256": "18c606d5a7b5c55d46805d7bd122d4ea7803e2bb406434117193c46059929aae",
+      "upstreamNamedExamples": [
+        "tabs-demo",
+        "tabs-disabled",
+        "tabs-icons",
+        "tabs-line",
+        "tabs-rtl",
+        "tabs-vertical"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/tabs.mdx",
+        "content/docs/components/radix/tabs.mdx",
+        "content/docs/components/base/tabs.mdx",
+        "registry/new-york-v4/examples/tabs-demo.tsx"
+      ],
+      "demonstratedVariations": [],
+      "remainingApiVariations": [
+        "icon slot per tab"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "tabs-demo",
+        "tabs-demo-panel",
+        "tabs-line",
+        "tabs-line-panel",
+        "tabs-vertical",
+        "tabs-vertical-panel",
+        "tabs-disabled",
+        "tabs-disabled-panel",
+        "tabs-rtl",
+        "tabs-rtl-panel",
+        "tabs-dynamic",
+        "tabs-relabel",
+        "tabs-external",
+        "tabs-clear",
+        "tabs-dynamic-panel"
+      ]
+    },
+    {
+      "slug": "textarea",
+      "demoSource": "examples/textarea.contract",
+      "demoSha256": "9e7b5f60cf2d2212071e071f0cb0702dbebd50b18269b73be539a1715d43cc95",
+      "upstreamNamedExamples": [
+        "textarea-button",
+        "textarea-demo",
+        "textarea-disabled",
+        "textarea-field",
+        "textarea-invalid",
+        "textarea-rtl"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/textarea.mdx",
+        "content/docs/components/radix/textarea.mdx",
+        "content/docs/components/base/textarea.mdx",
+        "registry/new-york-v4/examples/textarea-demo.tsx",
+        "registry/new-york-v4/examples/textarea-disabled.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Field description and submit action",
+          "id": "variation-textarea-field"
+        },
+        {
+          "name": "Invalid"
+        },
+        {
+          "name": "Disabled"
+        }
+      ],
+      "remainingApiVariations": [
+        "explicit RTL prop"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-notes",
+        "catalog-textarea-invalid",
+        "catalog-textarea-disabled",
+        "variation-textarea-field",
+        "variation-textarea-described",
+        "variation-textarea-submit"
+      ]
+    },
+    {
+      "slug": "toast",
+      "demoSource": "examples/toast.contract",
+      "demoSha256": "776210362af6adf5670251777154612a8eea92765b36b83d00d12126dd0f7a63",
+      "upstreamNamedExamples": [
+        "toast-demo",
+        "toast-promise",
+        "toast-types"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/toast.mdx",
+        "content/docs/components/radix/toast.mdx",
+        "content/docs/components/base/toast.mdx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Destructive notification",
+          "id": "variation-toast-danger-show"
+        }
+      ],
+      "remainingApiVariations": [
+        "upstream deprecated; stacking/provider/duration/swipe API absent"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "toast-show",
+        "controls-toast",
+        "variation-toast-danger-show",
+        "variation-toast-danger"
+      ]
+    },
+    {
+      "slug": "toggle",
+      "demoSource": "examples/toggle.contract",
+      "demoSha256": "ad3b29a8c226b420a60ea4135cbf8c5cc12db9c19935195bbaaa161f42bdd340",
+      "upstreamNamedExamples": [
+        "toggle-demo",
+        "toggle-disabled",
+        "toggle-outline",
+        "toggle-rtl",
+        "toggle-sizes",
+        "toggle-text"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/toggle.mdx",
+        "content/docs/components/radix/toggle.mdx",
+        "content/docs/components/base/toggle.mdx",
+        "registry/new-york-v4/examples/toggle-outline.tsx",
+        "registry/new-york-v4/examples/toggle-demo.tsx",
+        "registry/new-york-v4/examples/toggle-disabled.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Disabled",
+          "id": "variation-toggle-disabled"
+        }
+      ],
+      "remainingApiVariations": [
+        "outline,size,icon slot"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-bold",
+        "variation-toggle-disabled"
+      ]
+    },
+    {
+      "slug": "toggle-group",
+      "demoSource": "examples/toggle-group.contract",
+      "demoSha256": "98ea0fa48a49325f73464fa8097b27ea17ae2541d01515d73baa43f0852dbcb9",
+      "upstreamNamedExamples": [
+        "toggle-group-demo",
+        "toggle-group-disabled",
+        "toggle-group-font-weight-selector",
+        "toggle-group-outline",
+        "toggle-group-rtl",
+        "toggle-group-sizes",
+        "toggle-group-spacing",
+        "toggle-group-vertical"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/toggle-group.mdx",
+        "content/docs/components/radix/toggle-group.mdx",
+        "content/docs/components/base/toggle-group.mdx",
+        "registry/new-york-v4/examples/toggle-group-demo.tsx",
+        "registry/new-york-v4/examples/toggle-group-disabled.tsx",
+        "registry/new-york-v4/examples/toggle-group-outline.tsx",
+        "registry/new-york-v4/examples/toggle-group-spacing.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Disabled",
+          "id": "variation-toggle-group-disabled"
+        }
+      ],
+      "remainingApiVariations": [
+        "single selection mode, outline,size,spacing,vertical,custom item slots"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-styles",
+        "variation-toggle-group-disabled"
+      ]
+    },
+    {
+      "slug": "tooltip",
+      "demoSource": "examples/tooltip.contract",
+      "demoSha256": "9275d3d1b5b517727229feadd9b24d5455adfc87c9fa4af0c7fe84e1c471ee9c",
+      "upstreamNamedExamples": [
+        "tooltip-demo",
+        "tooltip-disabled",
+        "tooltip-keyboard",
+        "tooltip-rtl",
+        "tooltip-sides"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/tooltip.mdx",
+        "content/docs/components/radix/tooltip.mdx",
+        "content/docs/components/base/tooltip.mdx",
+        "registry/new-york-v4/examples/tooltip-demo.tsx"
+      ],
+      "demonstratedVariations": [],
+      "remainingApiVariations": [
+        "side/placement, custom keyboard content, disabled external trigger slot"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "catalog-tooltip"
+      ]
+    },
+    {
+      "slug": "trace",
+      "demoSource": "examples/trace.contract",
+      "demoSha256": "eb0915b2b0c60c69902589917686b13e6deb64540714052a4e3a423ddaf804c8",
+      "upstreamNamedExamples": [
+        "trace-collapsible",
+        "trace-commit",
+        "trace-demo",
+        "trace-description",
+        "trace-dialog",
+        "trace-group",
+        "trace-link",
+        "trace-open",
+        "trace-sheet",
+        "trace-sources",
+        "trace-static",
+        "trace-status",
+        "trace-steps",
+        "trace-thinking",
+        "trace-tool-calls",
+        "trace-turn"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/trace.mdx",
+        "content/docs/components/radix/trace.mdx",
+        "content/docs/components/base/trace.mdx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "Multiple independent traces",
+          "id": "content-trace"
+        },
+        {
+          "name": "Running"
+        },
+        {
+          "name": "Error"
+        }
+      ],
+      "remainingApiVariations": [
+        "TraceLine, link/dialog/sheet trigger, sources, controlled open, rich per-step icons/descriptions/content"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "content-trace",
+        "trace-running",
+        "trace-error"
+      ]
+    },
+    {
+      "slug": "typography",
+      "demoSource": "examples/typography.contract",
+      "demoSha256": "309662960057d1e00ba37e8c89c54a92417f201d543835381afaaaea99cbd227",
+      "upstreamNamedExamples": [
+        "typography-blockquote",
+        "typography-demo",
+        "typography-h1",
+        "typography-h2",
+        "typography-h3",
+        "typography-h4",
+        "typography-inline-code",
+        "typography-large",
+        "typography-lead",
+        "typography-list",
+        "typography-muted",
+        "typography-p",
+        "typography-rtl",
+        "typography-small",
+        "typography-table"
+      ],
+      "upstreamSources": [
+        "content/docs/components/aria/typography.mdx",
+        "content/docs/components/radix/typography.mdx",
+        "content/docs/components/base/typography.mdx",
+        "registry/new-york-v4/examples/typography-large.tsx",
+        "registry/new-york-v4/examples/typography-lead.tsx",
+        "registry/new-york-v4/examples/typography-table.tsx",
+        "registry/new-york-v4/examples/typography-small.tsx",
+        "registry/new-york-v4/examples/typography-demo.tsx",
+        "registry/new-york-v4/examples/typography-p.tsx",
+        "registry/new-york-v4/examples/typography-list.tsx",
+        "registry/new-york-v4/examples/typography-inline-code.tsx",
+        "registry/new-york-v4/examples/typography-h3.tsx",
+        "registry/new-york-v4/examples/typography-h2.tsx",
+        "registry/new-york-v4/examples/typography-blockquote.tsx",
+        "registry/new-york-v4/examples/typography-muted.tsx",
+        "registry/new-york-v4/examples/typography-h1.tsx",
+        "registry/new-york-v4/examples/typography-h4.tsx"
+      ],
+      "demonstratedVariations": [
+        {
+          "name": "h2",
+          "id": "variation-type-h2"
+        },
+        {
+          "name": "h3",
+          "id": "variation-type-h3"
+        },
+        {
+          "name": "h4",
+          "id": "variation-type-h4"
+        },
+        {
+          "name": "p",
+          "id": "variation-type-p"
+        },
+        {
+          "name": "blockquote",
+          "id": "variation-type-blockquote"
+        },
+        {
+          "name": "code",
+          "id": "variation-type-code"
+        },
+        {
+          "name": "lead",
+          "id": "variation-type-lead"
+        },
+        {
+          "name": "large",
+          "id": "variation-type-large"
+        },
+        {
+          "name": "small",
+          "id": "variation-type-small"
+        },
+        {
+          "name": "muted",
+          "id": "variation-type-muted"
+        }
+      ],
+      "remainingApiVariations": [
+        "semantic list/table structure (content is string only)"
+      ],
+      "frameworkSpecificDifferences": [],
+      "coverageStatus": "partial",
+      "demoIds": [
+        "controls-heading",
+        "variation-type-h2",
+        "variation-type-h3",
+        "variation-type-h4",
+        "variation-type-p",
+        "variation-type-blockquote",
+        "variation-type-code",
+        "variation-type-lead",
+        "variation-type-large",
+        "variation-type-small",
+        "variation-type-muted"
+      ]
+    }
+  ]
+}

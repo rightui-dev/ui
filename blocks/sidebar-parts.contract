@@ -1,0 +1,295 @@
+use Control, Field from "../packages/ui/styles.contract"
+use DropdownMenu, MenuEntry from "../packages/ui/menu.contract"
+component SidebarIcon
+  props
+    name: string
+  view
+    svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=1.7 stroke-linecap="round" stroke-linejoin="round" aria-hidden=true flex-shrink=0
+      if name == "SquareTerminal"
+        rect x=3 y=3 width=18 height=18 rx=2
+        path d="m7 8 4 4-4 4m6 0h4"
+      else if name == "Bot"
+        rect x=3 y=8 width=18 height=12 rx=2
+        path d="M12 8V4H8m0 9h.01M16 13h.01M8 17h8M1 12h2m18 0h2"
+      else if name == "BookOpen"
+        path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"
+      else if name == "Inbox"
+        path d="m4 3-3 12v5a1 1 0 0 0 1 1h20a1 1 0 0 0 1-1v-5L20 3ZM1 15h6l2 3h6l2-3h6"
+      else if name == "Search"
+        circle cx=11 cy=11 r=8
+        path d="m21 21-4.3-4.3"
+      else if name == "Home"
+        path d="m3 10 9-7 9 7v11h-6v-7H9v7H3Z"
+      else if name == "Calendar"
+        rect x=3 y=5 width=18 height=16 rx=2
+        path d="M16 3v4M8 3v4M3 11h18"
+      else if name == "File"
+        path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Zm0 0v6h6"
+      else if name == "Folder"
+        path d="M3 20a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h6l2 2h10a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1Z"
+      else if name == "Send"
+        path d="m22 2-7 20-4-9L2 9Zm0 0L11 13"
+      else if name == "Trash2"
+        path d="M3 6h18M8 6V3h8v3M5 6l1 15h12l1-15M10 10v7m4-7v7"
+      else if name == "Command"
+        path d="M9 7V4a2 2 0 1 0-2 2h10a2 2 0 1 0-2-2v16a2 2 0 1 0 2-2H7a2 2 0 1 0 2 2Z"
+      else if name == "GalleryVerticalEnd"
+        path d="M7 2h10M5 6h14"
+        rect x=3 y=10 width=18 height=12 rx=2
+      else if name == "Panel"
+        rect x=3 y=3 width=18 height=18 rx=2
+        path d="M9 3v18"
+      else if name == "ChevronRight"
+        path d="m9 5 7 7-7 7"
+      else if name == "ChevronsUpDown"
+        path d="m8 9 4-4 4 4m-8 6 4 4 4-4"
+      else if name == "Plus"
+        path d="M12 5v14M5 12h14"
+      else if name == "More"
+        circle cx=4 cy=12 r=1
+        circle cx=12 cy=12 r=1
+        circle cx=20 cy=12 r=1
+      else if name == "Star"
+        path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z"
+      else if name == "Bell"
+        path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"
+      else if name == "AudioWaveform"
+        path d="M2 10v4m4-7v10m4-14v18m4-16v14m4-12v10m4-7v4"
+      else if name == "CreditCard"
+        rect x=2 y=4 width=20 height=16 rx=2
+        path d="M2 10h20M6 15h2"
+      else if name == "LogOut"
+        path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4m7 14 5-5-5-5M21 12H9"
+      else if name == "BadgeCheck"
+        path d="m12 2 3 2 4 1 1 4 2 3-2 3-1 4-4 1-3 2-3-2-4-1-1-4-2-3 2-3 1-4 4-1Zm-4 10 3 3 5-6"
+      else if name == "Settings2" or name == "Settings"
+        path d="M4 7h9m4 0h3M4 17h3m4 0h9"
+        circle cx=15 cy=7 r=2
+        circle cx=9 cy=17 r=2
+      else if name == "Frame"
+        rect x=6 y=6 width=12 height=12 rx=1
+        path d="M6 2v20M18 2v20M2 6h20M2 18h20"
+      else if name == "PieChart"
+        path d="M21 12a9 9 0 1 1-9-9v9ZM15 3a9 9 0 0 1 6 6h-6Z"
+      else if name == "Map"
+        path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3Zm6-3v15m6-12v15"
+      else if name == "LifeBuoy"
+        circle cx=12 cy=12 r=10
+        circle cx=12 cy=12 r=4
+        path d="m5 5 4 4m6 6 4 4M5 19l4-4m6-6 4-4"
+      else if name == "Sparkles"
+        path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5ZM5 2v4M3 4h4m13 14v4m-2-2h4"
+      else if name == "Blocks"
+        rect x=3 y=3 width=7 height=7 rx=1
+        rect x=14 y=3 width=7 height=7 rx=1
+        rect x=3 y=14 width=7 height=7 rx=1
+        rect x=14 y=14 width=7 height=7 rx=1
+      else if name == "MessageCircleQuestion" or name == "MessageCircle"
+        path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8Z"
+        if name == "MessageCircleQuestion"
+          path d="M10 9a2 2 0 1 1 3 1.7c-.7.4-1 1.1-1 1.8m0 3h.01"
+      else if name == "ArchiveX"
+        rect x=3 y=3 width=18 height=4 rx=1
+        path d="M5 7v14h14V7m-9 4 4 6m0-6-4 6"
+      else if name == "Menu"
+        path d="M4 6h16M4 12h16M4 18h16"
+      else if name == "Paintbrush"
+        path d="m14 6 4-4 4 4-4 4-4 2-2 2-2-2 2-2ZM10 14c-2-2-6-1-6 3 0 2-2 3-2 3s8 3 9-3Z"
+      else if name == "Globe"
+        circle cx=12 cy=12 r=10
+        ellipse cx=12 cy=12 rx=4 ry=10
+        path d="M2 12h20"
+      else if name == "Keyboard"
+        rect x=2 y=5 width=20 height=14 rx=2
+        path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M7 16h10"
+      else if name == "Check"
+        path d="m5 12 4 4L19 6"
+      else if name == "Video"
+        rect x=2 y=5 width=14 height=14 rx=2
+        path d="m16 10 6-4v12l-6-4"
+      else if name == "Link"
+        path d="M10 13a5 5 0 0 0 7 .5l3-3a5 5 0 0 0-7-7l-2 2m3 5a5 5 0 0 0-7-.5l-3 3a5 5 0 0 0 7 7l2-2"
+      else if name == "Lock"
+        rect x=3 y=11 width=18 height=11 rx=2
+        path d="M7 11V7a5 5 0 0 1 10 0v4"
+      else
+        path d="M3 7h18M3 12h18M3 17h18"
+
+component SidebarLink
+  props
+    id: string
+    label: string
+    icon: string
+    selected: bool
+    compact: bool
+    badge: string
+    choose: action
+  view
+    button id=id testId=id class=Control press=choose(label) aria-label=label aria-current=(selected ? "page" : "false")
+      display="flex" align-items="center" gap=8 min-height=32 width="100%" padding="6px 8px" border="0" border-radius=6
+      background-color=(selected ? "ui.muted" : "transparent") color="ui.foreground" font-size="0.875rem" font-weight=(selected ? 500 : 400)
+      :hover
+        background-color="ui.muted"
+      if icon != ""
+        SidebarIcon(name=icon)
+      if not compact
+        text label flex=1 min-width=0 text-align="left" white-space="nowrap" overflow="hidden" text-overflow="ellipsis"
+        if badge != ""
+          text badge font-size="0.75rem" color="ui.muted-foreground"
+
+component SidebarRichMenu
+  props
+    id: string
+    title: string
+    subtitle: string
+    icon: string
+    avatar: bool
+    compact: bool
+    entries: MenuEntry[]
+    choose: action
+  state expanded = false
+  state width = 224
+  action openMenu(lastItem: bool)
+    let bounds = frame(id)
+    width = max(224, bounds.width)
+    expanded = true
+    showPopover(id + "-menu", source=id)
+    match entries.at(lastItem ? entries.length - 1 : 0)
+      case some(entry)
+        focus(id + "-item-" + entry.id)
+      case none
+        focus(id + "-menu")
+  action closeMenu
+    if expanded
+      hidePopover(id + "-menu")
+      focus(id)
+  action toggle
+    if expanded
+      closeMenu()
+    else
+      openMenu(false)
+  action changed(e: ToggleEvent)
+    expanded = e.newState == "open"
+  action triggerKeys(k: string)
+    if k == "Enter" or k == " "
+      preventDefault()
+      toggle()
+    else if k == "ArrowDown" or k == "ArrowUp"
+      preventDefault()
+      openMenu(k == "ArrowUp")
+    else if k == "Escape"
+      preventDefault()
+      closeMenu()
+  action pick(entry: MenuEntry)
+    closeMenu()
+    choose(entry.id)
+  action itemKeys(index: number, k: string, e: KeyboardEvent)
+    if k == "Enter" or k == " "
+      preventDefault()
+      match entries.at(index)
+        case some(entry)
+          pick(entry)
+        case none
+          stopPropagation()
+    else if k == "Escape" or k == "Tab"
+      if k == "Escape"
+        preventDefault()
+      closeMenu()
+    else if k == "ArrowDown" or k == "ArrowUp" or k == "Home" or k == "End"
+      preventDefault()
+      let next = (k == "Home" ? 0 : k == "End" ? entries.length - 1 : (index + (k == "ArrowDown" ? 1 : entries.length - 1)) % max(1, entries.length))
+      match entries.at(next)
+        case some(entry)
+          focus(id + "-item-" + entry.id)
+        case none
+          closeMenu()
+    else if k.length == 1 and k != " " and not e.ctrlKey and not e.metaKey and not e.altKey
+      let ordered = entries.slice(index + 1).concat(entries.slice(0, index + 1))
+      match first(ordered.filter(entry => entry.label.toLowerCase().startsWith(k.toLowerCase())))
+        case some(entry)
+          preventDefault()
+          focus(id + "-item-" + entry.id)
+        case none
+          stopPropagation()
+  view
+    column padding=8 min-width=0 box-sizing="border-box"
+      button id=id testId=id class=Control press=toggle key=triggerKeys aria-haspopup="menu" aria-expanded=expanded aria-controls=(id + "-menu") aria-label=title
+        display="flex" align-items="center" gap=8 width="100%" min-height=(compact ? 32 : 48) padding=(compact ? "0px" : "8px")
+        border="0" border-radius=6 background-color=(expanded ? "ui.muted" : "transparent") color="ui.foreground" font-size="0.875rem" font-weight=400
+        :hover
+          background-color="ui.muted"
+        view width="2rem" height="2rem" flex-shrink=0 border-radius=8 display="flex" align-items="center" justify-content="center"
+          background-color=(avatar ? "ui.muted" : "ui.primary") color=(avatar ? "ui.foreground" : "ui.primary-foreground")
+          if avatar
+            image "assets/shadcn-avatar.jpg" alt="shadcn" width="100%" height="100%" border-radius=8
+          else
+            SidebarIcon(name=icon)
+        if not compact
+          column gap=2 flex=1 min-width=0 align-items="flex-start"
+            text title testId=(id + "-title") font-size="0.875rem" font-weight=500 white-space="nowrap" overflow="hidden" text-overflow="ellipsis"
+            text subtitle testId=(id + "-subtitle") font-size="0.75rem" font-weight=400 white-space="nowrap" overflow="hidden" text-overflow="ellipsis"
+          SidebarIcon(name="ChevronsUpDown")
+      column id=(id + "-menu") testId=(id + "-menu") role="menu" aria-label=(avatar ? "Account" : "Teams") popover="auto" toggle=changed
+        position-area="right" position-try-fallbacks="flip-inline, flip-block, flip-block flip-inline" margin=4 width=width max-width="calc(100vw - 32px)" max-height="80vh" overflow="auto" box-sizing="border-box"
+        padding=4 gap=2 border="1px solid ui.border" border-radius=8 background-color="ui.surface" color="ui.foreground" box-shadow="0 4px 12px #00000018"
+        if avatar
+          row gap=8 padding="6px 4px" align-items="center"
+            view width="2rem" height="2rem" flex-shrink=0 border-radius=8 background-color="ui.muted" display="flex" align-items="center" justify-content="center"
+              image "assets/shadcn-avatar.jpg" alt="shadcn" width="100%" height="100%" border-radius=8
+            column gap=2 flex=1 min-width=0
+              text title font-size="0.875rem" font-weight=500
+              text subtitle font-size="0.75rem" font-weight=400
+          view height=1 margin="4px -4px" background-color="ui.border"
+        else
+          text "Teams" padding="6px 8px" font-size="0.75rem" color="ui.muted-foreground"
+        for entry, i in entries key=entry.id
+          if (avatar and (i == 1 or i == 4)) or (not avatar and i == 3)
+            view height=1 margin="4px -4px" background-color="ui.border"
+          button id=(id + "-item-" + entry.id) testId=(id + "-item-" + entry.id) class=Control role="menuitem" tabindex=-1 press=pick(entry) key=itemKeys(i)
+            display="flex" align-items="center" gap=8 min-height=32 padding="6px 8px" border="0" border-radius=4 background-color="transparent" color="ui.foreground" font-size="0.875rem" font-weight=400
+            :hover
+              background-color="ui.muted"
+            :focus-visible
+              background-color="ui.muted"
+            if avatar
+              SidebarIcon(name=(i == 0 ? "Sparkles" : i == 1 ? "BadgeCheck" : i == 2 ? "CreditCard" : i == 3 ? "Bell" : "LogOut"))
+            else
+              view width=24 height=24 flex-shrink=0 display="flex" align-items="center" justify-content="center" border="1px solid ui.border" border-radius=6
+                SidebarIcon(name=(i == 0 ? "GalleryVerticalEnd" : i == 1 ? "AudioWaveform" : i == 2 ? "Command" : "Plus"))
+            text entry.label flex=1 min-width=0 text-align="left" color=(not avatar and i == 3 ? "ui.muted-foreground" : "ui.foreground")
+            if entry.shortcut != ""
+              text entry.shortcut font-size="0.75rem" color="ui.muted-foreground"
+
+component SidebarUser
+  props
+    id: string
+    compact: bool
+    reduced: bool
+    choose: action
+  view
+    SidebarRichMenu(id=id + "-menu", title="shadcn", subtitle="m@example.com", icon="", avatar=true, compact=compact, choose=choose, entries=[MenuEntry(id="upgrade", label="Upgrade to Pro", shortcut="", disabled=false, destructive=false), MenuEntry(id="account", label="Account", shortcut="", disabled=false, destructive=false), MenuEntry(id="billing", label="Billing", shortcut="", disabled=false, destructive=false), MenuEntry(id="notifications", label="Notifications", shortcut="", disabled=false, destructive=false), MenuEntry(id="logout", label="Log out", shortcut="", disabled=false, destructive=false)])
+
+component SidebarBrand
+  props
+    id: string
+    docs: bool
+    compact: bool
+    switcher: bool
+    reduced: bool
+  state team = "Acme Inc"
+  derive plan = team == "Acme Inc" ? "Enterprise" : team == "Acme Corp." ? "Startup" : "Free"
+  derive teamIcon = team == "Acme Inc" ? "GalleryVerticalEnd" : team == "Acme Corp." ? "AudioWaveform" : "Command"
+  action changeTeam(value: string)
+    if value != "add"
+      team = value
+  view
+    if switcher
+      SidebarRichMenu(id=id + "-team", title=team, subtitle=plan, icon=teamIcon, avatar=false, compact=compact, choose=changeTeam, entries=[MenuEntry(id="Acme Inc", label="Acme Inc", shortcut="⌘1", disabled=false, destructive=false), MenuEntry(id="Acme Corp.", label="Acme Corp.", shortcut="⌘2", disabled=false, destructive=false), MenuEntry(id="Evil Corp.", label="Evil Corp.", shortcut="⌘3", disabled=false, destructive=false), MenuEntry(id="add", label="Add team", shortcut="", disabled=false, destructive=false)])
+    else
+      row gap=8 padding=8 margin=8 align-items="center" min-height=48 box-sizing="border-box"
+        view width="2rem" height="2rem" flex-shrink=0 border-radius=8 background-color="ui.primary" color="ui.primary-foreground" display="flex" align-items="center" justify-content="center"
+          SidebarIcon(name=(docs ? "GalleryVerticalEnd" : "Command"))
+        if not compact
+          column gap=2 flex=1 min-width=0
+            text (docs ? "Documentation" : "Acme Inc") font-size="0.875rem" font-weight=500 color="ui.foreground"
+            text (docs ? "v1.0.0" : "Enterprise") font-size="0.75rem" font-weight=400 color="ui.foreground"

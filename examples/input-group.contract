@@ -1,0 +1,24 @@
+use InputGroup from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state message = ""
+  action editMessage(value: string)
+    message = value
+  state activated = false
+  action showToast
+    activated = not activated
+  view
+    column gap=16 min-width=0 max-width="100%"
+      InputGroup(id="controls-search", label="Search", value=message, placeholder="Search…", prefix="https://", suffix=".com", buttonLabel="Submit", disabled=false, edit=editMessage, submit=showToast)
+      if activated
+        text ("Search submitted: " + message) testId="input-group-result" role="status" font-size="0.875rem" color="ui.muted-foreground"
+      text "Prefix only" font-weight=600
+      InputGroup(id="input-group-prefix-only", label="Prefix only", value=message, placeholder="example", prefix="https://", suffix="", buttonLabel="", disabled=false, edit=editMessage, submit=showToast)
+      text "Suffix only" font-weight=600
+      InputGroup(id="input-group-suffix-only", label="Suffix only", value=message, placeholder="example", prefix="", suffix=".com", buttonLabel="", disabled=false, edit=editMessage, submit=showToast)
+      text "Disabled" font-weight=600
+      InputGroup(id="input-group-disabled", label="Disabled", value=message, placeholder="example", prefix="https://", suffix=".com", buttonLabel="", disabled=true, edit=editMessage, submit=showToast)

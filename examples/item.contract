@@ -1,0 +1,39 @@
+use Badge, Avatar, Item, DropdownMenuAdvanced, AdvancedMenuEntry from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state itemResult = ""
+  action itemChoose(v: string)
+    itemResult = v
+  action itemCheck(id: string, value: bool)
+    itemResult = id
+  action itemRadio(group: string, value: string)
+    itemResult = value
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Item(id="catalog-item", title="Espace de montage", description="Avatar, texte et actions composables.")
+        Avatar(id="catalog-avatar", src="", name="Camille Martin", fallback="CM")
+        Badge(label="Active", variant="success")
+      text "Icon media" font-size="0.875rem" font-weight=600
+      Item(id="variation-item-icon", title="Verified workspace", description="Ready for collaboration.")
+        svg width=24 height=24 viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden=true
+          path d="m5 12 4 4 10-10"
+      text "Image media" font-size="0.875rem" font-weight=600
+      Item(id="variation-item-image", title="Landscape", description="A local preview asset.")
+        image "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2760%27%3E%3Crect width=%2780%27 height=%2760%27 fill=%27%2394a3b8%27/%3E%3C/svg%3E" alt="Gray preview" width=80 height=60
+      text "Grouped items with header" font-size="0.875rem" font-weight=600
+      column gap=8
+        text "Project team" font-weight=600
+        Item(id="variation-item-group-first", title="Alex Morgan", description="Editor")
+        Item(id="variation-item-group-second", title="Sam Lee", description="Producer")
+      text "Link action" font-size="0.875rem" font-weight=600
+      Item(id="variation-item-link", title="Project resources", description="Explore the component catalog.")
+        link href="#catalog-item"
+          text "View item documentation"
+      text "Dropdown action" font-size="0.875rem" font-weight=600
+      Item(id="variation-item-dropdown", title="Workspace actions", description="Choose an action from the menu.")
+        DropdownMenuAdvanced(id="variation-item-menu", label="Actions", entries=[AdvancedMenuEntry(id="variation-item-archive", parent="", label="Archive", kind="item", shortcut="", disabled=false, group="", value="")], checks=[], radios=[], reduced=reduced, choose=itemChoose, check=itemCheck, radio=itemRadio)
+      text itemResult role="status"

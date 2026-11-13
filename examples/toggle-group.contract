@@ -1,0 +1,15 @@
+use ToggleGroup from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state styles: string[] = ["Italic"]
+  action setStyles(v: string[])
+    styles = v
+  view
+    column gap=16 min-width=0 max-width="100%"
+      ToggleGroup(id="catalog-styles", label="Text styles", options=["Italic", "Underline", "Strikethrough"], selected=styles, disabled=false, reduced=reduced, change=setStyles)
+      text "Disabled" font-size="0.875rem" font-weight=600
+      ToggleGroup(id="variation-toggle-group-disabled", label="Text styles", options=["Italic", "Underline", "Strikethrough"], selected=styles, disabled=true, reduced=reduced, change=setStyles)

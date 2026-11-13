@@ -1,0 +1,44 @@
+style Control
+  box-sizing="border-box"
+  appearance="none"
+  outline="none"
+  min-width=0
+  max-width="100%"
+  cursor="pointer"
+  min-height="ui.control"
+  border-radius="ui.radius"
+  font-size="ui.type"
+  font-weight=500
+  font-family="Geist"
+  line-height=1.428571
+  :focus-visible
+    box-shadow="0 0 0 3px ui.ring"
+  :disabled
+    opacity=0.5
+
+style Pressable
+  cursor="pointer"
+
+style Field
+  box-sizing="border-box"
+  appearance="none"
+  outline="none"
+  min-width=0
+  max-width="100%"
+  width="100%"
+  min-height="ui.control"
+  height="auto"
+  border="1px solid ui.input"
+  border-radius="ui.radius"
+  padding="4px 12px"
+  font-size="ui.type"
+  font-family="Geist"
+  line-height=1.428571
+  color="ui.foreground"
+  background-color="transparent"
+  box-shadow="0 1px 2px 0 ui.shadow"
+  :focus-visible
+    border-color="ui.ring"
+    box-shadow="0 0 0 3px ui.ring"
+  :disabled
+    opacity=0.5

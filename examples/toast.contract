@@ -1,0 +1,30 @@
+use Toast, Button from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  action undo
+    dismissToast()
+    chosen = "Action undone"
+  state chosen = "No action selected"
+  state activated = false
+  action dismissToast
+    activated = false
+  action show
+    activated = true
+  state dangerVisible = false
+  action showDanger
+    dangerVisible = true
+  action hideDanger
+    dangerVisible = false
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Button(id="toast-show", label="Save project", variant="outline", disabled=false, press=show)
+      if activated
+        Toast(id="controls-toast", title="Project saved", description="Your change is saved. Dismiss the notification or undo the action.", actionLabel="Cancel", destructive=false, dismiss=dismissToast, act=undo)
+      text "Destructive notification" font-size="0.875rem" font-weight=600
+      Button(id="variation-toast-danger-show", label="Show failed save", variant="outline", disabled=false, press=showDanger)
+      if dangerVisible
+        Toast(id="variation-toast-danger", title="Save failed", description="Try saving again.", actionLabel="Retry", destructive=true, dismiss=hideDanger, act=hideDanger)

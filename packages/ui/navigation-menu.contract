@@ -1,0 +1,81 @@
+use uiPopupIn, uiPopupOut from "./popup-motion.contract"
+use Control from "./styles.contract"
+shape NavigationMenuEntry
+  id: string
+  title: string
+  description: string
+  href: string
+component NavigationMenu
+  props
+    id: string
+    label: string
+    entries: NavigationMenuEntry[]
+    reduced: bool
+  state expanded = false
+  state openEpoch = 0
+  action show
+    if not expanded
+      openEpoch = openEpoch + 1
+    expanded = true
+    showPopover(id + "-content", source=id)
+  action toggle
+    if expanded
+      expanded = false
+    else
+      show()
+  action changed(epoch: number, e: ToggleEvent)
+    if epoch == openEpoch
+      expanded = e.newState == "open"
+
+  action keys(k: string)
+    if k == "Enter" or k == " "
+      preventDefault()
+      toggle()
+    else if k == "Escape"
+      preventDefault()
+      expanded = false
+      focus(id)
+    else if k == "ArrowDown"
+      preventDefault()
+      show()
+      match first(entries)
+        case some(entry)
+          focus(id + "-" + entry.id)
+        case none
+          focus(id)
+  action linkKeys(index: number, k: string)
+    stopPropagation()
+    if k == "ArrowDown" or k == "ArrowUp" or k == "ArrowLeft" or k == "ArrowRight" or k == "Home" or k == "End"
+      preventDefault()
+      let next = (k == "Home" ? 0 : k == "End" ? entries.length - 1 : (index + (k == "ArrowDown" or k == "ArrowRight" ? 1 : entries.length - 1)) % max(1, entries.length))
+      match entries.at(next)
+        case some(entry)
+          focus(id + "-" + entry.id)
+        case none
+          focus(id)
+    else if k == "Escape"
+      keys(k)
+  view
+    column role="navigation" aria-label=label align-items="flex-start"
+      button id=id testId=id class=Control press=toggle key=keys aria-expanded=expanded aria-controls=(id + "-content")
+        display="flex" align-items="center" gap=6 padding="8px 16px" border="0" background-color=(expanded ? "ui.muted" : "ui.surface") color="ui.foreground"
+        text label
+        svg width=12 height=12 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+          path d="m6 9 6 6 6-6"
+      if expanded
+        for epoch in [openEpoch] key=epoch
+          column id=(id + "-content") testId=(id + "-content") popover="auto" toggle=changed(epoch) key=keys
+            position-area="bottom" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline" margin=4 width="25rem" max-width="calc(100vw - 32px)" padding=4 gap=4 box-sizing="border-box"
+            border="1px solid ui.border" border-radius="ui.radius-menu" background-color="ui.surface" color="ui.foreground" box-shadow="0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a"
+            animation=(reduced ? "none" : "uiPopupIn 150ms ease-out both")
+            -exact-exit-animation=(reduced ? "none" : "uiPopupOut 100ms ease-in both")
+            for entry, i in entries key=entry.id
+              link id=(id + "-" + entry.id) testId=(id + "-" + entry.id) href=entry.href key=linkKeys(i)
+                display="flex" flex-direction="column" gap=4 padding=12 border-radius="ui.radius-item" color="ui.foreground" text-decoration="none"
+                :hover
+                  background-color="ui.muted"
+                :focus-visible
+                  background-color="ui.muted"
+                  box-shadow="0 0 0 2px ui.ring"
+                text entry.title font-size="0.875rem" font-weight=500
+                text entry.description font-size="0.875rem" line-height=1.4 color="ui.muted-foreground"

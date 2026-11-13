@@ -1,0 +1,24 @@
+use AvatarGroup, AvatarGroupItem, AvatarGroupCount from "@rightui/ui"
+use AvatarFrame, AvatarBadge from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state name = ""
+  view
+    row gap=16 align-items="center"
+      for member, i in ["Alex Morgan", "Sam Chen", "Taylor Lee"] key=member
+        AvatarFrame(id="composition-avatar-" + i.toString(), name=member, src="", fallback=member.slice(0, 2), size="default")
+          AvatarBadge(id="composition-avatar-badge-" + i.toString(), label=(i == 0 ? "Available" : "Team member"), size="default")
+            view width=3 height=3 border-radius="50%" background-color="ui.primary-foreground" aria-hidden=true
+      text "Size sm" font-weight=600
+      AvatarFrame(id="avatar-sm", name="Alex Morgan", src="", fallback="AM", size="sm")
+      text "Size lg" font-weight=600
+      AvatarFrame(id="avatar-lg", name="Alex Morgan", src="", fallback="AM", size="lg")
+      text "Group with fallback and count" font-weight=600
+      AvatarGroup(id="avatar-group", label="Project team")
+        AvatarGroupItem(id="avatar-group-first", first=true)
+          AvatarFrame(id="avatar-fallback", name="Alex Morgan", src="", fallback="AM", size="default")
+        AvatarGroupCount(id="avatar-count", label="More members", count=3, size="default", first=false)

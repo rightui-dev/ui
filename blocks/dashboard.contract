@@ -1,0 +1,559 @@
+use SidebarTrigger, IconButton from "@rightui/ui"
+use Card, Badge, Tabs, CountedTabs from "@rightui/ui"
+use Control, Field from "../packages/ui/styles.contract"
+use AreaChart, ChartPoint from "../packages/ui/chart.contract"
+use DataTableCheck from "../packages/ui/data-table.contract"
+shape DashboardDocument
+  id: number
+  header: string
+  type: string
+  status: string
+  target: string
+  limit: string
+  reviewer: string
+fn dashboardDocuments(): DashboardDocument[] = [
+  DashboardDocument(id=1, header="Cover page", type="Cover page", status="In Process", target="18", limit="5", reviewer="Eddie Lake"),
+  DashboardDocument(id=2, header="Table of contents", type="Table of contents", status="Done", target="29", limit="24", reviewer="Eddie Lake"),
+  DashboardDocument(id=3, header="Executive summary", type="Narrative", status="Done", target="10", limit="13", reviewer="Eddie Lake"),
+  DashboardDocument(id=4, header="Technical approach", type="Narrative", status="Done", target="27", limit="23", reviewer="Jamik Tashpulatov"),
+  DashboardDocument(id=5, header="Design", type="Narrative", status="In Process", target="2", limit="16", reviewer="Jamik Tashpulatov"),
+  DashboardDocument(id=6, header="Capabilities", type="Narrative", status="In Process", target="20", limit="8", reviewer="Jamik Tashpulatov"),
+  DashboardDocument(id=7, header="Integration with existing systems", type="Narrative", status="In Process", target="19", limit="21", reviewer="Jamik Tashpulatov"),
+  DashboardDocument(id=8, header="Innovation and Advantages", type="Narrative", status="Done", target="25", limit="26", reviewer="Assign reviewer"),
+  DashboardDocument(id=9, header="Overview of EMR's Innovative Solutions", type="Technical content", status="Done", target="7", limit="23", reviewer="Assign reviewer"),
+  DashboardDocument(id=10, header="Advanced Algorithms and Machine Learning", type="Narrative", status="Done", target="30", limit="28", reviewer="Assign reviewer"),
+  DashboardDocument(id=11, header="Adaptive Communication Protocols", type="Narrative", status="Done", target="9", limit="31", reviewer="Assign reviewer"),
+  DashboardDocument(id=12, header="Advantages Over Current Technologies", type="Narrative", status="Done", target="12", limit="0", reviewer="Assign reviewer"),
+  DashboardDocument(id=13, header="Past Performance", type="Narrative", status="Done", target="22", limit="33", reviewer="Assign reviewer"),
+  DashboardDocument(id=14, header="Customer Feedback and Satisfaction Levels", type="Narrative", status="Done", target="15", limit="34", reviewer="Assign reviewer"),
+  DashboardDocument(id=15, header="Implementation Challenges and Solutions", type="Narrative", status="Done", target="3", limit="35", reviewer="Assign reviewer"),
+  DashboardDocument(id=16, header="Security Measures and Data Protection Policies", type="Narrative", status="In Process", target="6", limit="36", reviewer="Assign reviewer"),
+  DashboardDocument(id=17, header="Scalability and Future Proofing", type="Narrative", status="Done", target="4", limit="37", reviewer="Assign reviewer"),
+  DashboardDocument(id=18, header="Cost-Benefit Analysis", type="Plain language", status="Done", target="14", limit="38", reviewer="Assign reviewer"),
+  DashboardDocument(id=19, header="User Training and Onboarding Experience", type="Narrative", status="Done", target="17", limit="39", reviewer="Assign reviewer"),
+  DashboardDocument(id=20, header="Future Development Roadmap", type="Narrative", status="Done", target="11", limit="40", reviewer="Assign reviewer"),
+  DashboardDocument(id=21, header="System Architecture Overview", type="Technical content", status="In Process", target="24", limit="18", reviewer="Maya Johnson"),
+  DashboardDocument(id=22, header="Risk Management Plan", type="Narrative", status="Done", target="15", limit="22", reviewer="Carlos Rodriguez"),
+  DashboardDocument(id=23, header="Compliance Documentation", type="Legal", status="In Process", target="31", limit="27", reviewer="Sarah Chen"),
+  DashboardDocument(id=24, header="API Documentation", type="Technical content", status="Done", target="8", limit="12", reviewer="Raj Patel"),
+  DashboardDocument(id=25, header="User Interface Mockups", type="Visual", status="In Process", target="19", limit="25", reviewer="Leila Ahmadi"),
+  DashboardDocument(id=26, header="Database Schema", type="Technical content", status="Done", target="22", limit="20", reviewer="Thomas Wilson"),
+  DashboardDocument(id=27, header="Testing Methodology", type="Technical content", status="In Process", target="17", limit="14", reviewer="Assign reviewer"),
+  DashboardDocument(id=28, header="Deployment Strategy", type="Narrative", status="Done", target="26", limit="30", reviewer="Eddie Lake"),
+  DashboardDocument(id=29, header="Budget Breakdown", type="Financial", status="In Process", target="13", limit="16", reviewer="Jamik Tashpulatov"),
+  DashboardDocument(id=30, header="Market Analysis", type="Research", status="Done", target="29", limit="32", reviewer="Sophia Martinez"),
+  DashboardDocument(id=31, header="Competitor Comparison", type="Research", status="In Process", target="21", limit="19", reviewer="Assign reviewer"),
+  DashboardDocument(id=32, header="Maintenance Plan", type="Technical content", status="Done", target="16", limit="23", reviewer="Alex Thompson"),
+  DashboardDocument(id=33, header="User Personas", type="Research", status="In Process", target="27", limit="24", reviewer="Nina Patel"),
+  DashboardDocument(id=34, header="Accessibility Compliance", type="Legal", status="Done", target="18", limit="21", reviewer="Assign reviewer"),
+  DashboardDocument(id=35, header="Performance Metrics", type="Technical content", status="In Process", target="23", limit="26", reviewer="David Kim"),
+  DashboardDocument(id=36, header="Disaster Recovery Plan", type="Technical content", status="Done", target="14", limit="17", reviewer="Jamik Tashpulatov"),
+  DashboardDocument(id=37, header="Third-party Integrations", type="Technical content", status="In Process", target="25", limit="28", reviewer="Eddie Lake"),
+  DashboardDocument(id=38, header="User Feedback Summary", type="Research", status="Done", target="20", limit="15", reviewer="Assign reviewer"),
+  DashboardDocument(id=39, header="Localization Strategy", type="Narrative", status="In Process", target="12", limit="19", reviewer="Maria Garcia"),
+  DashboardDocument(id=40, header="Mobile Compatibility", type="Technical content", status="Done", target="28", limit="31", reviewer="James Wilson"),
+  DashboardDocument(id=41, header="Data Migration Plan", type="Technical content", status="In Process", target="19", limit="22", reviewer="Assign reviewer"),
+  DashboardDocument(id=42, header="Quality Assurance Protocols", type="Technical content", status="Done", target="30", limit="33", reviewer="Priya Singh"),
+  DashboardDocument(id=43, header="Stakeholder Analysis", type="Research", status="In Process", target="11", limit="14", reviewer="Eddie Lake"),
+  DashboardDocument(id=44, header="Environmental Impact Assessment", type="Research", status="Done", target="24", limit="27", reviewer="Assign reviewer"),
+  DashboardDocument(id=45, header="Intellectual Property Rights", type="Legal", status="In Process", target="17", limit="20", reviewer="Sarah Johnson"),
+  DashboardDocument(id=46, header="Customer Support Framework", type="Narrative", status="Done", target="22", limit="25", reviewer="Jamik Tashpulatov"),
+  DashboardDocument(id=47, header="Version Control Strategy", type="Technical content", status="In Process", target="15", limit="18", reviewer="Assign reviewer"),
+  DashboardDocument(id=48, header="Continuous Integration Pipeline", type="Technical content", status="Done", target="26", limit="29", reviewer="Michael Chen"),
+  DashboardDocument(id=49, header="Regulatory Compliance", type="Legal", status="In Process", target="13", limit="16", reviewer="Assign reviewer"),
+  DashboardDocument(id=50, header="User Authentication System", type="Technical content", status="Done", target="28", limit="31", reviewer="Eddie Lake"),
+  DashboardDocument(id=51, header="Data Analytics Framework", type="Technical content", status="In Process", target="21", limit="24", reviewer="Jamik Tashpulatov"),
+  DashboardDocument(id=52, header="Cloud Infrastructure", type="Technical content", status="Done", target="16", limit="19", reviewer="Assign reviewer"),
+  DashboardDocument(id=53, header="Network Security Measures", type="Technical content", status="In Process", target="29", limit="32", reviewer="Lisa Wong"),
+  DashboardDocument(id=54, header="Project Timeline", type="Planning", status="Done", target="14", limit="17", reviewer="Eddie Lake"),
+  DashboardDocument(id=55, header="Resource Allocation", type="Planning", status="In Process", target="27", limit="30", reviewer="Assign reviewer"),
+  DashboardDocument(id=56, header="Team Structure and Roles", type="Planning", status="Done", target="20", limit="23", reviewer="Jamik Tashpulatov"),
+  DashboardDocument(id=57, header="Communication Protocols", type="Planning", status="In Process", target="15", limit="18", reviewer="Assign reviewer"),
+  DashboardDocument(id=58, header="Success Metrics", type="Planning", status="Done", target="30", limit="33", reviewer="Eddie Lake"),
+  DashboardDocument(id=59, header="Internationalization Support", type="Technical content", status="In Process", target="23", limit="26", reviewer="Jamik Tashpulatov"),
+  DashboardDocument(id=60, header="Backup and Recovery Procedures", type="Technical content", status="Done", target="18", limit="21", reviewer="Assign reviewer"),
+  DashboardDocument(id=61, header="Monitoring and Alerting System", type="Technical content", status="In Process", target="25", limit="28", reviewer="Daniel Park"),
+  DashboardDocument(id=62, header="Code Review Guidelines", type="Technical content", status="Done", target="12", limit="15", reviewer="Eddie Lake"),
+  DashboardDocument(id=63, header="Documentation Standards", type="Technical content", status="In Process", target="27", limit="30", reviewer="Jamik Tashpulatov"),
+  DashboardDocument(id=64, header="Release Management Process", type="Planning", status="Done", target="22", limit="25", reviewer="Assign reviewer"),
+  DashboardDocument(id=65, header="Feature Prioritization Matrix", type="Planning", status="In Process", target="19", limit="22", reviewer="Emma Davis"),
+  DashboardDocument(id=66, header="Technical Debt Assessment", type="Technical content", status="Done", target="24", limit="27", reviewer="Eddie Lake"),
+  DashboardDocument(id=67, header="Capacity Planning", type="Planning", status="In Process", target="21", limit="24", reviewer="Jamik Tashpulatov"),
+  DashboardDocument(id=68, header="Service Level Agreements", type="Legal", status="Done", target="26", limit="29", reviewer="Assign reviewer")
+]
+fn dashboardVisitors(): ChartPoint[] = [
+  ChartPoint(label="2024-04-01", desktop=222, mobile=150),
+  ChartPoint(label="2024-04-02", desktop=97, mobile=180),
+  ChartPoint(label="2024-04-03", desktop=167, mobile=120),
+  ChartPoint(label="2024-04-04", desktop=242, mobile=260),
+  ChartPoint(label="2024-04-05", desktop=373, mobile=290),
+  ChartPoint(label="2024-04-06", desktop=301, mobile=340),
+  ChartPoint(label="2024-04-07", desktop=245, mobile=180),
+  ChartPoint(label="2024-04-08", desktop=409, mobile=320),
+  ChartPoint(label="2024-04-09", desktop=59, mobile=110),
+  ChartPoint(label="2024-04-10", desktop=261, mobile=190),
+  ChartPoint(label="2024-04-11", desktop=327, mobile=350),
+  ChartPoint(label="2024-04-12", desktop=292, mobile=210),
+  ChartPoint(label="2024-04-13", desktop=342, mobile=380),
+  ChartPoint(label="2024-04-14", desktop=137, mobile=220),
+  ChartPoint(label="2024-04-15", desktop=120, mobile=170),
+  ChartPoint(label="2024-04-16", desktop=138, mobile=190),
+  ChartPoint(label="2024-04-17", desktop=446, mobile=360),
+  ChartPoint(label="2024-04-18", desktop=364, mobile=410),
+  ChartPoint(label="2024-04-19", desktop=243, mobile=180),
+  ChartPoint(label="2024-04-20", desktop=89, mobile=150),
+  ChartPoint(label="2024-04-21", desktop=137, mobile=200),
+  ChartPoint(label="2024-04-22", desktop=224, mobile=170),
+  ChartPoint(label="2024-04-23", desktop=138, mobile=230),
+  ChartPoint(label="2024-04-24", desktop=387, mobile=290),
+  ChartPoint(label="2024-04-25", desktop=215, mobile=250),
+  ChartPoint(label="2024-04-26", desktop=75, mobile=130),
+  ChartPoint(label="2024-04-27", desktop=383, mobile=420),
+  ChartPoint(label="2024-04-28", desktop=122, mobile=180),
+  ChartPoint(label="2024-04-29", desktop=315, mobile=240),
+  ChartPoint(label="2024-04-30", desktop=454, mobile=380),
+  ChartPoint(label="2024-05-01", desktop=165, mobile=220),
+  ChartPoint(label="2024-05-02", desktop=293, mobile=310),
+  ChartPoint(label="2024-05-03", desktop=247, mobile=190),
+  ChartPoint(label="2024-05-04", desktop=385, mobile=420),
+  ChartPoint(label="2024-05-05", desktop=481, mobile=390),
+  ChartPoint(label="2024-05-06", desktop=498, mobile=520),
+  ChartPoint(label="2024-05-07", desktop=388, mobile=300),
+  ChartPoint(label="2024-05-08", desktop=149, mobile=210),
+  ChartPoint(label="2024-05-09", desktop=227, mobile=180),
+  ChartPoint(label="2024-05-10", desktop=293, mobile=330),
+  ChartPoint(label="2024-05-11", desktop=335, mobile=270),
+  ChartPoint(label="2024-05-12", desktop=197, mobile=240),
+  ChartPoint(label="2024-05-13", desktop=197, mobile=160),
+  ChartPoint(label="2024-05-14", desktop=448, mobile=490),
+  ChartPoint(label="2024-05-15", desktop=473, mobile=380),
+  ChartPoint(label="2024-05-16", desktop=338, mobile=400),
+  ChartPoint(label="2024-05-17", desktop=499, mobile=420),
+  ChartPoint(label="2024-05-18", desktop=315, mobile=350),
+  ChartPoint(label="2024-05-19", desktop=235, mobile=180),
+  ChartPoint(label="2024-05-20", desktop=177, mobile=230),
+  ChartPoint(label="2024-05-21", desktop=82, mobile=140),
+  ChartPoint(label="2024-05-22", desktop=81, mobile=120),
+  ChartPoint(label="2024-05-23", desktop=252, mobile=290),
+  ChartPoint(label="2024-05-24", desktop=294, mobile=220),
+  ChartPoint(label="2024-05-25", desktop=201, mobile=250),
+  ChartPoint(label="2024-05-26", desktop=213, mobile=170),
+  ChartPoint(label="2024-05-27", desktop=420, mobile=460),
+  ChartPoint(label="2024-05-28", desktop=233, mobile=190),
+  ChartPoint(label="2024-05-29", desktop=78, mobile=130),
+  ChartPoint(label="2024-05-30", desktop=340, mobile=280),
+  ChartPoint(label="2024-05-31", desktop=178, mobile=230),
+  ChartPoint(label="2024-06-01", desktop=178, mobile=200),
+  ChartPoint(label="2024-06-02", desktop=470, mobile=410),
+  ChartPoint(label="2024-06-03", desktop=103, mobile=160),
+  ChartPoint(label="2024-06-04", desktop=439, mobile=380),
+  ChartPoint(label="2024-06-05", desktop=88, mobile=140),
+  ChartPoint(label="2024-06-06", desktop=294, mobile=250),
+  ChartPoint(label="2024-06-07", desktop=323, mobile=370),
+  ChartPoint(label="2024-06-08", desktop=385, mobile=320),
+  ChartPoint(label="2024-06-09", desktop=438, mobile=480),
+  ChartPoint(label="2024-06-10", desktop=155, mobile=200),
+  ChartPoint(label="2024-06-11", desktop=92, mobile=150),
+  ChartPoint(label="2024-06-12", desktop=492, mobile=420),
+  ChartPoint(label="2024-06-13", desktop=81, mobile=130),
+  ChartPoint(label="2024-06-14", desktop=426, mobile=380),
+  ChartPoint(label="2024-06-15", desktop=307, mobile=350),
+  ChartPoint(label="2024-06-16", desktop=371, mobile=310),
+  ChartPoint(label="2024-06-17", desktop=475, mobile=520),
+  ChartPoint(label="2024-06-18", desktop=107, mobile=170),
+  ChartPoint(label="2024-06-19", desktop=341, mobile=290),
+  ChartPoint(label="2024-06-20", desktop=408, mobile=450),
+  ChartPoint(label="2024-06-21", desktop=169, mobile=210),
+  ChartPoint(label="2024-06-22", desktop=317, mobile=270),
+  ChartPoint(label="2024-06-23", desktop=480, mobile=530),
+  ChartPoint(label="2024-06-24", desktop=132, mobile=180),
+  ChartPoint(label="2024-06-25", desktop=141, mobile=190),
+  ChartPoint(label="2024-06-26", desktop=434, mobile=380),
+  ChartPoint(label="2024-06-27", desktop=448, mobile=490),
+  ChartPoint(label="2024-06-28", desktop=149, mobile=200),
+  ChartPoint(label="2024-06-29", desktop=103, mobile=160),
+  ChartPoint(label="2024-06-30", desktop=446, mobile=400)
+]
+component DashboardBlock
+  props
+    narrow: bool
+    reduced: bool
+  state sidebar = not narrow
+  state section = ""
+  state period = narrow ? "7d" : "90d"
+  state query = ""
+  state tab = "Outline"
+  state sort = "order"
+  state descending = false
+  state page = 0
+  state pageSize = 10
+  state selected: number[] = []
+  state columns = false
+  state contentWidth = 0
+  state pageSizes = false
+  state hidden: string[] = []
+  state documents = dashboardDocuments()
+  state notice = ""
+  derive cutoff = period == "7d" ? "2024-06-23" : period == "30d" ? "2024-05-31" : "2024-04-01"
+  derive points = dashboardVisitors().filter(p => p.label >= cutoff)
+  derive filtered = documents.filter(r => r.header.toLowerCase().includes(query.toLowerCase()) or r.reviewer.toLowerCase().includes(query.toLowerCase()))
+  derive asc = sort == "Target" ? sortBy(filtered, r => match parseNumber(r.target) { case some(n) => n, case none => 0 }) : sort == "Limit" ? sortBy(filtered, r => match parseNumber(r.limit) { case some(n) => n, case none => 0 }) : sort == "Section Type" ? sortBy(filtered, r => r.type) : sort == "Status" ? sortBy(filtered, r => r.status) : sort == "Reviewer" ? sortBy(filtered, r => r.reviewer) : sort == "Header" ? sortBy(filtered, r => r.header) : filtered
+  derive ordered = descending ? range(asc.length).map(i => match asc.at(asc.length - 1 - i) { case some(r) => r, case none => DashboardDocument(id=0, header="", type="", status="", target="", limit="", reviewer="") }) : asc
+  derive pages = max(1, ceil(filtered.length / pageSize))
+  derive current = min(page, pages - 1)
+  derive visible = ordered.slice(current * pageSize, (current + 1) * pageSize)
+  action toggleSidebar
+    sidebar = not sidebar
+  action navigateTo(v: string)
+    section = v
+    notice = v == "Search" ? "Filter documents below." : v + " selected."
+    if v == "Search"
+      focus("dashboard-search")
+  action changePeriod(v: string)
+    period = v
+  action search(v: string)
+    query = v
+    page = 0
+  action order(v: string)
+    descending = sort == v ? not descending : false
+    sort = v
+    page = 0
+  action measureContent(w: number, h: number)
+    if w != contentWidth
+      contentWidth = w
+  action chooseTab(i: number)
+    tab = match ["Outline", "Past Performance", "Key Personnel", "Focus Documents"].at(i) { case some(v) => v, case none => "Outline" }
+  action toggleColumns
+    if columns
+      hidePopover("dashboard-columns-popup")
+    else
+      columns = true
+      showPopover("dashboard-columns-popup", source="dashboard-columns")
+      focus("dashboard-column-Section Type")
+  action columnsChanged(e: ToggleEvent)
+    columns = e.newState == "open"
+    if e.newState == "closed"
+      focus("dashboard-columns")
+  action toggleColumn(v: string)
+    hidden = hidden.includes(v) ? hidden.filter(c => c != v) : hidden.concat([v])
+  action columnKeys(i: number, k: string)
+    if k == "Escape" or k == "Tab"
+      preventDefault()
+      hidePopover("dashboard-columns-popup")
+      focus("dashboard-columns")
+    else if k == "Enter" or k == " "
+      preventDefault()
+      match ["Section Type", "Status", "Target", "Limit", "Reviewer"].at(i)
+        case some(v)
+          toggleColumn(v)
+        case none
+          columns = columns
+    else if k == "ArrowDown" or k == "ArrowUp" or k == "Home" or k == "End"
+      preventDefault()
+      let next = k == "Home" ? 0 : k == "End" ? 4 : (i + (k == "ArrowDown" ? 1 : 4)) % 5
+      match ["Section Type", "Status", "Target", "Limit", "Reviewer"].at(next)
+        case some(v)
+          focus("dashboard-column-" + v)
+        case none
+          columns = columns
+  action selectRow(rowId: number, checked: bool)
+    selected = checked ? selected.concat([rowId]) : selected.filter(s => s != rowId)
+  action selectAll(checked: bool)
+    selected = checked ? selected.filter(s => not visible.map(r => r.id).includes(s)).concat(visible.map(r => r.id)) : selected.filter(s => not visible.map(r => r.id).includes(s))
+  action editDocument(rowId: number, field: string, v: string)
+    documents = documents.map(r => r.id == rowId ? (field == "target" ? DashboardDocument(r, target=v) : DashboardDocument(r, limit=v)) : r)
+  action changePage(delta: number)
+    page = max(0, min(pages - 1, current + delta))
+  action changeSize(v: number)
+    pageSize = v
+    page = 0
+    if pageSizes
+      hidePopover("dashboard-page-size-options")
+      focus("dashboard-page-size")
+  action togglePageSizes
+    if pageSizes
+      hidePopover("dashboard-page-size-options")
+    else
+      pageSizes = true
+      showPopover("dashboard-page-size-options", source="dashboard-page-size")
+      focus("dashboard-size-" + pageSize.toString())
+  action pageSizeTriggerKeys(k: string)
+    if k == "ArrowDown" or k == "Enter" or k == " "
+      preventDefault()
+      togglePageSizes()
+  action pageSizeKeys(size: number, k: string)
+    if k == "Escape" or k == "Tab"
+      preventDefault()
+      hidePopover("dashboard-page-size-options")
+      focus("dashboard-page-size")
+    else if k == "Enter" or k == " "
+      preventDefault()
+      changeSize(size)
+    else if k == "ArrowDown" or k == "ArrowUp" or k == "Home" or k == "End"
+      preventDefault()
+      let next = k == "Home" ? 10 : k == "End" ? 50 : k == "ArrowDown" ? (size == 50 ? 10 : size + 10) : (size == 10 ? 50 : size - 10)
+      focus("dashboard-size-" + next.toString())
+  action pageSizesChanged(e: ToggleEvent)
+    pageSizes = e.newState == "open"
+    if e.newState == "closed"
+      focus("dashboard-page-size")
+  action addSection
+    let id = documents.length + 1
+    let nextPage = floor(documents.length / pageSize)
+    documents = documents.concat([DashboardDocument(id=id, header="New section", type="Narrative", status="In Process", target="0", limit="0", reviewer="Assign reviewer")])
+    page = nextPage
+    query = ""
+    sort = "order"
+    descending = false
+    notice = "New section added."
+  view
+    row testId="dashboard-block" position="relative" align-items="stretch" min-width=0 background-color="ui.sidebar" overflow="clip" color="ui.foreground" line-height=1.5
+      view width=(narrow ? 0 : sidebar ? 288 : 0) flex-shrink=0 min-width=0 position="relative" overflow=(narrow ? "visible" : "clip") -exact-layout-transition=(reduced ? "none" : "200ms linear")
+        column id="dashboard-sidebar-panel" testId="dashboard-sidebar-panel" aria-hidden=(not sidebar) inert=(not sidebar) translate=(sidebar ? "0px 0px" : "-100% 0px") transition=(reduced ? "none" : "translate 200ms linear") position=(narrow ? "absolute" : "sticky") height="100vh" align-self="flex-start" z-index=20 left=0 top=0 bottom=0 width=288 max-width=(narrow ? "calc(100vw - 48px)" : "288px") flex-shrink=0 padding=16 gap=16 box-sizing="border-box" background-color="ui.sidebar"
+          row gap=8 padding="4px 6px" align-items="center"
+            DashboardNavIcon(name="Acme Inc.")
+            text "Acme Inc." font-size="1rem" font-weight=600 flex=1
+            if narrow
+              IconButton(id="dashboard-sidebar-close", label="Close sidebar", variant="ghost", disabled=false, press=toggleSidebar)
+                svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+                  path d="m6 6 12 12M6 18 18 6"
+          row gap=8 margin-bottom=-8
+            button class=Control id="dashboard-quick-create" testId="dashboard-quick-create" press=addSection padding="6px 8px" min-height=32 font-weight=400 flex=1 background-color="ui.primary" color="ui.primary-foreground" border="0" text-align="left"
+              row gap=8 align-items="center"
+                DashboardNavIcon(name="Quick Create")
+                text "Quick Create"
+            button class=Control press=navigateTo("Inbox") min-height=32 width=32 padding=6 border="1px solid ui.border" background-color="ui.surface" aria-label="Inbox"
+              svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=1.7 aria-hidden=true
+                rect x=3 y=5 width=18 height=14 rx=2
+                path d="m3 6 9 7 9-7"
+          column gap=4
+            for item in ["Dashboard", "Lifecycle", "Analytics", "Projects", "Team"] key=item
+              button class=Control press=navigateTo(item) testId=("dashboard-nav-" + item) padding="6px 8px" min-height=32 font-weight=400 border="0" background-color=(section == item ? "ui.muted" : "transparent") color="ui.foreground" text-align="left"
+                row gap=8 align-items="center"
+                  DashboardNavIcon(name=item)
+                  text item
+          column gap=4 padding="8px 0px"
+            text "Documents" min-height=32 display="flex" align-items="center" padding="0 8px" margin-bottom=-4 font-size="0.75rem" line-height=1.333333 color="ui.sidebar-label"
+            for item in ["Data Library", "Reports", "Word Assistant", "More"] key=item
+              button class=Control press=navigateTo(item) padding="6px 8px" min-height=32 font-weight=400 border="0" background-color="transparent" color="ui.foreground" text-align="left"
+                row gap=8 align-items="center"
+                  DashboardNavIcon(name=item)
+                  text item
+          view flex=1
+          column gap=4
+            for item in ["Settings", "Get Help", "Search"] key=item
+              button class=Control press=navigateTo(item) padding="6px 8px" min-height=32 font-weight=400 border="0" background-color="transparent" color="ui.foreground" text-align="left"
+                row gap=8 align-items="center"
+                  DashboardNavIcon(name=item)
+                  text item
+          row gap=8 align-items="center" padding="7.25px 8px" min-height=48 box-sizing="border-box"
+            image "assets/shadcn-avatar.jpg" alt="shadcn" width=32 height=32 border-radius=10 filter="grayscale(1)"
+            column gap=0 flex=1
+              text "shadcn" font-size="0.875rem" line-height=1.25 font-weight=500
+              text "m@example.com" font-size="0.75rem" line-height=1.333333 color="ui.muted-foreground"
+            svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 stroke-linecap="round" aria-hidden=true
+              path d="M12 5h.01M12 12h.01M12 19h.01"
+      column flex=1 min-width=0 background-color="ui.background" box-shadow="0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a" border-radius=(narrow ? 0 : 14) margin=(narrow ? "0px" : sidebar ? "8px 8px 8px 0px" : "8px") -exact-layout-transition=(reduced ? "none" : "200ms linear")
+        row min-height=48 box-sizing="border-box" padding="0 24px" gap=16 align-items="center" border-bottom="1px solid ui.border"
+          view margin-left=-4
+            SidebarTrigger(id="dashboard-sidebar", expanded=sidebar, controls="dashboard-sidebar-panel", press=toggleSidebar)
+          view width=1 height=16 background-color="ui.border"
+          text "Documents" font-size="1rem" font-weight=500 flex=1
+          link href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard" color="ui.foreground" font-size="0.875rem" text-decoration="none" padding="6px 12px"
+            text "GitHub"
+        column id="dashboard-content" resize=measureContent padding=(narrow ? 16 : 24) gap=24 min-width=0
+          view display="grid" grid-template-columns=(contentWidth >= 1024 ? "repeat(4, minmax(0, 1fr))" : contentWidth >= 576 ? "repeat(2, minmax(0, 1fr))" : "minmax(0, 1fr)") gap=16
+            DashboardMetric(label="Total Revenue", value="$1,250.00", change="+12.5%", trend="Trending up this month", detail="Visitors for the last 6 months")
+            DashboardMetric(label="New Customers", value="1,234", change="-20%", trend="Down 20% this period", detail="Acquisition needs attention")
+            DashboardMetric(label="Active Accounts", value="45,678", change="+12.5%", trend="Strong user retention", detail="Engagement exceed targets")
+            DashboardMetric(label="Growth Rate", value="4.5%", change="+4.5%", trend="Steady performance increase", detail="Meets growth projections")
+          column padding=24 gap=24 border="1px solid ui.border" border-radius=14 background-color="ui.surface" min-width=0 box-shadow="0 1px 2px 0 ui.shadow"
+            row gap=16 min-height=44 justify-content="space-between" flex-wrap="wrap" align-items="flex-start"
+              column gap=8
+                text "Total Visitors" font-size="1rem" line-height=1 font-weight=600
+                text "Total for the last 3 months" font-size="0.875rem" line-height=1.428571 color="ui.muted-foreground"
+              row gap=0 border="0" border-radius=8 overflow="hidden" flex-wrap="wrap"
+                for p in ["90d", "30d", "7d"] key=p
+                  button class=Control id=("dashboard-period-" + p) testId=("dashboard-period-" + p) press=changePeriod(p) aria-pressed=period == p height=36 min-height=36 box-sizing="border-box" padding="0 16px" border="1px solid ui.border" border-left=(p == "90d" ? "1px solid ui.border" : "0") border-radius=0 background-color=(period == p ? "ui.muted" : "transparent") color="ui.foreground" font-size="0.875rem"
+                    text (p == "90d" ? "Last 3 months" : p == "30d" ? "Last 30 days" : "Last 7 days")
+            view padding-top=24 min-width=0
+              AreaChart(id="dashboard-chart", points=points)
+            text (points.length.toString() + " daily observations") testId="dashboard-period-count" font-size="0.75rem" position="absolute" width="0.0625rem" height="0.0625rem" overflow="hidden" opacity=0 aria-hidden=true
+          row gap=12 justify-content="space-between" align-items="center" flex-wrap="wrap"
+            CountedTabs(id="dashboard-document-tabs", labels=["Outline", "Past Performance", "Key Personnel", "Focus Documents"], counts=["", "3", "2", ""], selected=["Outline", "Past Performance", "Key Personnel", "Focus Documents"].indexOf(tab), reduced=reduced, choose=chooseTab)
+            row gap=8
+              button class=Control id="dashboard-columns" testId="dashboard-columns" press=toggleColumns aria-expanded=columns aria-haspopup="menu" aria-controls="dashboard-columns-popup" min-height=32 height=32 box-sizing="border-box" padding="0 12px" border="1px solid ui.border" background-color="ui.surface" color="ui.foreground" font-size="0.75rem"
+                text "Customize Columns"
+              button class=Control id="dashboard-add-section" testId="dashboard-add-section" press=addSection min-height=32 height=32 box-sizing="border-box" padding="0 12px" border="1px solid ui.border" background-color="ui.surface" color="ui.foreground" font-size="0.75rem"
+                text "+ Add Section"
+          if columns
+            column id="dashboard-columns-popup" testId="dashboard-columns-popup" role="menu" aria-label="Customize Columns" popover="auto" toggle=columnsChanged tabindex=-1
+              position-area="bottom span-left" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline" margin=4 padding=4 width="14rem" max-width="calc(100vw - 32px)" box-sizing="border-box" border="1px solid ui.border" border-radius=6 background-color="ui.surface" box-shadow="0 4px 6px -1px ui.shadow"
+              for col, i in ["Section Type", "Status", "Target", "Limit", "Reviewer"] key=col
+                button id=("dashboard-column-" + col) testId=("dashboard-column-" + col) class=Control role="menuitemcheckbox" aria-checked=(not hidden.includes(col)) key=columnKeys(i) press=toggleColumn(col)
+                  display="flex" align-items="center" gap=8 min-height=32 padding="6px 8px" border="0" border-radius=4 background-color="transparent" color="ui.foreground" font-size="0.875rem" font-weight=400 text-align="left"
+                  view width=16 height=16 display="flex" align-items="center" justify-content="center" aria-hidden=true
+                    if not hidden.includes(col)
+                      svg width=14 height=14 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2
+                        path d="m5 12 4 4L19 6"
+                  text col
+          if tab != "Outline"
+            view id="dashboard-document-tabs-panel" role="tabpanel" aria-labelledby=("dashboard-document-tabs-" + ["Outline", "Past Performance", "Key Personnel", "Focus Documents"].indexOf(tab).toString()) border="1px dashed ui.border" border-radius=12 min-height=180 display="flex" align-items="center" justify-content="center"
+              text tab color="ui.muted-foreground"
+          else
+            column id="dashboard-document-tabs-panel" role="tabpanel" aria-labelledby="dashboard-document-tabs-0" gap=16 min-width=0
+              input id="dashboard-search" testId="dashboard-search" class=Field value=query input=search placeholder="Filter documents..." aria-label="Filter documents" max-width="20rem"
+              scroll max-height=580 overflow="auto" min-width=0 border="1px solid ui.border" border-radius=8
+                table width="100%" min-width=760 border-spacing=0 font-size="0.8125rem"
+                  thead background-color="ui.muted"
+                    tr
+                      th scope="col" padding="4px 8px" border-bottom="1px solid ui.border"
+                        DataTableCheck(id="dashboard-select-all", label="Select all", checked=visible.length > 0 and visible.filter(r => selected.includes(r.id)).length == visible.length, disabled=visible.length == 0, change=selectAll)
+                      for col in ["Header", "Section Type", "Status", "Target", "Limit", "Reviewer"] key=col
+                        if not hidden.includes(col)
+                          th scope="col" text-align="left" padding="8px" border-bottom="1px solid ui.border" aria-sort=(sort == col ? (descending ? "descending" : "ascending") : "none")
+                            button class=Control press=order(col) id=("dashboard-sort-" + col) testId=("dashboard-sort-" + col) padding=0 min-height=28 border="0" background-color="transparent" color="ui.foreground" font-size="0.75rem"
+                              text col
+                  tbody
+                    for r in visible key=r.id
+                      tr testId=("dashboard-row-" + r.id.toString()) background-color=(selected.includes(r.id) ? "ui.muted" : "transparent")
+                        td border-bottom="1px solid ui.border" padding="4px 8px"
+                          DataTableCheck(id="dashboard-select-" + r.id.toString(), label="Select " + r.header, checked=selected.includes(r.id), disabled=false, change=selectRow(r.id))
+                        td border-bottom="1px solid ui.border" padding="12px 8px" font-weight=500
+                          text r.header
+                        if not hidden.includes("Section Type")
+                          td border-bottom="1px solid ui.border" padding="12px 8px"
+                            Badge(label=r.type, variant="outline")
+                        if not hidden.includes("Status")
+                          td border-bottom="1px solid ui.border" padding="12px 8px"
+                            Badge(label=r.status, variant="outline")
+                        if not hidden.includes("Target")
+                          td border-bottom="1px solid ui.border" padding="12px 8px" text-align="right"
+                            input class=Field id=("dashboard-target-" + r.id.toString()) testId=("dashboard-target-" + r.id.toString()) value=r.target input=editDocument(r.id, "target") aria-label=("Target for " + r.header) width="4rem" min-height="2rem" height="auto" padding="0.25rem 0.5rem" border="1px solid transparent" background-color="transparent" text-align="right"
+                        if not hidden.includes("Limit")
+                          td border-bottom="1px solid ui.border" padding="12px 8px" text-align="right"
+                            input class=Field id=("dashboard-limit-" + r.id.toString()) testId=("dashboard-limit-" + r.id.toString()) value=r.limit input=editDocument(r.id, "limit") aria-label=("Limit for " + r.header) width="4rem" min-height="2rem" height="auto" padding="0.25rem 0.5rem" border="1px solid transparent" background-color="transparent" text-align="right"
+                        if not hidden.includes("Reviewer")
+                          td border-bottom="1px solid ui.border" padding="12px 8px"
+                            text r.reviewer
+                    if visible.length == 0
+                      tr
+                        td colspan=7 padding=32 text-align="center"
+                          text "No results."
+              row justify-content="space-between" align-items="center" gap=16 padding="0 16px" flex-wrap="wrap"
+                text (selected.filter(s => filtered.map(r => r.id).includes(s)).length.toString() + " of " + filtered.length.toString() + " row(s) selected.") testId="dashboard-selection" font-size="0.875rem" color="ui.muted-foreground" flex=1
+                row gap=32 align-items="center" flex-wrap="wrap"
+                  row gap=8 align-items="center"
+                    text "Rows per page" font-size="0.875rem" font-weight=500
+                    button id="dashboard-page-size" testId="dashboard-page-size" class=Control press=togglePageSizes key=pageSizeTriggerKeys role="combobox" aria-expanded=pageSizes aria-haspopup="listbox" aria-controls="dashboard-page-size-options" aria-label="Rows per page" width="5rem" height="2rem" min-height="2rem" padding="0 12px" border="1px solid ui.border" background-color="ui.surface" color="ui.foreground" display="flex" align-items="center" justify-content="space-between" gap=8 font-size="0.875rem" font-weight=400
+                      text pageSize.toString()
+                      svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=2 aria-hidden=true
+                        path d="m6 9 6 6 6-6"
+                  text ("Page " + (current + 1).toString() + " of " + pages.toString()) testId="dashboard-page" font-size="0.875rem" font-weight=500
+                  row gap=8 align-items="center"
+                    for direction in ["first", "previous", "next", "last"] key=direction
+                      if not narrow or direction == "previous" or direction == "next"
+                        button class=Control id=("dashboard-" + direction) testId=("dashboard-" + direction) press=changePage(direction == "first" ? -pages : direction == "previous" ? -1 : direction == "next" ? 1 : pages) disabled=(direction == "first" or direction == "previous" ? current == 0 : current == pages - 1) aria-label=("Go to " + direction + " page") width=32 height=32 min-height=32 padding=0 border="1px solid ui.border" background-color="ui.surface" color="ui.foreground" display="flex" align-items="center" justify-content="center"
+                          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
+                            path d=(direction == "first" ? "m11 7-5 5 5 5m6-10-5 5 5 5" : direction == "previous" ? "m15 18-6-6 6-6" : direction == "next" ? "m9 18 6-6-6-6" : "m7 7 5 5-5 5m6-10 5 5-5 5")
+              if pageSizes
+                column id="dashboard-page-size-options" testId="dashboard-page-size-options" role="listbox" aria-label="Rows per page" popover="auto" toggle=pageSizesChanged position-area="top span-right" position-try-fallbacks="flip-block, flip-inline" width="5rem" margin=4 padding=4 border="1px solid ui.border" border-radius=6 background-color="ui.surface" box-shadow="0 4px 6px -1px ui.shadow"
+                  for size in [10, 20, 30, 40, 50] key=size
+                    button id=("dashboard-size-" + size.toString()) testId=("dashboard-size-" + size.toString()) class=Control role="option" aria-selected=pageSize == size press=changeSize(size) key=pageSizeKeys(size) min-height=32 padding="6px 8px" border="0" border-radius=4 background-color=(pageSize == size ? "ui.muted" : "transparent") color="ui.foreground" font-size="0.875rem" font-weight=400 text-align="left"
+                      text size.toString()
+          if notice != ""
+            text notice testId="dashboard-notice" aria-live="polite" font-size="0.75rem" color="ui.muted-foreground"
+
+component DashboardMetric
+  props
+    label: string
+    value: string
+    change: string
+    trend: string
+    detail: string
+  state rootSize = 16
+  action measureFont(w: number, h: number)
+    if h != rootSize
+      rootSize = max(1, h)
+  view
+    column position="relative" border="1px solid ui.border" border-radius=14 background-image="linear-gradient(to top, ui.metric-shade, ui.surface)" padding=24 gap=24 min-width=0 box-shadow="0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a"
+      view position="absolute" inset=0 overflow="clip" opacity=0 aria-hidden=true pointer-events="none"
+        text "M" position="absolute" left=0 top=0 font-size="1rem" line-height=1 resize=measureFont aria-hidden=true pointer-events="none"
+      row justify-content="space-between" gap=8 align-items="flex-start" flex-wrap="wrap"
+        column gap=8 min-width=0 flex="1 1 8rem"
+          text label font-size="0.875rem" line-height=1.428571 color="ui.muted-foreground"
+          text value font-size="1.875rem" line-height=(max(1.2, 1.3 - 3 / (rootSize * 1.875))) font-weight=600 font-variant-numeric="tabular-nums" overflow-wrap="anywhere"
+        row gap=4 padding="2px 8px" border="1px solid ui.border" border-radius=99 align-items="center"
+          svg width=12 height=12 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 aria-hidden=true
+            path d=(change.startsWith("-") ? "m3 6 6 6 4-4 8 8M15 16h6v-6" : "m3 18 6-6 4 4 8-8M15 8h6v6")
+          text change font-size="0.75rem" font-weight=500
+      column gap=6
+        row gap=8 align-items="center"
+          text trend font-size="0.875rem" line-height=1.428571 font-weight=500 min-width=0
+          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 aria-hidden=true
+            path d=(change.startsWith("-") ? "m3 6 6 6 4-4 8 8M15 16h6v-6" : "m3 18 6-6 4 4 8-8M15 8h6v6")
+        text detail font-size="0.875rem" line-height=1.428571 color="ui.muted-foreground"
+
+component DashboardNavIcon
+  props
+    name: string
+  view
+    svg width=(name == "Acme Inc." ? 20 : 16) height=(name == "Acme Inc." ? 20 : 16) viewBox="0 0 24 24" fill=(name == "Quick Create" ? "ui.primary-foreground" : "none") stroke=(name == "Quick Create" ? "none" : "ui.foreground") stroke-width=2 stroke-linecap="round" stroke-linejoin="round" opacity=(name == "More" ? 0.7 : 1) aria-hidden=true
+      if name == "Acme Inc."
+        path d="M5.636 5.636a9 9 0 1 0 12.728 12.728a9 9 0 0 0 -12.728 -12.728z"
+        path d="M16.243 7.757a6 6 0 0 0 -8.486 0"
+      else if name == "Quick Create"
+        path d="M4.929 4.929a10 10 0 1 1 14.141 14.141a10 10 0 0 1 -14.14 -14.14zm8.071 4.071a1 1 0 1 0 -2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0 -2h-2v-2z"
+      else if name == "Dashboard"
+        path d="M12 13m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"
+        path d="M13.45 11.55l2.05 -2.05"
+        path d="M6.4 20a9 9 0 1 1 11.2 0z"
+      else if name == "Lifecycle"
+        path d="M13 5h8"
+        path d="M13 9h5"
+        path d="M13 15h8"
+        path d="M13 19h5"
+        path d="M3 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"
+        path d="M3 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"
+      else if name == "Analytics"
+        path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"
+        path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"
+        path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"
+        path d="M4 20h14"
+      else if name == "Projects"
+        path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"
+      else if name == "Team"
+        path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"
+        path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"
+        path d="M16 3.13a4 4 0 0 1 0 7.75"
+        path d="M21 21v-2a4 4 0 0 0 -3 -3.85"
+      else if name == "Data Library"
+        path d="M12 6m-8 0a8 3 0 1 0 16 0a8 3 0 1 0 -16 0"
+        path d="M4 6v6a8 3 0 0 0 16 0v-6"
+        path d="M4 12v6a8 3 0 0 0 16 0v-6"
+      else if name == "Reports"
+        path d="M8 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5.697"
+        path d="M18 14v4h4"
+        path d="M18 11v-4a2 2 0 0 0 -2 -2h-2"
+        path d="M8 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"
+        path d="M18 18m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"
+        path d="M8 11h4"
+        path d="M8 15h3"
+      else if name == "Word Assistant"
+        path d="M14 3v4a1 1 0 0 0 1 1h4"
+        path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2"
+        path d="M9 12l1.333 5l1.667 -4l1.667 4l1.333 -5"
+      else if name == "More"
+        path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"
+        path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"
+        path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"
+      else if name == "Settings"
+        path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"
+        path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"
+      else if name == "Get Help"
+        path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"
+        path d="M12 17l0 .01"
+        path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4"
+      else if name == "Search"
+        path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"
+        path d="M21 21l-6 -6"

@@ -1,0 +1,33 @@
+use CalendarAdvanced from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state year = 2026
+  state month = 3
+  state low = "2026-03-09"
+  state high = "2026-03-12"
+  state single = "2026-03-09"
+  action calendarMonth(y: number, m: number)
+    year = y
+    month = m
+  action chooseSingle(start: string, finish: string, values: string[])
+    single = start
+  action chooseRange(start: string, finish: string, values: string[])
+    low = start
+    high = finish
+  state multipleDates: string[] = ["2026-03-09", "2026-03-12"]
+  action chooseMultiple(start: string, finish: string, values: string[])
+    multipleDates = values
+  view
+    column gap=16 min-width=0 max-width="100%"
+      text "Single date with constraints" font-weight=600
+      CalendarAdvanced(id="dates-single", low=single, high="", selected=[], mode="single", navigation="both", year=year, month=month, minimum="2026-03-05", maximum="2026-05-25", disabledDates=["2026-03-17"], disabledWeekends=true, disabled=false, changeMonth=calendarMonth, change=chooseSingle)
+      text "Date range" font-weight=600
+      CalendarAdvanced(id="dates-range", low=low, high=high, selected=[], mode="range", navigation="both", year=year, month=month, minimum="2026-03-01", maximum="2026-05-25", disabledDates=[], disabledWeekends=false, disabled=false, changeMonth=calendarMonth, change=chooseRange)
+      text "Disabled" font-weight=600
+      CalendarAdvanced(id="dates-disabled", low=single, high="", selected=[], mode="single", navigation="both", year=year, month=month, minimum="", maximum="", disabledDates=[], disabledWeekends=false, disabled=true, changeMonth=calendarMonth, change=chooseSingle)
+      text "Multiple selection" font-weight=600
+      CalendarAdvanced(id="dates-multiple", low="", high="", selected=multipleDates, mode="multiple", navigation="both", year=year, month=month, minimum="", maximum="", disabledDates=[], disabledWeekends=false, disabled=false, changeMonth=calendarMonth, change=chooseMultiple)

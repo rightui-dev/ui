@@ -1,0 +1,31 @@
+use Attachment, Button from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  action remove
+    attached = false
+  state attached = true
+  state uploading = true
+  state failed = true
+  action removeUpload
+    uploading = false
+  action removeError
+    failed = false
+  action restore
+    attached = true
+    uploading = true
+    failed = true
+  view
+    column gap=16 min-width=0 max-width="100%"
+      if attached
+        Attachment(id="content-attachment", name="brief.txt", metadata="Text · Session brief · Ready", content="Photo session\nBedroom, restaurant and terrace.\nNatural morning light.\nDelivery: selected photos and a short video.", status="done", remove=remove)
+      Button(id="attachment-restore", label="Attach brief", variant="outline", disabled=(attached and uploading and failed), press=restore)
+      text "Uploading" font-weight=600
+      if uploading
+        Attachment(id="attachment-uploading", name="preview.txt", metadata="Uploading", content="Preview document", status="uploading", remove=removeUpload)
+      text "Error" font-weight=600
+      if failed
+        Attachment(id="attachment-error", name="preview.txt", metadata="Error", content="Preview document", status="error", remove=removeError)

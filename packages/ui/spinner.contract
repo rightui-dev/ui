@@ -1,0 +1,15 @@
+keyframes uiSpin
+  from rotate="0deg"
+  to rotate="360deg"
+component Spinner
+  props
+    id: string
+    label: string
+    reduced: bool
+  view
+    row id=id testId=id role="status" aria-label=label align-items="center" gap=8
+      svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 aria-hidden=true
+        animation=(reduced ? "none" : "uiSpin 1s linear infinite")
+        circle cx=12 cy=12 r=9 opacity=0.2
+        path d="M12 3a9 9 0 0 1 9 9" stroke-linecap="round"
+      text label font-size="0.8125rem" color="ui.muted-foreground"

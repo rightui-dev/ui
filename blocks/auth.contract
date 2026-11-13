@@ -1,0 +1,152 @@
+use Control, Field from "../packages/ui/styles.contract"
+use Brand, BrandIcon from "./brand.contract"
+
+component AuthField
+  props
+    id: string
+    label: string
+    kind: string
+    value: string
+    placeholder: string
+    hint: string
+    edit: action
+    submit: action
+  view
+    column gap=12 min-width=0
+      text label id=(id + "-label") font-size="0.875rem" font-weight=500 line-height=1.375
+      input id=id testId=id class=Field type=kind value=value input=edit submit=submit placeholder=placeholder aria-labelledby=(id + "-label") aria-describedby=(id + "-hint") aria-required=true
+        ::placeholder
+          color="ui.muted-foreground"
+      if hint != ""
+        text hint id=(id + "-hint") font-size="0.875rem" line-height=1.5 color="ui.muted-foreground"
+
+component AuthForm
+  props
+    signup: bool
+    variant: number
+    switchMode: action
+  state name = ""
+  state email = ""
+  state password = ""
+  state confirmation = ""
+  state message = ""
+  action setName(v: string)
+    name = v
+  action setEmail(v: string)
+    email = v
+  action setPassword(v: string)
+    password = v
+  action setConfirmation(v: string)
+    confirmation = v
+  action submit
+    if not email.includes("@") or (signup and variant < 4 and name.trim() == "")
+      message = "Please enter your name and a valid email address."
+    else if variant != 5 and password.length < 8
+      message = "Password must be at least 8 characters long."
+    else if signup and variant != 5 and password != confirmation
+      message = "Passwords do not match."
+    else
+      message = "Form complete. This preview does not create an account or sign you in."
+  action social(name: string)
+    message = name + " sign-in is not connected in this preview."
+  action recovery
+    message = "Password recovery is not connected in this preview."
+  view
+    column id="block-auth-form" testId="block-auth-form" gap=28 min-width=0
+      column min-width=0 width="100%" margin-bottom=-4 gap=(variant == 1 or variant == 3 ? 8 : 4) align-items=(variant == 1 ? "stretch" : "center")
+        if variant == 5
+          BrandIcon(name="gallery")
+        text (variant == 5 ? "Welcome to Acme Inc." : signup ? "Create your account" : variant == 3 or variant == 4 ? "Welcome back" : "Login to your account") role="heading" aria-level=1 font-size=(variant == 1 ? "1rem" : variant == 3 or variant == 5 ? "1.25rem" : "1.5rem") font-weight=(variant == 1 or variant == 3 ? 600 : 700) text-align=(variant == 1 ? "left" : "center") line-height=1.4 width="100%" min-width=0
+        if variant != 5
+          text (signup ? variant == 1 ? "Enter your information below to create your account" : variant == 2 ? "Fill in the form below to create your account" : "Enter your email below to create your account" : variant == 3 ? "Login with your Apple or Google account" : variant == 4 ? "Login to your Acme Inc account" : "Enter your email below to login to your account") font-size=(variant == 4 and not signup ? "1rem" : "0.875rem") color="ui.muted-foreground" line-height=1.428571 text-align=(variant == 1 ? "left" : "center") width="100%" min-width=0
+        else
+          button class=Control press=switchMode padding=0 border="0" background-color="transparent" color="ui.muted-foreground"
+            text (signup ? "Already have an account? Sign in" : "Don’t have an account? Sign up") font-size="0.875rem"
+      if variant == 3 and not signup
+        column gap=12
+          for provider in ["Apple", "Google"] key=provider
+            button id=("auth-provider-" + provider) testId=("auth-provider-" + provider) class=Control press=social(provider) border="1px solid ui.input" background-color="transparent" box-shadow="0 1px 2px 0 ui.shadow" display="flex" align-items="center" justify-content="center" gap=8 padding="6px 12px"
+              BrandIcon(name=provider.toLowerCase())
+              text ("Login with " + provider)
+        row align-items="center" gap=12 margin="-8px 0px"
+          view height=1 flex=1 background-color="ui.border"
+          text "Or continue with" font-size="0.875rem" color="ui.muted-foreground"
+          view height=1 flex=1 background-color="ui.border"
+      if signup and variant < 4
+        AuthField(id="auth-name", label="Full Name", kind="text", value=name, placeholder="John Doe", hint="", edit=setName, submit=submit)
+      AuthField(id="auth-email", label="Email", kind="email", value=email, placeholder="m@example.com", hint=(signup and variant != 3 and variant != 5 ? "We’ll use this to contact you. We will not share your email with anyone else." : ""), edit=setEmail, submit=submit)
+      if variant != 5
+        if signup
+          row gap=16 flex-wrap="wrap"
+            column flex=(variant == 3 or variant == 4 ? "1 1 8rem" : "1 1 100%") min-width=0
+              AuthField(id="auth-password", label="Password", kind="password", value=password, placeholder="", hint=(variant == 1 or variant == 2 ? "Must be at least 8 characters long." : ""), edit=setPassword, submit=submit)
+            column flex=(variant == 3 or variant == 4 ? "1 1 8rem" : "1 1 100%") min-width=0
+              AuthField(id="auth-confirm", label="Confirm Password", kind="password", value=confirmation, placeholder="", hint=(variant == 1 or variant == 2 ? "Please confirm your password." : ""), edit=setConfirmation, submit=submit)
+          if variant == 3 or variant == 4
+            text "Must be at least 8 characters long." font-size="0.875rem" color="ui.muted-foreground"
+        else
+          column gap=12
+            row justify-content="space-between" gap=8 flex-wrap="wrap" align-items="center"
+              text "Password" id="auth-password-label" font-size="0.875rem" font-weight=500 line-height=1.375
+              button id="auth-recover" testId="auth-recover" appearance="none" press=recovery border="0" padding=0 background-color="transparent" color="ui.foreground"
+                text "Forgot your password?" font-size="0.875rem"
+            input id="auth-password" testId="auth-password" class=Field type="password" value=password input=setPassword submit=submit aria-labelledby="auth-password-label"
+              ::placeholder
+                color="ui.muted-foreground"
+      column gap=12
+        button id="auth-submit" testId="auth-submit" class=Control press=submit background-color="ui.primary" color="ui.primary-foreground" border="0" padding="6px 16px"
+          text (signup ? "Create Account" : "Login")
+        if variant == 1
+          button class=Control press=social("Google") border="1px solid ui.input" background-color="transparent" padding="6px 16px"
+            text (signup ? "Sign up with Google" : "Login with Google")
+      if variant == 2 or variant == 4 or variant == 5
+        row align-items="center" gap=12 margin="-8px 0px"
+          view height=1 flex=1 background-color="ui.border"
+          text (variant == 5 ? "Or" : "Or continue with") font-size="0.875rem" color="ui.muted-foreground" width="100%" min-width=0
+          view height=1 flex=1 background-color="ui.border"
+        row gap=16 flex-wrap="wrap"
+          for provider in (variant == 2 ? ["GitHub"] : variant == 4 ? ["Apple", "Google", "Meta"] : ["Apple", "Google"]) key=provider
+            button class=Control aria-label=("Continue with " + provider) press=social(provider) flex="1 1 0px" border="1px solid ui.input" background-color="transparent" box-shadow="0 1px 2px 0 ui.shadow" display="flex" align-items="center" justify-content="center" gap=8 padding="6px 8px"
+              BrandIcon(name=provider.toLowerCase())
+              if variant != 4
+                text (variant == 2 ? (signup ? "Sign up with GitHub" : "Login with GitHub") : "Continue with " + provider)
+      if variant != 5
+        button margin-top=-16 min-height=0 id="auth-switch" testId="auth-switch" class=Control press=switchMode padding=0 border="0" background-color="transparent" color="ui.muted-foreground"
+          row justify-content="center" gap=4 flex-wrap="wrap"
+            text (signup ? "Already have an account?" : "Don’t have an account?") font-size="0.875rem" font-weight=400 line-height=1.5
+            text (signup ? "Sign in" : "Sign up") font-size="0.875rem" font-weight=400 line-height=1.5 text-decoration="underline"
+      if message != ""
+        text message testId="auth-message" role="status" font-size="0.875rem" line-height=1.5 color="ui.muted-foreground"
+
+component AuthBlock
+  props
+    variant: number
+    signup: bool
+    narrow: bool
+    switchMode: action
+  view
+    row id="auth-block" testId="auth-block" min-height=740 height="100%" width="100%" align-items="stretch" background-color=(variant == 3 or variant == 4 ? "ui.muted" : "ui.background")
+      column flex=1 min-width=0 padding=(narrow ? 24 : 40) gap=24
+        if variant == 2
+          Brand()
+        column flex=1 align-items="center" justify-content="center" gap=24
+          column width="100%" max-width=(variant == 2 ? "20rem" : variant == 4 and not narrow ? "56rem" : "24rem") gap=24
+            if variant == 3
+              row justify-content="center"
+                Brand()
+            row border=(variant == 1 or variant == 3 or variant == 4 ? "1px solid ui.border" : "0") border-radius=14 box-shadow=(variant == 1 or variant == 3 or variant == 4 ? "0 1px 3px 0 ui.shadow" : "none") overflow="clip" background-color=(variant == 1 or variant == 3 or variant == 4 ? "ui.surface" : "transparent")
+              column flex=1 min-width=0 padding=(variant == 4 ? (narrow ? 24 : 32) : variant == 1 or variant == 3 ? 24 : 0)
+                AuthForm(signup=signup, variant=variant, switchMode=switchMode)
+              if variant == 4 and not narrow
+                view flex=1 position="relative" min-width=0 background-color="ui.muted"
+                  image "assets/shadcn-placeholder.svg" alt="Image" width="100%" height="100%" position="absolute" inset=0 object-fit="cover"
+            if variant == 3 or variant == 4 or variant == 5
+              text font-size="0.875rem" line-height=1.5 color="ui.muted-foreground" text-align="center" padding="0px 24px"
+                text "By clicking continue, you agree to our "
+                text "Terms of Service" href="#" color="ui.muted-foreground" text-decoration="underline"
+                text " and "
+                text "Privacy Policy" href="#" color="ui.muted-foreground" text-decoration="underline"
+                text "."
+      if variant == 2 and not narrow
+        view flex=1 position="relative" min-width=0 background-color="ui.muted"
+          image "assets/shadcn-placeholder.svg" alt="Image" width="100%" height="100%" position="absolute" inset=0 object-fit="cover"

@@ -1,0 +1,119 @@
+use Control, Field as FieldStyle from "./styles.contract"
+component Label
+  props
+    id: string
+    text: string
+    required: bool
+  view
+    text (text + (required ? " *" : "")) id=id font-size="0.875rem" font-weight=500 color="ui.foreground"
+
+component Field
+  props
+    id: string
+    description: string
+    error: string
+  slot
+  view
+    column gap=8 min-width=0 role="group" aria-describedby=(id + "-hint")
+      children
+      text (error != "" ? error : description) id=(id + "-hint") testId=(id + "-hint") font-size="0.75rem" line-height=1.5 color=(error != "" ? "ui.danger" : "ui.muted-foreground")
+
+component Textarea
+  props
+    id: string
+    label: string
+    value: string
+    placeholder: string
+    error: string
+    disabled: bool
+    edit: action
+  view
+    column gap=8 min-width=0
+      Label(id=id + "-label", text=label, required=false)
+      textarea id=id testId=id class=FieldStyle value=value input=edit placeholder=placeholder disabled=disabled
+        aria-labelledby=(id + "-label") aria-invalid=(error != "") aria-describedby=(id + "-error")
+        min-height=64 max-height="20rem" resize="vertical"
+      text error id=(id + "-error") font-size="0.75rem" color="ui.danger" display=(error == "" ? "none" : "block")
+
+component RadioGroup
+  props
+    id: string
+    label: string
+    options: string[]
+    value: string
+    disabled: bool
+    required: bool
+    descriptionId: string
+    change: action
+  action pick(i: number)
+    if not disabled
+      match options.at(i)
+        case some(v)
+          change(v)
+          focus(id + "-" + i.toString())
+        case none
+          preventDefault()
+  action keys(k: string)
+    if not disabled and options.length > 0 and (k == "ArrowDown" or k == "ArrowRight" or k == "ArrowUp" or k == "ArrowLeft" or k == "Home" or k == "End")
+      preventDefault()
+      let index = max(0, options.indexOf(value))
+      pick(k == "Home" ? 0 : k == "End" ? options.length - 1 : (index + (k == "ArrowDown" or k == "ArrowRight" ? 1 : options.length - 1)) % options.length)
+  view
+    column id=id testId=id role="radiogroup" aria-label=label aria-required=required aria-describedby=descriptionId gap=12
+      for option, i in options key=option
+        button id=(id + "-" + i.toString()) testId=(id + "-" + i.toString()) class=Control role="radio" aria-checked=(value == option)
+          tabindex=(value == option or (options.indexOf(value) == -1 and i == 0) ? 0 : -1) disabled=disabled press=pick(i) key=keys
+          display="flex" align-items="center" gap=8 padding="0px" min-height=20 border="0" background-color="transparent" color="ui.foreground"
+          view width=16 height=16 flex-shrink=0 border-radius="ui.radius-full" border=(value == option ? "1px solid ui.primary" : "1px solid ui.border") display="flex" align-items="center" justify-content="center" aria-hidden=true
+            if value == option
+              view width=8 height=8 border-radius="ui.radius-full" background-color="ui.primary"
+          text option font-size="0.875rem" text-align="left"
+
+component Toggle
+  props
+    id: string
+    label: string
+    pressed: bool
+    disabled: bool
+    reduced: bool
+    change: action
+  action toggle
+    if not disabled
+      change(not pressed)
+  view
+    button id=id testId=id class=Control aria-pressed=pressed disabled=disabled press=toggle
+      padding="0px 8px" min-width=36 height=36 border="1px solid ui.border" background-color=(pressed ? "ui.muted" : "transparent") color="ui.foreground"
+      transition=(reduced ? "none" : "background-color 140ms ease-out")
+      text label
+
+component ToggleGroup
+  props
+    id: string
+    label: string
+    options: string[]
+    selected: string[]
+    disabled: bool
+    reduced: bool
+    change: action
+  action toggle(value: string)
+    if not disabled
+      change(selected.includes(value) ? selected.filter(item => item != value) : selected.concat([value]))
+  action keys(i: number, k: string)
+    if k == "Enter" or k == " "
+      preventDefault()
+      match options.at(i)
+        case some(v)
+          toggle(v)
+        case none
+          preventDefault()
+    else if k == "ArrowRight" or k == "ArrowLeft" or k == "Home" or k == "End"
+      preventDefault()
+      let next = (k == "Home" ? 0 : k == "End" ? options.length - 1 : (i + (k == "ArrowRight" ? 1 : options.length - 1)) % max(1, options.length))
+      focus(id + "-" + next.toString())
+  view
+    row id=id testId=id role="group" aria-label=label gap=4 flex-wrap="wrap"
+      for option, i in options key=option
+        button id=(id + "-" + i.toString()) testId=(id + "-" + i.toString()) class=Control aria-pressed=selected.includes(option) disabled=disabled press=toggle(option) key=keys(i)
+          padding="0px 8px" min-width=36 height=36 border="1px solid ui.border" background-color=(selected.includes(option) ? "ui.muted" : "transparent") color="ui.foreground"
+          transition=(reduced ? "none" : "background-color 140ms ease-out")
+          text option

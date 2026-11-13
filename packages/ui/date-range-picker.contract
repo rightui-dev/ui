@@ -1,0 +1,108 @@
+use Control from "./styles.contract"
+use CalendarAdvanced, CalendarDate, advancedAllowed, advancedISODate, advancedRangeValid, advancedISOValid from "./calendar-advanced.contract"
+use calendarDays, calendarISO, calendarMonth from "./calendar.contract"
+keyframes uiDateRangeIn
+  from opacity=0 scale=0.95
+  to opacity=1 scale=1
+keyframes uiDateRangeOut
+  to opacity=0 scale=0.95
+shape DateRangePreset
+  label: string
+  low: string
+  high: string
+fn dateRangeLabel(iso: string): string = calendarMonth(advancedISODate(iso).month).slice(0, 3) + " " + (advancedISODate(iso).day < 10 ? "0" : "") + advancedISODate(iso).day.toString() + ", " + advancedISODate(iso).year.toString()
+component DateRangePicker
+  props
+    id: string
+    low: string
+    high: string
+    initialYear: number
+    initialMonth: number
+    minimum: string
+    maximum: string
+    disabledDates: string[]
+    disabledWeekends: bool
+    disabled: bool
+    narrow: bool
+    reduced: bool
+    presets: DateRangePreset[]
+    change: action
+  state opened = false
+  state openEpoch = 0
+  state year = initialYear
+  state month = initialMonth
+  derive nextYear = month == 12 ? year + 1 : year
+  derive nextMonth = month == 12 ? 1 : month + 1
+  action show
+    if not disabled and not opened
+      let y = advancedISOValid(low) ? advancedISODate(low).year : initialYear
+      let m = advancedISOValid(low) ? advancedISODate(low).month : initialMonth
+      year = y
+      month = m
+      openEpoch = openEpoch + 1
+      opened = true
+      showPopover(id + "-popup", source=id)
+      match first(range(calendarDays(y, m)).map(i => calendarISO(y, m, i + 1)).filter(iso => advancedAllowed(y, m, advancedISODate(iso).day, minimum, maximum, disabledDates, disabledWeekends)))
+        case some(iso)
+          focus(id + "-first-date-" + (low != "" and advancedAllowed(y, m, advancedISODate(low).day, minimum, maximum, disabledDates, disabledWeekends) ? low : iso))
+        case none
+          focus(id + "-popup")
+  action closeRangePopup
+    opened = false
+    focus(id)
+  action toggle
+    if opened
+      closeRangePopup()
+    else
+      show()
+  action changed(epoch: number, e: ToggleEvent)
+    if epoch == openEpoch
+      opened = e.newState == "open"
+  action firstMonth(y: number, m: number)
+    year = y
+    month = m
+  action secondMonth(y: number, m: number)
+    let raw = m - 2
+    year = y + floor(raw / 12)
+    month = ((raw % 12 + 12) % 12) + 1
+  action selected(start: string, finish: string, values: string[])
+    change(start, finish)
+  action preset(value: DateRangePreset)
+    if not disabled and advancedRangeValid(value.low, value.high, minimum, maximum, disabledDates, disabledWeekends)
+      change(value.low, value.high)
+      year = advancedISODate(value.low).year
+      month = advancedISODate(value.low).month
+  action triggerKeys(k: string)
+    if k == "Enter" or k == " "
+      preventDefault()
+      toggle()
+    else if k == "ArrowDown"
+      preventDefault()
+      show()
+  action popupKeys(k: string)
+    if k == "Escape"
+      preventDefault()
+      stopPropagation()
+      closeRangePopup()
+  view
+    column min-width=0 align-items="flex-start"
+      button id=id testId=id class=Control press=toggle key=triggerKeys disabled=disabled aria-haspopup="dialog" aria-expanded=opened aria-controls=(id + "-popup")
+        display="flex" align-items="center" gap=8 padding="8px 12px" width="18.75rem" max-width="100%" text-align="left" border="1px solid ui.border" background-color="ui.surface" color=(low == "" ? "ui.muted-foreground" : "ui.foreground") font-weight=400
+        svg width=16 height=16 flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+          rect x=3 y=5 width=18 height=16 rx=2
+          path d="M16 3v4M8 3v4M3 11h18"
+        text (low == "" ? "Choose a range" : high == "" ? dateRangeLabel(low) : dateRangeLabel(low) + " - " + dateRangeLabel(high)) min-width=0 overflow-wrap="break-word"
+      if opened
+        for epoch in [openEpoch] key=epoch
+          column id=(id + "-popup") testId=(id + "-popup") popover="auto" toggle=changed(epoch) keycapture=popupKeys role="dialog" aria-label="Choose a date range" tabindex=-1
+            position-area="bottom span-right" position-try-fallbacks="flip-block, flip-inline" margin="4px 0px" padding=0 gap=0 box-sizing="border-box" width="auto" max-width="calc(100vw - 32px)" max-height="calc(100vh - 32px)" overflow="auto" border="1px solid ui.border" border-radius="ui.radius-popover" background-color="ui.surface" color="ui.foreground"
+            animation=(reduced ? "none" : "uiDateRangeIn 150ms ease-out both") -exact-exit-animation=(reduced ? "none" : "uiDateRangeOut 100ms ease-in both")
+            if presets.length > 0
+              row role="group" aria-label="Presets" gap=4 flex-wrap="wrap" padding=8 border-bottom="1px solid ui.border"
+                for value, i in presets key=value.label
+                  button id=(id + "-preset-" + i.toString()) testId=(id + "-preset-" + i.toString()) class=Control press=preset(value) disabled=(disabled or not advancedRangeValid(value.low, value.high, minimum, maximum, disabledDates, disabledWeekends)) aria-pressed=(low == value.low and high == value.high) padding="4px 8px" min-height="2rem" border="none" background-color="transparent" color="ui.foreground"
+                    text value.label
+            row gap=16 min-width=0
+              CalendarAdvanced(id=id + "-first", low=low, high=high, selected=[], mode="range", navigation=(narrow or nextYear > 9999 ? "both" : "previous"), year=year, month=month, minimum=minimum, maximum=maximum, disabledDates=disabledDates, disabledWeekends=disabledWeekends, disabled=disabled, changeMonth=firstMonth, change=selected)
+              if not narrow and nextYear <= 9999
+                CalendarAdvanced(id=id + "-second", low=low, high=high, selected=[], mode="range", navigation="next", year=nextYear, month=nextMonth, minimum=minimum, maximum=maximum, disabledDates=disabledDates, disabledWeekends=disabledWeekends, disabled=disabled, changeMonth=secondMonth, change=selected)

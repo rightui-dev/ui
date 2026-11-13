@@ -1,0 +1,18 @@
+font "Geist"
+  100 900 = "assets/fonts/Geist.ttf"
+
+use Button from "@rightui/ui"
+
+shape Greeting
+  label: string
+
+component App
+  resource greeting = greeting() as shape Greeting
+  state count = 0
+  action increment
+    count = count + 1
+  view
+    column padding=24 gap=12 color="ui.foreground" background-color="ui.background" font-family="Geist"
+      text greeting.label
+      text count.toString() testId="counter"
+      Button(id="increment", label="Increment", variant="primary", disabled=false, press=increment)

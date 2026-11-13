@@ -1,0 +1,24 @@
+use Button, AlertDialog from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state desktopOverlay = ""
+  derive reduce = reduced
+  action closeArchive
+    desktopOverlay = ""
+    focus("alert-dialog-open")
+  action archive
+    archived = true
+    desktopOverlay = ""
+    focus("alert-dialog-open")
+  state overlayReturn = "desktop-alert"
+  state archived = false
+  action openExample
+    desktopOverlay = "alert"
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Button(id="alert-dialog-open", label="Open alert dialog", variant="outline", disabled=false, press=openExample)
+      AlertDialog(id="desktop-confirm", open=desktopOverlay == "alert", title="Archive this project?", description="This demo project will be archived. You can restore it later.", confirmLabel="Archiver", reduced=reduce, dismiss=closeArchive, confirm=archive)

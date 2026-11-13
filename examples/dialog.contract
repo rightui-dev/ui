@@ -1,0 +1,32 @@
+use Button, Dialog from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state name = ""
+  state volume = 64
+  state preset = "Studio"
+  state dialog = false
+  derive reduce = reduced
+  action closeDialog
+    dialog = false
+    focus("dialog-open")
+  action save
+    saved = true
+    dialog = false
+    focus("dialog-open")
+  state saved = false
+  action openExample
+    dialog = true
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Button(id="dialog-open", label="Open dialog", variant="outline", disabled=false, press=openExample)
+      Dialog(id="save-dialog", open=dialog, reduced=reduce, title="Save your project?", description="Your preferences apply to this demo workspace.", confirmLabel="Save", focusIds=["save-dialog-cancel", "save-dialog-confirm"], dismiss=closeDialog, confirm=save)
+        column gap=8 padding=16 background-color="ui.muted" border-radius=8
+          text (name.trim() == "" ? "Untitled project" : name) font-size="0.875rem" font-weight=500 color="ui.foreground"
+          text (preset + " · Intensity " + volume.toFixed(0) + "%") font-size="0.75rem" color="ui.muted-foreground"
+        column id="dialog-long-content" max-height=180 overflow="auto" gap=12
+          for section in ["Overview", "Preferences", "Permissions", "Storage", "Notifications", "Accessibility", "Review"] key=section
+            text (section + ": review the project settings before continuing.")

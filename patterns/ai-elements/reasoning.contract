@@ -1,0 +1,43 @@
+use ButtonAI as ButtonContent from "@rightui/ui"
+use MessageFrame, MessageContent, BubbleFrame from "../../packages/ui/conversation-parts.contract"
+use TraceFrame, TraceDisclosure from "../../packages/ui/trace-parts.contract"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  inject
+    rightuiDemoTime: number
+    rightuiRunDemo: action
+  state started = -10000
+  state chosenOpen: option<bool> = some(true)
+  derive elapsed = (rightuiDemoTime - started) * 1.15
+  derive running = elapsed < 5000
+  derive busy = elapsed < 8000
+  derive open = match chosenOpen { case some(value) => value, case none => running }
+  derive reasoning = "The deploy log has three phases. Install takes 38s and next build takes 52s, both normal for this repo.\n\nImage optimization takes 3m 50s. It reruns on every deploy because its cache key includes the commit hash, so the cache never hits."
+  derive answer = "Image optimization is the bottleneck. Key its cache on the lockfile and the image directory instead of the commit hash, and the deploy should take under two minutes."
+  action replay
+    started = rightuiDemoTime
+    chosenOpen = none
+    rightuiRunDemo(7000)
+  action toggle
+    chosenOpen = some(not open)
+  view
+    column gap=16 min-width=0 width="100%" max-width="24rem" min-height=288 padding="24px 0px" font-size="0.875rem"
+      MessageFrame(id="ai-reasoning-user", align="end")
+        MessageContent(id="ai-reasoning-question", align="end")
+          BubbleFrame(id="ai-reasoning-bubble", align="end", variant="muted")
+            text "Why is the checkout deploy so slow?"
+      MessageFrame(id="ai-reasoning-assistant", align="start")
+        MessageContent(id="ai-reasoning-content", align="start")
+          column gap=16
+            TraceFrame()
+              TraceDisclosure(id="ai-reasoning-0", title=(running ? "Thinking" : "Thought for 5s"), icon="none", status=(running ? "running" : ""), open=open, reduced=reduced, toggle=toggle)
+                text (running ? reasoning.slice(0, floor(elapsed / 5000 * reasoning.length)) : reasoning) testId="ai-reasoning-text" white-space="pre-wrap" line-height=1.625
+            if elapsed >= 5400
+              text (busy ? answer.slice(0, floor((elapsed - 5400) / 2600 * answer.length)) : answer) testId="ai-reasoning-answer" line-height=1.625
+      if not busy
+        row margin-top="auto"
+          ButtonContent(id="ai-reasoning-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
+            text "Replay"

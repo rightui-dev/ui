@@ -1,0 +1,18 @@
+use HoverCard from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  view
+    column gap=16 min-width=0 max-width="100%"
+      HoverCard(id="controls-hover", label="@shadcn")
+        row gap=12 align-items="center"
+          view width="2.5rem" height="2.5rem" border-radius=99 background-color="ui.muted" display="flex" align-items="center" justify-content="center"
+            text "SC" font-size="0.875rem" font-weight=600 color="ui.foreground"
+          column gap=4
+            text "shadcn" font-size="0.875rem" font-weight=600
+            text "Composants ouverts, accessibles et composables." font-size="0.875rem" color="ui.muted-foreground"
+        link id="controls-hover-profile" testId="controls-hover-profile" href="https://ui.shadcn.com" color="ui.foreground" font-size="0.875rem"
+          text "Read documentation"

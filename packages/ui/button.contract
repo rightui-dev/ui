@@ -1,0 +1,147 @@
+use Control from "./styles.contract"
+fn buttonFill(variant: string, hovered: bool): string = ((variant == "primary" or variant == "default") ? (hovered ? "ui.primary-hover" : "ui.primary") : variant == "destructive" ? (hovered ? "ui.destructive-hover" : "ui.destructive") : variant == "secondary" ? (hovered ? "ui.secondary-hover" : "ui.muted") : variant == "outline" ? (hovered ? "ui.outline-hover" : "ui.outline") : variant == "link" ? "transparent" : hovered ? "ui.ghost-hover" : "transparent")
+fn buttonInk(variant: string): string = ((variant == "primary" or variant == "default") ? "ui.primary-foreground" : variant == "destructive" ? "ui.on-danger" : variant == "danger" ? "ui.danger" : "ui.foreground")
+
+component ButtonFrame
+  props
+    id: string
+    label: string
+    variant: string
+    disabled: bool
+    press: action
+    size: string
+    radius: string
+    compact: bool
+    pressed: option<bool>
+    describedBy: string
+  slot
+  derive icon = size.startsWith("icon")
+  derive height = size.endsWith("xs") ? "1.5rem" : size.endsWith("sm") ? (compact ? "1.75rem" : "2rem") : size.endsWith("lg") ? (compact ? "2.25rem" : "2.5rem") : (compact ? "2rem" : "2.25rem")
+  state hovered = false
+  state tipFocused = false
+  action hoverChanged(inside: bool)
+    hovered = inside
+    if describedBy != ""
+      if inside
+        showPopover(describedBy, source=id)
+      else if not tipFocused
+        hidePopover(describedBy)
+  action focusTip
+    tipFocused = true
+    if describedBy != ""
+      showPopover(describedBy, source=id)
+  action blurTip
+    tipFocused = false
+    if describedBy != ""
+      hidePopover(describedBy)
+  action tipKeys(k: string)
+    if k == "Escape" and describedBy != ""
+      hidePopover(describedBy)
+  view
+    button id=id testId=id class=Control press=press disabled=disabled hover=hoverChanged focus=focusTip blur=blurTip key=tipKeys aria-label=label aria-pressed=(match pressed { case some(value) => value ? "true" : "false", case none => "undefined" }) aria-describedby=describedBy
+      display="flex" flex-shrink=0 align-items="center" justify-content="center" padding=(icon ? "0px" : size == "xs" ? "0px 8px" : size == "sm" ? "4px 12px" : size == "lg" ? "8px 24px" : "6px 16px") gap=8
+      width=(icon ? height : "auto") height=height min-height=height
+      border-radius=(radius != "" ? radius : size.endsWith("xs") or size.endsWith("sm") ? "ui.radius-md" : "ui.radius-control")
+      text-decoration=(variant == "link" and hovered ? "underline" : "none")
+      background-color=buttonFill(variant, hovered)
+      color=buttonInk(variant)
+      border=(variant == "outline" ? "1px solid ui.input" : "0")
+      box-shadow=(variant == "outline" ? "0 1px 2px 0 ui.shadow" : "none")
+      transition="background-color 150ms ease, color 150ms ease, box-shadow 150ms ease"
+      children
+
+component Button
+  props
+    id: string
+    label: string
+    variant: string
+    disabled: bool
+    press: action
+  view
+    ButtonFrame(id=id, label=label, variant=variant, disabled=disabled, press=press, size="default", radius="", compact=false, pressed=none, describedBy="")
+      text label min-width=0
+
+component IconButton
+  props
+    id: string
+    label: string
+    variant: string
+    disabled: bool
+    press: action
+  slot
+  view
+    ButtonFrame(id=id, label=label, variant=variant, disabled=disabled, press=press, size="icon-sm", radius="", compact=false, pressed=none, describedBy="")
+      children
+
+component ButtonContent
+  props
+    id: string
+    label: string
+    variant: string
+    size: string
+    disabled: bool
+    press: action
+  slot
+  view
+    ButtonFrame(id=id, label=label, variant=variant, disabled=disabled, press=press, size=size, radius="", compact=false, pressed=none, describedBy="")
+      children
+
+component DisclosureButton
+  props
+    id: string
+    label: string
+    variant: string
+    controls: string
+    expanded: bool
+    icon: bool
+    press: action
+  slot
+  state hovered = false
+  action hoverChanged(inside: bool)
+    hovered = inside
+  view
+    button id=id testId=id class=Control press=press hover=hoverChanged aria-label=label aria-expanded=expanded aria-controls=controls
+      display="flex" align-items="center" justify-content=(icon ? "center" : "flex-start") text-align="left" gap=8
+      width=(icon ? "2rem" : "100%") min-height=(icon ? "2rem" : "ui.control") height=(icon ? "2rem" : "auto") flex-shrink=0 padding=(icon ? "0px" : "8px 12px")
+      background-color=buttonFill(variant, hovered) color=buttonInk(variant) border=(variant == "outline" ? "1px solid ui.input" : "0")
+      transition="background-color 150ms ease, color 150ms ease"
+      children
+
+component ButtonControl
+  props
+    id: string
+    label: string
+    variant: string
+    size: string
+    disabled: bool
+    pressed: option<bool>
+    describedBy: string
+    press: action
+  slot
+  view
+    ButtonFrame(id=id, label=label, variant=variant, disabled=disabled, press=press, size=size, radius="ui.ai-radius-control", compact=true, pressed=pressed, describedBy=describedBy)
+      children
+
+component ButtonSegment
+  props
+    id: string
+    label: string
+    disabled: bool
+    press: action
+  slot
+  view
+    ButtonFrame(id=id, label=label, variant="ghost", disabled=disabled, press=press, size="sm", radius="0px", compact=false, pressed=none, describedBy="")
+      children
+
+component ButtonAI
+  props
+    id: string
+    label: string
+    variant: string
+    size: string
+    disabled: bool
+    press: action
+  slot
+  view
+    ButtonFrame(id=id, label=label, variant=variant, disabled=disabled, press=press, size=size, radius="ui.ai-radius-control", compact=true, pressed=none, describedBy="")
+      children

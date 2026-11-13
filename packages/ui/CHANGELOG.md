@@ -1,0 +1,29 @@
+# Changelog
+
+rightui is in beta. No stable version has been released. Versions and their Git tags are immutable.
+
+## Unreleased
+
+## [0.1.0-beta.2] - 2026-11-13
+
+### Distribution
+
+- Prepare public npm distribution of `@rightui/ui` on the beta channel, with explicit public registry settings.
+- Add exact-version npm installation and update guidance; preserve immutable archives for offline installs.
+- Link the package to the public documentation at https://rightui.dev.
+- Component APIs, theme tokens and the Exact SDK pin are unchanged from beta.1.
+
+## [0.1.0-beta.1] - 2026-11-13
+
+### Added
+
+- Initial packaged Exact Contract components, shared Tamber theme and Geist font.
+- Component examples, AI patterns, blocks and area charts in the source repository.
+- Versioned archive installation, isolated web build and interaction validation.
+- TypeScript and Rust data integration examples and a native showcase project.
+
+### Compatibility
+
+- Exact SDK: `53426cf02bf986a5e781abc4f953d79989c6dc05`; Bun: `1.4.2`.
+- Targets: web, iOS and macOS. Web and targeted macOS checks passed; local iOS compilation is blocked by the required 27.1 SDK. Full catalog visual/accessibility coverage remains incomplete.
+- No previous published rightui package to migrate from. The earlier untagged `0.1.0` development manifest was never a stable release.

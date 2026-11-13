@@ -1,0 +1,866 @@
+[
+  {
+    "slug": "accordion",
+    "title": "Accordion",
+    "description": "Accordion with accessible presentation and local state.",
+    "usage": "Import Accordion, AccordionMultiple from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/disclosure.contract",
+    "example": "examples/accordion.contract",
+    "exports": [
+      "Accordion",
+      "AccordionMultiple"
+    ]
+  },
+  {
+    "slug": "alert",
+    "title": "Alert",
+    "description": "Alert with accessible presentation and local state.",
+    "usage": "Import Alert, AlertDialog from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/display.contract",
+    "example": "examples/alert.contract",
+    "exports": [
+      "Alert",
+      "AlertDialog"
+    ]
+  },
+  {
+    "slug": "alert-dialog",
+    "title": "Alert Dialog",
+    "description": "Alert Dialog with accessible presentation and local state.",
+    "usage": "Import AlertDialog from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/overlays.contract",
+    "example": "examples/alert-dialog.contract",
+    "exports": [
+      "AlertDialog"
+    ]
+  },
+  {
+    "slug": "aspect-ratio",
+    "title": "Aspect Ratio",
+    "description": "Aspect Ratio with accessible presentation and local state.",
+    "usage": "Import AspectRatio from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/display.contract",
+    "example": "examples/aspect-ratio.contract",
+    "exports": [
+      "AspectRatio"
+    ]
+  },
+  {
+    "slug": "attachment",
+    "title": "Attachment",
+    "description": "Attachment with accessible presentation and local state.",
+    "usage": "Import Attachment from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/conversation.contract",
+    "example": "examples/attachment.contract",
+    "exports": [
+      "Attachment"
+    ]
+  },
+  {
+    "slug": "avatar",
+    "title": "Avatar",
+    "description": "Avatar with accessible presentation and local state.",
+    "usage": "Import Avatar, AvatarFrame from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/display.contract",
+    "example": "examples/avatar.contract",
+    "exports": [
+      "Avatar",
+      "AvatarFrame",
+      "AvatarBadge",
+      "AvatarGroup",
+      "AvatarGroupItem",
+      "AvatarGroupCount"
+    ]
+  },
+  {
+    "slug": "badge",
+    "title": "Badge",
+    "description": "Badge with accessible presentation and local state.",
+    "usage": "Import Badge from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/badge.contract",
+    "example": "examples/badge.contract",
+    "exports": [
+      "Badge"
+    ]
+  },
+  {
+    "slug": "breadcrumb",
+    "title": "Breadcrumb",
+    "description": "Breadcrumb with accessible presentation and local state.",
+    "usage": "Import Breadcrumb from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/navigation.contract",
+    "example": "examples/breadcrumb.contract",
+    "exports": [
+      "Breadcrumb"
+    ]
+  },
+  {
+    "slug": "bubble",
+    "title": "Bubble",
+    "description": "Bubble with accessible presentation and local state.",
+    "usage": "Import Bubble from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/conversation.contract",
+    "example": "examples/bubble.contract",
+    "exports": [
+      "Bubble"
+    ]
+  },
+  {
+    "slug": "button",
+    "title": "Button",
+    "description": "Button with accessible presentation and local state.",
+    "usage": "Import Button, ButtonGroup from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/button.contract",
+    "example": "examples/button.contract",
+    "exports": [
+      "Button",
+      "IconButton",
+      "ButtonContent",
+      "DisclosureButton"
+    ]
+  },
+  {
+    "slug": "button-group",
+    "title": "Button Group",
+    "description": "Button Group with accessible presentation and local state.",
+    "usage": "Import ButtonGroup, ButtonGroupText from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/navigation.contract",
+    "example": "examples/button-group.contract",
+    "exports": [
+      "ButtonGroup",
+      "ButtonGroupText",
+      "ButtonGroupSeparator"
+    ]
+  },
+  {
+    "slug": "calendar",
+    "title": "Calendar",
+    "description": "Calendar with accessible presentation and local state.",
+    "usage": "Import Calendar, CalendarAdvanced from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/calendar.contract",
+    "example": "examples/calendar.contract",
+    "exports": [
+      "Calendar",
+      "CalendarAdvanced"
+    ]
+  },
+  {
+    "slug": "card",
+    "title": "Card",
+    "description": "Card with accessible presentation and local state.",
+    "usage": "Import Card, CardFrame from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/card.contract",
+    "example": "examples/card.contract",
+    "exports": [
+      "Card",
+      "CardFrame",
+      "CardHeader",
+      "CardTitle",
+      "CardDescription",
+      "CardAction",
+      "CardContent",
+      "CardFooter"
+    ]
+  },
+  {
+    "slug": "carousel",
+    "title": "Carousel",
+    "description": "Carousel with accessible presentation and local state.",
+    "usage": "Import Carousel, CarouselAdvanced from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/carousel.contract",
+    "example": "examples/carousel.contract",
+    "exports": [
+      "Carousel",
+      "CarouselAdvanced",
+      "CarouselFrameAdvanced",
+      "CarouselItemAdvanced",
+      "CarouselImageAdvanced",
+      "CarouselSlideData"
+    ]
+  },
+  {
+    "slug": "chart",
+    "title": "Chart",
+    "description": "Inspect bar, line, pie, radar and radial charts with sample data.",
+    "usage": "Import ChartPoint, Chart from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/chart.contract",
+    "example": "examples/chart.contract",
+    "exports": [
+      "Chart",
+      "AreaChart",
+      "ChartPoint",
+      "LineChart",
+      "PieChart",
+      "RadarChart",
+      "RadialChart",
+      "SeriesPoint",
+      "ChartSeries",
+      "ChartSlice"
+    ]
+  },
+  {
+    "slug": "checkbox",
+    "title": "Checkbox",
+    "description": "Select all items with a controlled mixed state.",
+    "usage": "Import Checkbox, CheckboxMixed from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/checkbox.contract",
+    "example": "examples/checkbox.contract",
+    "exports": [
+      "Checkbox",
+      "CheckboxMixed"
+    ]
+  },
+  {
+    "slug": "code-block",
+    "title": "Code Block",
+    "description": "Code Block with accessible presentation and local state.",
+    "usage": "Import CodeBlock from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/code-block.contract",
+    "example": "examples/code-block.contract",
+    "exports": [
+      "CodeBlock"
+    ]
+  },
+  {
+    "slug": "collapsible",
+    "title": "Collapsible",
+    "description": "Collapsible with accessible presentation and local state.",
+    "usage": "Import Collapsible from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/disclosure.contract",
+    "example": "examples/collapsible.contract",
+    "exports": [
+      "Collapsible"
+    ]
+  },
+  {
+    "slug": "combobox",
+    "title": "Combobox",
+    "description": "Combobox with accessible presentation and local state.",
+    "usage": "Import Combobox from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/combobox.contract",
+    "example": "examples/combobox.contract",
+    "exports": [
+      "Combobox"
+    ]
+  },
+  {
+    "slug": "command",
+    "title": "Command",
+    "description": "Command with accessible presentation and local state.",
+    "usage": "Import Command, CommandEntry from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/command.contract",
+    "example": "examples/command.contract",
+    "exports": [
+      "Command",
+      "CommandEntry"
+    ]
+  },
+  {
+    "slug": "context-menu",
+    "title": "Context Menu",
+    "description": "Context Menu with accessible presentation and local state.",
+    "usage": "Import ContextMenu, ContextMenuAdvanced from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/menu.contract",
+    "example": "examples/context-menu.contract",
+    "exports": [
+      "ContextMenu",
+      "ContextMenuAdvanced"
+    ]
+  },
+  {
+    "slug": "data-table",
+    "title": "Data Table",
+    "description": "Filter, sort, select and paginate project budgets.",
+    "usage": "Import DataTable, GridColumn from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/data-table.contract",
+    "example": "examples/data-table.contract",
+    "exports": [
+      "DataTable",
+      "GridColumn",
+      "GridRow",
+      "DataGrid"
+    ]
+  },
+  {
+    "slug": "date-picker",
+    "title": "Date Picker",
+    "description": "Choose a constrained date range with preset shortcuts.",
+    "usage": "Import DatePicker, DateRangePicker from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/date-picker.contract",
+    "example": "examples/date-picker.contract",
+    "exports": [
+      "DatePicker",
+      "DateRangePicker",
+      "DateRangePreset"
+    ]
+  },
+  {
+    "slug": "dialog",
+    "title": "Dialog",
+    "description": "Dialog with accessible presentation and local state.",
+    "usage": "Import Dialog from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/dialog.contract",
+    "example": "examples/dialog.contract",
+    "exports": [
+      "Dialog"
+    ]
+  },
+  {
+    "slug": "direction",
+    "title": "Direction",
+    "description": "Direction with accessible presentation and local state.",
+    "usage": "Import Direction from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/direction.contract",
+    "example": "examples/direction.contract",
+    "exports": [
+      "Direction"
+    ]
+  },
+  {
+    "slug": "drawer",
+    "title": "Drawer",
+    "description": "Drawer with accessible presentation and local state.",
+    "usage": "Import Drawer from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/drawer.contract",
+    "example": "examples/drawer.contract",
+    "exports": [
+      "Drawer"
+    ]
+  },
+  {
+    "slug": "dropdown-menu",
+    "title": "Dropdown Menu",
+    "description": "Dropdown Menu with accessible presentation and local state.",
+    "usage": "Import DropdownMenu, DropdownMenuAdvanced from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/menu.contract",
+    "example": "examples/dropdown-menu.contract",
+    "exports": [
+      "DropdownMenu",
+      "DropdownMenuAdvanced"
+    ]
+  },
+  {
+    "slug": "empty",
+    "title": "Empty",
+    "description": "Empty with accessible presentation and local state.",
+    "usage": "Import Empty from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/display.contract",
+    "example": "examples/empty.contract",
+    "exports": [
+      "Empty"
+    ]
+  },
+  {
+    "slug": "field",
+    "title": "Field",
+    "description": "Field with accessible presentation and local state.",
+    "usage": "Import Field, FieldSet from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/forms.contract",
+    "example": "examples/field.contract",
+    "exports": [
+      "Field",
+      "FieldSet",
+      "FieldLegend",
+      "FieldGroup",
+      "FieldFrame",
+      "FieldContent",
+      "FieldLabel",
+      "FieldTitle",
+      "FieldDescription",
+      "FieldError",
+      "FieldSeparator"
+    ]
+  },
+  {
+    "slug": "hover-card",
+    "title": "Hover Card",
+    "description": "Hover Card with accessible presentation and local state.",
+    "usage": "Import HoverCard from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/hover-card.contract",
+    "example": "examples/hover-card.contract",
+    "exports": [
+      "HoverCard"
+    ]
+  },
+  {
+    "slug": "input",
+    "title": "Input",
+    "description": "Input with accessible presentation and local state.",
+    "usage": "Import Input, InputGroup from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/input.contract",
+    "example": "examples/input.contract",
+    "exports": [
+      "Input",
+      "InputGroup",
+      "InputOTP"
+    ]
+  },
+  {
+    "slug": "input-group",
+    "title": "Input Group",
+    "description": "Input Group with accessible presentation and local state.",
+    "usage": "Import InputGroup from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/input-group.contract",
+    "example": "examples/input-group.contract",
+    "exports": [
+      "InputGroup"
+    ]
+  },
+  {
+    "slug": "input-otp",
+    "title": "Input OTP",
+    "description": "Input OTP with accessible presentation and local state.",
+    "usage": "Import InputOTP from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/input-otp.contract",
+    "example": "examples/input-otp.contract",
+    "exports": [
+      "InputOTP"
+    ]
+  },
+  {
+    "slug": "item",
+    "title": "Item",
+    "description": "Item with accessible presentation and local state.",
+    "usage": "Import Item from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/display.contract",
+    "example": "examples/item.contract",
+    "exports": [
+      "Item"
+    ]
+  },
+  {
+    "slug": "kbd",
+    "title": "Kbd",
+    "description": "Kbd with accessible presentation and local state.",
+    "usage": "Import Kbd, KbdGroup from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/display.contract",
+    "example": "examples/kbd.contract",
+    "exports": [
+      "Kbd",
+      "KbdGroup"
+    ]
+  },
+  {
+    "slug": "label",
+    "title": "Label",
+    "description": "Label with accessible presentation and local state.",
+    "usage": "Import Label from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/forms.contract",
+    "example": "examples/label.contract",
+    "exports": [
+      "Label"
+    ]
+  },
+  {
+    "slug": "marker",
+    "title": "Marker",
+    "description": "Marker with accessible presentation and local state.",
+    "usage": "Import Marker from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/conversation.contract",
+    "example": "examples/marker.contract",
+    "exports": [
+      "Marker"
+    ]
+  },
+  {
+    "slug": "menubar",
+    "title": "Menubar",
+    "description": "Menubar with accessible presentation and local state.",
+    "usage": "Import MenubarGroup, Menubar from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/menubar.contract",
+    "example": "examples/menubar.contract",
+    "exports": [
+      "MenubarGroup",
+      "Menubar",
+      "MenubarAdvanced"
+    ]
+  },
+  {
+    "slug": "message",
+    "title": "Message",
+    "description": "Message with accessible presentation and local state.",
+    "usage": "Import Message, MessageScroller from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/conversation.contract",
+    "example": "examples/message.contract",
+    "exports": [
+      "Message",
+      "MessageScroller"
+    ]
+  },
+  {
+    "slug": "message-scroller",
+    "title": "Message Scroller",
+    "description": "Message Scroller with accessible presentation and local state.",
+    "usage": "Import MessageScroller from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/message-scroller.contract",
+    "example": "examples/message-scroller.contract",
+    "exports": [
+      "MessageScroller"
+    ]
+  },
+  {
+    "slug": "native-select",
+    "title": "Native Select",
+    "description": "Native Select with accessible presentation and local state.",
+    "usage": "Import NativeSelect from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/native-select.contract",
+    "example": "examples/native-select.contract",
+    "exports": [
+      "NativeSelect"
+    ]
+  },
+  {
+    "slug": "navigation-menu",
+    "title": "Navigation Menu",
+    "description": "Navigation Menu with accessible presentation and local state.",
+    "usage": "Import NavigationMenuEntry, NavigationMenu from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/navigation-menu.contract",
+    "example": "examples/navigation-menu.contract",
+    "exports": [
+      "NavigationMenuEntry",
+      "NavigationMenu"
+    ]
+  },
+  {
+    "slug": "pagination",
+    "title": "Pagination",
+    "description": "Pagination with accessible presentation and local state.",
+    "usage": "Import Pagination from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/navigation.contract",
+    "example": "examples/pagination.contract",
+    "exports": [
+      "Pagination"
+    ]
+  },
+  {
+    "slug": "popover",
+    "title": "Popover",
+    "description": "Popover with accessible presentation and local state.",
+    "usage": "Import Popover from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/disclosure.contract",
+    "example": "examples/popover.contract",
+    "exports": [
+      "Popover"
+    ]
+  },
+  {
+    "slug": "progress",
+    "title": "Progress",
+    "description": "Progress with accessible presentation and local state.",
+    "usage": "Import Progress from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/display.contract",
+    "example": "examples/progress.contract",
+    "exports": [
+      "Progress"
+    ]
+  },
+  {
+    "slug": "questionnaire",
+    "title": "Questionnaire",
+    "description": "Questionnaire with accessible presentation and local state.",
+    "usage": "Import QuestionnaireQuestion, QuestionnaireAnswer from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/questionnaire.contract",
+    "example": "examples/questionnaire.contract",
+    "exports": [
+      "QuestionnaireQuestion",
+      "QuestionnaireAnswer",
+      "Questionnaire"
+    ]
+  },
+  {
+    "slug": "radio-group",
+    "title": "Radio Group",
+    "description": "Radio Group with accessible presentation and local state.",
+    "usage": "Import RadioGroup from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/forms.contract",
+    "example": "examples/radio-group.contract",
+    "exports": [
+      "RadioGroup"
+    ]
+  },
+  {
+    "slug": "resizable",
+    "title": "Resizable",
+    "description": "Accessible resizable panels with horizontal, vertical and right-to-left layouts.",
+    "usage": "Compose ResizablePanelGroup, ResizablePanel and ResizableHandle. Set orientation to horizontal or vertical, dir to ltr or rtl, and withHandle to show or hide the grip. Pass the same orientation and dir to the group and its handle. Store the first panel percentage in state and update it with change. Each example has independent state.",
+    "keyboard": "Arrow keys resize by 1%; Shift + Arrow resizes by 10%. Horizontal arrows follow the visual direction in RTL. Home/End select the bounds, Enter restores the initial size and Escape cancels an active drag. A hidden grip remains draggable and keyboard accessible.",
+    "source": "packages/ui/resizable.contract",
+    "example": "examples/resizable.contract",
+    "exports": [
+      "ResizablePanelGroup",
+      "ResizablePanel",
+      "ResizableHandle"
+    ]
+  },
+  {
+    "slug": "scroll-area",
+    "title": "Scroll Area",
+    "description": "Scroll Area with accessible presentation and local state.",
+    "usage": "Import ScrollArea, ScrollAreaAdvanced from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/display.contract",
+    "example": "examples/scroll-area.contract",
+    "exports": [
+      "ScrollArea",
+      "ScrollAreaAdvanced"
+    ]
+  },
+  {
+    "slug": "select",
+    "title": "Select",
+    "description": "Select with accessible presentation and local state.",
+    "usage": "Import Select from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/select.contract",
+    "example": "examples/select.contract",
+    "exports": [
+      "Select"
+    ]
+  },
+  {
+    "slug": "separator",
+    "title": "Separator",
+    "description": "Separator with accessible presentation and local state.",
+    "usage": "Import Separator from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/display.contract",
+    "example": "examples/separator.contract",
+    "exports": [
+      "Separator"
+    ]
+  },
+  {
+    "slug": "sheet",
+    "title": "Sheet",
+    "description": "Sheet with accessible presentation and local state.",
+    "usage": "Import Sheet from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/overlays.contract",
+    "example": "examples/sheet.contract",
+    "exports": [
+      "Sheet"
+    ]
+  },
+  {
+    "slug": "sidebar",
+    "title": "Sidebar",
+    "description": "Sidebar with accessible presentation and local state.",
+    "usage": "Import Sidebar, SidebarEntry from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/sidebar.contract",
+    "example": "examples/sidebar.contract",
+    "exports": [
+      "Sidebar",
+      "SidebarEntry",
+      "SidebarTrigger"
+    ]
+  },
+  {
+    "slug": "skeleton",
+    "title": "Skeleton",
+    "description": "Skeleton with accessible presentation and local state.",
+    "usage": "Import Skeleton from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/display.contract",
+    "example": "examples/skeleton.contract",
+    "exports": [
+      "Skeleton"
+    ]
+  },
+  {
+    "slug": "slider",
+    "title": "Slider",
+    "description": "Adjust a controlled numeric range using two handles.",
+    "usage": "Import Slider, RangeSlider from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/slider.contract",
+    "example": "examples/slider.contract",
+    "exports": [
+      "Slider",
+      "RangeSlider"
+    ]
+  },
+  {
+    "slug": "spinner",
+    "title": "Spinner",
+    "description": "Spinner with accessible presentation and local state.",
+    "usage": "Import Spinner from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/spinner.contract",
+    "example": "examples/spinner.contract",
+    "exports": [
+      "Spinner"
+    ]
+  },
+  {
+    "slug": "switch",
+    "title": "Switch",
+    "description": "Switch with accessible presentation and local state.",
+    "usage": "Import Switch from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/switch.contract",
+    "example": "examples/switch.contract",
+    "exports": [
+      "Switch"
+    ]
+  },
+  {
+    "slug": "table",
+    "title": "Table",
+    "description": "Table with accessible presentation and local state.",
+    "usage": "Import Table, TableRow from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/display.contract",
+    "example": "examples/table.contract",
+    "exports": [
+      "Table",
+      "TableRow"
+    ]
+  },
+  {
+    "slug": "tabs",
+    "title": "Tabs",
+    "description": "Switch between content panels with default, line and vertical tabs.",
+    "usage": "Import Tabs, TabsAdvanced from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/tabs.contract",
+    "example": "examples/tabs.contract",
+    "exports": [
+      "Tabs",
+      "CountedTabs",
+      "TabsAdvanced"
+    ]
+  },
+  {
+    "slug": "textarea",
+    "title": "Textarea",
+    "description": "Textarea with accessible presentation and local state.",
+    "usage": "Import Textarea from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/forms.contract",
+    "example": "examples/textarea.contract",
+    "exports": [
+      "Textarea"
+    ]
+  },
+  {
+    "slug": "toast",
+    "title": "Toast",
+    "description": "Toast with accessible presentation and local state.",
+    "usage": "Import Toast from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/toast.contract",
+    "example": "examples/toast.contract",
+    "exports": [
+      "Toast"
+    ]
+  },
+  {
+    "slug": "toggle",
+    "title": "Toggle",
+    "description": "Toggle with accessible presentation and local state.",
+    "usage": "Import Toggle, ToggleGroup from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/forms.contract",
+    "example": "examples/toggle.contract",
+    "exports": [
+      "Toggle",
+      "ToggleGroup"
+    ]
+  },
+  {
+    "slug": "toggle-group",
+    "title": "Toggle Group",
+    "description": "Toggle Group with accessible presentation and local state.",
+    "usage": "Import ToggleGroup from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "keyboard": "",
+    "source": "packages/ui/forms.contract",
+    "example": "examples/toggle-group.contract",
+    "exports": [
+      "ToggleGroup"
+    ]
+  },
+  {
+    "slug": "tooltip",
+    "title": "Tooltip",
+    "description": "Tooltip with accessible presentation and local state.",
+    "usage": "Import Tooltip from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/tooltip.contract",
+    "example": "examples/tooltip.contract",
+    "exports": [
+      "Tooltip"
+    ]
+  },
+  {
+    "slug": "trace",
+    "title": "Trace",
+    "description": "Trace with accessible presentation and local state.",
+    "usage": "Import Trace from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/trace.contract",
+    "example": "examples/trace.contract",
+    "exports": [
+      "Trace"
+    ]
+  },
+  {
+    "slug": "typography",
+    "title": "Typography",
+    "description": "Typography with accessible presentation and local state.",
+    "usage": "Import Typography from @rightui/ui. Supply content and required properties as shown in the example.",
+    "keyboard": "",
+    "source": "packages/ui/typography.contract",
+    "example": "examples/typography.contract",
+    "exports": [
+      "Typography"
+    ]
+  }
+]

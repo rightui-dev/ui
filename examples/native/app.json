@@ -1,0 +1,44 @@
+{
+  "$schema": "../../../.tooling/exact/scripts/app.schema.json",
+  "name": "rightui Demo",
+  "short_name": "rightui Demo",
+  "id": "dev.rightui.demo",
+  "start_url": "/",
+  "display": "standalone",
+  "app": {
+    "id": "dev.rightui.demo",
+    "name": "rightui Demo"
+  },
+  "host": {
+    "web": {},
+    "macos": {
+      "minimumOS": "14.0",
+      "window": {
+        "width": 1120,
+        "height": 820
+      }
+    },
+    "ios": {
+      "minimumOS": "17.0",
+      "deviceFamily": [
+        "iphone",
+        "ipad"
+      ]
+    }
+  },
+  "deploy": {
+    "store": {
+      "web": "0",
+      "macos": "0",
+      "ios": "0"
+    }
+  },
+  "icons": [
+    {
+      "src": "assets/icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

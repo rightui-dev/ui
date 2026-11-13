@@ -1,0 +1,90 @@
+use Button from "./button.contract"
+use Control, Field from "./styles.contract"
+shape DataRow
+  id: string
+  status: string
+  email: string
+  amount: number
+component DataTable
+  props
+    id: string
+    rows: DataRow[]
+    pageSize: number
+  state query = ""
+  state sort = "email"
+  state descending = false
+  state page = 0
+  state selected: string[] = []
+  derive filtered = rows.filter(r => r.email.toLowerCase().includes(query.toLowerCase()) or r.status.toLowerCase().includes(query.toLowerCase()))
+  derive ordered = sort == "amount" ? (descending ? sortBy(filtered, r => r.amount, "desc") : sortBy(filtered, r => r.amount)) : sort == "status" ? (descending ? sortBy(filtered, r => r.status, "desc") : sortBy(filtered, r => r.status)) : (descending ? sortBy(filtered, r => r.email, "desc") : sortBy(filtered, r => r.email))
+  derive size = max(1, floor(pageSize))
+  derive count = max(1, ceil(filtered.length / size))
+  derive currentPage = min(page, count - 1)
+  derive visible = ordered.slice(currentPage * size, (currentPage + 1) * size)
+  action search(v: string)
+    query = v
+    page = 0
+  action order(v: string)
+    descending = sort == v ? not descending : false
+    sort = v
+    page = 0
+  action pick(rowId: string, checked: bool)
+    selected = checked ? selected.concat([rowId]) : selected.filter(s => s != rowId)
+  action pickAll(checked: bool)
+    selected = checked ? selected.filter(s => not visible.map(r => r.id).includes(s)).concat(visible.map(r => r.id)) : selected.filter(s => not visible.map(r => r.id).includes(s))
+  action previous
+    page = max(0, currentPage - 1)
+  action next
+    page = min(count - 1, currentPage + 1)
+  view
+    column id=id testId=id gap=16 min-width=0 color="ui.foreground"
+      input id=(id + "-search") testId=(id + "-search") class=Field value=query input=search placeholder="Filter emails or status..." aria-label="Filter payments" max-width="20rem"
+      scroll max-height=480 overflow="auto" border="1px solid ui.border" border-radius="ui.radius-control" min-width=0
+        table width="100%" border-spacing=0 font-size="0.875rem"
+          thead
+            tr border-bottom="1px solid ui.border"
+              th border-bottom="1px solid ui.border" scope="col" padding="0 12px" width=44
+                DataTableCheck(id=id + "-all", label="Select page", checked=visible.length > 0 and visible.filter(r => selected.includes(r.id)).length == visible.length, disabled=visible.length == 0, change=pickAll)
+              for col in ["status", "email", "amount"] key=col
+                th border-bottom="1px solid ui.border" scope="col" padding="8px 12px" text-align=(col == "amount" ? "right" : "left") aria-sort=(sort == col ? (descending ? "descending" : "ascending") : "none")
+                  button class=Control id=(id + "-sort-" + col) testId=(id + "-sort-" + col) press=order(col) padding="4px 8px" border="0" background-color="transparent" color="ui.muted-foreground" min-height=32
+                    text ((col == "status" ? "Status" : col == "email" ? "Email" : "Amount") + (sort == col ? (descending ? " ↓" : " ↑") : ""))
+          tbody
+            for r in visible key=r.id
+              tr testId=(id + "-row-" + r.id) border-bottom="1px solid ui.border" background-color=(selected.includes(r.id) ? "ui.muted" : "transparent")
+                td border-bottom="1px solid ui.border" padding="4px 12px"
+                  DataTableCheck(id=id + "-select-" + r.id, label="Select " + r.email, checked=selected.includes(r.id), disabled=false, change=pick(r.id))
+                td border-bottom="1px solid ui.border" padding="12px" text-transform="capitalize"
+                  text r.status
+                td border-bottom="1px solid ui.border" padding="12px"
+                  text r.email
+                td border-bottom="1px solid ui.border" padding="12px" text-align="right" font-weight=500
+                  text ("$" + r.amount.toFixed(2))
+            if visible.length == 0
+              tr
+                td colspan=4 padding=32 text-align="center"
+                  text "No results." testId=(id + "-empty")
+      row align-items="center" justify-content="space-between" gap=12 flex-wrap="wrap"
+        text (selected.filter(s => rows.map(r => r.id).includes(s)).length.toString() + " of " + rows.length.toString() + " row(s) selected.") testId=(id + "-selection") font-size="0.875rem" color="ui.muted-foreground"
+        row gap=8 align-items="center"
+          text ("Page " + (currentPage + 1).toString() + " of " + count.toString()) testId=(id + "-page") font-size="0.875rem" color="ui.muted-foreground"
+          Button(id=id + "-previous", label="Previous", variant="outline", disabled=currentPage == 0, press=previous)
+          Button(id=id + "-next", label="Next", variant="outline", disabled=currentPage >= count - 1, press=next)
+
+component DataTableCheck
+  props
+    id: string
+    label: string
+    checked: bool
+    disabled: bool
+    change: action
+  action toggle
+    if not disabled
+      change(not checked)
+  view
+    button id=id testId=id class=Control press=toggle role="checkbox" aria-checked=checked aria-label=label disabled=disabled
+      width=32 min-height=32 height=32 padding=8 border="0" background-color="transparent" display="flex" align-items="center" justify-content="center"
+      view width=16 height=16 border-radius="ui.radius-checkbox" border="1px solid ui.border" background-color=(checked ? "ui.primary" : "ui.surface") display="flex" align-items="center" justify-content="center" aria-hidden=true
+        if checked
+          svg width=12 height=12 viewBox="0 0 24 24" fill="none" stroke="ui.primary-foreground" stroke-width=3
+            path d="m5 12 4 4L19 6"

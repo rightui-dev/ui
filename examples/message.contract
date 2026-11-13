@@ -1,0 +1,29 @@
+use Button, Attachment, Bubble, Message from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state attached = true
+  action remove
+    attached = false
+  action restore
+    attached = true
+  state acknowledgment = ""
+  action acknowledge
+    acknowledgment = "Acknowledged"
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Message(id="content-message-in", author="Camille", initials="CA", time="10:24 · Delivered", align="start")
+        Bubble(id="content-bubble-in", body="Here is the session brief.\nPlease check the spaces and lighting before our appointment.", align="start", variant="muted", collapsible=true)
+        if attached
+          Attachment(id="content-attachment", name="brief.txt", metadata="Text · Session brief · Ready", content="Photo session\nBedroom, restaurant and terrace.\nNatural morning light.\nDelivery: selected photos and a short video.", status="done", remove=remove)
+        else
+          Button(id="content-attachment-restore", label="Attach the brief again", variant="outline", disabled=false, press=restore)
+      text "Outgoing grouped messages and action" font-size="0.875rem" font-weight=600
+      Message(id="variation-message-out", author="You", initials="YO", time="10:25 · Sent", align="end")
+        Bubble(id="variation-message-out-first", body="The brief looks good.", align="end", variant="muted", collapsible=false)
+        Bubble(id="variation-message-out-second", body="Ready for the session.", align="end", variant="muted", collapsible=false)
+        Button(id="variation-message-action", label="Acknowledge", variant="outline", disabled=false, press=acknowledge)
+      text acknowledgment role="status"

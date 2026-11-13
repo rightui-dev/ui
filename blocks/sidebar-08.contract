@@ -1,0 +1,13 @@
+use SidebarBlock, SidebarSettings from "@rightui/registry/blocks/sidebars"
+
+component Demo
+  state settings = false
+  action openSettings
+    settings = true
+  action closeSettings
+    settings = false
+  view
+    column width="100%"
+      SidebarBlock(variant=8, narrow=false, reduced=false, openSettings=openSettings)
+      if settings
+        SidebarSettings(id="example-settings", narrow=false, dismiss=closeSettings)

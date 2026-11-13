@@ -1,0 +1,137 @@
+use Control, Field from "./styles.contract"
+use CheckboxMixed from "./advanced-controls.contract"
+use Popover from "./disclosure.contract"
+use Select from "./select.contract"
+
+shape GridColumn
+  id: string
+  label: string
+  kind: string
+  align: string
+  sortable: bool
+  searchable: bool
+shape GridRow
+  id: string
+  values: string[]
+fn gridValue(row: GridRow, index: number): string = match row.values.at(index) { case some(value) => value, case none => "" }
+fn gridNumber(row: GridRow, index: number): number = match parseNumber(gridValue(row, index)) { case some(value) => value, case none => 0 }
+fn gridSearch(row: GridRow, columns: GridColumn[], query: string): bool = columns.filter((column, i) => column.searchable and gridValue(row, i).toLowerCase().includes(query)).length > 0
+
+component DataGrid
+  props
+    id: string
+    label: string
+    columns: GridColumn[]
+    rows: GridRow[]
+    initialPageSize: number
+    reduced: bool
+    selectionChanged: action
+    openRow: action
+  state query = ""
+  state sortColumn = ""
+  state sortOrder = "none"
+  state page = 0
+  state pageSize = max(1, floor(initialPageSize))
+  state selected: string[] = []
+  state hidden: string[] = []
+  derive filtered = query.trim() == "" ? rows : rows.filter(row => gridSearch(row, columns, query.trim().toLowerCase()))
+  derive sortIndex = columns.map(column => column.id).indexOf(sortColumn)
+  derive sortKind = match columns.at(sortIndex) { case some(column) => column.kind, case none => "text" }
+  derive ordered = sortOrder == "none" or sortIndex < 0 ? filtered : sortKind == "number" or sortKind == "currency" or sortKind == "percent" ? (sortOrder == "desc" ? sortBy(filtered, row => gridNumber(row, sortIndex), "desc") : sortBy(filtered, row => gridNumber(row, sortIndex))) : (sortOrder == "desc" ? sortBy(filtered, row => gridValue(row, sortIndex).toLowerCase(), "desc") : sortBy(filtered, row => gridValue(row, sortIndex).toLowerCase()))
+  derive pageCount = max(1, ceil(ordered.length / pageSize))
+  derive currentPage = min(max(0, page), pageCount - 1)
+  derive visible = ordered.slice(currentPage * pageSize, (currentPage + 1) * pageSize)
+  derive visibleColumns = columns.filter(column => not hidden.includes(column.id))
+  derive visibleSelected = visible.filter(row => selected.includes(row.id)).length
+  derive rowIds = rows.map(row => row.id)
+  derive visibleIds = visible.map(row => row.id)
+  derive liveSelected = selected.filter(key => rowIds.includes(key))
+  derive selectedFiltered = filtered.filter(row => selected.includes(row.id)).length
+  derive focusColumn = match first(columns.filter(column => hidden.includes(column.id) or visibleColumns.length > 1)) { case some(column) => columns.map(value => value.id).indexOf(column.id), case none => 0 }
+  derive pageChecked = visibleSelected == 0 ? "false" : visibleSelected == visible.length ? "true" : "mixed"
+  action search(value: string)
+    query = value
+    page = 0
+  action sortByColumn(column: GridColumn)
+    if column.sortable
+      sortOrder = sortColumn != column.id or sortOrder == "none" ? "asc" : sortOrder == "asc" ? "desc" : "none"
+      sortColumn = column.id
+      page = 0
+  action selectRow(key: string, checked: bool)
+    let next = checked ? liveSelected.filter(value => value != key).concat([key]) : liveSelected.filter(value => value != key)
+    selected = next
+    selectionChanged(next)
+  action selectPage(checked: bool)
+    let keep = liveSelected.filter(key => not visibleIds.includes(key))
+    let next = checked ? keep.concat(visibleIds) : keep
+    selected = next
+    selectionChanged(next)
+  action showColumn(key: string, checked: bool)
+    if checked
+      hidden = hidden.filter(value => value != key)
+    else if visibleColumns.length > 1
+      hidden = hidden.filter(value => value != key).concat([key])
+  action chooseSize(value: string)
+    match parseNumber(value)
+      case some(size)
+        pageSize = max(1, floor(size))
+        page = 0
+      case none
+        page = page
+  action go(target: number)
+    page = max(0, min(pageCount - 1, target))
+  view
+    column id=id testId=id gap=16 min-width=0 color="ui.foreground" font-family="Geist"
+      row gap=12 flex-wrap="wrap" align-items="flex-end" justify-content="space-between"
+        input id=(id + "-search") testId=(id + "-search") class=Field value=query input=search placeholder="Filter rows..." aria-label=("Filter " + label) flex="1 1 12rem" max-width="20rem"
+        if columns.length > 0
+          Popover(id=id + "-columns", label="Columns", focusId=id + "-column-" + focusColumn.toString(), reduced=reduced)
+            text "Toggle columns" font-size="0.875rem" font-weight=500
+            column gap=4
+              for column, i in columns key=column.id
+                CheckboxMixed(id=id + "-column-" + i.toString(), label=column.label, labelVisible=true, checked=(hidden.includes(column.id) ? "false" : "true"), disabled=(not hidden.includes(column.id) and visibleColumns.length == 1), change=showColumn(column.id))
+      scroll min-width=0 max-height="30rem" overflow="auto" border="1px solid ui.border" border-radius="ui.radius-control" tabindex=0 aria-label=label
+        table aria-label=label width="100%" border-spacing=0 font-size="0.875rem" line-height=1.428571
+          thead
+            tr
+              th scope="col" padding="0 12px" border-bottom="1px solid ui.border" width="2.75rem"
+                CheckboxMixed(id=id + "-all", label="Select page", labelVisible=false, checked=pageChecked, disabled=visible.length == 0, change=selectPage)
+              for column in visibleColumns key=column.id
+                th scope="col" padding="8px 12px" border-bottom="1px solid ui.border" text-align=column.align aria-sort=(sortColumn == column.id and sortOrder != "none" ? (sortOrder == "desc" ? "descending" : "ascending") : "none")
+                  if column.sortable
+                    button id=(id + "-sort-" + column.id) testId=(id + "-sort-" + column.id) class=Control press=sortByColumn(column) padding="4px 0px" min-height=32 border="0" background-color="transparent" color="ui.foreground" text-align=column.align
+                      text (column.label + (sortColumn == column.id and sortOrder != "none" ? (sortOrder == "desc" ? " ↓" : " ↑") : ""))
+                  else
+                    text column.label font-weight=500
+              th scope="col" border-bottom="1px solid ui.border" padding=12
+                text "Actions" font-size="0.75rem" color="ui.muted-foreground"
+          tbody
+            for row in visible key=row.id
+              tr testId=(id + "-row-" + row.id) background-color=(selected.includes(row.id) ? "ui.muted" : "transparent")
+                td padding="4px 12px" border-bottom="1px solid ui.border"
+                  CheckboxMixed(id=id + "-select-" + row.id, label="Select row " + row.id, labelVisible=false, checked=(selected.includes(row.id) ? "true" : "false"), disabled=false, change=selectRow(row.id))
+                for column in visibleColumns key=column.id
+                  td testId=(id + "-cell-" + row.id + "-" + column.id) padding=12 border-bottom="1px solid ui.border" text-align=column.align
+                    if column.kind == "badge"
+                      row justify-content=(column.align == "right" ? "flex-end" : "flex-start")
+                        text gridValue(row, columns.map(value => value.id).indexOf(column.id)) border="1px solid ui.border" border-radius="ui.radius-full" padding="2px 8px" font-size="0.75rem" font-weight=500
+                    else
+                      text (column.kind == "currency" ? "$" + gridNumber(row, columns.map(value => value.id).indexOf(column.id)).toFixed(2) : column.kind == "percent" ? gridValue(row, columns.map(value => value.id).indexOf(column.id)) + "%" : gridValue(row, columns.map(value => value.id).indexOf(column.id))) font-variant-numeric=(column.kind == "text" ? "normal" : "tabular-nums")
+                td padding="4px 12px" border-bottom="1px solid ui.border"
+                  button class=Control id=(id + "-open-" + row.id) testId=(id + "-open-" + row.id) press=openRow(row.id) aria-label=("Open row " + row.id) min-height=32 width=32 padding=0 border="0" background-color="transparent" color="ui.foreground"
+                    svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 stroke-linecap="round" aria-hidden=true
+                      path d="M5 12h.01M12 12h.01M19 12h.01"
+            if visible.length == 0
+              tr
+                td colspan=(visibleColumns.length + 2) padding=32 text-align="center"
+                  text "No results." testId=(id + "-empty")
+      row gap=16 flex-wrap="wrap" align-items="center" justify-content="space-between"
+        text (selectedFiltered.toString() + " of " + filtered.length.toString() + " row(s) selected.") testId=(id + "-selection") font-size="0.875rem" color="ui.muted-foreground"
+        row gap=16 align-items="flex-end" flex-wrap="wrap"
+          view width="7rem"
+            Select(id=id + "-page-size", label="Rows per page", options=["5", "10", "20", "50"], value=pageSize.toString(), disabled=false, reduced=reduced, change=chooseSize)
+          row gap=8 align-items="center"
+            text ("Page " + (currentPage + 1).toString() + " of " + pageCount.toString()) testId=(id + "-page") font-size="0.875rem" font-weight=500
+            for command in ["first", "previous", "next", "last"] key=command
+              button id=(id + "-" + command) testId=(id + "-" + command) class=Control press=go(command == "first" ? 0 : command == "previous" ? currentPage - 1 : command == "next" ? currentPage + 1 : pageCount - 1) disabled=(command == "first" or command == "previous" ? currentPage == 0 : currentPage == pageCount - 1) aria-label=(command + " page") width=32 height=32 min-height=32 padding=0 border="1px solid ui.input" background-color="ui.surface" color="ui.foreground"
+                text (command == "first" ? "«" : command == "previous" ? "‹" : command == "next" ? "›" : "»")

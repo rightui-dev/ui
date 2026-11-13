@@ -1,0 +1,48 @@
+use Control from "./styles.contract"
+keyframes uiTooltipDelay
+  from opacity=0
+  to opacity=1
+
+component Tooltip
+  props
+    id: string
+    label: string
+    description: string
+  state focused = false
+  state delayed = false
+  state expanded = false
+  action show
+    delayed = false
+    expanded = true
+    showPopover(id + "-tip", source=id)
+  action enter
+    focused = true
+    show()
+  action leave
+    focused = false
+    hidePopover(id + "-tip")
+  action hover(inside: bool)
+    if inside
+      expanded = true
+      delayed = true
+      showPopover(id + "-tip", source=id)
+    else if not focused
+      hidePopover(id + "-tip")
+  action changed(e: ToggleEvent)
+    expanded = e.newState == "open"
+  action keys(k: string)
+    if k == "Escape"
+      preventDefault()
+      hidePopover(id + "-tip")
+  view
+    column align-items="flex-start" hover=hover
+      button id=id testId=id class=Control aria-describedby=(id + "-tip") focus=enter blur=leave press=show key=keys
+        padding="8px 12px" border="1px solid ui.border" background-color="ui.surface" color="ui.foreground"
+        text label
+      view id=(id + "-tip") testId=(id + "-tip") role="tooltip" popover="auto" toggle=changed hover=hover
+        position-area="top" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
+        width="auto" max-width="calc(100vw - 32px)" box-sizing="border-box" margin=4 padding="6px 12px"
+        background-color="ui.foreground" color="ui.background" border="0" border-radius="ui.radius-item" overflow="visible"
+        animation=(delayed ? "uiTooltipDelay 1ms linear 700ms both" : "none")
+        text description font-size="0.75rem" line-height=1.5
+        view position="absolute" left="50%" bottom=-5 width=10 height=10 rotate="45deg" border-radius="ui.radius-detail" background-color="ui.foreground" aria-hidden=true

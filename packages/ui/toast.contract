@@ -1,0 +1,26 @@
+use Control from "./styles.contract"
+component Toast
+  props
+    id: string
+    title: string
+    description: string
+    actionLabel: string
+    destructive: bool
+    dismiss: action
+    act: action
+  action keys(k: string)
+    if k == "Escape"
+      preventDefault()
+      dismiss()
+  view
+    row id=id testId=id role="status" aria-live="polite" key=keys gap=16 align-items="center" padding=16
+      width="100%" max-width="26rem" box-sizing="border-box" border="1px solid ui.border" border-radius="ui.radius-2xl" background-color="ui.surface" color=(destructive ? "ui.danger" : "ui.foreground") box-shadow="0 4px 12px #00000018"
+      column flex=1 min-width=0 gap=4
+        text title font-size="0.875rem" font-weight=600
+        text description font-size="0.875rem" color="ui.muted-foreground"
+      if actionLabel != ""
+        button id=(id + "-action") testId=(id + "-action") class=Control press=act padding="4px 10px" border="1px solid ui.border" background-color="ui.surface" color="ui.foreground"
+          text actionLabel
+      button id=(id + "-close") testId=(id + "-close") class=Control press=dismiss aria-label="Close notification" padding=4 border="0" background-color="transparent" color="ui.muted-foreground"
+        svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+          path d="m6 6 12 12M6 18 18 6"

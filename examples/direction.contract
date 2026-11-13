@@ -1,0 +1,21 @@
+use Badge, Direction from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state rtl = false
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Direction(id="controls-direction", direction=(rtl ? "rtl" : "ltr"))
+        row gap=8 align-items="center"
+          Badge(label="1", variant="outline")
+          text (rtl ? "مرحباً بالعالم" : "Hello world") font-size="0.875rem" color="ui.foreground"
+          Badge(label="2", variant="outline")
+      text "Nested direction" font-weight=600
+      Direction(id="direction-outer", direction="rtl")
+        column gap=8
+          text "Outer RTL scope"
+          Direction(id="direction-inner", direction="ltr")
+            text "Inner LTR scope"

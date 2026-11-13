@@ -1,0 +1,3 @@
+tamber rightui-native
+theme
+  AccentColor = light-dark(#000000, #fafafa)

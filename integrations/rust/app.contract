@@ -1,0 +1,15 @@
+use Button from "@rightui/ui"
+
+shape Greeting
+  label: string
+
+component App
+  resource greeting = greeting() as shape Greeting
+  state count = 0
+  action increment
+    count = count + 1
+  view
+    column padding=24 gap=12
+      text greeting.label
+      text count.toString()
+      Button(id="increment", label="Increment", variant="primary", disabled=false, press=increment)

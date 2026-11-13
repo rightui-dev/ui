@@ -1,0 +1,38 @@
+use Button from "./button.contract"
+use Message from "./conversation.contract"
+use Field from "./styles.contract"
+shape ContentMessage
+  id: number
+  body: string
+  mine: bool
+
+component MessageScroller
+  props
+    id: string
+    messages: ContentMessage[]
+    historyLoaded: bool
+    loadHistory: action
+    send: action
+    latest: action
+  state draft = ""
+  action edit(v: string)
+    draft = v
+  action post
+    if draft.trim() != ""
+      send(draft.trim())
+      draft = ""
+  view
+    column id=(id + "-root") testId=id gap=12 min-width=0
+      row justify-content="center"
+        Button(id=id + "-history", label=(historyLoaded ? "Start of conversation" : "Load earlier messages"), variant="outline", disabled=historyLoaded, press=loadHistory)
+      list id=id testId=(id + "-viewport") appearance="none" virtualized=true scroll-start="end" scrollFollowEnd=true height="17.5rem" min-height=0 border="1px solid ui.border" border-radius="ui.radius-control" background-color="ui.background"
+        for message in messages key=message.id
+          view padding="8px 12px"
+            Message(id=id + "-message-" + message.id.toString(), author=(message.mine ? "You" : "Assistant"), initials=(message.mine ? "YO" : "AI"), time="", align=(message.mine ? "end" : "start"))
+              text message.body testId=(id + "-message-" + message.id.toString() + "-body") max-width="90%" min-width=0 padding="8px 12px" border-radius="ui.radius-panel" font-size="0.875rem" line-height=1.625 white-space="pre-wrap" overflow-wrap="break-word" background-color=(message.mine ? "ui.muted" : "transparent") color="ui.foreground"
+
+      row gap=8 align-items="center" flex-wrap="wrap"
+        input id=(id + "-draft") testId=(id + "-draft") class=Field value=draft input=edit submit=post placeholder="Your message…" aria-label="Your message" flex="1 1 10rem"
+        Button(id=id + "-send", label="Send", variant="primary", disabled=(draft.trim() == ""), press=post)
+      row justify-content="center"
+        Button(id=id + "-latest", label="Latest message", variant="outline", disabled=false, press=latest)

@@ -1,0 +1,89 @@
+font "Geist"
+  100 900 = "assets/fonts/Geist.ttf"
+
+use DemoEntry, DemoView, catalog from "./catalog.contract"
+
+shape Viewport
+  width: number
+  height: number
+  prefersReducedMotion: bool
+
+routes nav
+  catalog "/"
+    demo "/demo/:id"
+
+component Native
+  resource viewport = exactViewport() as shape Viewport
+  state query = ""
+  state theme = "light" persist
+  state demoTime = 0
+  state demoUntil = 0
+  derive entries = catalog()
+  derive shown = entries.filter(e => (e.title + " " + e.group).toLowerCase().includes(query.trim().toLowerCase()))
+  provide
+    rightuiDemoTime = demoTime
+    rightuiRunDemo = runDemo
+  action search(value: string)
+    query = value
+  action follow(url: string)
+    nav = top(nav).name == "demo" and url.startsWith("/demo/") ? replace(nav, url) : go(nav, url)
+  action back
+    nav = back(nav)
+  action toggleTheme
+    theme = theme == "dark" ? "light" : "dark"
+  task applyTheme key=theme
+    change(syncTheme)
+  action syncTheme
+    setScheme(theme)
+  action runDemo(duration: number)
+    demoUntil = max(demoUntil, demoTime + duration)
+  action tickDemo
+    demoTime = min(demoUntil, demoTime + 32)
+  task demoClock when demoTime < demoUntil and top(nav).name == "demo"
+    every(32, tickDemo)
+  view
+    main testId="native-app" navigationKey=`${top(nav).id}` navigationBack="back" navigate=follow width="100%" height="100%" font-family="Geist, system-ui, sans-serif" color-scheme=theme color="ui.foreground" background-color="ui.background"
+      for route in stack(nav) key=route.id
+        if route.name == "catalog"
+          column navigationKey=`${route.id}` navigationScroll="native-catalog" position="absolute" inset=0
+            header display="flex" align-items="center" flex-wrap="wrap" gap=12 padding="12px 20px"
+              text "rightui" role="heading" aria-level=1 flex=1 font-weight=600
+              if top(nav).name == "catalog"
+                button press=toggleTheme aria-label="Toggle theme" testId="native-theme"
+                  image (theme == "dark" ? "symbol:sf/sun.max" : "symbol:moon")
+              input type="search" value=query input=search placeholder=("Search " + entries.length.toString() + " examples") aria-label="Search examples" testId="native-search" width="100%"
+            list id="native-catalog" appearance="auto" listStyle="plain" flex=1 min-height=0
+              for group in ["Components", "AI Elements", "Blocks", "Charts"] key=group
+                if shown.filter(e => e.group == group).length > 0
+                  section
+                    header
+                      text group
+                    for entry in shown.filter(e => e.group == group) key=entry.id
+                      link href=path("demo", entry.id) testId=("open-" + entry.id)
+                        text entry.title flex=1
+                        image "symbol:forward-chevron"
+              if shown.length == 0
+                section
+                  text "No examples match your search." color="ui.muted-foreground" padding=20
+        else if route.name == "demo"
+          column navigationKey=`${route.id}` navigationScroll=("preview-" + route.id.toString()) position="absolute" inset=0
+            for entry in entries.filter(e => e.id == route.params.id) key=entry.id
+              header display="flex" align-items="center" gap=12 padding="12px 20px"
+                text entry.title role="heading" aria-level=1 testId="native-demo-title" flex=1
+                button press=toggleTheme aria-label="Toggle theme" testId="native-demo-theme"
+                  image (theme == "dark" ? "symbol:sf/sun.max" : "symbol:moon")
+              scroll id=("preview-" + route.id.toString()) flex=1 min-height=0
+                Preview(entry=entry, reduced=viewport.prefersReducedMotion)
+
+component Preview
+  props
+    entry: DemoEntry
+    reduced: bool
+  state width = 640
+  action measure(w: number, h: number)
+    width = w
+  view
+    column padding=24 gap=24 min-width=0 resize=measure
+      text entry.description color="ui.muted-foreground" font-size="0.875rem" line-height=1.5
+      column min-width=0 gap=16 testId="native-demo"
+        DemoView(id=entry.id, width=max(240, width - 48), reduced=reduced)

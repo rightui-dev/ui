@@ -1,0 +1,29 @@
+use ButtonContent from "./button.contract"
+component InputGroup
+  props
+    id: string
+    label: string
+    value: string
+    placeholder: string
+    prefix: string
+    suffix: string
+    buttonLabel: string
+    disabled: bool
+    edit: action
+    submit: action
+  view
+    column gap=8 min-width=0
+      text label id=(id + "-label") font-size="0.875rem" font-weight=500 color="ui.foreground"
+      row id=(id + "-group") testId=(id + "-group") role="group" aria-labelledby=(id + "-label") align-items="center" gap=8
+        min-height="2.25rem" padding="0px 6px 0px 12px" box-sizing="border-box" border="1px solid ui.border" border-radius="ui.radius-control" background-color="ui.surface" color="ui.foreground"
+        if prefix != ""
+          text prefix font-size="0.875rem" color="ui.muted-foreground"
+        input id=id testId=id value=value input=edit submit=submit placeholder=placeholder disabled=disabled aria-labelledby=(id + "-label")
+          appearance="none" flex=1 min-width=0 height=34 padding=0 border="0" background-color="transparent" color="ui.foreground" font-size="0.875rem"
+          :focus-visible
+            box-shadow="0 0 0 2px ui.ring"
+        if suffix != ""
+          text suffix font-size="0.875rem" color="ui.muted-foreground"
+        if buttonLabel != ""
+          ButtonContent(id=id + "-action", label=buttonLabel, variant="secondary", size="xs", disabled=disabled, press=submit)
+            text buttonLabel

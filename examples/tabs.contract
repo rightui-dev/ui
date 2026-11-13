@@ -1,0 +1,62 @@
+use Tabs, TabsAdvanced, CountedTabs, Button from "@rightui/ui"
+
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  state current = 0
+  state line = 0
+  state vertical = 0
+  state disabled = 0
+  state rtl = 0
+  state dynamic = 2
+  state longFirst = false
+  derive captions = longFirst ? ["Advanced settings", "Analytics", "Reports", "Home"] : ["Home", "Analytics", "Reports", "Advanced settings"]
+  action selectCurrent(i: number)
+    current = i
+  action selectLine(i: number)
+    line = i
+  action selectVertical(i: number)
+    vertical = i
+  action selectDisabled(i: number)
+    disabled = i
+  action selectRTL(i: number)
+    rtl = i
+  action selectDynamic(i: number)
+    dynamic = i
+  action relabel
+    longFirst = not longFirst
+  action external
+    dynamic = dynamic == 2 ? 3 : 2
+  action clear
+    dynamic = -1
+  view
+    column gap=32 min-width=0
+      column gap=8 width="25rem" max-width="100%" min-width=0
+        Tabs(id="tabs-demo", labels=["Overview", "Analytics", "Reports", "Settings"], selected=current, reduced=reduced, choose=selectCurrent)
+        column id="tabs-demo-panel" role="tabpanel" aria-labelledby=("tabs-demo-" + current.toString()) gap=6 padding=16 border="1px solid ui.border" border-radius=18
+          text (current == 0 ? "Overview" : current == 1 ? "Analytics" : current == 2 ? "Reports" : "Settings") testId="tabs-demo-title" font-size="0.875rem" line-height=1.428571 font-weight=500
+          text (current == 0 ? "View your key metrics and recent project activity. Track progress across all your active projects." : current == 1 ? "Explore traffic, engagement, and performance over time." : current == 2 ? "Review and download your latest reports." : "Manage your account and preferences.") font-size="0.875rem" line-height=1.428571 color="ui.muted-foreground"
+          if current == 0
+            text "You have 12 active projects and 3 pending tasks." font-size="0.875rem" line-height=1.428571 color="ui.muted-foreground" margin-top=12
+      column gap=12 min-width=0
+        TabsAdvanced(id="tabs-line", label="Line", labels=["Overview", "Analytics", "Reports"], counts=[], selected=line, variant="line", vertical=false, compact=true, disabledIndices=[], direction="ltr", reduced=reduced, choose=selectLine)
+        text (line == 0 ? "Overview" : line == 1 ? "Analytics" : "Reports") id="tabs-line-panel" testId="tabs-line-panel" role="tabpanel" aria-labelledby=("tabs-line-" + line.toString()) font-size="0.875rem" color="ui.muted-foreground"
+      column gap=12 min-width=0
+        row gap=16 align-items="flex-start" min-width=0
+          TabsAdvanced(id="tabs-vertical", label="Account settings", labels=["Account", "Password", "Notifications"], counts=[], selected=vertical, variant="default", vertical=true, compact=true, disabledIndices=[], direction="ltr", reduced=reduced, choose=selectVertical)
+          text (vertical == 0 ? "Account" : vertical == 1 ? "Password" : "Notifications") id="tabs-vertical-panel" testId="tabs-vertical-panel" role="tabpanel" aria-labelledby=("tabs-vertical-" + vertical.toString()) padding=8 font-size="0.875rem" color="ui.muted-foreground"
+      column gap=12 min-width=0
+        TabsAdvanced(id="tabs-disabled", label="Disabled example", labels=["Home", "Disabled", "Settings"], counts=[], selected=disabled, variant="default", vertical=false, compact=true, disabledIndices=[1], direction="ltr", reduced=reduced, choose=selectDisabled)
+        text (disabled == 0 ? "Home" : "Settings") id="tabs-disabled-panel" testId="tabs-disabled-panel" role="tabpanel" aria-labelledby=("tabs-disabled-" + disabled.toString()) font-size="0.875rem" color="ui.muted-foreground"
+      column gap=12 min-width=0
+        TabsAdvanced(id="tabs-rtl", label="RTL example", labels=["Overview", "Analytics", "Reports"], counts=[], selected=rtl, variant="line", vertical=false, compact=true, disabledIndices=[], direction="rtl", reduced=reduced, choose=selectRTL)
+        text (rtl == 0 ? "Overview" : rtl == 1 ? "Analytics" : "Reports") id="tabs-rtl-panel" testId="tabs-rtl-panel" role="tabpanel" aria-labelledby=("tabs-rtl-" + rtl.toString()) font-size="0.875rem" color="ui.muted-foreground"
+      column gap=12 min-width=0
+        CountedTabs(id="tabs-dynamic", labels=captions, counts=["", "3", "", ""], selected=dynamic, reduced=reduced, choose=selectDynamic)
+        row flex-wrap="wrap" gap=8
+          Button(id="tabs-relabel", label="Change labels", variant="outline", disabled=false, press=relabel)
+          Button(id="tabs-external", label="Change selection", variant="outline", disabled=false, press=external)
+          Button(id="tabs-clear", label="Clear selection", variant="ghost", disabled=false, press=clear)
+        text (dynamic.toString()) id="tabs-dynamic-panel" testId="tabs-dynamic-panel" role="tabpanel" aria-label="Selected index" font-size="0.875rem" color="ui.muted-foreground"

@@ -1,0 +1,333 @@
+[
+  {
+    "slug": "chain-of-thought",
+    "title": "Chain of Thought",
+    "description": "An expandable summary of observable agent steps.",
+    "usage": "Expand the summary to inspect search steps and linked sources. Replay reveals the scripted steps progressively.",
+    "keyboard": "Tab to controls; Enter or Space to activate buttons.",
+    "source": "patterns/ai-elements/chain-of-thought.contract",
+    "dependencies": [
+      "BubbleFrame",
+      "ButtonAI",
+      "TraceFrame",
+      "TraceLine",
+      "TraceCollapsible",
+      "TraceDisclosure",
+      "TraceSource",
+      "CodeBlockContent"
+    ]
+  },
+  {
+    "slug": "chat",
+    "title": "Chat",
+    "description": "A local conversation with an editable prompt and response actions.",
+    "usage": "Send the suggested prompts to replay three scripted turns. Reasoning, commands and Markdown arrive progressively. Enter sends; Shift+Enter inserts a newline. Reset starts a new thread; Latest message returns to the live edge.",
+    "keyboard": "Tab to controls; Enter or Space to activate buttons.",
+    "source": "patterns/ai-elements/chat.contract",
+    "dependencies": [
+      "MessageFrame",
+      "MessageContent",
+      "BubbleFrame",
+      "MessageIcon",
+      "TraceFrame",
+      "TraceLine",
+      "TraceDisclosure",
+      "TraceCollapsible",
+      "CodeBlockContent",
+      "ButtonAI",
+      "CompactAiMenu",
+      "InputGroupFrame",
+      "InputGroupAddon",
+      "AdvancedMenuEntry",
+      "Markdown"
+    ]
+  },
+  {
+    "slug": "checkpoint",
+    "title": "Checkpoint",
+    "description": "Restore a saved point in a local conversation.",
+    "usage": "Restore the conversation to the named checkpoint, then continue the sample conversation.",
+    "keyboard": "Tab to controls; Enter or Space to activate buttons.",
+    "source": "patterns/ai-elements/checkpoint.contract",
+    "dependencies": [
+      "ButtonAI",
+      "BubbleFrame"
+    ]
+  },
+  {
+    "slug": "confirmation",
+    "title": "Confirmation",
+    "description": "Review a proposed action and explicitly approve or deny it.",
+    "usage": "Send the sample message, expand the reasoning, then approve or deny the proposed command. Reset repeats the local simulation. The demo does not execute commands.",
+    "keyboard": "Tab to controls; Enter or Space to activate buttons.",
+    "source": "patterns/ai-elements/confirmation.contract",
+    "dependencies": [
+      "ApprovalItem",
+      "ButtonAI",
+      "TraceDisclosure",
+      "TraceLine",
+      "BubbleFrame"
+    ]
+  },
+  {
+    "slug": "context",
+    "title": "Context",
+    "description": "Inspect a conversation token budget.",
+    "usage": "Hover or focus the context button to inspect the token budget and input, output and reasoning breakdown.",
+    "keyboard": "Tab to the context button to open details; Escape closes them.",
+    "source": "patterns/ai-elements/context.contract",
+    "dependencies": [
+      "HoverCardStyled"
+    ]
+  },
+  {
+    "slug": "file-tree",
+    "title": "File Tree",
+    "description": "Explore collapsible folders and inspect a selected file.",
+    "usage": "Expand folders and select a file to inspect its path.",
+    "keyboard": "Tab to controls; Enter or Space to activate buttons.",
+    "source": "patterns/ai-elements/file-tree.contract",
+    "dependencies": [
+      "Control"
+    ]
+  },
+  {
+    "slug": "inline-citation",
+    "title": "Inline Citation",
+    "description": "An inline source reference with a hover and focus card.",
+    "usage": "Hover, focus or activate an inline citation to inspect its source. Follow its link to open the original documentation.",
+    "keyboard": "Tab opens the citation card; Escape closes it. Tab to the source link and Enter to follow.",
+    "source": "patterns/ai-elements/inline-citation.contract",
+    "dependencies": []
+  },
+  {
+    "slug": "message",
+    "title": "Message",
+    "description": "One turn, with a user bubble, Markdown reply and response actions.",
+    "usage": "Copy the question or Markdown reply, edit the question, and toggle positive or negative feedback. Copy confirmation resets after two seconds. The reply is a fixed local sample.",
+    "keyboard": "Tab to controls; Enter or Space to activate buttons.",
+    "source": "patterns/ai-elements/message.contract",
+    "dependencies": [
+      "MessageFrame",
+      "MessageContent",
+      "MessageFooter",
+      "BubbleFrame",
+      "MessageAction",
+      "MessageEditor",
+      "Markdown"
+    ]
+  },
+  {
+    "slug": "model-selector",
+    "title": "Model Selector",
+    "description": "Choose a sample model and a reasoning effort independently.",
+    "usage": "Choose the model and effort from independent keyboard-accessible menus in the composer. Submit the local draft to see its text. These choices do not connect a provider.",
+    "keyboard": "Tab between menus; Enter or Arrow Down opens a menu. Arrow keys choose an item; Enter selects it; Escape closes the menu.",
+    "source": "patterns/ai-elements/model-selector.contract",
+    "dependencies": [
+      "Composer"
+    ]
+  },
+  {
+    "slug": "plan",
+    "title": "Plan",
+    "description": "Track a predefined plan and its completion count.",
+    "usage": "Expand the plan and replay its steps to watch completion states change.",
+    "keyboard": "Tab to actions and disclosures; Enter or Space activates them.",
+    "source": "patterns/ai-elements/plan.contract",
+    "dependencies": [
+      "BubbleFrame",
+      "ButtonAI",
+      "TraceFrame",
+      "TraceLine",
+      "TraceCollapsible",
+      "TraceDisclosure",
+      "TraceSource",
+      "CodeBlockContent"
+    ]
+  },
+  {
+    "slug": "prompt-input",
+    "title": "Prompt Input",
+    "description": "Compose a message with attachments and a send button.",
+    "usage": "Write a message, choose local files, remove attachments, and submit to see a local receipt. Files are not uploaded. Enter sends; Shift+Enter inserts a newline.",
+    "keyboard": "Tab to controls; Enter or Space to activate buttons.",
+    "source": "patterns/ai-elements/prompt-input.contract",
+    "dependencies": [
+      "Composer"
+    ]
+  },
+  {
+    "slug": "queue",
+    "title": "Queue",
+    "description": "Separate remaining work from completed items.",
+    "usage": "Expand pending and completed groups. Replay moves the scripted tasks through their statuses.",
+    "keyboard": "Tab to actions and disclosures; Enter or Space activates them.",
+    "source": "patterns/ai-elements/queue.contract",
+    "dependencies": [
+      "BubbleFrame",
+      "ButtonAI",
+      "TraceFrame",
+      "TraceLine",
+      "TraceCollapsible",
+      "TraceDisclosure",
+      "TraceSource",
+      "CodeBlockContent"
+    ]
+  },
+  {
+    "slug": "reasoning",
+    "title": "Reasoning",
+    "description": "Stream a reasoning summary, expand its details and replay the response.",
+    "usage": "Expand the reasoning summary or press Replay. Thinking text streams first, the summary closes automatically unless you changed it, then the answer arrives. Reduced motion disables decorative transitions.",
+    "keyboard": "Tab to actions and disclosures; Enter or Space activates them.",
+    "source": "patterns/ai-elements/reasoning.contract",
+    "dependencies": [
+      "ButtonAI",
+      "MessageFrame",
+      "MessageContent",
+      "BubbleFrame",
+      "TraceFrame",
+      "TraceDisclosure"
+    ]
+  },
+  {
+    "slug": "sources",
+    "title": "Sources",
+    "description": "Expand the source list and follow the original documentation links.",
+    "usage": "Expand the source list and follow its original documentation links.",
+    "keyboard": "Tab to actions and disclosures; Enter or Space activates them.",
+    "source": "patterns/ai-elements/sources.contract",
+    "dependencies": [
+      "BubbleFrame",
+      "ButtonAI",
+      "TraceFrame",
+      "TraceLine",
+      "TraceCollapsible",
+      "TraceDisclosure",
+      "TraceSource",
+      "CodeBlockContent"
+    ]
+  },
+  {
+    "slug": "stack-trace",
+    "title": "Stack Trace",
+    "description": "Inspect an error and expand its stack frames.",
+    "usage": "Expand the failed command and inspect application and framework stack frames. Replay repeats the sample failure.",
+    "keyboard": "Tab to actions and disclosures; Enter or Space activates them.",
+    "source": "patterns/ai-elements/stack-trace.contract",
+    "dependencies": [
+      "BubbleFrame",
+      "ButtonAI",
+      "TraceFrame",
+      "TraceLine",
+      "TraceCollapsible",
+      "TraceDisclosure",
+      "TraceSource",
+      "CodeBlockContent"
+    ]
+  },
+  {
+    "slug": "subagent",
+    "title": "Subagent",
+    "description": "Inspect a delegated task, its sample tool calls and result.",
+    "usage": "Expand the delegated task to inspect its reasoning, tool calls and result. Replay streams the local sequence.",
+    "keyboard": "Tab to actions and disclosures; Enter or Space activates them.",
+    "source": "patterns/ai-elements/subagent.contract",
+    "dependencies": [
+      "BubbleFrame",
+      "ButtonAI",
+      "TraceFrame",
+      "TraceLine",
+      "TraceCollapsible",
+      "TraceDisclosure",
+      "TraceSource",
+      "CodeBlockContent"
+    ]
+  },
+  {
+    "slug": "suggestion",
+    "title": "Suggestion",
+    "description": "Choose a prompt suggestion and inspect the selected local prompt.",
+    "usage": "Choose a prompt suggestion or write your own message and submit it locally.",
+    "keyboard": "Tab to actions and disclosures; Enter or Space activates them.",
+    "source": "patterns/ai-elements/suggestion.contract",
+    "dependencies": [
+      "ButtonAI",
+      "Composer",
+      "BubbleFrame"
+    ]
+  },
+  {
+    "slug": "task",
+    "title": "Task",
+    "description": "Follow steps discovered as work progresses.",
+    "usage": "Replay the sample to reveal discovered steps, running statuses and completion.",
+    "keyboard": "Tab to actions and disclosures; Enter or Space activates them.",
+    "source": "patterns/ai-elements/task.contract",
+    "dependencies": [
+      "BubbleFrame",
+      "ButtonAI",
+      "TraceFrame",
+      "TraceLine",
+      "TraceCollapsible",
+      "TraceDisclosure",
+      "TraceSource",
+      "CodeBlockContent"
+    ]
+  },
+  {
+    "slug": "terminal",
+    "title": "Terminal",
+    "description": "Reveal sample command output one chunk at a time.",
+    "usage": "Expand each command to inspect its own output. Replay streams output lines and updates command statuses.",
+    "keyboard": "Tab to actions and disclosures; Enter or Space activates them.",
+    "source": "patterns/ai-elements/terminal.contract",
+    "dependencies": [
+      "BubbleFrame",
+      "ButtonAI",
+      "TraceFrame",
+      "TraceLine",
+      "TraceCollapsible",
+      "TraceDisclosure",
+      "TraceSource",
+      "CodeBlockContent"
+    ]
+  },
+  {
+    "slug": "test-results",
+    "title": "Test Results",
+    "description": "Inspect suites, test statuses and failure details.",
+    "usage": "Expand the test run and its suites to inspect passing and failing tests. Replay progresses through the sample run.",
+    "keyboard": "Tab to actions and disclosures; Enter or Space activates them.",
+    "source": "patterns/ai-elements/test-results.contract",
+    "dependencies": [
+      "BubbleFrame",
+      "ButtonAI",
+      "TraceFrame",
+      "TraceLine",
+      "TraceCollapsible",
+      "TraceDisclosure",
+      "TraceSource",
+      "CodeBlockContent"
+    ]
+  },
+  {
+    "slug": "tool",
+    "title": "Tool",
+    "description": "Inspect a tool call with structured input and output.",
+    "usage": "Expand command calls to inspect their outputs and errors. Replay runs the scripted sequence without executing commands.",
+    "keyboard": "Tab to actions and disclosures; Enter or Space activates them.",
+    "source": "patterns/ai-elements/tool.contract",
+    "dependencies": [
+      "BubbleFrame",
+      "ButtonAI",
+      "TraceFrame",
+      "TraceLine",
+      "TraceCollapsible",
+      "TraceDisclosure",
+      "TraceSource",
+      "CodeBlockContent"
+    ]
+  }
+]

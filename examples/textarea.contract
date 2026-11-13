@@ -1,0 +1,23 @@
+use Textarea, Field, Button from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state notes = ""
+  action editNotes(v: string)
+    notes = v
+  state savedBrief = ""
+  action saveBrief
+    savedBrief = notes == "" ? "Add a brief first." : "Brief saved locally."
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Textarea(id="catalog-notes", label="Notes", value=notes, placeholder="Describe your project…", error="", disabled=false, edit=editNotes)
+      Textarea(id="catalog-textarea-invalid", label="Invalid textarea", value=notes, placeholder="Required", error="This field is required.", disabled=false, edit=editNotes)
+      Textarea(id="catalog-textarea-disabled", label="Disabled textarea", value="Read only preview", placeholder="", error="", disabled=true, edit=editNotes)
+      text "Field description and submit action" font-size="0.875rem" font-weight=600
+      Field(id="variation-textarea-field", description="Include timing and delivery preferences.", error="")
+        Textarea(id="variation-textarea-described", label="Project brief", value=notes, placeholder="Your brief", error="", disabled=false, edit=editNotes)
+      Button(id="variation-textarea-submit", label="Save brief", variant="outline", disabled=false, press=saveBrief)
+      text savedBrief role="status"

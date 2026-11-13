@@ -1,0 +1,97 @@
+use uiPopupIn, uiPopupOut from "./popup-motion.contract"
+use Field, Control from "./styles.contract"
+component Combobox
+  props
+    id: string
+    label: string
+    options: string[]
+    value: string
+    disabled: bool
+    reduced: bool
+    change: action
+  state expanded = false
+  state openEpoch = 0
+  state query = ""
+  state width = 280
+  derive filtered = options.filter(option => option.toLowerCase().includes(query.trim().toLowerCase()))
+  action open
+    if not disabled
+      if expanded
+        closeList()
+      else
+        let rect = frame(id)
+        width = rect.width
+        query = ""
+        openEpoch = openEpoch + 1
+        expanded = true
+        showPopover(id + "-list", source=id)
+        focus(id + "-search")
+  action changed(epoch: number, e: ToggleEvent)
+    if epoch == openEpoch
+      expanded = e.newState == "open"
+
+  action edit(v: string)
+    query = v
+  action closeList
+    expanded = false
+    focus(id)
+  action pick(v: string)
+    if not disabled
+      change(v)
+      closeList()
+  action searchKeys(k: string, e: KeyboardEvent)
+    if not e.isComposing
+      if k == "Escape"
+        preventDefault()
+        closeList()
+      else if k == "ArrowDown" and filtered.length > 0
+        preventDefault()
+        focus(id + "-option-0")
+      else if k == "Enter" and filtered.length > 0
+        preventDefault()
+        match first(filtered)
+          case some(v)
+            pick(v)
+          case none
+            preventDefault()
+  action optionKeys(i: number, k: string)
+    if k == "Enter" or k == " "
+      preventDefault()
+      match filtered.at(i)
+        case some(v)
+          pick(v)
+        case none
+          closeList()
+    else if k == "Escape"
+      preventDefault()
+      closeList()
+    else if k == "ArrowUp" or k == "ArrowDown" or k == "Home" or k == "End"
+      preventDefault()
+      let next = (k == "Home" ? 0 : k == "End" ? filtered.length - 1 : min(filtered.length - 1, i + (k == "ArrowDown" ? 1 : -1)))
+      focus(next < 0 ? id + "-search" : id + "-option-" + next.toString())
+  view
+    column gap=8 min-width=0
+      text label id=(id + "-label") font-size="0.875rem" font-weight=500 color="ui.foreground"
+      button id=id testId=id class=Field disabled=disabled press=open aria-expanded=expanded aria-controls=(id + "-list") aria-haspopup="listbox" aria-labelledby=(id + "-label")
+        display="flex" align-items="center" justify-content="space-between" gap=8
+        text (value == "" ? "Choose…" : value) flex=1 min-width=0 text-align="left"
+        svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=1.5 aria-hidden=true
+          path d="m8 9 4-4 4 4m-8 6 4 4 4-4"
+      if expanded
+        for epoch in [openEpoch] key=epoch
+          column id=(id + "-list") testId=(id + "-list") popover="auto" toggle=changed(epoch)
+            position-area="bottom" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
+            animation=(reduced ? "none" : "uiPopupIn 150ms ease-out both")
+            -exact-exit-animation=(reduced ? "none" : "uiPopupOut 100ms ease-in both")
+            width=width max-width="calc(100vw - 32px)" max-height="min(30rem, 70vh)" box-sizing="border-box" margin=4 padding=0 gap=0
+            border="1px solid ui.border" border-radius="ui.radius-menu" background-color="ui.surface" box-shadow="0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a"
+            input id=(id + "-search") testId=(id + "-search") class=Field value=query input=edit key=searchKeys
+              role="combobox" aria-expanded=true aria-controls=(id + "-options") aria-description="Type to filter, then use Arrow Down to browse results." aria-label=("Rechercher : " + label) placeholder="Rechercher…" border="none" border-bottom="1px solid ui.border" border-radius=0 min-height=40 padding="8px 12px"
+            scroll min-height=0 flex="1 1 auto" max-height="18rem"
+              column id=(id + "-options") role="listbox" aria-label=label gap=0 padding=4
+                for option, i in filtered key=option
+                  button id=(id + "-option-" + i.toString()) testId=(id + "-option-" + i.toString()) class=Control role="option" aria-selected=(value == option)
+                    press=pick(option) key=optionKeys(i) tabindex=-1 min-height=32 padding="6px 8px" border="0" border-radius="ui.radius-item" font-weight=400 background-color=(value == option ? "ui.muted" : "ui.surface") color="ui.foreground"
+                    text option text-align="left" font-size="0.875rem"
+                if filtered.length == 0
+                  text "No results." testId=(id + "-empty") role="status" padding=12 font-size="0.8125rem" color="ui.muted-foreground"

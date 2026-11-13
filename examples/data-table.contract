@@ -1,0 +1,16 @@
+use GridColumn, GridRow, DataGrid from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  action setSelection(value: string[])
+    selected = value
+  action openRow(value: string)
+    opened = value
+  state selected: string[] = []
+  state opened = ""
+  view
+    column gap=16 min-width=0 max-width="100%"
+      DataGrid(id="advanced-grid", label="Project budgets", columns=[GridColumn(id="name", label="Project", kind="text", align="left", sortable=true, searchable=true), GridColumn(id="status", label="Status", kind="badge", align="left", sortable=true, searchable=true), GridColumn(id="budget", label="Budget", kind="currency", align="right", sortable=true, searchable=false)], rows=[GridRow(id="g1", values=["Atlas", "Active", "12"]), GridRow(id="g2", values=["Boreal", "Pending", "110"]), GridRow(id="g3", values=["Cedar", "Active", "3"]), GridRow(id="g4", values=["Dune", "Pending", "47"]), GridRow(id="g5", values=["Ember", "Active", "90"]), GridRow(id="g6", values=["Fjord", "Done", "28"]), GridRow(id="g7", values=["Grove", "Done", "64"]), GridRow(id="g8", values=["Harbor", "Pending", "36"])], initialPageSize=5, reduced=reduced, selectionChanged=setSelection, openRow=openRow)

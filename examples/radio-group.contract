@@ -1,0 +1,17 @@
+use RadioGroup from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state quality = "Balanced"
+  action setQuality(v: string)
+    quality = v
+  view
+    column gap=16 min-width=0 max-width="100%"
+      RadioGroup(id="catalog-quality", label="Export quality", options=["Fast", "Balanced", "Maximum"], value=quality, disabled=false, required=true, descriptionId="catalog-quality-hint", change=setQuality)
+      text "Disabled" font-size="0.875rem" font-weight=600
+      RadioGroup(id="variation-radio-group-disabled", label="Export quality", options=["Fast", "Balanced", "Maximum"], value=quality, disabled=true, required=true, descriptionId="catalog-quality-hint", change=setQuality)
+      text "Description" font-size="0.875rem" font-weight=600
+      text "Choose the balance between speed and detail." id="catalog-quality-hint"

@@ -1,0 +1,22 @@
+use CarouselFrameAdvanced, CarouselItemAdvanced from "@rightui/ui"
+use CarouselAdvanced, CarouselSlideData from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state horizontal = 0
+  action changeHorizontal(value: number)
+    horizontal = value
+  derive images = [CarouselSlideData(id="workspace", title="Workspace", description="Compose an interface around your content.", src="assets/shadcn-placeholder.svg"), CarouselSlideData(id="typography", title="Typography", description="A clear hierarchy for text and images.", src="assets/shadcn-placeholder.svg"), CarouselSlideData(id="theme", title="Theme", description="One palette across the interface.", src="assets/shadcn-placeholder.svg")]
+  view
+    column gap=16 min-width=0 max-width="100%"
+      CarouselAdvanced(id="layout-images", label="Interface images", slides=images, value=horizontal, orientation="horizontal", height=320, imageRatio=1.7778, loop=true, reduced=reduced, change=changeHorizontal)
+      text "Vertical without looping" font-weight=600
+      CarouselAdvanced(id="carousel-vertical", label="Vertical images", slides=images, value=horizontal, orientation="vertical", height=320, imageRatio=1.7778, loop=false, reduced=reduced, change=changeHorizontal)
+      text "Custom slide content" font-weight=600
+      CarouselFrameAdvanced(id="carousel-custom", label="Project notes", value=horizontal, count=3, orientation="horizontal", height=200, loop=false, reduced=reduced, change=changeHorizontal)
+        for title, i in ["Plan", "Create", "Review"] key=title
+          CarouselItemAdvanced(id="carousel-note-" + i.toString(), label=title, index=i, value=horizontal, count=3, orientation="horizontal", height=200, reduced=reduced)
+            text title

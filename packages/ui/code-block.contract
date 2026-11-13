@@ -1,0 +1,56 @@
+use Control from "./styles.contract"
+use ButtonContent from "./button.contract"
+component CodeBlockFrame
+  props
+    id: string
+    title: string
+    language: string
+    code: string
+    numbers: bool
+    diff: bool
+    ai: bool
+  state copied = false
+  action copy
+    copyText(code)
+    copied = true
+  view
+    column id=id testId=id min-width=0 border="1px solid ui.border" border-radius=(ai ? "ui.ai-radius-control" : "ui.radius-control") overflow="hidden" background-color=(ai ? "ui.background" : "ui.muted")
+      row gap=8 align-items="center" flex-wrap="wrap" padding=(ai ? "12px 12px 0px" : "6px 12px") border-bottom=(ai ? "0" : "1px solid ui.border")
+        text title flex="1 1 6rem" min-width=0 overflow-wrap="break-word" font-size="0.75rem" font-weight=500 color="ui.foreground"
+        text language overflow-wrap="break-word" font-size="0.75rem" color="ui.muted-foreground"
+        ButtonContent(id=id + "-copy", label=(copied ? "Copied" : "Copy code"), variant="ghost", size="icon-xs", disabled=false, press=copy)
+          svg width=14 height=14 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
+            if copied
+              path d="m20 6-11 11-5-5"
+            else
+              rect x=9 y=9 width=13 height=13 rx=2
+              path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+      scroll overflow-x="auto" max-height="17.5rem"
+        column padding="12px 0px"
+          for line, i in code.split("\n") key=i
+            row gap=16 padding="0px 12px" background-color=(diff and line.startsWith("-") ? "ui.background" : diff and line.startsWith("+") ? "ui.surface" : "transparent")
+              if numbers
+                text (i + 1).toString() width="1.5rem" flex-shrink=0 text-align="right" aria-hidden=true font-size="0.8125rem" font-family="monospace" color="ui.muted-foreground"
+              text line testId=(id + "-line-" + i.toString()) white-space="pre" font-size="0.8125rem" line-height=1.7 font-family="monospace" color=(diff and line.startsWith("-") ? "ui.danger" : "ui.foreground")
+
+component CodeBlock
+  props
+    id: string
+    title: string
+    language: string
+    code: string
+    numbers: bool
+    diff: bool
+  view
+    CodeBlockFrame(id=id, title=title, language=language, code=code, numbers=numbers, diff=diff, ai=false)
+
+component CodeBlockAI
+  props
+    id: string
+    title: string
+    language: string
+    code: string
+    numbers: bool
+    diff: bool
+  view
+    CodeBlockFrame(id=id, title=title, language=language, code=code, numbers=numbers, diff=diff, ai=true)

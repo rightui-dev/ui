@@ -1,0 +1,34 @@
+use BubbleFrame from "../../packages/ui/conversation-parts.contract"
+use ButtonAI as ButtonContent from "../../packages/ui/button.contract"
+use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "../../packages/ui/trace-parts.contract"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  inject
+    rightuiDemoTime: number
+    rightuiRunDemo: action
+  state started = -1
+  derive elapsed = started < 0 ? 14800 : max(0, rightuiDemoTime - started)
+  derive busy = elapsed < 4800
+  action replay
+    started = rightuiDemoTime
+    rightuiRunDemo(8800)
+  view
+    column gap=16 min-width=0 min-height=288 max-width="24rem" width="100%" padding="24px 0px"
+      BubbleFrame(id="ai-plan-question", align="end", variant="muted")
+        text "Migrate the dialog components to Base UI."
+      TraceFrame()
+        TraceCollapsible(id="ai-plan-0", title="Plan: migrate to Base UI", icon="route", status="", initiallyOpen=true, reduced=reduced)
+          text (min(4, floor(elapsed / 1200)).toString() + " of 4 done") font-size="0.875rem" color="ui.muted-foreground"
+          TraceLine(title="Install @base-ui/react", icon=(elapsed >= 0 and elapsed < 1200 ? "dot" : "check"), status=(elapsed < 0 ? "pending" : elapsed < 1200 ? "running" : ""), reduced=reduced)
+          TraceLine(title="Replace the Radix imports", icon=(elapsed >= 1200 and elapsed < 2400 ? "dot" : "check"), status=(elapsed < 1200 ? "pending" : elapsed < 2400 ? "running" : ""), reduced=reduced)
+          TraceLine(title="Rename asChild to render", icon=(elapsed >= 2400 and elapsed < 3600 ? "dot" : "check"), status=(elapsed < 2400 ? "pending" : elapsed < 3600 ? "running" : ""), reduced=reduced)
+          TraceLine(title="Run the type checker", icon=(elapsed >= 3600 and elapsed < 4800 ? "dot" : "check"), status=(elapsed < 3600 ? "pending" : elapsed < 4800 ? "running" : ""), reduced=reduced)
+      if elapsed >= 4800
+        text "Migrated Dialog and AlertDialog. The type checker passes.".slice(0, started < 0 or reduced ? 57 : floor((elapsed - 4800) / 20)) font-size="0.875rem" line-height=1.625
+      if not busy
+        row margin-top="auto" align-items="flex-start"
+          ButtonContent(id="ai-plan-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
+            text "Replay"

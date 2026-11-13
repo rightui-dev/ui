@@ -1,0 +1,46 @@
+use BubbleFrame from "../../packages/ui/conversation-parts.contract"
+use ButtonAI as ButtonContent from "../../packages/ui/button.contract"
+use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "../../packages/ui/trace-parts.contract"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  inject
+    rightuiDemoTime: number
+    rightuiRunDemo: action
+  state started = -1
+  derive elapsed = started < 0 ? 14000 : max(0, rightuiDemoTime - started)
+  derive busy = elapsed < 4000
+  state agentOpen = false
+  action toggleAgent
+    agentOpen = not agentOpen
+  action replay
+    started = rightuiDemoTime
+    rightuiRunDemo(8000)
+  view
+    column gap=16 min-width=0 min-height=288 max-width="24rem" width="100%" padding="24px 0px"
+      BubbleFrame(id="ai-subagent-question", align="end", variant="muted")
+        text "Why does image optimization rerun on every deploy?"
+      TraceFrame()
+        TraceDisclosure(id="ai-subagent-0", title=(busy ? "Researching image optimization" : "Researched image optimization"), icon="check", status=(busy ? "running" : ""), open=(agentOpen or busy), reduced=reduced, toggle=toggleAgent)
+          if elapsed >= 600
+            TraceCollapsible(id="ai-subagent-step-0", title=((elapsed < 1600 ? "Running " : "Ran ") + "grep -rn cacheKey scripts"), icon="check", status=(elapsed < 1600 ? "running" : ""), initiallyOpen=false, reduced=reduced)
+              if elapsed >= 1600
+                CodeBlockContent(id="ai-subagent-output-0", code="scripts/optimize-images.ts:14:  const cacheKey = process.env.COMMIT_SHA")
+          if elapsed >= 1600
+            TraceCollapsible(id="ai-subagent-step-1", title=((elapsed < 2600 ? "Running " : "Ran ") + "sed -n 13,15p scripts/optimize-images.ts"), icon="check", status=(elapsed < 2600 ? "running" : ""), initiallyOpen=false, reduced=reduced)
+              if elapsed >= 2600
+                CodeBlockContent(id="ai-subagent-output-1", code="const cacheDir = \".next/cache/images\"\nconst cacheKey = process.env.COMMIT_SHA\nconst cached = await restoreCache(cacheDir, cacheKey)")
+          if elapsed >= 2600
+            TraceCollapsible(id="ai-subagent-step-2", title=((elapsed < 3600 ? "Running " : "Ran ") + "ls public/images | wc -l"), icon="check", status=(elapsed < 3600 ? "running" : ""), initiallyOpen=false, reduced=reduced)
+              if elapsed >= 3600
+                CodeBlockContent(id="ai-subagent-output-2", code="1240")
+          if elapsed >= 3600
+            text "The cache is keyed on the commit SHA, so every deploy misses it and optimizes all 1,240 images again." font-size="0.875rem" line-height=1.625
+      if elapsed >= 4000
+        text "Image optimization reruns because its cache is keyed on the commit SHA, which changes on every deploy. Key the cache on a hash of public/images instead, and unchanged images will be skipped.".slice(0, started < 0 or reduced ? 190 : floor((elapsed - 4000) / 20)) font-size="0.875rem" line-height=1.625
+      if not busy
+        row margin-top="auto" align-items="flex-start"
+          ButtonContent(id="ai-subagent-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
+            text "Replay"

@@ -1,0 +1,41 @@
+use BubbleFrame from "../../packages/ui/conversation-parts.contract"
+use ButtonAI as ButtonContent from "../../packages/ui/button.contract"
+use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "../../packages/ui/trace-parts.contract"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  inject
+    rightuiDemoTime: number
+    rightuiRunDemo: action
+  state started = -1
+  derive elapsed = started < 0 ? 12100 : max(0, rightuiDemoTime - started)
+  derive busy = elapsed < 2100
+  action replay
+    started = rightuiDemoTime
+    rightuiRunDemo(6100)
+  view
+    column gap=16 min-width=0 min-height=288 max-width="24rem" width="100%" padding="24px 0px"
+      BubbleFrame(id="ai-stack-trace-question", align="end", variant="muted")
+        text "Reset the database and seed it."
+      TraceFrame()
+        TraceCollapsible(id="ai-stack-trace-0", title=((elapsed < 900 ? "Running " : "Ran ") + "pnpm prisma migrate reset --skip-seed"), icon="terminal", status=(elapsed < 900 ? "running" : ""), initiallyOpen=false, reduced=reduced)
+          if elapsed >= 900
+            CodeBlockContent(id="ai-stack-reset", code="Database reset successful\n\nThe following migrations have been applied:\n\nmigrations/\n  \u2514\u2500 20260912_init/\n  \u2514\u2500 20260920_add_profiles/")
+        if elapsed >= 900
+          if elapsed < 2100
+            TraceLine(title="Running pnpm prisma db seed", icon="terminal", status="running", reduced=reduced)
+          else
+            TraceCollapsible(id="ai-stack-trace-1", title="Failed: TypeError: Cannot read properties of undefined (reading 'email')", icon="terminal", status="error", initiallyOpen=true, reduced=reduced)
+              text "TypeError: Cannot read properties of undefined (reading 'email')" font-family="monospace" font-size="0.75rem" color="ui.danger"
+              TraceSource(title="seedUsers in prisma/seed.ts:27", href="#prisma/seed.ts:27", reduced=reduced)
+              TraceSource(title="main in prisma/seed.ts:51", href="#prisma/seed.ts:51", reduced=reduced)
+              TraceCollapsible(id="ai-stack-framework", title="4 framework frames", icon="layers", status="", initiallyOpen=false, reduced=reduced)
+                CodeBlockContent(id="ai-stack-frames", code="at Module._compile (node:internal/modules/cjs/loader:1554:14)\nat Object.transformer (node_modules/tsx/dist/register.cjs:3:1104)\nat Module.load (node:internal/modules/cjs/loader:1289:32)\nat process.processTicksAndRejections (node:internal/process/task_queues:105:5)")
+      if elapsed >= 2100
+        text "The migrations ran, but the seed failed in seedUsers. One fixture has no profile, so profile.email is undefined.".slice(0, started < 0 or reduced ? 112 : floor((elapsed - 2100) / 20)) font-size="0.875rem" line-height=1.625
+      if not busy
+        row margin-top="auto" align-items="flex-start"
+          ButtonContent(id="ai-stack-trace-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
+            text "Replay"

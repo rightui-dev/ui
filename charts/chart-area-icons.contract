@@ -1,0 +1,13 @@
+use ChartPoint, Button from "@rightui/ui"
+use AreaGalleryChart from "../packages/ui/area-chart.contract"
+component Demo
+  props
+    width: number
+    reduced: bool
+  view
+    column gap=20 padding=24 min-width=0 border="1px solid ui.border" border-radius=12 background-color="ui.surface"
+      text "Area Chart - Icons" font-size=16 font-weight=600
+      text "Showing total visitors for the last 6 months" font-size=14 color="ui.muted-foreground"
+      AreaGalleryChart(id="chart-area-icons", points=[ChartPoint(label="January", desktop=186, mobile=80), ChartPoint(label="February", desktop=305, mobile=200), ChartPoint(label="March", desktop=237, mobile=120), ChartPoint(label="April", desktop=73, mobile=190), ChartPoint(label="May", desktop=209, mobile=130), ChartPoint(label="June", desktop=214, mobile=140)], others=[0, 0, 0, 0, 0, 0], mode="icons", width=width, reduced=reduced)
+      text "Trending up by 5.2% this month ↗" font-size=14 font-weight=500
+      text "January - June 2024" font-size=14 color="ui.muted-foreground"

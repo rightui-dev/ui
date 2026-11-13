@@ -1,0 +1,16 @@
+component NativeSelect
+  props
+    id: string
+    label: string
+    options: string[]
+    value: string
+    disabled: bool
+    change: action
+  view
+    column gap=8 min-width=0
+      text label id=(id + "-label") font-size="0.875rem" font-weight=500 color="ui.foreground"
+      select id=id testId=id value=value change=change disabled=disabled aria-labelledby=(id + "-label")
+        min-height=36 padding="8px 12px" border="1px solid ui.border" border-radius="ui.radius-control" background-color="ui.surface" color="ui.foreground" font-size="0.875rem"
+        for item in options key=item
+          option value=item
+            text item

@@ -1,0 +1,13 @@
+use Breadcrumb from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state breadcrumb = "Components"
+  action chooseBreadcrumb(i: number)
+    breadcrumb = (i == 0 ? "Home" : "Library")
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Breadcrumb(id="catalog-breadcrumb", labels=["Home", "Library", "Components"], choose=chooseBreadcrumb)

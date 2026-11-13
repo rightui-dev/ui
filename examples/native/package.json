@@ -1,0 +1,13 @@
+{
+  "name": "@rightui/native-demo",
+  "private": true,
+  "scripts": {
+    "mac": "EXACT_FEEDBACK=0 EXACT_IDENTITY=- bun exact.mjs mac --bundle --json",
+    "ios": "EXACT_FEEDBACK=0 bun exact.mjs ios --no-install --json",
+    "test:mac": "EXACT_FEEDBACK=0 EXACT_IDENTITY=- bun exact.mjs test macos"
+  },
+  "dependencies": {
+    "@rightui/ui": "workspace:*",
+    "@rightui/registry": "link:@rightui/registry"
+  }
+}

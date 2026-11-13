@@ -1,0 +1,40 @@
+use BubbleFrame from "../../packages/ui/conversation-parts.contract"
+use ButtonAI as ButtonContent from "../../packages/ui/button.contract"
+use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "../../packages/ui/trace-parts.contract"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  inject
+    rightuiDemoTime: number
+    rightuiRunDemo: action
+  state started = -1
+  derive elapsed = started < 0 ? 11500 : max(0, rightuiDemoTime - started)
+  derive busy = elapsed < 1500
+  action replay
+    started = rightuiDemoTime
+    rightuiRunDemo(5500)
+  view
+    column gap=16 min-width=0 min-height=288 max-width="24rem" width="100%" padding="24px 0px"
+      BubbleFrame(id="ai-test-results-question", align="end", variant="muted")
+        text "Run the checkout tests."
+      TraceFrame()
+        if elapsed < 1500
+          TraceLine(title="Running pnpm test checkout", icon="flask", status="running", reduced=reduced)
+        else
+          TraceCollapsible(id="ai-test-results-0", title="Ran 5 tests, 1 failed", icon="flask", status="error", initiallyOpen=true, reduced=reduced)
+            TraceCollapsible(id="ai-test-cart", title="cart.test.ts, 3 tests", icon="file", status="", initiallyOpen=false, reduced=reduced)
+              TraceLine(title="adds an item", icon="tick", status="", reduced=reduced)
+              TraceLine(title="removes an item", icon="tick", status="", reduced=reduced)
+              TraceLine(title="applies a discount code", icon="tick", status="", reduced=reduced)
+            TraceCollapsible(id="ai-test-payment", title="payment.test.ts, 2 tests, 1 failed", icon="file", status="error", initiallyOpen=true, reduced=reduced)
+              TraceLine(title="charges the saved card", icon="tick", status="", reduced=reduced)
+              TraceCollapsible(id="ai-test-failure", title="retries a declined card", icon="x", status="error", initiallyOpen=true, reduced=reduced)
+                CodeBlockContent(id="ai-test-error", code="Expected 2 charge attempts, received 1\n\n  at Object.<anonymous> (src/payment.test.ts:58:22)")
+      if elapsed >= 1500
+        text "One test failed. The payment client does not retry a declined card, so the second charge attempt never happens.".slice(0, started < 0 or reduced ? 111 : floor((elapsed - 1500) / 20)) font-size="0.875rem" line-height=1.625
+      if not busy
+        row margin-top="auto" align-items="flex-start"
+          ButtonContent(id="ai-test-results-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
+            text "Replay"

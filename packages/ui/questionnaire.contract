@@ -1,0 +1,96 @@
+use Button from "./button.contract"
+use Control, Field from "./styles.contract"
+shape QuestionnaireQuestion
+  id: string
+  title: string
+  description: string
+  kind: string
+  options: string[]
+  optional: bool
+
+shape QuestionnaireAnswer
+  id: string
+  values: string[]
+
+component Questionnaire
+  props
+    id: string
+    questions: QuestionnaireQuestion[]
+    complete: action
+  state step = 0
+  state answers: QuestionnaireAnswer[] = []
+  state finished = false
+  derive question = match questions.at(step) { case some(q) => q, case none => QuestionnaireQuestion(id="", title="", description="", kind="freeform", options=[], optional=true) }
+  derive values = match first(answers.filter(a => a.id == question.id)) { case some(a) => a.values, case none => [] }
+  derive freeform = match first(values) { case some(v) => v, case none => "" }
+  derive ready = question.optional or values.filter(v => v.trim() != "").length > 0
+  action choose(v: string)
+    let selection = question.kind == "multi" ? (values.includes(v) ? values.filter(x => x != v) : values.concat([v])) : [v]
+    answers = answers.filter(a => a.id != question.id).concat([QuestionnaireAnswer(id=question.id, values=selection)])
+  action edit(v: string)
+    answers = answers.filter(a => a.id != question.id).concat([QuestionnaireAnswer(id=question.id, values=(v.trim() == "" ? [] : [v]))])
+  action next
+    if ready and questions.length > 0
+      if step == questions.length - 1
+        complete(answers)
+        finished = true
+      else
+        step = step + 1
+  action skip
+    if question.optional
+      let nextAnswers = answers.filter(a => a.id != question.id).concat([QuestionnaireAnswer(id=question.id, values=[])])
+      if step == questions.length - 1
+        complete(nextAnswers)
+        finished = true
+      else
+        step = step + 1
+      answers = nextAnswers
+  action back
+    if finished
+      finished = false
+    else
+      step = max(0, step - 1)
+  action restart
+    step = 0
+    answers = []
+    finished = false
+  action choiceKey(i: number, k: string)
+    if question.kind == "single" and question.options.length > 0 and (k == "ArrowDown" or k == "ArrowRight" or k == "ArrowUp" or k == "ArrowLeft" or k == "Home" or k == "End")
+      preventDefault()
+      let index = k == "Home" ? 0 : k == "End" ? question.options.length - 1 : (i + (k == "ArrowDown" or k == "ArrowRight" ? 1 : question.options.length - 1)) % question.options.length
+      match question.options.at(index)
+        case some(v)
+          choose(v)
+          focus(id + "-choice-" + index.toString())
+        case none
+          preventDefault()
+  view
+    column id=id testId=id gap=16 min-width=0
+      if questions.length == 0
+        text "Aucune question." font-size="0.875rem" color="ui.muted-foreground"
+      else if finished
+        text "Your answers" font-size="1.125rem" font-weight=600 color="ui.foreground" role="heading" aria-level=3
+        column testId=(id + "-result") gap=8 role="status"
+          for q in questions key=q.id
+            column gap=4
+              text q.title font-size="0.875rem" font-weight=500 color="ui.foreground"
+              text (match first(answers.filter(a => a.id == q.id)) { case some(a) => a.values.length == 0 ? "Skipped" : a.values.join(", "), case none => "Skipped" }) testId=(id + "-answer-" + q.id) font-size="0.875rem" color="ui.muted-foreground" overflow-wrap="break-word"
+        row gap=8 flex-wrap="wrap"
+          Button(id=id + "-back", label="Modifier", variant="outline", disabled=false, press=back)
+          Button(id=id + "-restart", label="Recommencer", variant="primary", disabled=false, press=restart)
+      else
+        text ("Question " + (step + 1).toString() + " sur " + questions.length.toString()) testId=(id + "-progress") font-size="0.75rem" font-weight=500 color="ui.muted-foreground" aria-live="polite"
+        text question.title font-size="1.125rem" font-weight=600 color="ui.foreground" role="heading" aria-level=3
+        text question.description font-size="0.875rem" color="ui.muted-foreground"
+        if question.kind == "freeform"
+          textarea id=(id + "-input") testId=(id + "-input") class=Field value=freeform input=edit aria-label=question.title placeholder="Your answer…" min-height="6.25rem"
+        else
+          column role=(question.kind == "single" ? "radiogroup" : "group") aria-label=question.title gap=8
+            for option, i in question.options key=option
+              button id=(id + "-choice-" + i.toString()) testId=(id + "-choice-" + i.toString()) class=Control tabindex=(question.kind == "multi" or values.includes(option) or (values.length == 0 and i == 0) ? 0 : -1) role=(question.kind == "single" ? "radio" : "checkbox") aria-checked=values.includes(option) press=choose(option) key=choiceKey(i) padding=12 min-height="2.75rem" border=(values.includes(option) ? "1px solid ui.foreground" : "1px solid ui.border") background-color=(values.includes(option) ? "ui.muted" : "ui.surface") color="ui.foreground" text-align="left"
+                text option
+        row gap=8 flex-wrap="wrap" align-items="center"
+          Button(id=id + "-back", label="Retour", variant="outline", disabled=(step == 0), press=back)
+          if question.optional
+            Button(id=id + "-skip", label="Passer", variant="ghost", disabled=false, press=skip)
+          Button(id=id + "-next", label=(step == questions.length - 1 ? "Terminer" : "Continuer"), variant="primary", disabled=(not ready), press=next)

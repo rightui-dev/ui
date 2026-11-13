@@ -1,0 +1,61 @@
+component Slider
+  props
+    id: string
+    label: string
+    value: number
+    minimum: number
+    maximum: number
+    step: number
+    disabled: bool
+    change: action
+  state start = 0
+  state trackWidth = 1
+  derive ratio = max(0, min(1, (value - minimum) / max(1, maximum - minimum)))
+  action update(n: number)
+    if not disabled
+      change(max(minimum, min(maximum, minimum + round((n - minimum) / step) * step)))
+  action begin(e: PointerEvent)
+    let box = frame(id)
+    let width = max(1, box.width - 20)
+    let position = max(0, min(width, e.clientX - box.x - 10))
+    trackWidth = width
+    start = position
+    update(minimum + position / width * (maximum - minimum))
+    focus(id)
+  action move(dx: number, dy: number)
+    let position = start + dx
+    start = position
+    update(minimum + position / trackWidth * (maximum - minimum))
+  action keys(k: string)
+    if k == "ArrowRight" or k == "ArrowUp"
+      preventDefault()
+      update(value + step)
+    if k == "ArrowLeft" or k == "ArrowDown"
+      preventDefault()
+      update(value - step)
+    if k == "Home"
+      preventDefault()
+      update(minimum)
+    if k == "End"
+      preventDefault()
+      update(maximum)
+    if k == "PageUp"
+      preventDefault()
+      update(value + step * 10)
+    if k == "PageDown"
+      preventDefault()
+      update(value - step * 10)
+  view
+    column gap=8 min-width=0
+      row justify-content="space-between" align-items="center" flex-wrap="wrap" gap=8
+        text label flex="1 1 8rem" min-width=0 hyphens="auto" font-size="0.875rem" color="ui.foreground"
+        text value.toFixed(0) flex-shrink=0 font-size="0.8125rem" color="ui.muted-foreground" font-variant-numeric="tabular-nums" testId=(id + "-value")
+      view id=id testId=id role="slider" aria-label=label aria-valuemin=minimum aria-valuemax=maximum aria-valuenow=value
+        aria-disabled=disabled tabindex=(disabled ? -1 : 0) key=keys pointerdown=begin pan=move
+        height=44 width="100%" position="relative" touch-action="none" cursor="pointer" opacity=(disabled ? 0.4 : 1)
+        :focus-visible
+          box-shadow="0 0 0 3px ui.ring"
+        view position="absolute" left=10 right=10 top=19 height=6 border-radius="ui.radius-full" background-color="ui.muted" pointer-events="none"
+          view height="100%" width=((ratio * 100).toString() + "%") border-radius="ui.radius-full" background-color="ui.primary"
+          view position="absolute" left=((ratio * 100).toString() + "%") top=-7 width=20 height=20 translate="-10px 0px"
+            border-radius="ui.radius-full" background-color="ui.surface" border="2px solid ui.primary" box-sizing="border-box"

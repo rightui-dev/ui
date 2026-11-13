@@ -1,0 +1,30 @@
+use DisclosureButton from "./button.contract"
+component Trace
+  props
+    id: string
+    title: string
+    status: string
+    steps: string[]
+    details: string[]
+  state expanded = -1
+  action toggle(i: number)
+    expanded = expanded == i ? -1 : i
+  view
+    column id=id testId=id gap=12 min-width=0
+      row gap=8 align-items="center" flex-wrap="wrap"
+        text title flex=1 min-width=0 font-size="0.875rem" font-weight=500 color="ui.foreground"
+        text status testId=(id + "-status") role="status" font-size="0.75rem" color=(["error", "failed", "erreur"].includes(status.toLowerCase()) ? "ui.danger" : "ui.muted-foreground")
+      for step, i in steps key=step
+        row gap=12 min-width=0
+          column align-items="center" width="1.25rem" flex-shrink=0
+            view width=8 height=8 margin-top=14 border-radius="ui.radius-full" background-color="ui.foreground"
+            view width=1 flex=1 min-height="1.25rem" background-color="ui.border"
+          column flex=1 min-width=0
+            DisclosureButton(id=id + "-step-" + i.toString(), label=step, variant="ghost", controls=id + "-detail-" + i.toString(), expanded=(expanded == i), icon=false, press=toggle(i))
+              text step font-size="0.875rem"
+            if expanded == i
+              match details.at(i)
+                case some(detail)
+                  text detail id=(id + "-detail-" + i.toString()) testId=(id + "-detail-" + i.toString()) padding="4px 12px 12px" font-size="0.8125rem" line-height=1.5 color="ui.muted-foreground" overflow-wrap="break-word"
+                case none
+                  text "No details." font-size="0.8125rem" color="ui.muted-foreground"

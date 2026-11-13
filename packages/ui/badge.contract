@@ -1,0 +1,9 @@
+component Badge
+  props
+    label: string
+    variant: string
+  view
+    row align-items="center" justify-content="center" padding="2px 8px" border-radius="ui.radius-4xl" border=(variant == "outline" ? "1px solid ui.border" : "1px solid transparent")
+      background-color=((variant == "primary" or variant == "default") ? "ui.primary" : variant == "outline" or variant == "ghost" or variant == "link" ? "transparent" : variant == "destructive" ? "ui.destructive" : "ui.muted")
+      color=((variant == "primary" or variant == "default") ? "ui.primary-foreground" : variant == "success" ? "ui.success" : variant == "destructive" ? "ui.on-danger" : "ui.foreground")
+      text label font-size="0.75rem" line-height=1.333333 font-weight=500

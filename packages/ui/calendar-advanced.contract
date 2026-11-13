@@ -1,0 +1,128 @@
+use IconButton from "./button.contract"
+use Control from "./styles.contract"
+use calendarDays, calendarOffset, calendarISO, calendarMonth from "./calendar.contract"
+shape CalendarDate
+  year: number
+  month: number
+  day: number
+  iso: string
+fn advancedBefore(m: number): number = m == 1 ? 0 : m == 2 ? 31 : m == 3 ? 59 : m == 4 ? 90 : m == 5 ? 120 : m == 6 ? 151 : m == 7 ? 181 : m == 8 ? 212 : m == 9 ? 243 : m == 10 ? 273 : m == 11 ? 304 : 334
+fn advancedSerial(y: number, m: number, d: number): number = 365 * (y - 1) + floor((y - 1) / 4) - floor((y - 1) / 100) + floor((y - 1) / 400) + advancedBefore(m) + (m > 2 and calendarDays(y, 2) == 29 ? 1 : 0) + d - 1
+fn advancedYear(n: number): number = advancedSerial(floor(n / 365.2425) + 1, 1, 1) > n ? floor(n / 365.2425) : advancedSerial(floor(n / 365.2425) + 2, 1, 1) <= n ? floor(n / 365.2425) + 2 : floor(n / 365.2425) + 1
+fn advancedMonth(n: number, y: number): number = n >= advancedSerial(y, 12, 1) ? 12 : n >= advancedSerial(y, 11, 1) ? 11 : n >= advancedSerial(y, 10, 1) ? 10 : n >= advancedSerial(y, 9, 1) ? 9 : n >= advancedSerial(y, 8, 1) ? 8 : n >= advancedSerial(y, 7, 1) ? 7 : n >= advancedSerial(y, 6, 1) ? 6 : n >= advancedSerial(y, 5, 1) ? 5 : n >= advancedSerial(y, 4, 1) ? 4 : n >= advancedSerial(y, 3, 1) ? 3 : n >= advancedSerial(y, 2, 1) ? 2 : 1
+fn advancedDate(n: number): CalendarDate = CalendarDate(year=advancedYear(n), month=advancedMonth(n, advancedYear(n)), day=n - advancedSerial(advancedYear(n), advancedMonth(n, advancedYear(n)), 1) + 1, iso=calendarISO(advancedYear(n), advancedMonth(n, advancedYear(n)), n - advancedSerial(advancedYear(n), advancedMonth(n, advancedYear(n)), 1) + 1))
+fn advancedAllowed(y: number, m: number, d: number, minimum: string, maximum: string, dates: string[], weekends: bool): bool = y >= 1 and y <= 9999 and m >= 1 and m <= 12 and d >= 1 and d <= calendarDays(y, m) and (minimum == "" or calendarISO(y, m, d) >= minimum) and (maximum == "" or calendarISO(y, m, d) <= maximum) and not dates.includes(calendarISO(y, m, d)) and (not weekends or ((calendarOffset(y, m) + d - 1) % 7 != 0 and (calendarOffset(y, m) + d - 1) % 7 != 6))
+fn advancedISODate(iso: string): CalendarDate = CalendarDate(year=(match parseNumber(iso.slice(0, 4)) { case some(n) => n, case none => 0 }), month=(match parseNumber(iso.slice(5, 7)) { case some(n) => n, case none => 0 }), day=(match parseNumber(iso.slice(8, 10)) { case some(n) => n, case none => 0 }), iso=iso)
+fn advancedISOValid(iso: string): bool = iso.length == 10 and advancedAllowed(advancedISODate(iso).year, advancedISODate(iso).month, advancedISODate(iso).day, "", "", [], false) and calendarISO(advancedISODate(iso).year, advancedISODate(iso).month, advancedISODate(iso).day) == iso
+fn advancedRangeValid(low: string, high: string, minimum: string, maximum: string, dates: string[], weekends: bool): bool = advancedISOValid(low) and advancedISOValid(high) and low <= high and (minimum == "" or low >= minimum) and (maximum == "" or high <= maximum) and dates.filter(date => date >= low and date <= high).length == 0 and (not weekends or range(7).map(i => advancedDate(advancedSerial(advancedISODate(low).year, advancedISODate(low).month, advancedISODate(low).day) + i)).filter(date => date.iso <= high and not advancedAllowed(date.year, date.month, date.day, minimum, maximum, dates, weekends)).length == 0)
+
+component CalendarAdvanced
+  props
+    id: string
+    low: string
+    high: string
+    selected: string[]
+    mode: string
+    navigation: string
+    year: number
+    month: number
+    minimum: string
+    maximum: string
+    disabledDates: string[]
+    disabledWeekends: bool
+    disabled: bool
+    changeMonth: action
+    change: action
+  state hoveredDay = -1
+  state active = ""
+  state error = ""
+  state errorStart = ""
+  derive days = calendarDays(year, month)
+  derive offset = calendarOffset(year, month)
+  derive available = range(days).map(i => calendarISO(year, month, i + 1)).filter(iso => advancedAllowed(year, month, advancedISODate(iso).day, minimum, maximum, disabledDates, disabledWeekends))
+  derive focusDate = available.includes(active) ? active : available.includes(low) ? low : match first(available) { case some(iso) => iso, case none => "" }
+  action hoverDay(day: number, inside: bool)
+    hoveredDay = inside and not disabled and advancedAllowed(year, month, day, minimum, maximum, disabledDates, disabledWeekends) ? day : -1
+  action shiftMonth(delta: number)
+    let raw = month - 1 + delta
+    let y = year + floor(raw / 12)
+    let m = ((raw % 12 + 12) % 12) + 1
+    if not disabled and y >= 1 and y <= 9999 and (minimum == "" or calendarISO(y, m, calendarDays(y, m)) >= minimum) and (maximum == "" or calendarISO(y, m, 1) <= maximum)
+      changeMonth(y, m)
+  action select(d: number)
+    let iso = calendarISO(year, month, d)
+    if not disabled and advancedAllowed(year, month, d, minimum, maximum, disabledDates, disabledWeekends)
+      if mode == "multiple"
+        change("", "", selected.includes(iso) ? selected.filter(v => v != iso) : selected.concat([iso]))
+      else if mode == "range"
+        if low == "" or high != ""
+          change(iso, "", [])
+          error = ""
+        else
+          let start = iso < low ? iso : low
+          let finish = iso < low ? low : iso
+          if advancedRangeValid(start, finish, minimum, maximum, disabledDates, disabledWeekends)
+            change(start, finish, [])
+            error = ""
+          else
+            errorStart = low
+            error = "Cette plage contient une date indisponible. Choisissez une autre date de fin."
+      else
+        change(iso, "", [iso])
+        error = ""
+      active = iso
+  action keys(d: number, k: string, e: KeyboardEvent)
+    if not disabled and not e.isComposing
+      if k == "Enter" or k == " "
+        preventDefault()
+        select(d)
+      else if k == "ArrowLeft" or k == "ArrowRight" or k == "ArrowUp" or k == "ArrowDown" or k == "Home" or k == "End" or k == "PageUp" or k == "PageDown"
+        preventDefault()
+        stopPropagation()
+        let direction = k == "ArrowLeft" or k == "ArrowUp" or k == "Home" or k == "PageUp" ? -1 : 1
+        let raw = month - 1 + (k == "PageUp" ? -1 : 1) * (e.shiftKey ? 12 : 1)
+        let py = year + floor(raw / 12)
+        let pm = ((raw % 12 + 12) % 12) + 1
+        let base = k == "PageUp" or k == "PageDown" ? advancedSerial(py, pm, min(d, calendarDays(py, pm))) : advancedSerial(year, month, d) + (k == "Home" ? -((offset + d - 1) % 7) : k == "End" ? 6 - (offset + d - 1) % 7 : k == "ArrowUp" ? -7 : k == "ArrowDown" ? 7 : direction)
+        match first(range(min(370, 28 + disabledDates.length * 7)).map(i => advancedDate(base + i * direction)).filter(date => advancedAllowed(date.year, date.month, date.day, minimum, maximum, disabledDates, disabledWeekends)))
+          case some(date)
+            if date.year != year or date.month != month
+              changeMonth(date.year, date.month)
+            active = date.iso
+            focus(id + "-date-" + date.iso)
+          case none
+            preventDefault()
+  view
+    column id=id testId=id gap=16 padding=12 width="15.5rem" max-width="100%" min-width=0 box-sizing="border-box" overflow="auto" color="ui.foreground" font-family="Geist"
+      row gap=4 align-items="center" justify-content="space-between" min-height="2rem" min-width="14rem"
+        if navigation == "both" or navigation == "previous"
+          IconButton(id=id + "-previous", label="Previous month", variant="ghost", disabled=(disabled or year == 1 and month == 1 or minimum != "" and calendarISO(year, month, 1) <= minimum), press=shiftMonth(-1))
+            svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+              path d="m15 18-6-6 6-6"
+        else
+          view width="2rem" height="2rem" aria-hidden=true
+        text (calendarMonth(month) + " " + year.toString()) testId=(id + "-month") font-size="0.875rem" font-weight=500 aria-live="polite"
+        if navigation == "both" or navigation == "next"
+          IconButton(id=id + "-next", label="Next month", variant="ghost", disabled=(disabled or year == 9999 and month == 12 or maximum != "" and calendarISO(year, month, days) >= maximum), press=shiftMonth(1))
+            svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+              path d="m9 18 6-6-6-6"
+        else
+          view width="2rem" height="2rem" aria-hidden=true
+      view display="grid" grid-template-columns="repeat(7, minmax(2rem, 1fr))" column-gap=0 row-gap=8 min-width="14rem" role="group" aria-label=(calendarMonth(month) + " " + year.toString())
+        for name in ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] key=name
+          text name text-align="center" font-size="0.8rem" color="ui.muted-foreground"
+        for cell in range(ceil((offset + days) / 7) * 7) key=cell
+          if cell < offset or cell >= offset + days
+            view height="2rem" aria-hidden=true
+          else
+            view position="relative" height="2rem"
+              if mode == "range" and low != "" and high != "" and calendarISO(year, month, cell - offset + 1) >= low and calendarISO(year, month, cell - offset + 1) <= high
+                view position="absolute" top=0 bottom=0 left=(calendarISO(year, month, cell - offset + 1) == low ? "50%" : "0px") right=(calendarISO(year, month, cell - offset + 1) == high ? "50%" : "0px") background-color="ui.muted" pointer-events="none" aria-hidden=true
+              button id=(id + "-date-" + calendarISO(year, month, cell - offset + 1)) testId=(id + "-date-" + calendarISO(year, month, cell - offset + 1)) class=Control press=select(cell - offset + 1) key=keys(cell - offset + 1) hover=hoverDay(cell - offset + 1)
+                disabled=(disabled or not advancedAllowed(year, month, cell - offset + 1, minimum, maximum, disabledDates, disabledWeekends)) tabindex=(focusDate == calendarISO(year, month, cell - offset + 1) ? 0 : -1)
+                aria-label=calendarISO(year, month, cell - offset + 1) aria-pressed=(low == calendarISO(year, month, cell - offset + 1) or high == calendarISO(year, month, cell - offset + 1) or selected.includes(calendarISO(year, month, cell - offset + 1)))
+                position="relative" width="100%" height="2rem" min-height="2rem" padding=0 border="none" border-radius="ui.radius-control" font-size="0.875rem" font-weight=400
+                background-color=(low == calendarISO(year, month, cell - offset + 1) or high == calendarISO(year, month, cell - offset + 1) or selected.includes(calendarISO(year, month, cell - offset + 1)) ? "ui.primary" : hoveredDay == cell - offset + 1 ? "ui.muted" : "transparent") color=(low == calendarISO(year, month, cell - offset + 1) or high == calendarISO(year, month, cell - offset + 1) or selected.includes(calendarISO(year, month, cell - offset + 1)) ? "ui.primary-foreground" : "ui.foreground")
+                text (cell - offset + 1).toString()
+      if error != "" and high == "" and low == errorStart
+        text error testId=(id + "-error") role="alert" font-size="0.875rem" color="ui.danger"

@@ -1,0 +1,145 @@
+use uiPopupIn, uiPopupOut from "./popup-motion.contract"
+use Control from "./styles.contract"
+use MenuEntry from "./menu.contract"
+shape MenubarGroup
+  id: string
+  label: string
+  entries: MenuEntry[]
+component Menubar
+  props
+    id: string
+    groups: MenubarGroup[]
+    reduced: bool
+    choose: action
+  state active = 0
+  state expanded = false
+  state opening = 0
+  action open(index: number, lastItem: bool)
+    match groups.at(index)
+      case some(group)
+        active = index
+        opening = opening + 1
+        expanded = true
+        showPopover(id + "-" + group.id + "-menu", source=id + "-" + group.id)
+        let enabled = group.entries.filter(entry => not entry.disabled)
+        match enabled.at(lastItem ? enabled.length - 1 : 0)
+          case some(entry)
+            focus(id + "-" + group.id + "-item-" + entry.id)
+          case none
+            focus(id + "-" + group.id + "-menu")
+      case none
+        expanded = false
+  action closeMenu
+    expanded = false
+    match groups.at(active)
+      case some(group)
+        focus(id + "-" + group.id)
+      case none
+        expanded = false
+  action toggle(index: number)
+    if expanded and active == index
+      closeMenu()
+    else
+      open(index, false)
+  action changed(index: number, token: number, e: ToggleEvent)
+    if active == index and token == opening
+      expanded = e.newState == "open"
+  action nextGroup(index: number, k: string)
+    let next = (k == "Home" ? 0 : k == "End" ? groups.length - 1 : (index + (k == "ArrowRight" ? 1 : groups.length - 1)) % max(1, groups.length))
+    if expanded
+      open(next, false)
+    else
+      active = next
+      match groups.at(next)
+        case some(group)
+          focus(id + "-" + group.id)
+        case none
+          active = 0
+  action triggerKeys(index: number, k: string)
+    if k == "Enter" or k == " "
+      preventDefault()
+      toggle(index)
+    else if k == "ArrowLeft" or k == "ArrowRight" or k == "Home" or k == "End"
+      preventDefault()
+      nextGroup(index, k)
+    else if k == "ArrowDown" or k == "ArrowUp"
+      preventDefault()
+      open(index, k == "ArrowUp")
+    else if k == "Escape"
+      closeMenu()
+  action pick(entry: MenuEntry)
+    if not entry.disabled
+      closeMenu()
+      choose(entry.id)
+  action itemKeys(groupIndex: number, entryId: string, k: string, e: KeyboardEvent)
+    if not e.isComposing
+      if k == "Enter" or k == " "
+        preventDefault()
+        match groups.at(groupIndex)
+          case some(group)
+            match first(group.entries.filter(entry => entry.id == entryId and not entry.disabled))
+              case some(entry)
+                pick(entry)
+              case none
+                stopPropagation()
+          case none
+            stopPropagation()
+      else if k == "Escape"
+        preventDefault()
+        closeMenu()
+      else if k == "Tab"
+        closeMenu()
+      else if k == "ArrowLeft" or k == "ArrowRight"
+        preventDefault()
+        nextGroup(groupIndex, k)
+      else
+        match groups.at(groupIndex)
+          case some(group)
+            let enabled = group.entries.filter(entry => not entry.disabled)
+            let index = enabled.map(entry => entry.id).indexOf(entryId)
+            if k == "ArrowDown" or k == "ArrowUp" or k == "Home" or k == "End"
+              preventDefault()
+              let next = (k == "Home" ? 0 : k == "End" ? enabled.length - 1 : (index + (k == "ArrowDown" ? 1 : enabled.length - 1)) % max(1, enabled.length))
+              match enabled.at(next)
+                case some(entry)
+                  focus(id + "-" + group.id + "-item-" + entry.id)
+                case none
+                  closeMenu()
+            else if k.length == 1 and k != " " and not e.ctrlKey and not e.metaKey and not e.altKey
+              let ordered = enabled.slice(index + 1).concat(enabled.slice(0, index + 1))
+              match first(ordered.filter(entry => entry.label.toLowerCase().startsWith(k.toLowerCase())))
+                case some(entry)
+                  preventDefault()
+                  focus(id + "-" + group.id + "-item-" + entry.id)
+                case none
+                  stopPropagation()
+          case none
+            closeMenu()
+  view
+    row id=id testId=id role="menubar" aria-label="Menu de l’application" gap=4 align-items="center" flex-wrap="wrap"
+      padding=4 border="1px solid ui.border" border-radius="ui.radius-menu" background-color="ui.surface" min-height=36 box-sizing="border-box"
+      for group, i in groups key=group.id
+        column align-items="flex-start"
+          button id=(id + "-" + group.id) testId=(id + "-" + group.id) class=Control role="menuitem"
+            tabindex=(active == i ? 0 : -1) aria-haspopup="menu" aria-expanded=(expanded and active == i) aria-controls=(id + "-" + group.id + "-menu")
+            press=toggle(i) key=triggerKeys(i) padding="4px 8px" min-height=28 border="0" border-radius="ui.radius-sm" background-color=(expanded and active == i ? "ui.muted" : "transparent") color="ui.foreground" font-size="0.875rem"
+            text group.label
+          if expanded and active == i
+            for token in [opening] key=token
+              column id=(id + "-" + group.id + "-menu") testId=(expanded and active == i ? id + "-" + group.id + "-menu" : "") role="menu" aria-label=group.label tabindex=-1
+                popover="auto" toggle=changed(i, token) position-area="bottom" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
+                margin=4 padding=4 gap=2 min-width="12rem" max-width="calc(100vw - 32px)" box-sizing="border-box" border="1px solid ui.border" border-radius="ui.radius-menu" background-color="ui.surface" box-shadow="0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a"
+                animation=(reduced ? "none" : "uiPopupIn 150ms ease-out both")
+                -exact-exit-animation=(reduced ? "none" : "uiPopupOut 100ms ease-in both")
+                column role="none" align-items="stretch" gap=0 min-width=0
+                  for entry in group.entries key=entry.id
+                    button id=(id + "-" + group.id + "-item-" + entry.id) testId=(id + "-" + group.id + "-item-" + entry.id) class=Control
+                      role="menuitem" tabindex=-1 disabled=entry.disabled press=pick(entry) key=itemKeys(i, entry.id)
+                      display="flex" width="100%" box-sizing="border-box" align-items="center" gap=24 min-height=32 padding="6px 8px" border="0" border-radius="ui.radius-item" background-color="transparent" color=(entry.destructive ? "ui.danger" : "ui.foreground") font-size="0.875rem" font-weight=400
+                      :hover
+                        background-color="ui.muted"
+                      :focus-visible
+                        background-color="ui.muted"
+                      text entry.label flex=1 text-align="left"
+                      if entry.shortcut != ""
+                        text entry.shortcut font-size="0.75rem" color="ui.muted-foreground" aria-hidden=true

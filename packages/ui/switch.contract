@@ -1,0 +1,28 @@
+use Pressable from "./styles.contract"
+component Switch
+  props
+    id: string
+    label: string
+    checked: bool
+    disabled: bool
+    reduced: bool
+    change: action
+  action toggle
+    if not disabled
+      change(not checked)
+  view
+    button id=id testId=id appearance="none" class=Pressable press=toggle disabled=disabled
+      role="switch" aria-checked=checked aria-label=label
+      display="flex" align-items="center" justify-content="space-between" gap=16
+      min-height=44 padding="8px 0px" flex-wrap="wrap" border="0" background-color="transparent" color="ui.foreground"
+      :focus-visible
+        box-shadow="0 0 0 3px ui.ring"
+      :disabled
+        opacity=0.5
+      text label text-align="left" font-size="0.875rem"
+      view flex-shrink=0 width=32 height=18 border-radius="ui.radius-full" background-color=(checked ? "ui.primary" : "ui.border") position="relative" aria-hidden=true
+        transition=(reduced ? "none" : "background-color 140ms ease-out")
+        view width=16 height=16 border-radius="ui.radius-full" position="absolute" left=1 top=1
+          background-color=(checked ? "ui.primary-foreground" : "ui.surface")
+          translate=(checked ? "14px 0px" : "0px 0px")
+          transition=(reduced ? "none" : "translate 140ms ease-out")

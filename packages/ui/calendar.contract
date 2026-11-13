@@ -1,0 +1,100 @@
+use Control from "./styles.contract"
+use IconButton from "./button.contract"
+fn calendarLeap(y: number): bool = y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)
+fn calendarDays(y: number, m: number): number = m == 2 ? (calendarLeap(y) ? 29 : 28) : ([4, 6, 9, 11].includes(m) ? 30 : 31)
+fn calendarOffset(y: number, m: number): number = (floor((m < 3 ? y - 1 : y) + floor((m < 3 ? y - 1 : y) / 4) - floor((m < 3 ? y - 1 : y) / 100) + floor((m < 3 ? y - 1 : y) / 400) + (m == 1 ? 0 : m == 2 ? 3 : m == 3 ? 2 : m == 4 ? 5 : m == 5 ? 0 : m == 6 ? 3 : m == 7 ? 5 : m == 8 ? 1 : m == 9 ? 4 : m == 10 ? 6 : m == 11 ? 2 : 4) + 1)) % 7
+fn calendarISO(y: number, m: number, d: number): string = (y < 10 ? "000" : y < 100 ? "00" : y < 1000 ? "0" : "") + y.toString() + "-" + (m < 10 ? "0" : "") + m.toString() + "-" + (d < 10 ? "0" : "") + d.toString()
+fn calendarMonth(m: number): string = m == 1 ? "January" : m == 2 ? "February" : m == 3 ? "March" : m == 4 ? "April" : m == 5 ? "May" : m == 6 ? "June" : m == 7 ? "July" : m == 8 ? "August" : m == 9 ? "September" : m == 10 ? "October" : m == 11 ? "November" : "December"
+component Calendar
+  props
+    id: string
+    value: string
+    year: number
+    month: number
+    changeMonth: action
+    end: string
+    mode: string
+    disabled: bool
+    change: action
+  state hoveredDay = -1
+  state active = match parseNumber(value.slice(8, 10)) { case some(d) => max(1, min(31, floor(d))), case none => 1 }
+  derive days = calendarDays(year, month)
+  derive offset = calendarOffset(year, month)
+  derive activeDay = max(1, min(days, active))
+  action hoverDay(day: number, inside: bool)
+    hoveredDay = inside ? day : -1
+  action shiftMonth(delta: number)
+    let m = month + delta
+    changeMonth(max(1, min(9999, year + (m < 1 ? -1 : m > 12 ? 1 : 0))), m < 1 ? 12 : m > 12 ? 1 : m)
+    active = 1
+  action select(d: number)
+    if not disabled
+      change(calendarISO(year, month, d))
+      active = d
+  action keys(d: number, k: string, e: KeyboardEvent)
+    if disabled
+      preventDefault()
+    else if k == "Enter" or k == " "
+      preventDefault()
+      select(d)
+    else if k == "ArrowLeft" or k == "ArrowRight" or k == "ArrowUp" or k == "ArrowDown" or k == "Home" or k == "End"
+      preventDefault()
+      let next = k == "Home" ? max(1, d - (offset + d - 1) % 7) : k == "End" ? min(days, d + 6 - (offset + d - 1) % 7) : d + (k == "ArrowLeft" ? -1 : k == "ArrowRight" ? 1 : k == "ArrowUp" ? -7 : 7)
+      let m = next < 1 ? (month == 1 ? 12 : month - 1) : next > days ? (month == 12 ? 1 : month + 1) : month
+      let y = year + (next < 1 and month == 1 ? -1 : next > days and month == 12 ? 1 : 0)
+      let day = next < 1 ? calendarDays(y, m) + next : next > days ? next - days : next
+      if next < 1 or next > days
+        changeMonth(y, m)
+      active = day
+      focus(id + "-day-" + day.toString())
+    else if k == "PageUp" or k == "PageDown"
+      preventDefault()
+      let delta = (k == "PageUp" ? -1 : 1) * (e.shiftKey ? 12 : 1)
+      let raw = month - 1 + delta
+      let y = year + floor(raw / 12)
+      let m = ((raw % 12 + 12) % 12) + 1
+      let day = min(d, calendarDays(y, m))
+      changeMonth(y, m)
+      active = day
+      focus(id + "-day-" + day.toString())
+  action selectOutside(delta: number, day: number)
+    let raw = month + delta
+    let m = raw < 1 ? 12 : raw > 12 ? 1 : raw
+    let y = year + (raw < 1 ? -1 : raw > 12 ? 1 : 0)
+    if not disabled
+      changeMonth(y, m)
+      change(calendarISO(y, m, day))
+      active = day
+  view
+    column id=id testId=id gap=16 padding=12 width="15.5rem" max-width="100%" box-sizing="border-box" color="ui.foreground" font-family="Geist" overflow="auto"
+      row align-items="center" justify-content="space-between" gap=4 min-height="2rem" min-width="14rem"
+        IconButton(id=(id + "-previous"), label="Previous month", variant="ghost", disabled=disabled, press=shiftMonth(-1))
+          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 aria-hidden=true
+            path d="m15 18-6-6 6-6"
+        text (calendarMonth(month) + " " + year.toString()) testId=(id + "-month") font-size="0.875rem" font-weight=500 aria-live="polite"
+        IconButton(id=(id + "-next"), label="Next month", variant="ghost", disabled=disabled, press=shiftMonth(1))
+          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 aria-hidden=true
+            path d="m9 18 6-6-6-6"
+      view display="grid" grid-template-columns="repeat(7, minmax(2rem, 1fr))" column-gap=0 row-gap=8 min-width="14rem" role="group" aria-label=(calendarMonth(month) + " " + year.toString())
+        for name in ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] key=name
+          text name text-align="center" font-size="0.8rem" color="ui.muted-foreground" height="1.25rem" display="flex" align-items="center" justify-content="center"
+        for cell in range(ceil((offset + days) / 7) * 7) key=cell
+          if cell < offset or cell >= offset + days
+            button class=Control testId=(id + "-outside-" + cell.toString()) press=selectOutside(cell < offset ? -1 : 1, cell < offset ? calendarDays(month == 1 ? year - 1 : year, month == 1 ? 12 : month - 1) - offset + cell + 1 : cell - offset - days + 1) disabled=disabled tabindex=-1
+              height="2rem" min-height="2rem" padding=0 border="0" font-size="0.875rem" font-weight=400 border-radius="ui.radius-control" background-color="transparent" color="ui.muted-foreground"
+              :hover
+                background-color="ui.muted"
+                color="ui.foreground"
+              text (cell < offset ? calendarDays(month == 1 ? year - 1 : year, month == 1 ? 12 : month - 1) - offset + cell + 1 : cell - offset - days + 1).toString()
+          else
+            view height="2rem" min-height="2rem" min-width=0
+              background-color=(mode == "range" and value != "" and end != "" and (value == calendarISO(year, month, cell - offset + 1) or end == calendarISO(year, month, cell - offset + 1)) ? "ui.muted" : "transparent")
+              border-radius=(mode == "range" and value != end ? (value == calendarISO(year, month, cell - offset + 1) ? "ui.radius-control 0px 0px ui.radius-control" : end == calendarISO(year, month, cell - offset + 1) ? "0px ui.radius-control ui.radius-control 0px" : "0px") : "ui.radius-control")
+              button id=(id + "-day-" + (cell - offset + 1).toString()) testId=(id + "-day-" + (cell - offset + 1).toString()) class=Control
+                press=select(cell - offset + 1) key=keys(cell - offset + 1) hover=hoverDay(cell - offset + 1) disabled=disabled tabindex=(activeDay == cell - offset + 1 ? 0 : -1)
+                aria-label=calendarISO(year, month, cell - offset + 1) aria-pressed=(value == calendarISO(year, month, cell - offset + 1) or end == calendarISO(year, month, cell - offset + 1))
+                height="2rem" min-height="2rem" width="100%" box-sizing="border-box" padding=0 border="0" font-size="0.875rem" font-weight=400
+                border-radius=(mode == "range" and value != "" and end != "" and calendarISO(year, month, cell - offset + 1) > value and calendarISO(year, month, cell - offset + 1) < end ? (cell % 7 == 0 ? "ui.radius-control 0px 0px ui.radius-control" : cell % 7 == 6 ? "0px ui.radius-control ui.radius-control 0px" : "0px") : "ui.radius-control")
+                background-color=(value == calendarISO(year, month, cell - offset + 1) or end == calendarISO(year, month, cell - offset + 1) ? "ui.primary" : hoveredDay == cell - offset + 1 ? "ui.muted" : mode == "range" and value != "" and end != "" and calendarISO(year, month, cell - offset + 1) > value and calendarISO(year, month, cell - offset + 1) < end ? "ui.muted" : "transparent")
+                color=(value == calendarISO(year, month, cell - offset + 1) or end == calendarISO(year, month, cell - offset + 1) ? "ui.primary-foreground" : "ui.foreground")
+                text (cell - offset + 1).toString()

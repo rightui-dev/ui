@@ -1,0 +1,152 @@
+keyframes uiSkeletonPulse
+  from opacity=1
+  50% opacity=0.5
+  to opacity=1
+
+component Alert
+  props
+    id: string
+    title: string
+    description: string
+    variant: string
+  view
+    row id=id testId=id role="status" gap=12 padding="12px 16px" border="1px solid ui.border" border-radius="ui.radius-control" min-width=0 background-color="ui.surface"
+      svg width=16 height=16 margin-top=2 flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke=((variant == "danger" or variant == "destructive") ? "ui.danger" : "ui.foreground") stroke-width=1.6 aria-hidden=true
+        circle cx=12 cy=12 r=9
+        path d="M12 7v6m0 3v1"
+      column gap=2 min-width=0
+        text title font-size="0.875rem" font-weight=500 color=((variant == "danger" or variant == "destructive") ? "ui.danger" : "ui.foreground")
+        text description font-size="0.875rem" line-height=1.5 color=((variant == "danger" or variant == "destructive") ? "ui.danger" : "ui.muted-foreground") hyphens="auto"
+
+component Avatar
+  props
+    id: string
+    src: string
+    name: string
+    fallback: string
+  state failedSource = ""
+  action markFailed(source: string, message: string)
+    failedSource = source
+  view
+    view id=id testId=id role="img" aria-label=name width="2rem" height="2rem" flex-shrink=0 border-radius="ui.radius-full" overflow="hidden" background-color="ui.muted" display="flex" align-items="center" justify-content="center"
+      if src != "" and failedSource != src
+        image src alt=name width="100%" height="100%" object-fit="cover" error=markFailed(src)
+      else
+        text fallback aria-hidden=true font-size="0.875rem" font-weight=400 color="ui.muted-foreground"
+
+component Progress
+  props
+    id: string
+    label: string
+    value: number
+  derive bounded = max(0, min(100, value))
+  view
+    column gap=8 min-width=0
+      row justify-content="space-between" gap=12 flex-wrap="wrap"
+        text label font-size="0.8125rem" color="ui.foreground"
+        text (bounded.toFixed(0) + " %") testId=(id + "-value") font-size="0.8125rem" font-variant-numeric="tabular-nums" color="ui.muted-foreground"
+      view id=id testId=id role="progressbar" aria-label=label aria-valuemin=0 aria-valuemax=100 aria-valuenow=bounded height=8 border-radius="ui.radius-control" background-color="ui.muted" overflow="hidden"
+        view width=(bounded.toString() + "%") height="100%" background-color="ui.primary"
+
+component Separator
+  props
+    vertical: bool
+  view
+    view role="separator" aria-orientation=(vertical ? "vertical" : "horizontal") flex-shrink=0
+      width=(vertical ? "1px" : "100%") height=(vertical ? "100%" : "1px") background-color="ui.border"
+
+component Skeleton
+  props
+    id: string
+    label: string
+    reduced: bool
+  view
+    column id=id testId=id role="status" aria-label=label gap=12 animation=(reduced ? "none" : "uiSkeletonPulse 2s ease-in-out infinite")
+      view height="1rem" width="60%" border-radius="ui.radius-md" background-color="ui.muted" aria-hidden=true
+      view height="0.75rem" width="100%" border-radius="ui.radius-md" background-color="ui.muted" aria-hidden=true
+      view height="0.75rem" width="85%" border-radius="ui.radius-md" background-color="ui.muted" aria-hidden=true
+
+component Kbd
+  props
+    label: string
+  view
+    text label display="flex" align-items="center" justify-content="center" min-width=20 height=20 box-sizing="border-box" font-family="system-ui" font-size="0.75rem" font-weight=500 line-height=1.5 padding="0px 4px" background-color="ui.muted" color="ui.muted-foreground" border-radius="ui.radius-sm"
+
+component Empty
+  props
+    id: string
+    title: string
+    description: string
+  slot
+  view
+    column id=id testId=id align-items="center" justify-content="center" gap=24 padding=24 border="1px dashed ui.border" border-radius="ui.radius-panel" min-width=0
+      svg width=32 height=32 viewBox="0 0 24 24" stroke="ui.muted-foreground" stroke-width=1.5 fill="none" aria-hidden=true
+        path d="M3 7h7l2 2h9v11H3ZM3 7V4h7l2 3"
+      text title font-size="1.125rem" font-weight=500 text-align="center" color="ui.foreground"
+      text description font-size="0.875rem" line-height=1.5 text-align="center" color="ui.muted-foreground"
+      children
+
+component AspectRatio
+  props
+    ratio: number
+  slot
+  view
+    view aspect-ratio=max(0.1, ratio) width="100%" min-width=0 position="relative" overflow="hidden" border-radius="ui.radius-control"
+      children
+
+component Item
+  props
+    id: string
+    title: string
+    description: string
+  slot
+  view
+    row id=id testId=id flex-wrap="wrap" align-items="center" gap=16 padding=16 border="1px solid ui.border" border-radius="ui.radius-control"
+      column flex="1 1 10rem" min-width=0 gap=4
+        text title font-size="0.875rem" font-weight=600 color="ui.foreground"
+        text description font-size="0.8125rem" line-height=1.5 color="ui.muted-foreground"
+      children
+
+component ScrollArea
+  props
+    id: string
+    label: string
+    height: number
+  slot
+  view
+    scroll id=id testId=id aria-label=label tabindex=0 height=height min-width=0 border="1px solid ui.border" border-radius="ui.radius-control"
+      :focus-visible
+        box-shadow="0 0 0 3px ui.ring"
+      column padding=16 gap=12 min-width=0
+        children
+
+shape TableRow
+  id: string
+  cells: string[]
+
+component Table
+  props
+    id: string
+    label: string
+    headers: string[]
+    rows: TableRow[]
+  view
+    scroll id=(id + "-scroll") aria-label=(label + ": horizontal scrolling") tabindex=0 min-width=0 max-height="30rem"
+      table id=id testId=id aria-label=label width="100%" border-spacing=0 font-size="0.875rem" color="ui.foreground"
+        thead
+          tr
+            for heading in headers key=heading
+              th scope="col" height=40 padding="0px 8px" text-align="left" border-bottom="1px solid ui.border" color="ui.foreground" font-weight=500
+                text heading
+        tbody
+          for row in rows key=row.id
+            tr
+              :hover
+                background-color="ui.muted"
+              for heading, j in headers key=heading
+                td padding=8 border-bottom="1px solid ui.border" font-variant-numeric="tabular-nums"
+                  match row.cells.at(j)
+                    case some(cell)
+                      text cell
+                    case none
+                      text ""

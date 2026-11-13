@@ -1,0 +1,144 @@
+use MessageFrame, MessageContent, BubbleFrame, MessageIcon from "../../packages/ui/conversation-parts.contract"
+use TraceFrame, TraceLine, TraceDisclosure, TraceCollapsible, CodeBlockContent from "../../packages/ui/trace-parts.contract"
+use ButtonAI as ButtonContent from "../../packages/ui/button.contract"
+use CompactAiMenu, InputGroupFrame, InputGroupAddon from "../../packages/ui/ai-controls.contract"
+use AdvancedMenuEntry from "../../packages/ui/menu-advanced.contract"
+use Markdown from "../../packages/ui/markdown.contract"
+use uiReveal from "../../packages/ui/motion.contract"
+
+shape ChatTurn
+  id: number
+  prompt: string
+  script: number
+  started: number
+
+fn chatReply(turn: number): string = turn == 0 ? "next-themes is already set up in `app/layout.tsx`, so the toggle only has to call `setTheme`.\n\n**Changes**\n\n- Added `components/mode-toggle.tsx` with a Light and Dark option.\n- Put `<ModeToggle />` next to the Appearance heading in `app/settings/page.tsx`.\n\n```tsx\nconst { setTheme } = useTheme()\n```\n" : turn == 1 ? "It was set to `light`. I updated the `ThemeProvider` in `app/layout.tsx`:\n\n```tsx\n<ThemeProvider attribute=\"class\" defaultTheme=\"system\" enableSystem>\n```\n\nNew visitors now get the theme from their OS. The toggle also has a **System** option, so anyone who picked Light or Dark can switch back.\n" : turn == 2 ? "The build passes, so it is ready to ship.\n\n- Compiled in **4.2s**.\n- No lint or type errors.\n- Generated all **12** static pages.\n" : "This demo only knows the scripted turns. Press reset to start over."
+fn chatThought(turn: number): string = turn == 0 ? "I need to know how themes are set up before I add a toggle. If next-themes is already in the layout, the toggle only has to call setTheme." : turn == 1 ? "The default theme lives on the ThemeProvider. I should check what it is set to now." : turn == 2 ? "" : ""
+fn chatCommand(turn: number): string = turn == 0 ? "rg -l ThemeProvider app" : turn == 1 ? "rg -n defaultTheme app/layout.tsx" : turn == 2 ? "pnpm build" : ""
+fn chatOutput(turn: number): string = turn == 0 ? "app/layout.tsx" : turn == 1 ? "12:  <ThemeProvider attribute=\"class\" defaultTheme=\"light\">" : turn == 2 ? "▲ Next.js 16.0.0\n\n✓ Compiled successfully in 4.2s\n✓ Linting and checking validity of types\n✓ Generating static pages (12/12)" : ""
+
+component ChatResponse
+  props
+    id: string
+    script: number
+    elapsed: number
+    reduced: bool
+  state thoughtOpen = false
+  derive thoughtEnd = script < 2 ? 600 + chatThought(script).length * 16 : 600
+  derive commandStart = thoughtEnd + 400
+  derive commandEnd = commandStart + (script == 2 ? 1600 : 800)
+  derive replyStart = script == 3 ? 600 : commandEnd + 500
+  derive reply = chatReply(script).slice(0, max(0, floor((elapsed - replyStart) / 16)))
+  action toggleThought
+    thoughtOpen = not thoughtOpen
+  view
+    MessageFrame(id=id, align="start")
+      MessageContent(id=id + "-content", align="start")
+        column gap=12
+          TraceFrame()
+            if script < 2 and elapsed >= 600
+              TraceDisclosure(id=id + "-thought", title=(elapsed < thoughtEnd ? "Thinking" : "Thought"), icon="check", status=(elapsed < thoughtEnd ? "running" : ""), open=(thoughtOpen or elapsed < thoughtEnd), reduced=reduced, toggle=toggleThought)
+                text chatThought(script).slice(0, max(0, floor((elapsed - 600) / 16))) font-size="0.875rem" line-height=1.625 white-space="pre-wrap"
+            if script < 3 and elapsed >= commandStart
+              if elapsed < commandEnd
+                TraceLine(title="Running " + chatCommand(script), icon="terminal", status="running", reduced=reduced)
+              else
+                TraceCollapsible(id=id + "-command", title="Ran " + chatCommand(script), icon="terminal", status="", initiallyOpen=false, reduced=reduced)
+                  CodeBlockContent(id=id + "-output", code=chatOutput(script))
+          if reply != ""
+            Markdown(id=id + "-reply", content=reply)
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  inject
+    rightuiDemoTime: number
+    rightuiRunDemo: action
+  state turns: ChatTurn[] = []
+  state draft = "Add a dark mode toggle to the settings page."
+  state busyUntil = 0
+  state away = false
+  state selectedContext = ""
+  derive busy = rightuiDemoTime < busyUntil
+  action edit(value: string)
+    draft = value
+  action reset
+    if not busy
+      turns = []
+      draft = "Add a dark mode toggle to the settings page."
+      selectedContext = ""
+      away = false
+  action chooseContext(group: string, value: string)
+    if value == "Add Photos & Files"
+      showPicker("ai-chat-files")
+    else
+      selectedContext = value
+  action picked(files: Picked[])
+    selectedContext = files.map(file => file.name).join(", ")
+  action moved(x: number, y: number, e: ScrollEvent)
+    away = e.scrollHeight - e.scrollTop - e.clientHeight > 24
+  action latest
+    match turns.at(-1)
+      case some(turn)
+        if reduced
+          scrollIntoView("ai-chat-thread", turn.id, block="end", behavior="instant")
+        else
+          scrollIntoView("ai-chat-thread", turn.id, block="end", behavior="smooth")
+      case none
+        away = false
+  action send
+    if draft.trim() != "" and not busy
+      let prompt = draft.trim()
+      let nextLength = turns.length + 1
+      let script = prompt == "Add a dark mode toggle to the settings page." ? 0 : prompt == "Make it follow the system setting by default." ? 1 : prompt == "Run the build before I ship it." ? 2 : 3
+      let duration = (script == 3 ? 600 : (script < 2 ? 600 + chatThought(script).length * 16 : 600) + 400 + (script == 2 ? 1600 : 800) + 500) + chatReply(script).length * 16 + 100
+      turns = turns.concat([ChatTurn(id=turns.length, prompt=prompt, script=script, started=rightuiDemoTime)])
+      busyUntil = rightuiDemoTime + duration
+      rightuiRunDemo(duration)
+      draft = nextLength == 1 ? "Make it follow the system setting by default." : nextLength == 2 ? "Run the build before I ship it." : ""
+  action keys(k: string, e: KeyboardEvent)
+    if k == "Enter" and not e.shiftKey and not e.isComposing
+      preventDefault()
+      send()
+  view
+    column width="100%" height=800 gap=16 min-width=0 background-color="ui.background"
+      input id="ai-chat-files" type="file" multiple=true change=picked display="none"
+      row justify-content="space-between" align-items="flex-start" gap=16 padding="32px 32px 16px"
+        column gap=4
+          text "New Thread" font-weight=500
+          text "Ask the agent to change your code." font-size="0.875rem" color="ui.muted-foreground"
+        ButtonContent(id="ai-chat-reset", label="Reset conversation", variant="outline", size="icon", disabled=busy, press=reset)
+          MessageIcon(name="arrow.clockwise", filled=false)
+      if turns.length == 0
+        column flex=1 gap=8 align-items="center" justify-content="center" padding=32
+          view width=40 height=40 display="flex" align-items="center" justify-content="center" border-radius=8 background-color="ui.muted"
+            MessageIcon(name="message", filled=false)
+          text "What should we build?" font-size="1.125rem" font-weight=500
+          text "The agent can read your code, run commands and make changes. Press send to start." max-width="20rem" text-align="center" font-size="0.875rem" line-height=1.625 color="ui.muted-foreground"
+      else
+        column flex=1 min-height=0 position="relative"
+          list id="ai-chat-thread" testId="ai-chat-thread" aria-busy=busy appearance="none" virtualized=true scroll-start="end" scrollFollowEnd=true scroll=moved flex=1 min-height=0
+            for turn in turns key=turn.id
+              column gap=24 padding="0px 32px 24px" min-width=0
+                MessageFrame(id="ai-chat-user-" + turn.id.toString(), align="end")
+                  MessageContent(id="ai-chat-user-content-" + turn.id.toString(), align="end")
+                    BubbleFrame(id="ai-chat-bubble-" + turn.id.toString(), align="end", variant="muted")
+                      text turn.prompt white-space="pre-wrap" animation=(reduced ? "none" : "uiReveal 200ms ease-out both")
+                if rightuiDemoTime - turn.started >= 600
+                  ChatResponse(id="ai-chat-assistant-" + turn.id.toString(), script=turn.script, elapsed=rightuiDemoTime - turn.started, reduced=reduced)
+          if away
+            row position="absolute" bottom=8 left=0 right=0 justify-content="center"
+              ButtonContent(id="ai-chat-latest", label="Latest message", variant="outline", size="sm", disabled=false, press=latest)
+                svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+                  path d="M12 5v14m-6-6 6 6 6-6"
+      column padding="0px 32px 32px" gap=8
+        InputGroupFrame(id="ai-chat-composer")
+          textarea id="ai-chat-thread-draft" testId="ai-chat-thread-draft" value=draft input=edit key=keys aria-label="Message" placeholder="Ask the agent..." min-height=56 border="0" padding=12 background-color="transparent" color="ui.foreground" font-size="0.875rem"
+          InputGroupAddon(id="ai-chat-toolbar")
+            CompactAiMenu(id="ai-chat-context", label="Add context", prefix="Context", entries=[AdvancedMenuEntry(id="files", parent="", label="Add Photos & Files", kind="item", shortcut="", disabled=false, group="effort", value="Add Photos & Files"), AdvancedMenuEntry(id="separator", parent="", label="", kind="separator", shortcut="", disabled=false, group="", value=""), AdvancedMenuEntry(id="research", parent="", label="Deep Research", kind="item", shortcut="", disabled=false, group="effort", value="Deep Research"), AdvancedMenuEntry(id="web", parent="", label="Web Search", kind="item", shortcut="", disabled=false, group="effort", value="Web Search")], value=selectedContext, reduced=reduced, radio=chooseContext)
+            view flex=1
+            ButtonContent(id="ai-chat-thread-send", label="Send", variant="default", size="icon-sm", disabled=(draft.trim() == "" or busy), press=send)
+              MessageIcon(name="arrow.up", filled=false)
+        if selectedContext != ""
+          text selectedContext role="status" font-size="0.75rem" color="ui.muted-foreground"

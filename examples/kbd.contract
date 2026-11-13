@@ -1,0 +1,23 @@
+use Kbd, ButtonContent from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state commandStatus = ""
+  action command
+    commandStatus = "Command selected"
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Kbd(label="⌘")
+      text "Shortcut group" font-size="0.875rem" font-weight=600
+      row gap=4
+        Kbd(label="⌘")
+        Kbd(label="Shift")
+        Kbd(label="P")
+      text "Button shortcut" font-size="0.875rem" font-weight=600
+      ButtonContent(id="variation-kbd-button", label="Open command", variant="outline", size="default", disabled=false, press=command)
+        text "Command"
+        Kbd(label="⌘K")
+      text commandStatus role="status"

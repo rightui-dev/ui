@@ -1,0 +1,14 @@
+use Label, Field from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state quality = "Balanced"
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Label(id="catalog-quality-label", text="Export quality", required=true)
+      text "Label inside a field" font-size="0.875rem" font-weight=600
+      Field(id="variation-label-field", description="Select an export quality.", error="")
+        Label(id="variation-label-required", text="Quality", required=true)

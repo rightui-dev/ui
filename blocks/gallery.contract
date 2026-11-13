@@ -1,0 +1,56 @@
+use Button, Tabs from "@rightui/ui"
+use AuthBlock from "./auth.contract"
+use SidebarBlock from "./sidebars.contract"
+use DashboardBlock from "./dashboard.contract"
+component BlockGallery
+  props
+    narrow: bool
+    reduced: bool
+    fullscreen: bool
+    changePreview: action
+    openSettings: action
+    closeSettings: action
+  state group = 2
+  state variant = 3
+  action setGroup(v: number)
+    closeSettings()
+    group = v
+    variant = 1
+  action setVariant(v: number)
+    variant = v
+    if group == 1 and v == 13
+      openSettings()
+  action switchAuth
+    group = (group == 2 ? 3 : 2)
+  action toggleFullscreen
+    changePreview(not fullscreen)
+  action keys(k: string)
+    if fullscreen and k == "Escape"
+      preventDefault()
+      changePreview(false)
+      focus("block-fullscreen")
+  derive identifier = (group == 0 ? "dashboard" : group == 1 ? "sidebar" : group == 2 ? "login" : "signup") + "-" + (variant < 10 ? "0" : "") + variant.toString()
+  view
+    column id="blocks-gallery" testId="blocks-gallery" gap=20 width="100%" min-width=0
+      if not fullscreen
+        column gap=16 padding=(narrow ? 20 : 32)
+          text "Blocks" role="heading" aria-level=1 font-size="2rem" font-weight=600 letter-spacing="-0.04em"
+          text "The shadcn/ui blocks, rebuilt in Exact." font-size="1rem" color="ui.muted-foreground"
+          Tabs(id="blocks-groups", labels=["Dashboard", "Sidebar", "Login", "Signup"], selected=group, reduced=reduced, choose=setGroup)
+          row gap=6 flex-wrap="wrap"
+            for n in range(group == 0 ? 1 : group == 1 ? 16 : 5) key=n
+              Button(id="block-variant-" + (n + 1).toString(), label=(n + 1 < 10 ? "0" : "") + (n + 1).toString(), variant=(variant == n + 1 ? "secondary" : "ghost"), disabled=false, press=setVariant(n + 1))
+          row gap=12 justify-content="space-between" align-items="center" flex-wrap="wrap"
+            text identifier testId="block-identifier" font-size="0.875rem" font-weight=500
+            Button(id="block-fullscreen", label="Open preview", variant="outline", disabled=false, press=toggleFullscreen)
+      view id="block-preview" testId="block-preview" key=keys position=(fullscreen ? "absolute" : "relative") inset=(fullscreen ? "0px" : "auto") z-index=(fullscreen ? 90 : 0) width="100%" min-height=(fullscreen ? 0 : 740) height=(fullscreen ? "100%" : "auto") background-color="ui.background" border=(fullscreen ? "0" : "1px solid ui.border") box-sizing="border-box"
+        view position="relative" overflow=(fullscreen ? "auto" : "visible") height=(fullscreen ? "100%" : "auto") min-height=740 width="100%"
+          if group == 0
+            DashboardBlock(narrow=narrow, reduced=reduced)
+          else if group == 1
+            SidebarBlock(variant=variant, narrow=narrow, reduced=reduced, openSettings=openSettings)
+          else
+            AuthBlock(variant=variant, signup=(group == 3), narrow=narrow, switchMode=switchAuth)
+        if fullscreen
+          button id="block-exit" testId="block-exit" appearance="none" press=toggleFullscreen position="absolute" right=12 top=12 z-index=100 border="1px solid ui.border" background-color="ui.surface" color="ui.foreground" border-radius=6 padding=8 aria-label="Close preview"
+            text "×" font-size="1rem"

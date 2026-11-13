@@ -1,0 +1,33 @@
+use Checkbox from "@rightui/ui"
+use Button, Alert, Collapsible from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state details = false
+  action setDetails(v: bool)
+    details = v
+  action openExample
+    details = true
+  state settingsEnabled = true
+  state filesOpen = false
+  state sourceOpen = false
+  action changeSettings(v: bool)
+    settingsEnabled = v
+  action changeFiles(v: bool)
+    filesOpen = v
+  action changeSource(v: bool)
+    sourceOpen = v
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Button(id="collapsible-open", label="Open collapsible", variant="outline", disabled=false, press=openExample)
+      Collapsible(id="catalog-details", label=(details ? "Hide details" : "Show details"), open=details, reduced=reduced, change=setDetails)
+        Alert(id="catalog-details-alert", title="Content on demand", description="Cette section peut contenir vos propres composants.", variant="default")
+      text "Settings and nested files" font-weight=600
+      Collapsible(id="settings-panel", label="Settings", open=details, reduced=reduced, change=setDetails)
+        Checkbox(id="settings-enabled", label="Enable notifications", checked=settingsEnabled, disabled=false, change=changeSettings)
+      Collapsible(id="files-root", label="Project files", open=filesOpen, reduced=reduced, change=changeFiles)
+        Collapsible(id="files-source", label="Source folder", open=sourceOpen, reduced=reduced, change=changeSource)
+          text "index.contract"

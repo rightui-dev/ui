@@ -1,0 +1,20 @@
+test "native catalog opens real button examples"
+  size 1120x820
+  type "native-search" "Button"
+  tap "open-component-button"
+  clock settle
+  expect text "native-demo-title" == "Button"
+  expect tree has "button-primary"
+  expect no failures
+
+test "native AI reasoning replays from the shared clock"
+  size 1120x820
+  type "native-search" "Reasoning"
+  tap "open-ai-reasoning"
+  clock settle
+  tap "ai-reasoning-replay"
+  clock +2500
+  expect tree has "ai-reasoning-0-content"
+  clock +4700
+  expect tree has "ai-reasoning-replay"
+  expect no failures

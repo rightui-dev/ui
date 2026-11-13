@@ -1,0 +1,30 @@
+{
+  "lockfileVersion": 2,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "@rightui/registry",
+      "dependencies": {
+        "@rightui/ui": "workspace:*",
+      },
+    },
+    "examples/native": {
+      "name": "@rightui/native-demo",
+      "dependencies": {
+        "@rightui/registry": "link:@rightui/registry",
+        "@rightui/ui": "workspace:*",
+      },
+    },
+    "packages/ui": {
+      "name": "@rightui/ui",
+      "version": "0.1.0-beta.2",
+    },
+  },
+  "packages": {
+    "@rightui/native-demo": ["@rightui/native-demo@workspace:examples/native"],
+
+    "@rightui/registry": ["@rightui/registry@link:@rightui/registry", {}],
+
+    "@rightui/ui": ["@rightui/ui@workspace:packages/ui"],
+  }
+}

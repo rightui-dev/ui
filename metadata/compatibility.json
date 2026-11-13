@@ -1,0 +1,359 @@
+{
+  "version": "0.1.0-beta.1",
+  "asOf": "2026-11-13",
+  "exactRevision": "53426cf02bf986a5e781abc4f953d79989c6dc05",
+  "platforms": [
+    {
+      "key": "ios",
+      "label": "iOS"
+    },
+    {
+      "key": "macos",
+      "label": "macOS"
+    },
+    {
+      "key": "web",
+      "label": "Web"
+    },
+    {
+      "key": "windows",
+      "label": "Windows"
+    },
+    {
+      "key": "android",
+      "label": "Android"
+    }
+  ],
+  "statuses": {
+    "checked": {
+      "label": "✅ Partial checks",
+      "description": "Targeted checks completed. Coverage varies by component."
+    },
+    "built": {
+      "label": "✅ Built only",
+      "description": "Compiled successfully. Interactions have not been verified."
+    },
+    "blocked": {
+      "label": "⚠️ Partial checks",
+      "description": "Validation incomplete. No successful iOS build or device checks recorded."
+    },
+    "unsupported": {
+      "label": "❌ Not supported",
+      "description": "Outside rightui support. The project targets web, iOS and macOS."
+    }
+  },
+  "defaults": {
+    "ios": "blocked",
+    "macos": "built",
+    "web": "built",
+    "windows": "unsupported",
+    "android": "unsupported"
+  },
+  "evidence": [
+    {
+      "id": "web-run",
+      "description": "VALIDATION.md records 24 successful browser tests and 0 Contract findings on 2026-11-13. The broader visual/accessibility audit still reports 130 findings; this is limited functional coverage, not full compatibility certification.",
+      "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    },
+    {
+      "id": "web-tabs",
+      "description": "Test \"tabs use keyboard navigation and retain selection after resize\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect text \"tabs-demo-title\" == \"Analytics\"; expect text \"tabs-demo-title\" == \"Settings\"; expect text \"tabs-demo-title\" == \"Settings\"; expect disabled \"tabs-disabled-1\"; expect text \"tabs-line-panel\" == \"Reports\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-calendar",
+      "description": "Test \"calendar icon controls change month and respect disabled state\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect text \"dates-single-month\" == \"April 2026\"; expect text \"dates-single-month\" == \"March 2026\"; expect disabled \"dates-disabled-next\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-trace",
+      "description": "Test \"trace disclosure opens and closes its detail\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect tree has \"content-trace-detail-0\"; expect tree missing \"content-trace-detail-0\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-input-group",
+      "description": "Test \"input group compact action submits the shared field\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect text \"input-group-result\" == \"Search submitted: rightui\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-button",
+      "description": "Test \"button variations preserve size and disabled behavior\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect tree has \"button-with-icon\"; expect disabled \"button-loading\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-resizable-5",
+      "description": "Test \"resizable orientations retain independent values\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect text \"resizable-horizontal-value\" == \"51% / 49%\"; expect text \"resizable-vertical-value\" == \"50% / 50%\"; expect text \"resizable-vertical-value\" == \"51% / 49%\"; expect text \"resizable-vertical-value\" == \"80% / 20%\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-resizable-6",
+      "description": "Test \"resizable RTL reverses horizontal keyboard direction\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect text \"resizable-rtl-value\" == \"51% / 49%\"; expect text \"resizable-rtl-value\" == \"52% / 48%\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-resizable-7",
+      "description": "Test \"resizable withHandle changes the grip without disabling resizing\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect tree missing \"resizable-horizontal-handle-grip\"; expect tree has \"resizable-handle-handle-grip\"; expect tree missing \"resizable-handle-handle-grip\"; expect text \"resizable-handle-value\" == \"51% / 49%\"; expect disabled \"variation-resize-disabled-handle\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-confirmation",
+      "description": "Test \"AI confirmation controls a local approval state\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect text \"ai-confirmation-result\" == \"Approved locally. No command executed.\"; expect text \"ai-confirmation-result\" == \"Denied. No command executed.\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-prompt-input",
+      "description": "Test \"AI prompt input submits typed text and clears the field\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect text \"ai-prompt-input-result\" == \"Local submission: Summarize the brief\"; expect disabled \"ai-prompt-input-send\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-message",
+      "description": "Test \"AI message actions support editing and temporary copy feedback\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect text \"ai-message-copy-tip\" == \"Copied\"; expect text \"ai-message-copy-tip\" == \"Copy\"; expect text \"ai-message-bubble\" == \"How do I change the theme?\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-reasoning",
+      "description": "Test \"AI reasoning replay streams before showing the answer\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect tree has \"ai-reasoning-answer\"; expect tree missing \"ai-reasoning-answer\"; expect tree has \"ai-reasoning-0-content\"; expect tree missing \"ai-reasoning-0-content\"; expect tree has \"ai-reasoning-answer\"; expect tree has \"ai-reasoning-replay\"; expect tree has \"ai-reasoning-0-content\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-chat",
+      "description": "Test \"AI chat streams a scripted turn and resets\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect disabled \"ai-chat-thread-send\"; expect tree has \"ai-chat-assistant-0-reply\"; expect tree missing \"ai-chat-thread\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-tool",
+      "description": "Test \"AI tool exposes distinct command outputs\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect text \"ai-tool-0-output\" == \"v24.18.0\"; expect text \"ai-tool-1-output\" == \"11.6.2\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-chart-area-interactive",
+      "description": "Test \"area charts respond to period changes and keyboard inspection\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect tree has \"chart-area-stacked\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "native-run",
+      "description": "docs/NATIVE.md records the full macOS showcase build and 2 successful native tests, rerun after theme propagation was fixed. Compilation alone does not establish individual interaction behavior. iOS validation is incomplete.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/docs/NATIVE.md"
+    },
+    {
+      "id": "native-button-presence",
+      "description": "Successful test \"native catalog opens real button examples\" searches Button, opens the component, asserts the title Button and presence of button-primary, and expects no failures. It does not click the Button or assert its action.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/examples/native/app.test.contract"
+    },
+    {
+      "id": "native-reasoning",
+      "description": "Successful test \"native AI reasoning replays from the shared clock\" taps ai-reasoning-replay, advances 2500 ms and asserts ai-reasoning-0-content, then advances 4700 ms and asserts ai-reasoning-replay; expects no failures.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/examples/native/app.test.contract"
+    },
+    {
+      "id": "native-accordion-theme",
+      "description": "Recorded manual check: immediate native Accordion captures after theme toggles showed consistent sidebar, content and text colors in both schemes. This establishes limited theme rendering evidence, not Accordion disclosure interaction or accessibility coverage.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/docs/NATIVE.md"
+    },
+    {
+      "id": "web-manual-model-selector",
+      "description": "Recorded manual browser check in VALIDATION.md: Model Selector Arrow Down and Enter selected GPT-5 mini and dismissed the menu. Limited to the documented sample and gestures.",
+      "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    },
+    {
+      "id": "web-manual-context",
+      "description": "Recorded manual browser check in VALIDATION.md: Context opened on keyboard focus, exposed content and closed with Escape; its values fit the 256 px popover at desktop and 390 px widths. Limited to the documented sample and gestures.",
+      "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    },
+    {
+      "id": "web-manual-inline-citation",
+      "description": "Recorded manual browser check in VALIDATION.md: Inline citations opened on keyboard focus, exposed content and closed with Escape. Limited to the documented sample and gestures.",
+      "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    }
+  ],
+  "overrides": [
+    {
+      "kind": "component",
+      "slug": "tabs",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-tabs",
+        "web-run"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "calendar",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-calendar",
+        "web-run"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "trace",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-trace",
+        "web-run"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "input-group",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-input-group",
+        "web-run"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "button",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-button",
+        "web-run"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "resizable",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-resizable-5",
+        "web-run",
+        "web-resizable-6",
+        "web-resizable-7"
+      ]
+    },
+    {
+      "kind": "ai",
+      "slug": "confirmation",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-confirmation",
+        "web-run"
+      ]
+    },
+    {
+      "kind": "ai",
+      "slug": "prompt-input",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-prompt-input",
+        "web-run"
+      ]
+    },
+    {
+      "kind": "ai",
+      "slug": "message",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-message",
+        "web-run"
+      ]
+    },
+    {
+      "kind": "ai",
+      "slug": "reasoning",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-reasoning",
+        "web-run"
+      ]
+    },
+    {
+      "kind": "ai",
+      "slug": "chat",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-chat",
+        "web-run"
+      ]
+    },
+    {
+      "kind": "ai",
+      "slug": "tool",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-tool",
+        "web-run"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-interactive",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-chart-area-interactive",
+        "web-run"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "button",
+      "platform": "macos",
+      "status": "checked",
+      "evidence": [
+        "native-button-presence",
+        "native-run"
+      ]
+    },
+    {
+      "kind": "ai",
+      "slug": "reasoning",
+      "platform": "macos",
+      "status": "checked",
+      "evidence": [
+        "native-reasoning",
+        "native-run"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "accordion",
+      "platform": "macos",
+      "status": "checked",
+      "evidence": [
+        "native-accordion-theme"
+      ]
+    },
+    {
+      "kind": "ai",
+      "slug": "model-selector",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-manual-model-selector"
+      ]
+    },
+    {
+      "kind": "ai",
+      "slug": "context",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-manual-context"
+      ]
+    },
+    {
+      "kind": "ai",
+      "slug": "inline-citation",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-manual-inline-citation"
+      ]
+    }
+  ]
+}

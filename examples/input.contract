@@ -1,0 +1,25 @@
+use FieldGroup, Button from "@rightui/ui"
+use Input from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state folder = "Editing"
+  action editFolder(v: string)
+    folder = v
+  state savedFolder = false
+  action saveFolder
+    savedFolder = true
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Input(id="catalog-folder", label="Folder name", value=folder, placeholder="Your folder", error="", disabled=false, edit=editFolder)
+      Input(id="catalog-input-invalid", label="Invalid input", value=folder, placeholder="Required", error="This field is required.", disabled=false, edit=editFolder)
+      Input(id="catalog-input-disabled", label="Disabled input", value="Read only preview", placeholder="", error="", disabled=true, edit=editFolder)
+      text "Grouped inline fields and action" font-weight=600
+      FieldGroup(id="input-inline-group", nested=false)
+        row gap=12 flex-wrap="wrap"
+          Input(id="input-inline-name", label="Folder", value=folder, placeholder="Folder", error="", disabled=false, edit=editFolder)
+          Button(id="input-inline-save", label="Save folder", variant="outline", disabled=false, press=saveFolder)
+        text (savedFolder ? "Folder saved locally." : "Edit a folder name.") role="status"

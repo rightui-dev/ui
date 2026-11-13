@@ -1,0 +1,90 @@
+use ChartPoint from "./chart.contract"
+fn naturalPower(k: number): number = k > 44 ? 0 : k == 0 ? 1 : k == 1 ? 0.26794919243112281 : k == 2 ? 0.07179676972449088 : k == 3 ? 0.019237886466840617 : k == 4 ? 0.0051547761428715703 : k == 5 ? 0.0013812181046456555 : k == 6 ? 0.00037009627571104941 : k == 7 ? 9.9166998198541869e-05 : k == 8 ? 2.6571717083117901e-05 : k == 9 ? 7.119870133929712e-06 : k == 10 ? 1.9077634526009366e-06 : k == 11 ? 5.1118367647403156e-07 : k == 12 ? 1.3697125329518911e-07 : k == 13 ? 3.6701336706724693e-08 : k == 14 ? 9.8340935317096054e-09 : k == 15 ? 2.6350374201137172e-09 : k == 16 ? 7.0605614874525981e-10 : k == 17 ? 1.8918717486732108e-10 : k == 18 ? 5.0692550724024295e-11 : k == 19 ? 1.358302802877604e-11 : k == 20 ? 3.6395613910798461e-12 : k == 21 ? 9.7521753554333854e-13 : k == 22 ? 2.6130875109350738e-13 : k == 23 ? 7.0017468830690579e-14 : k == 24 ? 1.8761124229254853e-14 : k == 25 ? 5.0270280863288097e-15 : k == 26 ? 1.3469881160603771e-15 : k == 27 ? 3.6092437791269757e-16 : k == 28 ? 9.6709395590412697e-17 : k == 29 ? 2.591320444895307e-17 : k == 30 ? 6.9434222053995546e-18 : k == 31 ? 1.8604843726451361e-18 : k == 32 ? 4.9851528518098844e-19 : k == 33 ? 1.3357676807881673e-19 : k == 34 ? 3.5791787134278322e-20 : k == 35 ? 9.5903804582965288e-21 : k == 36 ? 2.5697346989077761e-21 : k == 37 ? 6.8855833733457311e-22 : k == 38 ? 1.8449865043051551e-22 : k == 39 ? 4.9436264387488662e-23 : k == 40 ? 1.3246407119439064e-23 : k == 41 ? 3.5493640902675723e-24 : k == 42 ? 9.5104924163122292e-25 : k == 43 ? 2.5483287625731797e-25 : k == 44 ? 6.8282263398048592e-26 : 0
+fn naturalValue(values: number[], i: number): number = match values.at(i) { case some(v) => v, case none => 0 }
+fn naturalInverse(i: number, j: number, n: number): number = ((i + j) % 2 == 0 ? 1 : -1) * naturalPower(max(i - j, j - i) + 1) * (1 - naturalPower(2 * min(i, j))) * (1 - naturalPower(2 * (n - max(i, j) + 1))) / ((1 - 0.07179676972449088) * (1 - naturalPower(2 * (n + 1))))
+fn naturalTerm(values: number[], i: number, j: number): number = naturalInverse(i, j, values.length - 2) * 6 * (naturalValue(values, j + 1) - 2 * naturalValue(values, j) + naturalValue(values, j - 1))
+fn naturalSecond(values: number[], i: number): number = i == 0 or i == values.length - 1 ? 0 : sum(range(min(values.length - 2, i + 20) - max(1, i - 20) + 1).map(k => naturalTerm(values, i, max(1, i - 20) + k)))
+fn naturalSeconds(values: number[]): number[] = values.map((v, i) => naturalSecond(values, i))
+fn naturalX(i: number, count: number): number = 20 + i * 520 / max(1, count - 1)
+fn naturalSegment(values: number[], second: number[], i: number): string = " C " + (naturalX(i, values.length) + 520 / max(1, values.length - 1) / 3).toFixed(3) + "," + (naturalValue(values, i) + (naturalValue(values, i + 1) - naturalValue(values, i) - (2 * naturalValue(second, i) + naturalValue(second, i + 1)) / 6) / 3).toFixed(3) + " " + (naturalX(i + 1, values.length) - 520 / max(1, values.length - 1) / 3).toFixed(3) + "," + (naturalValue(values, i + 1) - (naturalValue(values, i + 1) - naturalValue(values, i) + (naturalValue(second, i) + 2 * naturalValue(second, i + 1)) / 6) / 3).toFixed(3) + " " + naturalX(i + 1, values.length).toFixed(3) + "," + naturalValue(values, i + 1).toFixed(3)
+fn naturalReverseSegment(values: number[], second: number[], i: number): string = " C " + (naturalX(i, values.length) - 520 / max(1, values.length - 1) / 3).toFixed(3) + "," + (naturalValue(values, i) - (naturalValue(values, i) - naturalValue(values, i - 1) + (naturalValue(second, i - 1) + 2 * naturalValue(second, i)) / 6) / 3).toFixed(3) + " " + (naturalX(i - 1, values.length) + 520 / max(1, values.length - 1) / 3).toFixed(3) + "," + (naturalValue(values, i - 1) + (naturalValue(values, i) - naturalValue(values, i - 1) - (2 * naturalValue(second, i - 1) + naturalValue(second, i)) / 6) / 3).toFixed(3) + " " + naturalX(i - 1, values.length).toFixed(3) + "," + naturalValue(values, i - 1).toFixed(3)
+fn naturalPath(values: number[], second: number[]): string = values.length == 0 ? "" : "M 20," + naturalValue(values, 0).toFixed(3) + range(max(0, values.length - 1)).map(i => naturalSegment(values, second, i)).join("")
+
+fn naturalReturn(values: number[], second: number[]): string = range(max(0, values.length - 1)).map(i => naturalReverseSegment(values, second, values.length - 1 - i)).join("")
+
+
+fn areaLine(values: number[], curve: string): string = curve == "natural" ? naturalPath(values, naturalSeconds(values)) : "M 20," + naturalValue(values, 0).toFixed(3) + range(max(0, values.length - 1)).map(i => (curve == "step" ? " H " + ((naturalX(i, values.length) + naturalX(i + 1, values.length)) / 2).toFixed(3) + " V " + naturalValue(values, i + 1).toFixed(3) + " H " : " L ") + naturalX(i + 1, values.length).toFixed(3) + (curve == "step" ? "" : "," + naturalValue(values, i + 1).toFixed(3))).join("")
+shape AreaLayer
+  outline: string
+  area: string
+  color: string
+fn areaValues(points: ChartPoint[], others: number[], layer: number, expanded: bool, single: bool, peak: number): number[] = points.map((p, i) => 215 - (single ? p.desktop : expanded ? (layer == 0 ? p.desktop + p.mobile + naturalValue(others, i) : layer == 1 ? p.mobile + naturalValue(others, i) : naturalValue(others, i)) / max(1, p.desktop + p.mobile + naturalValue(others, i)) * peak : layer == 0 ? p.desktop + p.mobile : p.mobile) / peak * 210)
+fn areaLower(points: ChartPoint[], others: number[], layer: number, layers: number, expanded: bool, single: bool, peak: number): number[] = points.map((p, i) => 215 - (single or layer == layers - 1 ? 0 : expanded ? (layer == 0 ? p.mobile + naturalValue(others, i) : naturalValue(others, i)) / max(1, p.desktop + p.mobile + naturalValue(others, i)) * peak : p.mobile) / peak * 210)
+fn areaBand(values: number[], lower: number[], curve: string, base: bool): string = areaLine(values, curve) + (base ? " L 540,215 L 20,215 Z" : " L 540," + naturalValue(lower, lower.length - 1).toFixed(3) + naturalReturn(lower, naturalSeconds(lower)) + " Z")
+component AreaGalleryChart
+  props
+    id: string
+    points: ChartPoint[]
+    others: number[]
+    mode: string
+    width: number
+    reduced: bool
+  state active = -1
+  state measured = 560
+  derive single = mode == "default" or mode == "linear" or mode == "step"
+  derive expanded = mode == "stacked-expand"
+  derive peak = match first(sortBy(points, p => single ? p.desktop : p.desktop + p.mobile, "desc")) { case some(p) => max(1, ceil((single ? p.desktop : p.desktop + p.mobile) / 100) * 100), case none => 1 }
+  derive curve = mode == "linear" ? "linear" : mode == "step" ? "step" : "natural"
+  derive layers = expanded ? 3 : single ? 1 : 2
+  derive series = range(layers).map(layer => AreaLayer(outline=areaLine(areaValues(points, others, layer, expanded, single, peak), curve), area=areaBand(areaValues(points, others, layer, expanded, single, peak), areaLower(points, others, layer, layers, expanded, single, peak), curve, single or layer == layers - 1), color=(layer == 0 ? "#8ec5ff" : layer == 1 ? "#2b7fff" : "#155dfb")))
+  action measure(w: number, h: number)
+    measured = max(1, w)
+  action inspect(e: PointerEvent)
+    let bounds = frame(id)
+    active = max(0, min(points.length - 1, round((e.clientX - bounds.x - 24) / max(1, bounds.width - 48) * (points.length - 1))))
+  action hover(inside: bool)
+    if not inside
+      active = -1
+  action keys(k: string)
+    if k == "ArrowLeft" or k == "ArrowRight" or k == "Home" or k == "End"
+      preventDefault()
+      active = k == "Home" ? 0 : k == "End" ? points.length - 1 : max(0, min(points.length - 1, active + (k == "ArrowLeft" ? -1 : 1)))
+  view
+    column gap=12 min-width=0
+      view id=id testId=id resize=measure tabindex=0 role="group" aria-label="Visitor area chart. Use arrow keys to inspect values." key=keys pointermove=inspect pointerdown=inspect hover=hover position="relative" height=260 min-width=0
+        svg position="absolute" left=24 top=0 width="calc(100% - 48px)" height=220 viewBox="20 0 520 250" preserveAspectRatio="none" aria-hidden=true
+          defs
+            for layer in range(layers) key=layer
+              linearGradient id=(id + "-gradient-" + layer.toString()) x1="0" y1="0" x2="0" y2="1"
+                stop offset="5%" stop-color=(layer == 0 ? "#8ec5ff" : layer == 1 ? "#2b7fff" : "#155dfb") stop-opacity=0.8
+                stop offset="95%" stop-color=(layer == 0 ? "#8ec5ff" : layer == 1 ? "#2b7fff" : "#155dfb") stop-opacity=0.1
+          for tick in range(5) key=tick
+            line x1=20 x2=540 y1=(5 + tick * 52.5) y2=(5 + tick * 52.5) stroke="ui.chart-grid" stroke-width=1 vector-effect="non-scaling-stroke"
+          for seriesItem, layer in series key=seriesItem.color
+            path d=seriesItem.area fill=(mode == "gradient" or mode == "interactive" ? "url(#" + id + "-gradient-" + layer.toString() + ")" : seriesItem.color) fill-opacity=0.4
+            path d=seriesItem.outline fill="none" stroke=seriesItem.color stroke-width=1 vector-effect="non-scaling-stroke"
+        for p, i in points key=p.label
+          if points.length <= 6 or i % max(1, ceil(points.length / max(2, floor(measured / 80)))) == 0
+            text (points.length <= 6 ? p.label.slice(0, 3) : p.label.slice(5, 10)) position="absolute" top=230 left=(24 + i * max(1, measured - 48) / max(1, points.length - 1)) translate="-50% 0px" font-size=12 color="ui.muted-foreground"
+        if mode == "axes"
+          for tick in range(3) key=tick
+            text (600 - tick * 300).toString() position="absolute" left=0 top=(tick * 92) font-size=12 color="ui.muted-foreground"
+        for p, i in points key=p.label
+          if i == active
+            column role="tooltip" aria-live="polite" position="absolute" z-index=20 top=24 left=(max(8, min(measured - 180, i * measured / max(1, points.length)))) padding=12 gap=6 border="1px solid ui.border" border-radius="ui.radius-control" background-color="ui.surface" font-size=12 pointer-events="none"
+              text p.label font-weight=500
+              text ("Desktop  " + p.desktop.toString())
+              if not single
+                text ("Mobile  " + p.mobile.toString())
+              if expanded
+                text ("Other  " + naturalValue(others, i).toString())
+      if mode == "legend" or mode == "icons" or mode == "interactive"
+        row gap=16 justify-content="center" font-size=12
+          for label, i in ["Desktop", "Mobile"] key=label
+            row gap=6 align-items="center"
+              if mode == "icons"
+                svg width=14 height=14 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=2 aria-hidden=true
+                  path d=(i == 0 ? "M3 4h18v13H3zM8 21h8M12 17v4" : "M7 2h10v20H7zM11 18h2")
+              else
+                view width=8 height=8 border-radius="ui.radius-detail" background-color=(i == 0 ? "#8ec5ff" : "#2b7fff") aria-hidden=true
+              text label color="ui.foreground"

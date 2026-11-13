@@ -1,0 +1,20 @@
+use AspectRatio from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  view
+    column gap=16 min-width=0 max-width="100%"
+      AspectRatio(ratio=3)
+        view position="absolute" inset=0 background-color="ui.muted" display="flex" align-items="center" justify-content="center"
+          text "3 : 1" font-size="1rem" color="ui.muted-foreground"
+      text "Square" font-weight=600
+      column id="ratio-square" max-width=240
+        AspectRatio(ratio=1)
+          text "Square image area"
+      text "Portrait" font-weight=600
+      column id="ratio-portrait" max-width=240
+        AspectRatio(ratio=0.5625)
+          text "Portrait image area"

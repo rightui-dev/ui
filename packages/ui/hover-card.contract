@@ -1,0 +1,73 @@
+use Control from "./styles.contract"
+component HoverCardFrame
+  props
+    id: string
+    label: string
+    variant: string
+    size: string
+    ai: bool
+  slot
+  state expanded = false
+  state focused = false
+  action show
+    expanded = true
+    showPopover(id + "-content", source=id)
+  action hide
+    expanded = false
+    hidePopover(id + "-content")
+  action hover(inside: bool)
+    if inside
+      show()
+    else if not focused
+      hide()
+  action enter
+    focused = true
+    show()
+  action leave(e: FocusEvent)
+    match e.relatedTarget
+      case some(target)
+        if not target.startsWith(id)
+          focused = false
+          hide()
+      case none
+        focused = false
+        hide()
+  action toggle
+    if expanded
+      hide()
+    else
+      show()
+  action changed(e: ToggleEvent)
+    expanded = e.newState == "open"
+  action keys(k: string)
+    if k == "Escape"
+      preventDefault()
+      hide()
+  view
+    row position="relative" align-items="center" hover=hover focusin=enter focusout=leave key=keys
+      button id=id testId=id class=Control press=toggle aria-expanded=expanded aria-controls=(id + "-content")
+        display="flex" align-items="center" height=(size == "xs" ? 24 : 28) min-height=(size == "xs" ? 24 : 28) padding=(size == "xs" ? "0 8px" : "0 12px") border=(variant == "outline" ? "1px solid ui.input" : "0") border-radius=(ai ? "ui.ai-radius-control" : "ui.radius-control") background-color=(variant == "secondary" ? "ui.muted" : "ui.surface") color="ui.foreground" font-size=(size == "xs" ? "0.75rem" : "0.875rem") font-weight=500 text-decoration=(variant == "link" ? "underline" : "none")
+        text label
+      column id=(id + "-content") testId=(id + "-content") role="region" aria-label=label popover="auto" toggle=changed position-area="bottom span-right" position-try-fallbacks="flip-block, flip-inline" margin=0 gap=12 padding=16 box-sizing="border-box" min-width=0 align-items="stretch" width=(ai ? "16rem" : "20rem") max-width="calc(100vw - 32px)"
+        border="1px solid ui.border" border-radius=(ai ? "ui.ai-radius-popover" : "ui.radius-popover") background-color="ui.surface" color="ui.foreground" box-shadow="0 4px 12px #00000018"
+        children
+
+component HoverCard
+  props
+    id: string
+    label: string
+  slot
+  view
+    HoverCardFrame(id=id, label=label, variant="link", size="sm", ai=false)
+      children
+
+component HoverCardStyled
+  props
+    id: string
+    label: string
+    variant: string
+    size: string
+  slot
+  view
+    HoverCardFrame(id=id, label=label, variant=variant, size=size, ai=true)
+      children

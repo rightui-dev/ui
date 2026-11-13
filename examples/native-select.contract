@@ -1,0 +1,15 @@
+use NativeSelect from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state language = "English"
+  action changeLanguage(value: string)
+    language = value
+  view
+    column gap=16 min-width=0 max-width="100%"
+      NativeSelect(id="controls-native", label="Language", options=["English", "English", "العربية"], value=language, disabled=false, change=changeLanguage)
+      text "Disabled" font-size="0.875rem" font-weight=600
+      NativeSelect(id="variation-native-select-disabled", label="Language", options=["English", "English", "العربية"], value=language, disabled=true, change=changeLanguage)

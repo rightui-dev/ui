@@ -1,0 +1,9 @@
+use AuthBlock from "@rightui/registry/blocks/auth"
+
+component Demo
+  state signup = true
+  action switchMode
+    signup = not signup
+  view
+    column width="100%"
+      AuthBlock(variant=2, signup=signup, narrow=false, switchMode=switchMode)

@@ -1,0 +1,239 @@
+component CardFrame
+  props
+    id: string
+  slot
+  view
+    column id=id testId=id gap=24 padding="24px 0px" min-width=0 border="1px solid ui.border" border-radius="ui.panel-radius" background-color="ui.surface" color="ui.foreground" box-shadow="0 1px 3px 0 ui.shadow-sm, 0 1px 2px -1px ui.shadow-sm"
+      children
+
+component CardHeader
+  props
+    id: string
+  slot
+  view
+    view id=id testId=id display="grid" grid-template-columns="minmax(0, 1fr) auto" grid-template-rows="auto auto" align-items="start" gap=8 padding="0px 24px" min-width=0
+      children
+
+component CardTitle
+  props
+    id: string
+    title: string
+    level: number
+  view
+    text title id=id testId=id grid-column="1" grid-row="1" min-width=0 font-size="1rem" line-height=1 font-weight=600 role="heading" aria-level=level overflow-wrap="break-word"
+
+component CardDescription
+  props
+    id: string
+    description: string
+  view
+    text description id=id testId=id grid-column="1" grid-row="2" min-width=0 font-size="0.875rem" line-height=1.5 color="ui.muted-foreground" overflow-wrap="break-word"
+
+component CardAction
+  props
+    id: string
+  slot
+  view
+    view id=id testId=id grid-column="2" grid-row="1 / span 2" align-self="start" min-width=0
+      children
+
+component CardContent
+  props
+    id: string
+  slot
+  view
+    column id=id testId=id padding="0px 24px" min-width=0
+      children
+
+component CardFooter
+  props
+    id: string
+    divided: bool
+  slot
+  view
+    row id=id testId=id align-items="center" flex-wrap="wrap" padding=(divided ? "24px 24px 0px" : "0px 24px") border-top=(divided ? "1px solid ui.border" : "none") min-width=0
+      children
+
+component AvatarFrame
+  props
+    id: string
+    name: string
+    src: string
+    fallback: string
+    size: string
+  slot
+  state failedSource = ""
+  action markImageFailed(source: string, message: string)
+    failedSource = source
+  view
+    view id=id testId=id position="relative" width=(size == "sm" ? "1.5rem" : size == "lg" ? "2.5rem" : "2rem") height=(size == "sm" ? "1.5rem" : size == "lg" ? "2.5rem" : "2rem") flex-shrink=0
+      view width="100%" height="100%" overflow="hidden" border-radius="ui.radius-full" background-color="ui.muted" display="flex" align-items="center" justify-content="center" role="img" aria-label=name
+        if src != "" and failedSource != src
+          image src alt="" width="100%" height="100%" object-fit="cover" error=markImageFailed(src)
+        else
+          text fallback aria-hidden=true font-size=(size == "sm" ? "0.75rem" : "0.875rem") color="ui.muted-foreground"
+      children
+
+component AvatarBadge
+  props
+    id: string
+    label: string
+    size: string
+  slot
+  view
+    view id=id testId=id role="img" aria-label=label position="absolute" right=0 bottom=0 z-index=10 width=(size == "sm" ? "0.5rem" : size == "lg" ? "0.75rem" : "0.625rem") height=(size == "sm" ? "0.5rem" : size == "lg" ? "0.75rem" : "0.625rem") border-radius="ui.radius-full" background-color="ui.primary" color="ui.primary-foreground" box-shadow="0 0 0 2px ui.background" display="flex" align-items="center" justify-content="center"
+      if size != "sm"
+        children
+
+component AvatarGroup
+  props
+    id: string
+    label: string
+  slot
+  view
+    row id=id testId=id role="group" aria-label=label align-items="center" padding=2
+      children
+
+component AvatarGroupItem
+  props
+    id: string
+    first: bool
+  slot
+  view
+    view id=id testId=id margin-left=(first ? 0 : -8) border-radius="ui.radius-full" box-shadow="0 0 0 2px ui.background" flex-shrink=0
+      children
+
+component AvatarGroupCount
+  props
+    id: string
+    label: string
+    count: number
+    size: string
+    first: bool
+  view
+    view id=id testId=id role="img" aria-label=label margin-left=(first ? 0 : -8) width=(size == "sm" ? "1.5rem" : size == "lg" ? "2.5rem" : "2rem") height=(size == "sm" ? "1.5rem" : size == "lg" ? "2.5rem" : "2rem") border-radius="ui.radius-full" background-color="ui.muted" box-shadow="0 0 0 2px ui.background" display="flex" align-items="center" justify-content="center" flex-shrink=0
+      text ("+" + max(0, floor(count)).toString()) aria-hidden=true font-size="0.875rem" color="ui.muted-foreground"
+
+component FieldSet
+  props
+    id: string
+    legendId: string
+    descriptionId: string
+    disabled: bool
+  slot
+  view
+    column id=id testId=id role="group" aria-labelledby=legendId aria-describedby=descriptionId aria-disabled=disabled gap=24 min-width=0
+      children
+
+component FieldLegend
+  props
+    id: string
+    label: string
+    variant: string
+  view
+    text label id=id testId=id margin-bottom=12 font-size=(variant == "label" ? "0.875rem" : "1rem") font-weight=500 line-height=1.5 color="ui.foreground"
+
+component FieldGroup
+  props
+    id: string
+    nested: bool
+  slot
+  view
+    column id=id testId=id gap=(nested ? 16 : 28) min-width=0
+      children
+
+component FieldFrame
+  props
+    id: string
+    labelId: string
+    descriptionId: string
+    invalid: bool
+    orientation: string
+  slot
+  view
+    view id=id testId=id role="group" aria-labelledby=labelId aria-describedby=descriptionId aria-invalid=invalid display="flex" flex-direction=(orientation == "horizontal" ? "row" : "column") align-items=(orientation == "horizontal" ? "center" : "stretch") gap=12 min-width=0 color=(invalid ? "ui.danger" : "ui.foreground")
+      children
+
+component FieldContent
+  props
+    id: string
+  slot
+  view
+    column id=id testId=id flex=1 gap=6 min-width=0 line-height=1.375
+      children
+
+component FieldLabel
+  props
+    id: string
+    label: string
+    controlId: string
+    disabled: bool
+  action activate
+    if not disabled
+      focus(controlId)
+  view
+    text label id=id testId=id press=activate font-size="0.875rem" font-weight=500 line-height=1.375 color="ui.foreground" opacity=(disabled ? 0.5 : 1)
+
+component FieldTitle
+  props
+    id: string
+    title: string
+    disabled: bool
+  view
+    text title id=id testId=id font-size="0.875rem" font-weight=500 line-height=1.375 color="ui.foreground" opacity=(disabled ? 0.5 : 1)
+
+component FieldDescription
+  props
+    id: string
+    description: string
+  view
+    text description id=id testId=id font-size="0.875rem" line-height=1.5 color="ui.muted-foreground" overflow-wrap="break-word"
+
+component FieldError
+  props
+    id: string
+    messages: string[]
+  derive unique = messages.filter((message, index) => message.trim() != "" and messages.indexOf(message) == index)
+  view
+    if unique.length > 0
+      column id=id testId=id role="alert" gap=4 font-size="0.875rem" font-weight=400 color="ui.danger"
+        if unique.length == 1
+          text unique.join("") testId=(id + "-message-0") overflow-wrap="break-word"
+        else
+          column role="list" gap=4 padding-left=16
+            for message, i in unique key=message
+              text ("• " + message) testId=(id + "-message-" + i.toString()) role="listitem" overflow-wrap="break-word"
+
+component FieldSeparator
+  props
+    id: string
+    label: string
+  view
+    row id=id testId=id role="separator" aria-orientation="horizontal" aria-label=label align-items="center" min-height="1.25rem" margin="-8px 0px"
+      view height=1 background-color="ui.border" flex=1 aria-hidden=true
+      if label != ""
+        text label padding="0px 8px" font-size="0.875rem" line-height=1.5 color="ui.muted-foreground"
+        view height=1 background-color="ui.border" flex=1 aria-hidden=true
+
+component ButtonGroupText
+  props
+    id: string
+  slot
+  view
+    row id=id testId=id align-items="center" gap=8 min-height="2.25rem" padding="0px 16px" border="1px solid ui.border" border-radius="ui.radius-control" background-color="ui.muted" font-size="0.875rem" font-weight=500 color="ui.foreground" box-shadow="0 1px 2px 0 ui.shadow"
+      children
+
+component ButtonGroupSeparator
+  props
+    vertical: bool
+  view
+    view role="separator" aria-orientation=(vertical ? "vertical" : "horizontal") align-self="stretch" flex-shrink=0 width=(vertical ? "1px" : "100%") height=(vertical ? "auto" : "1px") background-color="ui.input"
+
+component KbdGroup
+  props
+    id: string
+    label: string
+  slot
+  view
+    row id=id testId=id role="group" aria-label=label align-items="center" gap=4
+      children

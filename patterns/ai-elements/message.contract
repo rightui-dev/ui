@@ -1,0 +1,56 @@
+use MessageFrame, MessageContent, MessageFooter, BubbleFrame, MessageAction, MessageEditor from "../../packages/ui/conversation-parts.contract"
+use Markdown from "../../packages/ui/markdown.contract"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  state prompt = "How do I add a settings dialog? It should open from the gear icon in the header."
+  state editing = false
+  inject
+    rightuiDemoTime: number
+    rightuiRunDemo: action
+  state copiedUntil = 0
+  derive copied = rightuiDemoTime < copiedUntil
+  state feedback = ""
+  state replayUntil = 0
+  derive replaying = rightuiDemoTime < replayUntil
+  action edit(value: string)
+    prompt = value
+  action toggleEdit
+    editing = not editing
+  action copyUser
+    copyText(prompt)
+  action copy
+    copyText("Install Dialog, then open it from the gear button in `site-header.tsx`.\n\n```bash\nnpx shadcn@latest add dialog\n```\n\nWrap the button in a `DialogTrigger` and put the settings form in `DialogContent`. Focus moves into the dialog when it opens, and **Esc** closes it.")
+    copiedUntil = rightuiDemoTime + 2000
+    rightuiRunDemo(2000)
+  action like
+    feedback = feedback == "like" ? "" : "like"
+  action dislike
+    feedback = feedback == "dislike" ? "" : "dislike"
+  action retry
+    replayUntil = rightuiDemoTime + 800
+    rightuiRunDemo(800)
+  view
+    column width="100%" max-width="28rem" margin="0 auto" gap=32 padding="24px 0" min-width=0
+      MessageFrame(id="ai-message-user", align="end")
+        MessageContent(id="ai-message-user-content", align="end")
+          if editing
+            MessageEditor(id="ai-message-editor", value=prompt, edit=edit, save=toggleEdit)
+          else
+            BubbleFrame(id="ai-message-bubble", align="end", variant="muted")
+              text prompt
+          MessageFooter(id="ai-message-user-footer", align="end")
+            MessageAction(id="ai-message-user-copy", label="Copy", icon="copy", pressed=false, press=copyUser)
+            MessageAction(id="ai-message-edit", label="Edit", icon="pencil", pressed=editing, press=toggleEdit)
+      MessageFrame(id="ai-message-assistant", align="start")
+        MessageContent(id="ai-message-answer", align="start")
+          Markdown(id="ai-message-markdown", content="Install Dialog, then open it from the gear button in `site-header.tsx`.\n\n```bash\nnpx shadcn@latest add dialog\n```\n\nWrap the button in a `DialogTrigger` and put the settings form in `DialogContent`. Focus moves into the dialog when it opens, and **Esc** closes it.")
+          MessageFooter(id="ai-message-footer", align="start")
+            MessageAction(id="ai-message-copy", label=(copied ? "Copied" : "Copy"), icon=(copied ? "check" : "copy"), pressed=false, press=copy)
+            MessageAction(id="ai-message-helpful", label="Good response", icon="hand.thumbsup", pressed=(feedback == "like"), press=like)
+            MessageAction(id="ai-message-unhelpful", label="Bad response", icon="hand.thumbsdown", pressed=(feedback == "dislike"), press=dislike)
+            MessageAction(id="ai-message-retry", label="Retry", icon="arrow.clockwise", pressed=false, press=retry)
+          if replaying
+            text "Replaying response…" role="status" font-size="0.75rem" color="ui.muted-foreground"

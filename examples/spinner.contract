@@ -1,0 +1,13 @@
+use Spinner, Empty from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Spinner(id="catalog-spinner", label="Processing", reduced=reduced)
+      text "Loading empty state" font-size="0.875rem" font-weight=600
+      Empty(id="variation-spinner-empty", title="Loading projects", description="Your projects will appear here.")
+        Spinner(id="variation-spinner-loading", label="Loading", reduced=reduced)

@@ -1,0 +1,12 @@
+use CodeBlock from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  view
+    column gap=16 min-width=0 max-width="100%"
+      CodeBlock(id="content-codeblock", title="salutation.ts", language="typescript · diff", code="-const message = 'Bonjour'\n+const message = 'Bonjour Camille'\n console.log(message)", numbers=true, diff=true)
+      text "Plain code without numbers" font-weight=600
+      CodeBlock(id="code-plain", title="hello.ts", language="typescript", code="console.log(42)", numbers=false, diff=false)

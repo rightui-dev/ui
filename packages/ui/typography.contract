@@ -1,0 +1,18 @@
+component Typography
+  props
+    id: string
+    variant: string
+    content: string
+  view
+    if variant == "blockquote"
+      text content id=id testId=id font-family="system-ui" font-size="1rem" font-style="italic" line-height=1.75 border-left="2px solid ui.border" padding-left=24 color="ui.foreground"
+    else
+      text content id=id testId=id role=(variant == "h1" or variant == "h2" or variant == "h3" or variant == "h4" ? "heading" : "none")
+        aria-level=(variant == "h1" ? 1 : variant == "h2" ? 2 : variant == "h3" ? 3 : 4)
+        font-size=(variant == "h1" ? "2.25rem" : variant == "h2" ? "1.875rem" : variant == "h3" ? "1.5rem" : variant == "h4" ? "1.25rem" : variant == "small" or variant == "muted" or variant == "code" ? "0.875rem" : variant == "lead" ? "1.25rem" : "1rem")
+        font-weight=(variant == "h1" ? 800 : variant == "h2" or variant == "h3" or variant == "h4" or variant == "large" or variant == "small" ? 600 : variant == "code" ? 500 : 400)
+        color=(variant == "muted" or variant == "lead" ? "ui.muted-foreground" : "ui.foreground")
+        line-height=(variant == "p" ? 1.75 : 1.4) letter-spacing=(variant == "h1" or variant == "h2" ? "-0.025em" : "0px")
+        font-family=(variant == "code" ? "monospace" : "Geist") font-style="normal"
+        border-left=(variant == "blockquote" ? "2px solid ui.border" : "0") padding-left=(variant == "blockquote" ? "24px" : "0px")
+        background-color=(variant == "code" ? "ui.muted" : "transparent") border-radius=(variant == "code" ? "ui.radius-inline" : "0px")

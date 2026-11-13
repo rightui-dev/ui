@@ -1,0 +1,15 @@
+use Toggle from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state bold = false
+  action setBold(v: bool)
+    bold = v
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Toggle(id="catalog-bold", label="Bold", pressed=bold, disabled=false, reduced=reduced, change=setBold)
+      text "Disabled" font-size="0.875rem" font-weight=600
+      Toggle(id="variation-toggle-disabled", label="Bold", pressed=bold, disabled=true, reduced=reduced, change=setBold)

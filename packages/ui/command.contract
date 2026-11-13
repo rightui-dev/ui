@@ -1,0 +1,76 @@
+use Control, Field from "./styles.contract"
+
+shape CommandEntry
+  id: string
+  label: string
+  keywords: string
+  shortcut: string
+  disabled: bool
+
+component Command
+  props
+    id: string
+    label: string
+    entries: CommandEntry[]
+    choose: action
+  state query = ""
+  derive filtered = entries.filter(item => (item.label + " " + item.keywords).toLowerCase().includes(query.trim().toLowerCase()))
+  derive enabled = filtered.filter(item => not item.disabled)
+  action edit(v: string)
+    query = v
+  action pick(item: CommandEntry)
+    if not item.disabled
+      choose(item.id)
+  action searchKeys(k: string, e: KeyboardEvent)
+    if not e.isComposing
+      if k == "ArrowDown" or k == "Enter"
+        preventDefault()
+        match first(enabled)
+          case some(item)
+            if k == "Enter"
+              pick(item)
+            else
+              focus(id + "-item-" + item.id)
+          case none
+            focus(id + "-search")
+      else if k == "Escape"
+        query = ""
+  action itemKeys(itemId: string, k: string)
+    let index = enabled.map(item => item.id).indexOf(itemId)
+    if k == "ArrowUp" or k == "ArrowDown" or k == "Home" or k == "End"
+      preventDefault()
+      let next = (k == "Home" ? 0 : k == "End" ? enabled.length - 1 : min(enabled.length - 1, index + (k == "ArrowUp" ? -1 : 1)))
+      match enabled.at(next)
+        case some(item)
+          focus(id + "-item-" + item.id)
+        case none
+          focus(id + "-search")
+    else if k == "Escape"
+      preventDefault()
+      focus(id + "-search")
+    else if k == "Enter" or k == " "
+      preventDefault()
+      match enabled.at(index)
+        case some(item)
+          pick(item)
+        case none
+          focus(id + "-search")
+  view
+    column id=id testId=id role="region" aria-label=label min-width=0 border="1px solid ui.border" border-radius="ui.radius-panel" background-color="ui.surface" padding=6 gap=6
+      input id=(id + "-search") testId=(id + "-search") class=Field value=query input=edit key=searchKeys
+        aria-label=label aria-controls=(id + "-results") placeholder="Rechercher une commande…"
+      scroll max-height="18rem" min-height=0
+        column id=(id + "-results") gap=2
+          for item in filtered key=item.id
+            button id=(id + "-item-" + item.id) testId=(id + "-item-" + item.id) class=Control
+              disabled=item.disabled press=pick(item) key=itemKeys(item.id)
+              display="flex" align-items="center" flex-wrap="wrap" gap=12 padding="10px 12px" border-radius="ui.radius-sm" border="0" background-color="transparent" color="ui.foreground"
+              :hover
+                background-color="ui.muted"
+              :focus-visible
+                background-color="ui.muted"
+              text item.label flex="1 1 8rem" min-width=0 text-align="left"
+              if item.shortcut != ""
+                text item.shortcut font-size="0.75rem" color="ui.muted-foreground" aria-hidden=true
+          if filtered.length == 0
+            text "Aucune commande." testId=(id + "-empty") role="status" padding=16 font-size="0.8125rem" color="ui.muted-foreground"

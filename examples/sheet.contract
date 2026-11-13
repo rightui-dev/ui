@@ -1,0 +1,42 @@
+use Button, Input, Sheet from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state name = ""
+  state desktopOverlay = ""
+  state sheetSide = "right"
+  state sheetName = "My workspace"
+  derive reduce = reduced
+  action save
+    saved = true
+    dialog = false
+    focus("sheet-open")
+  action closeSheet
+    desktopOverlay = ""
+    focus("sheet-open")
+  action editSheet(v: string)
+    sheetName = v
+  state dialog = false
+  state overlayReturn = "desktop-alert"
+  state saved = false
+  action openExample
+    desktopOverlay = "sheet"
+  action openSide(side: string)
+    sheetSide = side
+    desktopOverlay = "sheet"
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Button(id="sheet-open", label="Open sheet", variant="outline", disabled=false, press=openExample)
+      Sheet(id="desktop-sheet", open=desktopOverlay == "sheet", title="Your workspace", description="These settings are preserved when you close the panel.", side=sheetSide, reduced=reduce, focusIds=["desktop-sheet-name", "desktop-sheet-save"], dismiss=closeSheet)
+        Input(id="desktop-sheet-name", label="Workspace name", value=sheetName, placeholder="Your workspace", error="", disabled=false, edit=editSheet)
+        text sheetName testId="desktop-sheet-echo" font-size="0.875rem" color="ui.muted-foreground"
+        Button(id="desktop-sheet-save", label="Done", variant="primary", disabled=false, press=closeSheet)
+      text "Left sheet" font-size="0.875rem" font-weight=600
+      Button(id="variation-sheet-left", label="Open left sheet", variant="outline", disabled=false, press=openSide("left"))
+      text "Top sheet" font-size="0.875rem" font-weight=600
+      Button(id="variation-sheet-top", label="Open top sheet", variant="outline", disabled=false, press=openSide("top"))
+      text "Bottom sheet" font-size="0.875rem" font-weight=600
+      Button(id="variation-sheet-bottom", label="Open bottom sheet", variant="outline", disabled=false, press=openSide("bottom"))

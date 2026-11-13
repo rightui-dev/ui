@@ -1,0 +1,13 @@
+use Trace from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  view
+    column gap=16 min-width=0 max-width="100%"
+      text "Grouped activity traces" font-weight=600
+      Trace(id="content-trace", title="Preparing the render", status="Done", steps=["Read the brief", "Prepare selection", "Check result"], details=["The brief covers three spaces: bedroom, restaurant and terrace.", "12 selected images with consistent natural lighting.", "The selection is ready for review. No files sent."])
+      Trace(id="trace-running", title="Preparing assets", status="Running", steps=["Read files", "Render previews"], details=["Source files loaded.", "Rendering the selected images."])
+      Trace(id="trace-error", title="Upload interrupted", status="Error", steps=["Connect", "Upload"], details=["Connection established.", "Connection lost. Try again."])

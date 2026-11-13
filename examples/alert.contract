@@ -1,0 +1,12 @@
+use Alert from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  view
+    column gap=16 min-width=0 max-width="100%"
+      Alert(id="catalog-alert", title="Your workspace is ready", description="The theme and components share the same design system.", variant="default")
+      text "Destructive" font-weight=600
+      Alert(id="alert-destructive", title="Unable to save", description="Check your connection and try again.", variant="destructive")

@@ -1,0 +1,114 @@
+component ResizablePanelGroup
+  props
+    id: string
+    orientation: string
+    dir: string
+    value: number
+  slot
+  derive ratio = max(0, min(100, value))
+  derive tracks = "minmax(0, " + ratio.toString() + "fr) 1px minmax(0, " + (100 - ratio).toString() + "fr)"
+  view
+    view id=id testId=id display="grid" width="100%" height="100%" min-width=0 min-height=0 direction=(dir == "rtl" ? "rtl" : "ltr")
+      grid-template-columns=(orientation == "horizontal" ? tracks : "minmax(0, 1fr)")
+      grid-template-rows=(orientation == "vertical" ? tracks : "minmax(0, 1fr)")
+      children
+
+component ResizablePanel
+  props
+    id: string
+    label: string
+    minContentWidth: string
+  slot
+  view
+    column id=id testId=id role="group" aria-label=label min-width=0 min-height=0 padding=20 box-sizing="border-box"
+      scroll id=(id + "-scroll") testId=(id + "-scroll") aria-label=label flex=1 min-width=0 min-height=0 overflow="auto" tabindex=0
+        :focus-visible
+          box-shadow="inset 0 0 0 2px ui.ring"
+        column gap=12 min-width=minContentWidth width="100%" box-sizing="border-box"
+          children
+
+component ResizableHandle
+  props
+    id: string
+    groupId: string
+    primaryId: string
+    label: string
+    orientation: string
+    dir: string
+    value: number
+    minimum: number
+    maximum: number
+    reset: number
+    withHandle: bool
+    disabled: bool
+    change: action
+  state pointer = -1
+  state origin = 0
+  state start = 0
+  state extent = 1
+  derive reverse = orientation == "horizontal" and dir == "rtl"
+  derive low = max(0, min(100, minimum))
+  derive high = max(low, min(100, maximum))
+  action begin(e: PointerEvent)
+    if not disabled and e.button == 0 and pointer == -1
+      stopPropagation()
+      preventDefault()
+      let bounds = frame(groupId)
+      pointer = e.pointerId
+      origin = value
+      start = (orientation == "horizontal" ? e.clientX : e.clientY)
+      extent = max(1, (orientation == "horizontal" ? bounds.width : bounds.height) - 1)
+      if e.pointerType == "mouse"
+        focus(id)
+  action move(e: PointerEvent)
+    if not disabled and e.pointerId == pointer
+      stopPropagation()
+      let distance = (orientation == "horizontal" ? e.clientX : e.clientY) - start
+      change(max(low, min(high, origin + distance / extent * 100 * (reverse ? -1 : 1))))
+  action end(e: PointerEvent)
+    if e.pointerId == pointer
+      stopPropagation()
+      pointer = -1
+  action keys(k: string, e: KeyboardEvent)
+    if not disabled
+      if k == "Escape" and pointer != -1
+        preventDefault()
+        pointer = -1
+        change(origin)
+      else if k == "Home" or k == "End" or k == "Enter"
+        preventDefault()
+        change(k == "Home" ? low : k == "End" ? high : max(low, min(high, reset)))
+      else if (orientation == "horizontal" and (k == "ArrowLeft" or k == "ArrowRight")) or (orientation == "vertical" and (k == "ArrowUp" or k == "ArrowDown"))
+        preventDefault()
+        let delta = (k == "ArrowLeft" or k == "ArrowUp" ? -1 : 1) * (e.shiftKey ? 10 : 1)
+        change(max(low, min(high, value + delta * (reverse ? -1 : 1))))
+  view
+    view position="relative" z-index=2 min-width=0 min-height=0 touch-action="none" user-select="none"
+      cursor=(disabled ? "default" : orientation == "horizontal" ? "col-resize" : "row-resize")
+      pointerdown=begin pointermove=move pointerup=end
+      view position="absolute" pointer-events="none" background-color="ui.border"
+        width=(orientation == "horizontal" ? "1px" : "100%") height=(orientation == "horizontal" ? "100%" : "1px")
+        left=(orientation == "horizontal" ? "50%" : "0px") top=(orientation == "horizontal" ? "0px" : "50%")
+      button id=id testId=id role="separator" aria-label=label aria-controls=primaryId
+        aria-orientation=(orientation == "horizontal" ? "vertical" : "horizontal")
+        aria-valuemin=low aria-valuemax=high aria-valuenow=value aria-valuetext=(value.toFixed(0) + " %") disabled=disabled
+        key=keys pointerdown=begin pointermove=move pointerup=end
+        position="absolute" z-index=2 left="50%" top="50%" translate="-50% -50%" width=(orientation == "horizontal" ? "12px" : "100%") height=(orientation == "horizontal" ? "100%" : "12px")
+        appearance="none" padding=0 border="0" background-color="transparent" touch-action="none" user-select="none"
+        cursor=(disabled ? "default" : orientation == "horizontal" ? "col-resize" : "row-resize")
+        display="flex" align-items="center" justify-content="center" border-radius="ui.radius-control"
+        :focus-visible
+          box-shadow="0 0 0 3px ui.ring"
+        :disabled
+          opacity=0.4
+        if withHandle
+          view id=(id + "-grip") testId=(id + "-grip") width=(orientation == "horizontal" ? 12 : 16) height=(orientation == "horizontal" ? 16 : 12)
+            border="1px solid ui.border" border-radius="ui.radius-detail" background-color="ui.border"
+            display="flex" align-items="center" justify-content="center" pointer-events="none"
+            svg width=10 height=10 viewBox="0 0 10 16" fill="ui.muted-foreground" aria-hidden=true rotate=(orientation == "horizontal" ? "0deg" : "90deg")
+              circle cx=3 cy=4 r=1
+              circle cx=7 cy=4 r=1
+              circle cx=3 cy=8 r=1
+              circle cx=7 cy=8 r=1
+              circle cx=3 cy=12 r=1
+              circle cx=7 cy=12 r=1

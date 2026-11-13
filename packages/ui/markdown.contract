@@ -1,0 +1,14 @@
+use CodeBlockAI from "./code-block.contract"
+
+component Markdown
+  props
+    id: string
+    content: string
+  view
+    column id=id testId=id gap=16 width="100%" min-width=0
+      for part, i in content.split("```") key=i
+        if i % 2 == 0
+          if part.trim() != ""
+            text part.trim() markup="markdown" font-size="0.875rem" line-height=1.625 color="ui.foreground" min-width=0 overflow-wrap="break-word"
+        else
+          CodeBlockAI(id=id + "-code-" + i.toString(), title=(part.indexOf("\n") >= 0 ? part.slice(0, part.indexOf("\n")) : "text"), language="", code=(part.indexOf("\n") >= 0 ? part.slice(part.indexOf("\n") + 1).trim() : part), numbers=true, diff=false)

@@ -1,0 +1,16 @@
+use CheckboxMixed from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state checked = "mixed"
+  action setChecked(value: bool)
+    checked = value ? "true" : "false"
+  view
+    column gap=16 min-width=0 max-width="100%"
+      CheckboxMixed(id="advanced-mixed", label="Select all items", labelVisible=true, checked=checked, disabled=false, change=setChecked)
+      text "Controlled and disabled" font-weight=600
+      CheckboxMixed(id="checkbox-controlled", label="Controlled selection", labelVisible=true, checked=checked, disabled=false, change=setChecked)
+      CheckboxMixed(id="checkbox-disabled", label="Disabled selection", labelVisible=true, checked="true", disabled=true, change=setChecked)

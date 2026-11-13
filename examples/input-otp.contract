@@ -1,0 +1,20 @@
+use InputOTP from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  derive narrow = width < 600
+  state otp = ""
+  state pin = ""
+  action editPIN(value: string)
+    pin = value
+  action editOTP(value: string)
+    otp = value
+  view
+    column gap=16 min-width=0 max-width="100%"
+      InputOTP(id="controls-otp", label="Verification code", value=otp, length=6, disabled=false, change=editOTP)
+      text "Four digits and disabled" font-weight=600
+      InputOTP(id="otp-four", label="Four digit PIN", value=pin, length=4, disabled=false, change=editPIN)
+      InputOTP(id="otp-disabled", label="Disabled code", value="123456", length=6, disabled=true, change=editOTP)
+      text ("Entered code: " + otp) testId="otp-controlled-result" role="status"

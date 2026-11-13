@@ -1,0 +1,8 @@
+component Direction
+  props
+    id: string
+    direction: string
+  slot
+  view
+    column id=id testId=id direction=(direction == "rtl" ? "rtl" : "ltr") gap=12 min-width=0
+      children
