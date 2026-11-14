@@ -4,6 +4,10 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.2.0-beta.5] - 2026-11-14
+
+- Keep decorative Avatar images out of pointer hit testing so the first click reaches an enclosing button and activates the server-rendered app. Preserve image loading, error recovery and interactive badge slots.
+
 ## [0.2.0-beta.4] - 2026-11-14
 
 - Refine Avatar image loading and failed-source recovery while preserving existing props. Keep one accessible name and reserve the image dimensions.

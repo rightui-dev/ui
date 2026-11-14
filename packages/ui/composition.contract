@@ -83,7 +83,7 @@ component AvatarPicture
       if not loaded
         text fallback id=(id + "-fallback") testId=(id + "-fallback") aria-hidden=true font-size=(size == "sm" ? "ui.text-xs" : "ui.text-sm") line-height="ui.leading-solid" color="ui.avatar-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if src != "" and not failed
-        image src id=(id + "-image") testId=(id + "-image") alt="" position="absolute" left=0 top=0 width="100%" height="100%" object-fit="cover" load=imageLoaded error=imageFailed
+        image src id=(id + "-image") testId=(id + "-image") alt="" position="absolute" left=0 top=0 width="100%" height="100%" object-fit="cover" pointer-events="none" load=imageLoaded error=imageFailed
       view aria-hidden=true pointer-events="none" position="absolute" left=0 right=0 top=0 bottom=0 border-radius="ui.avatar-radius" border-width="ui.avatar-border-width" border-style="solid" border-color="ui.avatar-border"
 
 component AvatarFrame
