@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0-beta.4",
+  "version": "0.1.0-beta.5",
   "asOf": "2026-11-14",
   "exactRevision": "53426cf02bf986a5e781abc4f953d79989c6dc05",
   "platforms": [
@@ -26,19 +26,19 @@
   ],
   "statuses": {
     "checked": {
-      "label": "✅ Partial checks",
+      "label": "\u2705 Partial checks",
       "description": "Targeted checks completed. Coverage varies by component."
     },
     "built": {
-      "label": "✅ Built only",
+      "label": "\u2705 Built only",
       "description": "Compiled successfully. Interactions have not been verified."
     },
     "blocked": {
-      "label": "⚠️ Partial checks",
+      "label": "\u26a0\ufe0f Partial checks",
       "description": "Validation incomplete. No successful iOS build or device checks recorded."
     },
     "unsupported": {
-      "label": "❌ Not supported",
+      "label": "\u274c Not supported",
       "description": "Outside rightui support. The project targets web, iOS and macOS."
     }
   },
@@ -67,7 +67,7 @@
     },
     {
       "id": "web-trace",
-      "description": "Test \"trace disclosure opens and closes its detail\" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect tree has \"content-trace-detail-0\"; expect tree missing \"content-trace-detail-0\"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects.",
+      "description": "Two targeted web tests passed in the 28-test website run: disclosure open/close and replay progression through reasoning, tool output, error, sources and final answer, including reduced motion and mobile resize. Desktop and 390px browser checks showed no document horizontal overflow. No new native checks are claimed.",
       "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
     },
     {
@@ -168,6 +168,11 @@
     {
       "id": "web-accordion-spacing",
       "description": "Accordion and AccordionMultiple from the beta.4 archive passed a browser interaction test for single and independent expansion. Focus moved between triggers with ArrowDown. At a 390px viewport, browser measurements confirmed 16px heading, content and chevron insets with no horizontal document overflow; hover retained its underline. These are targeted web checks only.",
+      "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    },
+    {
+      "id": "web-code-block",
+      "description": "A targeted web test in the 28-test website run checked tokenized text, wrap interaction, copy feedback and retained text after mobile resize. Browser checks confirmed wrapping without document overflow at 390px; the UTF-8 downloaded file matched the original 337-byte code passed to the clipboard. Clipboard write succeeded with browser write permission granted. No new native checks are claimed.",
       "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
     }
   ],
@@ -367,6 +372,15 @@
       "status": "checked",
       "evidence": [
         "web-accordion-spacing"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "code-block",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-code-block"
       ]
     }
   ]

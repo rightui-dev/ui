@@ -20,7 +20,8 @@
     "test:version": "bun test tools/version-ui.test.ts",
     "compatibility": "bun tools/compatibility.ts",
     "native:ios:archive": "bun run native:prepare && cd examples/native && EXACT_FEEDBACK=0 bun exact.mjs ios --device --archive ../../dist/rightui-demo.ipa --unsigned",
-    "native:share:ios": "bun run native:prepare && cd examples/native && EXACT_FEEDBACK=0 bun exact.mjs share"
+    "native:share:ios": "bun run native:prepare && cd examples/native && EXACT_FEEDBACK=0 bun exact.mjs share",
+    "generate:code-block": "bun tools/generate-code-block.ts"
   },
   "exports": {
     "./blocks/dashboard-01": "./blocks/dashboard-01.contract",
@@ -162,5 +163,8 @@
   },
   "engines": {
     "bun": ">=1.4.2"
+  },
+  "devDependencies": {
+    "shiki": "4.6.0"
   }
 }

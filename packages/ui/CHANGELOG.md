@@ -4,6 +4,15 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.1.0-beta.5] - 2026-11-14
+
+### Components
+
+- Refine Trace spacing, status icons, disclosure focus and source links. Export TraceTitle and TraceDescription for richer compositions, with a replayable reasoning and tool-result example.
+- Add CodeBlockAdvanced, CodeToken and CodeLine for syntax tokens, highlighted lines, custom line numbers, constrained height and optional UTF-8 file export.
+- Improve existing CodeBlock rendering with a file header, line wrapping, copy feedback and semantic diff colors. Add light/dark syntax colors and a reproducible Shiki-highlighted example.
+- Existing component imports and required props remain compatible. No migration or Exact SDK upgrade is required.
+
 ## [0.1.0-beta.4] - 2026-11-13
 
 ### Fixed

@@ -2,7 +2,7 @@
 
 [npm package](https://www.npmjs.com/package/@rightui/ui) · [Documentation](https://rightui.dev/docs/installation)
 
-Composable Exact Contract components and Tamber themes, inspired by shadcn/ui. The installable package is **@rightui/ui 0.1.0-beta.4**. Exact compiles the Contract UI; TypeScript or Rust supplies data logic.
+Composable Exact Contract components and Tamber themes, inspired by shadcn/ui. The installable package is **@rightui/ui 0.1.0-beta.5**. Exact compiles the Contract UI; TypeScript or Rust supplies data logic.
 
 Official repositories: [UI sources](https://github.com/rightui-dev/ui) and [website](https://github.com/rightui-dev/website). Both repositories are currently private; cloning requires GitHub access.
 
@@ -11,12 +11,12 @@ Official repositories: [UI sources](https://github.com/rightui-dev/ui) and [webs
 Use **Bun 1.4.2** for Exact. In an existing Exact app:
 
 ```sh
-bun add --exact @rightui/ui@0.1.0-beta.4
+bun add --exact @rightui/ui@0.1.0-beta.5
 ```
 
 Follow the [installation guide](docs/INSTALLATION.md) for app creation and required font registration. The public npm package does not require GitHub access. The private root package `@rightui/registry` is development infrastructure, not the consumer package. See [distribution](docs/DISTRIBUTION.md).
 
-For a source/offline build, run `bun run native:setup` and `bun run package:ui`; install `dist/rightui-ui-0.1.0-beta.4.tgz` in the consumer app.
+For a source/offline build, run `bun run native:setup` and `bun run package:ui`; install `dist/rightui-ui-0.1.0-beta.5.tgz` in the consumer app.
 
 Unlike shadcn's source-copy workflow, this delivery installs Contract sources and theme tokens as a package.
 

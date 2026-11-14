@@ -44,15 +44,22 @@ component TraceIcon
     status: string
     reduced: bool
   view
-    svg width=16 height=16 flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke=(status == "error" ? "ui.danger" : "currentColor") stroke-width=2 stroke-linecap="round" stroke-linejoin="round" animation=(status == "running" and icon == "check" and not reduced ? "traceSpin 1s linear infinite" : "none") aria-hidden=true
-      if status == "running" and icon == "check"
+    svg width=16 height=16 flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke=(status == "error" ? "ui.danger" : "currentColor") stroke-width=2 stroke-linecap="round" stroke-linejoin="round" animation=(status == "running" and (icon == "check" or icon == "loader") and not reduced ? "traceSpin 1s linear infinite" : "none") aria-hidden=true
+      if icon == "loader" or (status == "running" and icon == "check")
         path d="M12 2a10 10 0 1 0 10 10"
-        circle cx=12 cy=12 r=3
       else if icon == "dot"
         circle cx=12 cy=12 r=10
         circle cx=12 cy=12 r=3
       else if icon == "terminal"
         path d="m4 17 6-5-6-5M12 19h8"
+      else if icon == "search"
+        circle cx=10.5 cy=10.5 r=7.5
+        path d="m16 16 5 5"
+      else if icon == "clock"
+        circle cx=12 cy=12 r=10
+        path d="M12 6v6l4 2"
+      else if icon == "brain"
+        path d="M12 18V5a3 3 0 0 0-5.8-1A4 4 0 0 0 4 11a4 4 0 0 0 2 7.5A3 3 0 0 0 12 18ZM12 5a3 3 0 0 1 5.8-1A4 4 0 0 1 20 11a4 4 0 0 1-2 7.5A3 3 0 0 1 12 18M8 8c-1 0-2-.5-2-1.5M16 8c1 0 2-.5 2-1.5M6 14a3 3 0 0 1 3 2M18 14a3 3 0 0 0-3 2"
       else if icon == "globe"
         circle cx=12 cy=12 r=10
         path d="M2 12h20M12 2a18 18 0 0 1 0 20 18 18 0 0 1 0-20"
@@ -85,11 +92,11 @@ component TraceIcon
 component TraceFrame
   slot
   view
-    column gap=8 min-width=0
+    column gap=8 min-width=0 color="ui.muted-foreground" font-size="0.875rem"
       children
 style TraceTitleText
   font-size="0.875rem"
-  line-height=1.5
+  line-height=1.428571
   font-weight=400
   white-space="nowrap"
 
@@ -103,7 +110,7 @@ component TraceTitle
     width = w
   derive band = width <= 64 ? "64" : width <= 128 ? "128" : width <= 256 ? "256" : width <= 512 ? "512" : "1024"
   view
-    view position="relative" min-width=0 overflow="hidden" resize=measure
+    view position="relative" flex="0 1 auto" min-width=0 max-width="100%" overflow="hidden" resize=measure
       text title class=TraceTitleText min-width=0 overflow="hidden" text-overflow="ellipsis"
       if running and not reduced
         view position="absolute" left=0 top=0 bottom=0 width=64 pointer-events="none" aria-hidden=true mask-image="linear-gradient(to right, transparent 0%, #000000 50%, transparent 100%)" animation=("traceSweep" + band + " 2s linear infinite")
@@ -116,10 +123,15 @@ component TraceLine
     status: string
     reduced: bool
   view
-    row gap=8 align-items="center" min-width=0 color=(status == "error" ? "ui.danger" : "ui.muted-foreground") opacity=(status == "pending" ? 0.6 : 1)
+    row gap=8 align-items="center" flex="0 1 auto" min-width=0 max-width="100%" color=(status == "error" ? "ui.danger" : "ui.muted-foreground") opacity=(status == "pending" ? 0.6 : 1)
       if icon != "none"
         TraceIcon(icon=icon, status=status, reduced=reduced)
       TraceTitle(title=title, running=(status == "running"), reduced=reduced)
+component TraceDescription
+  props
+    description: string
+  view
+    text description flex-shrink=0 font-size="0.75rem" line-height=1.5 color="ui.muted-foreground" font-variant-numeric="tabular-nums"
 component TraceDisclosure
   props
     id: string
@@ -133,16 +145,16 @@ component TraceDisclosure
   view
     column min-width=0
       button id=id testId=id class=Control press=toggle aria-label=title aria-expanded=open aria-controls=(id + "-content")
-        display="flex" align-items="center" align-self="flex-start" text-align="left" gap=4 padding="4px 8px" margin-left=-8 min-height=28 border="0" border-radius="ui.radius-md" background-color="transparent" color=(status == "error" ? "ui.danger" : "ui.muted-foreground")
-        transition=(reduced ? "none" : "background-color 150ms ease")
+        display="flex" align-items="center" align-self="flex-start" text-align="left" gap=4 padding="4px 0px" margin="-4px 0px" min-height=28 border="0" border-radius="ui.radius-md" background-color="transparent" color=(status == "error" ? "ui.danger" : "ui.muted-foreground")
+        transition=(reduced ? "none" : "color 150ms ease")
         :hover
-          background-color="ui.muted"
+          color="ui.foreground"
         TraceLine(title=title, icon=icon, status=status, reduced=reduced)
         svg width=16 height=16 flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 rotate=(open ? "90deg" : "0deg") transition=(reduced ? "none" : "rotate 200ms ease") aria-hidden=true
           path d="m9 6 6 6-6 6"
       column id=(id + "-content") testId=(open ? id + "-content" : "") height=(open ? "auto" : "0px") min-height=0 overflow="hidden" aria-hidden=(not open) inert=(not open)
         -exact-layout-transition=(reduced ? "none" : "200ms ease-out")
-        column margin="8px 4px 4px 7px" padding-left=16 border-left="1px solid ui.border" gap=8 min-width=0 line-height=1.625
+        column margin="8px 4px 4px 7px" padding-left=16 border-left="1px solid ui.border" gap=8 min-width=0 font-size="0.875rem" color="ui.muted-foreground" line-height=1.625
           children
 component TraceCollapsible
   props
@@ -165,9 +177,14 @@ component TraceSource
     href: string
     reduced: bool
   view
-    link href=href target="_blank" rel="noreferrer" aria-label=(title + " (opens in a new tab)") color="ui.muted-foreground" text-decoration="none"
-      row gap=4 align-items="center"
-        text title font-size="0.875rem" min-width=0
+    link href=href target="_blank" rel="noopener noreferrer" aria-label=(title + " (opens in a new tab)") color="ui.muted-foreground" text-decoration="none" min-width=0 max-width="100%" border-radius="ui.radius-md"
+      :hover
+        color="ui.foreground"
+      :focus-visible
+        box-shadow="0 0 0 3px ui.ring"
+      row gap=8 align-items="center" min-width=0
+        TraceIcon(icon="globe", status="", reduced=reduced)
+        text title font-size="0.875rem" line-height=1.428571 min-width=0 overflow="hidden" text-overflow="ellipsis" white-space="nowrap"
         TraceIcon(icon="external", status="", reduced=reduced)
 component CodeBlockContent
   props

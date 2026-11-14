@@ -1,5 +1,17 @@
 use Control from "./styles.contract"
-use ButtonContent from "./button.contract"
+
+shape CodeToken
+  text: string
+  tone: string
+
+shape CodeLine
+  tokens: CodeToken[]
+  variant: string
+
+fn codeTokenColor(tone: string): string = tone == "keyword" ? "ui.code-keyword" : tone == "string" ? "ui.code-string" : tone == "function" ? "ui.code-function" : tone == "number" ? "ui.code-number" : tone == "comment" ? "ui.code-comment" : tone == "type" ? "ui.code-type" : tone == "property" ? "ui.code-property" : "ui.code-foreground"
+fn codeLineVariant(line: string, diff: bool): string = diff and line.startsWith("+") ? "added" : diff and line.startsWith("-") ? "removed" : "default"
+fn codeLineText(line: string, diff: bool): string = diff and (line.startsWith("+") or line.startsWith("-") or line.startsWith(" ")) ? line.slice(1) : line
+
 component CodeBlockFrame
   props
     id: string
@@ -9,29 +21,8 @@ component CodeBlockFrame
     numbers: bool
     diff: bool
     ai: bool
-  state copied = false
-  action copy
-    copyText(code)
-    copied = true
   view
-    column id=id testId=id min-width=0 border="1px solid ui.border" border-radius=(ai ? "ui.ai-radius-control" : "ui.radius-control") overflow="hidden" background-color=(ai ? "ui.background" : "ui.muted")
-      row gap=8 align-items="center" flex-wrap="wrap" padding=(ai ? "12px 12px 0px" : "6px 12px") border-bottom=(ai ? "0" : "1px solid ui.border")
-        text title flex="1 1 6rem" min-width=0 overflow-wrap="break-word" font-size="0.75rem" font-weight=500 color="ui.foreground"
-        text language overflow-wrap="break-word" font-size="0.75rem" color="ui.muted-foreground"
-        ButtonContent(id=id + "-copy", label=(copied ? "Copied" : "Copy code"), variant="ghost", size="icon-xs", disabled=false, press=copy)
-          svg width=14 height=14 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
-            if copied
-              path d="m20 6-11 11-5-5"
-            else
-              rect x=9 y=9 width=13 height=13 rx=2
-              path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-      scroll overflow-x="auto" max-height="17.5rem"
-        column padding="12px 0px"
-          for line, i in code.split("\n") key=i
-            row gap=16 padding="0px 12px" background-color=(diff and line.startsWith("-") ? "ui.background" : diff and line.startsWith("+") ? "ui.surface" : "transparent")
-              if numbers
-                text (i + 1).toString() width="1.5rem" flex-shrink=0 text-align="right" aria-hidden=true font-size="0.8125rem" font-family="monospace" color="ui.muted-foreground"
-              text line testId=(id + "-line-" + i.toString()) white-space="pre" font-size="0.8125rem" line-height=1.7 font-family="monospace" color=(diff and line.startsWith("-") ? "ui.danger" : "ui.foreground")
+    CodeBlockView(id=id, title=title, language=language, code=code, lines=[], numbers=numbers, diff=diff, ai=ai, startLine=1, showDownload=false, maxHeight=280, compact=ai, variant="default")
 
 component CodeBlock
   props
@@ -54,3 +45,104 @@ component CodeBlockAI
     diff: bool
   view
     CodeBlockFrame(id=id, title=title, language=language, code=code, numbers=numbers, diff=diff, ai=true)
+
+component CodeBlockAdvanced
+  props
+    id: string
+    title: string
+    language: string
+    code: string
+    lines: CodeLine[]
+    numbers: bool
+    startLine: number
+    showDownload: bool
+    maxHeight: number
+    compact: bool
+    variant: string
+  view
+    CodeBlockView(id=id, title=title, language=language, code=code, lines=lines, numbers=numbers, diff=false, ai=false, startLine=startLine, showDownload=showDownload, maxHeight=maxHeight, compact=compact, variant=variant)
+
+component CodeBlockView
+  props
+    id: string
+    title: string
+    language: string
+    code: string
+    lines: CodeLine[]
+    numbers: bool
+    diff: bool
+    ai: bool
+    startLine: number
+    showDownload: bool
+    maxHeight: number
+    compact: bool
+    variant: string
+  state wrapped = false
+  state copied = false
+  state copiedCode = ""
+  derive copyConfirmed = copied and copiedCode == code
+  derive heading = title.trim() != "" ? title : language.trim() != "" ? language : "Code"
+  derive filename = title.trim() != "" ? title.split("/").slice(-1).join("") : "code.txt"
+  derive plainCode = code.endsWith("\n") ? code.slice(0, -1) : code
+  derive plainLines = plainCode.split("\n").map(line => CodeLine(tokens=[CodeToken(text=codeLineText(line, diff), tone="plain")], variant=codeLineVariant(line, diff)))
+  derive displayLines = lines.length > 0 ? lines : plainLines
+  derive lineStart = max(1, floor(startLine))
+  derive numberWidth = max(2, (lineStart + displayLines.length - 1).toString().length).toString() + "ch"
+  action copy
+    copyText(code)
+    copiedCode = code
+    copied = true
+  action toggleWrap
+    wrapped = not wrapped
+  action download
+    saveFile(id + "-file", text=code, suggestedName=filename)
+  view
+    column id=id testId=id min-width=0 border="1px solid ui.border" border-radius=(compact ? "ui.radius-lg" : "ui.radius-2xl") overflow="hidden" background-color=(variant == "destructive" ? "ui.code-destructive-background" : ai ? "ui.background" : "ui.muted") color=(variant == "destructive" ? "ui.danger" : "ui.code-foreground")
+      row gap=8 align-items="center" padding=(compact ? "12px 12px 0px" : "16px 16px 0px") min-width=0
+        row gap=6 align-items="center" flex=1 min-width=0
+          svg width=(compact ? 14 : 16) height=(compact ? 14 : 16) flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=1.75 stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
+            if language == "sh" or language == "bash" or language == "shell" or language == "text"
+              path d="m4 17 6-5-6-5M12 19h8"
+            else
+              path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8ZM14 2v6h6M10 12l-2 2 2 2M14 12l2 2-2 2"
+          text heading testId=(id + "-title") min-width=0 overflow="hidden" text-overflow="ellipsis" white-space="nowrap" font-size=(compact ? "0.75rem" : "0.875rem") line-height=1.5 font-weight=500 color=(variant == "destructive" ? "ui.danger" : "ui.foreground")
+        row gap=4 align-items="center" flex-shrink=0 margin="-4px -6px -4px 0px"
+          button id=(id + "-wrap") testId=(id + "-wrap") class=Control press=toggleWrap aria-label="Wrap lines" title="Wrap lines" aria-pressed=wrapped aria-controls=(id + "-content") display="flex" align-items="center" justify-content="center" width=28 height=28 min-height=28 padding=0 border="0" background-color=(wrapped ? "ui.code-highlight" : "transparent") color=(wrapped ? "ui.foreground" : "ui.muted-foreground")
+            :hover
+              background-color="ui.code-highlight"
+            svg width=14 height=14 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=1.75 stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
+              path d="M3 6h18M3 11h14a4 4 0 0 1 0 8h-4M3 16h4M13 16l-3 3 3 3"
+          if showDownload
+            button id=(id + "-download") testId=(id + "-download") class=Control press=download aria-label="Download code" title="Download code" display="flex" align-items="center" justify-content="center" width=28 height=28 min-height=28 padding=0 border="0" background-color="transparent" color="ui.muted-foreground"
+              :hover
+                background-color="ui.code-highlight"
+              svg width=14 height=14 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=1.75 stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
+                path d="M12 3v12M7 10l5 5 5-5M5 16v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"
+          button id=(id + "-copy") testId=(id + "-copy") class=Control press=copy aria-label=(copyConfirmed ? "Copied" : "Copy code") title=(copyConfirmed ? "Copied" : "Copy code") display="flex" align-items="center" justify-content="center" width=28 height=28 min-height=28 padding=0 border="0" background-color="transparent" color="ui.muted-foreground"
+            :hover
+              background-color="ui.code-highlight"
+            svg width=14 height=14 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=1.75 stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
+              if copyConfirmed
+                path d="m20 6-11 11-5-5"
+              else
+                rect x=8 y=8 width=12 height=12 rx=2
+                path d="M16 8V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4"
+      text (copyConfirmed ? "Copied to clipboard" : "") testId=(id + "-copy-status") role="status" aria-live="polite" position="absolute" width="0.0625rem" height="0.0625rem" overflow="hidden" white-space="nowrap"
+      if showDownload
+        input id=(id + "-file") display="none" aria-hidden=true
+      scroll id=(id + "-content") testId=(id + "-content") tabindex=0 role="region" aria-label=(heading + " code") overflow="auto" min-width=0 max-height=max(64, maxHeight) padding=(compact ? "6px 0px 12px" : "8px 0px 16px")
+        :focus-visible
+          box-shadow="inset 0 0 0 2px ui.ring"
+        view display="grid" grid-template-columns=(wrapped ? "minmax(0, 1fr)" : "minmax(100%, max-content)") min-width=0
+          for line, i in displayLines key=i
+            row gap=12 align-items="flex-start" position="relative" padding=(compact ? "0px 12px" : "0px 16px") min-width=0 min-height=(compact ? "1.25rem" : "1.5rem") role="group" aria-label=("Line " + (lineStart + i).toString() + (line.variant == "added" ? ", added" : line.variant == "removed" ? ", removed" : line.variant == "highlighted" ? ", highlighted" : "")) background-color=(line.variant == "added" ? "ui.code-added-background" : line.variant == "removed" ? "ui.code-removed-background" : line.variant == "highlighted" ? "ui.code-highlight" : "transparent")
+              if line.variant == "added" or line.variant == "removed"
+                text (line.variant == "added" ? "+" : "−") position="absolute" left=3 top=0 aria-hidden=true user-select="none" font-family="monospace" font-size=(compact ? "0.75rem" : "0.875rem") line-height=1.625 color=(line.variant == "removed" ? "ui.danger" : "ui.success")
+              if numbers
+                text (lineStart + i).toString() width=numberWidth flex-shrink=0 text-align="right" aria-hidden=true user-select="none" font-size=(compact ? "0.75rem" : "0.875rem") font-family="monospace" line-height=1.625 color="ui.muted-foreground"
+              text testId=(id + "-line-" + i.toString()) min-width=0 flex=1 white-space=(wrapped ? "pre-wrap" : "pre") overflow-wrap=(wrapped ? "anywhere" : "normal") font-family="monospace" font-size=(compact ? "0.75rem" : "0.875rem") line-height=1.625 min-height=(compact ? "1.25rem" : "1.5rem")
+                if line.tokens.length == 0
+                  text "\n"
+                else
+                  for token, j in line.tokens key=j
+                    text token.text color=(variant == "destructive" ? "ui.danger" : line.variant == "removed" and token.tone == "plain" ? "ui.danger" : codeTokenColor(token.tone))

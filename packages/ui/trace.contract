@@ -1,4 +1,5 @@
-use DisclosureButton from "./button.contract"
+use TraceIcon, TraceDisclosure from "./trace-parts.contract"
+
 component Trace
   props
     id: string
@@ -7,24 +8,22 @@ component Trace
     steps: string[]
     details: string[]
   state expanded = -1
+  derive normalizedStatus = ["error", "failed", "erreur"].includes(status.toLowerCase()) ? "error" : ["running", "loading"].includes(status.toLowerCase()) ? "running" : status.toLowerCase() == "pending" ? "pending" : ""
   action toggle(i: number)
     expanded = expanded == i ? -1 : i
   view
     column id=id testId=id gap=12 min-width=0
-      row gap=8 align-items="center" flex-wrap="wrap"
-        text title flex=1 min-width=0 font-size="0.875rem" font-weight=500 color="ui.foreground"
-        text status testId=(id + "-status") role="status" font-size="0.75rem" color=(["error", "failed", "erreur"].includes(status.toLowerCase()) ? "ui.danger" : "ui.muted-foreground")
-      for step, i in steps key=step
-        row gap=12 min-width=0
-          column align-items="center" width="1.25rem" flex-shrink=0
-            view width=8 height=8 margin-top=14 border-radius="ui.radius-full" background-color="ui.foreground"
-            view width=1 flex=1 min-height="1.25rem" background-color="ui.border"
-          column flex=1 min-width=0
-            DisclosureButton(id=id + "-step-" + i.toString(), label=step, variant="ghost", controls=id + "-detail-" + i.toString(), expanded=(expanded == i), icon=false, press=toggle(i))
-              text step font-size="0.875rem"
+      row gap=8 align-items="center" flex-wrap="wrap" color=(normalizedStatus == "error" ? "ui.danger" : "ui.muted-foreground")
+        text title flex="1 1 10rem" min-width=0 font-size="0.875rem" font-weight=500 color="ui.foreground"
+        row gap=6 align-items="center"
+          TraceIcon(icon="check", status=normalizedStatus, reduced=true)
+          text status testId=(id + "-status") role="status" font-size="0.75rem" line-height=1.5
+      column gap=8 min-width=0
+        for step, i in steps key=step
+          TraceDisclosure(id=id + "-step-" + i.toString(), title=step, icon="none", status="", open=(expanded == i), reduced=true, toggle=toggle(i))
             if expanded == i
               match details.at(i)
                 case some(detail)
-                  text detail id=(id + "-detail-" + i.toString()) testId=(id + "-detail-" + i.toString()) padding="4px 12px 12px" font-size="0.8125rem" line-height=1.5 color="ui.muted-foreground" overflow-wrap="break-word"
+                  text detail id=(id + "-detail-" + i.toString()) testId=(id + "-detail-" + i.toString()) font-size="0.875rem" line-height=1.625 overflow-wrap="break-word"
                 case none
-                  text "No details." font-size="0.8125rem" color="ui.muted-foreground"
+                  text "No details." font-size="0.875rem" line-height=1.625

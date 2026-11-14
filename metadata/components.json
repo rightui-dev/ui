@@ -229,13 +229,16 @@
   {
     "slug": "code-block",
     "title": "Code Block",
-    "description": "Code Block with accessible presentation and local state.",
-    "usage": "Import CodeBlock from @rightui/ui. Supply content and required properties as shown in the example.",
-    "keyboard": "",
+    "description": "Display source code with syntax tokens, highlighted lines, diffs and useful file actions.",
+    "usage": "CodeBlock keeps its existing props and adds a line-wrap toggle with clearer diff styling. Use CodeBlockAdvanced for tokenized content, highlighted or added/removed lines, a custom starting line, maximum height and optional file export. CodeToken contains text and tone; CodeLine contains tokens and variant. Supported tones are plain, keyword, string, function, number, comment, type and property. Line variants are default, highlighted, added and removed. Supply tokenized lines from your data or build tooling; language labels the code and does not run a parser. The example uses Shiki-generated tokens with light and dark theme colors. Copy and Download always use the original code string. Keep that string and the tokenized lines in sync. An empty lines array falls back to the code string. The export uses the platform save flow.",
+    "keyboard": "Tab focuses Wrap lines, Download code when enabled, Copy code and the scrollable code region. Enter or Space activates the focused action. Wrap lines exposes its pressed state.",
     "source": "packages/ui/code-block.contract",
     "example": "examples/code-block.contract",
     "exports": [
-      "CodeBlock"
+      "CodeBlock",
+      "CodeBlockAdvanced",
+      "CodeToken",
+      "CodeLine"
     ]
   },
   {
@@ -842,13 +845,21 @@
   {
     "slug": "trace",
     "title": "Trace",
-    "description": "Trace with accessible presentation and local state.",
-    "usage": "Import Trace from @rightui/ui. Supply content and required properties as shown in the example.",
-    "keyboard": "",
+    "description": "Follow reasoning, tool results and sources with compact, expandable activity traces.",
+    "usage": "Use Trace for a simple list of steps. Compose TraceFrame, TraceLine, TraceDisclosure and TraceSource for rich activity with controlled disclosure, per-step icons and running, pending or error states. Pass the reduced-motion preference to the composable primitives. The preview uses a local scripted clock: Replay demonstrates the UI and does not execute commands or contact an AI service. Its source includes the injected clock used by the demo.",
+    "keyboard": "Tab moves between disclosures, source links and Replay. Enter or Space toggles the focused disclosure. Closed content is hidden from keyboard navigation.",
     "source": "packages/ui/trace.contract",
     "example": "examples/trace.contract",
     "exports": [
-      "Trace"
+      "Trace",
+      "TraceFrame",
+      "TraceLine",
+      "TraceTitle",
+      "TraceDescription",
+      "TraceDisclosure",
+      "TraceCollapsible",
+      "TraceSource",
+      "TraceIcon"
     ]
   },
   {

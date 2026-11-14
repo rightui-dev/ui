@@ -1,13 +1,79 @@
-use Trace from "@rightui/ui"
+use ButtonAI, BubbleFrame, TraceFrame, TraceLine, TraceDisclosure, TraceSource, CodeBlockContent from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
-  derive narrow = width < 600
+  inject
+    rightuiDemoTime: number
+    rightuiRunDemo: action
+  state started = -1
+  state thinkingChoice: option<bool> = none
+  state statusOpen = false
+  state diffOpen = true
+  state errorOpen = false
+  state sourcesOpen = false
+  derive elapsed = started < 0 ? 9000 : max(0, rightuiDemoTime - started)
+  derive thinking = elapsed < 2000
+  derive busy = elapsed < 8500
+  derive thinkingOpen = match thinkingChoice { case some(value) => value, case none => thinking }
+  derive reasoning = "The CI job installs dependencies with a frozen lockfile. I will compare the dependency changes with the committed lockfile, then check the install output."
+  derive answer = "package.json changed, but pnpm-lock.yaml did not. Run pnpm install locally and commit the updated lockfile so CI can install the same dependency versions."
+  action replay
+    started = rightuiDemoTime
+    thinkingChoice = none
+    statusOpen = false
+    diffOpen = true
+    errorOpen = false
+    sourcesOpen = false
+    rightuiRunDemo(8600)
+  action toggleThinking
+    thinkingChoice = some(not thinkingOpen)
+  action toggleStatus
+    statusOpen = not statusOpen
+  action toggleDiff
+    diffOpen = not diffOpen
+  action toggleError
+    errorOpen = not errorOpen
+  action toggleSources
+    sourcesOpen = not sourcesOpen
   view
-    column gap=16 min-width=0 max-width="100%"
-      text "Grouped activity traces" font-weight=600
-      Trace(id="content-trace", title="Preparing the render", status="Done", steps=["Read the brief", "Prepare selection", "Check result"], details=["The brief covers three spaces: bedroom, restaurant and terrace.", "12 selected images with consistent natural lighting.", "The selection is ready for review. No files sent."])
-      Trace(id="trace-running", title="Preparing assets", status="Running", steps=["Read files", "Render previews"], details=["Source files loaded.", "Rendering the selected images."])
-      Trace(id="trace-error", title="Upload interrupted", status="Error", steps=["Connect", "Upload"], details=["Connection established.", "Connection lost. Try again."])
+    column id="content-trace" testId="content-trace" aria-busy=busy gap=16 min-width=0 max-width="24rem" width="100%" min-height=288 padding="24px 0px" font-size="0.875rem" line-height=1.5
+      BubbleFrame(id="content-trace-question", align="end", variant="muted")
+        text "Why does this install fail in CI?"
+      column testId=(thinking ? "content-trace-thinking" : busy ? "content-trace-working" : "content-trace-complete") min-width=0
+        TraceFrame()
+          TraceDisclosure(id="content-trace-step-0", title=(thinking ? "Thinking" : "Thought for 2s"), icon="check", status=(thinking ? "running" : ""), open=thinkingOpen, reduced=reduced, toggle=toggleThinking)
+            if thinkingOpen
+              text (thinking and not reduced ? reasoning.slice(0, floor(elapsed / 2000 * reasoning.length)) : reasoning) id="content-trace-detail-0" testId="content-trace-detail-0" line-height=1.625
+          if elapsed >= 2000
+            if elapsed < 2800
+              TraceLine(title="Running git status --short", icon="check", status="running", reduced=reduced)
+            else
+              TraceDisclosure(id="content-trace-step-1", title="Ran git status --short", icon="check", status="", open=statusOpen, reduced=reduced, toggle=toggleStatus)
+                CodeBlockContent(id="content-trace-status-output", code=" M package.json")
+          if elapsed >= 2800
+            if elapsed < 3800
+              TraceLine(title="Running git diff --stat", icon="check", status="running", reduced=reduced)
+            else
+              TraceDisclosure(id="content-trace-step-2", title="Ran git diff --stat -- package.json pnpm-lock.yaml", icon="check", status="", open=diffOpen, reduced=reduced, toggle=toggleDiff)
+                CodeBlockContent(id="content-trace-diff-output", code=" package.json | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)")
+          if elapsed >= 3800
+            if elapsed < 5000
+              TraceLine(title="Running pnpm install --frozen-lockfile", icon="check", status="running", reduced=reduced)
+            else
+              TraceDisclosure(id="content-trace-step-3", title="Failed to run pnpm install --frozen-lockfile", icon="check", status="error", open=errorOpen, reduced=reduced, toggle=toggleError)
+                column min-width=0 padding=12 border-radius="ui.ai-radius-control" background-color="ui.code-destructive-background" border="1px solid ui.border"
+                  text "ERR_PNPM_OUTDATED_LOCKFILE" testId="content-trace-error-code" color="ui.danger" font-family="monospace" font-size="0.75rem" line-height=1.625 overflow-wrap="anywhere"
+                  text "Cannot install with frozen-lockfile because pnpm-lock.yaml is not up to date with package.json." testId="content-trace-error-output" color="ui.danger" font-family="monospace" font-size="0.75rem" line-height=1.625 overflow-wrap="anywhere"
+          if elapsed >= 5000
+            TraceDisclosure(id="content-trace-sources", title="Used 2 sources", icon="globe", status="", open=sourcesOpen, reduced=reduced, toggle=toggleSources)
+              TraceFrame()
+                TraceSource(title="pnpm install", href="https://pnpm.io/cli/install#--frozen-lockfile", reduced=reduced)
+                TraceSource(title="Continuous Integration", href="https://pnpm.io/continuous-integration", reduced=reduced)
+      if elapsed >= 5500
+        text (started < 0 or reduced ? answer : answer.slice(0, floor((elapsed - 5500) / 3000 * answer.length))) testId="content-trace-answer" line-height=1.5
+      if not busy
+        row margin-top="auto"
+          ButtonAI(id="content-trace-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
+            text "Replay"

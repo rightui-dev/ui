@@ -36,7 +36,7 @@ Demos include Button sizes/icons/loading, Calendar range/multiple/disabled, stat
 | carousel | Vertical without looping, Custom slide content | No additional gap identified in this scoped review |
 | chart | Explicit maximum without legend | No additional gap identified in this scoped review |
 | checkbox | Controlled and disabled | Invalid state |
-| code-block | Plain code without numbers | Start line; highlighted lines; wrap; max-height; collapse; action slots |
+| code-block | Tokenized source; light/dark syntax colors; line numbers and start line; highlighted and diff lines; wrap; max-height; copy; optional file export | ANSI parsing; Markdown rendering; file tabs; collapse; arbitrary action slots |
 | collapsible | Settings and nested files | No additional gap identified in this scoped review |
 | combobox | Disabled | Multiple selection; groups; clear button; custom items; invalid; auto highlight |
 | command | Keyboard shortcuts | Groups |
@@ -84,7 +84,7 @@ Demos include Button sizes/icons/loading, Calendar range/multiple/disabled, stat
 | toggle | Disabled | outline,size,icon slot |
 | toggle-group | Disabled | single selection mode, outline,size,spacing,vertical,custom item slots |
 | tooltip | Existing examples retained | side/placement, custom keyboard content, disabled external trigger slot |
-| trace | Multiple independent traces, Running, Error | TraceLine, link/dialog/sheet trigger, sources, controlled open, rich per-step icons/descriptions/content |
+| trace | Compact composable rows; running/pending/error icons; controlled disclosure; rich content; sources; scripted replay; reduced motion | Dedicated dialog/sheet trigger wrappers |
 | typography | h2, h3, h4, p, blockquote, code, lead, large, small, muted | semantic list/table structure (content is string only) |
 
 ## AI Elements
