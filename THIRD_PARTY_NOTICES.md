@@ -138,3 +138,8 @@ THIS SOFTWARE.
 # Geist
 
 `examples/native/assets/fonts/Geist.ttf` is Geist, distributed under the SIL Open Font License 1.1. The full license is included at `examples/native/assets/fonts/OFL.txt`. Source: https://github.com/google/fonts/tree/main/ofl/geist
+
+
+# Expo logo
+
+The demo profile mark in `blocks/brand.contract` uses Expo’s official `svg/logo-type-a.svg` geometry from `expo/logos`, commit `ab130d18ab0b75b85997986980875c152efedf2d`. Source: https://github.com/expo/logos/blob/ab130d18ab0b75b85997986980875c152efedf2d/svg/logo-type-a.svg . The Expo name and logo are trademarks of their respective owner; usage guidelines: https://expo.dev/brand .

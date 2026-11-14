@@ -1,3 +1,4 @@
+use ExpoMark from "./brand.contract"
 use uiFontFamily, ControlStyle as Control, InputStyle as Field from "@rightui/ui"
 use DropdownMenu, MenuEntry from "@rightui/ui"
 component SidebarIcon
@@ -225,7 +226,7 @@ component SidebarRichMenu
         view width="ui.space-32" height="ui.space-32" flex-shrink=0 border-radius="ui.radius-md" display="flex" align-items="center" justify-content="center"
           background-color=(avatar ? "ui.muted" : "ui.primary") color=(avatar ? "ui.foreground" : "ui.primary-foreground")
           if avatar
-            image "assets/shadcn-avatar.jpg" alt="shadcn" width="100%" height="100%" border-radius="ui.radius-md"
+            ExpoMark()
           else
             SidebarIcon(name=icon)
         if not compact
@@ -239,7 +240,7 @@ component SidebarRichMenu
         if avatar
           row gap="ui.space-8" padding="ui.space-6 ui.space-4" align-items="center"
             view width="ui.space-32" height="ui.space-32" flex-shrink=0 border-radius="ui.radius-md" background-color="ui.muted" display="flex" align-items="center" justify-content="center"
-              image "assets/shadcn-avatar.jpg" alt="shadcn" width="100%" height="100%" border-radius="ui.radius-md"
+              ExpoMark()
             column gap="ui.space-2" flex=1 min-width=0
               text title font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               text subtitle font-size="ui.text-xs" font-weight="ui.weight-regular" font-family=uiFontFamily(uiFont) data-rightui-font="body"
@@ -271,7 +272,7 @@ component SidebarUser
     reduced: bool
     choose: action
   view
-    SidebarRichMenu(id=id + "-menu", title="shadcn", subtitle="m@example.com", icon="", avatar=true, compact=compact, choose=choose, entries=[MenuEntry(id="upgrade", label="Upgrade to Pro", shortcut="", disabled=false, destructive=false), MenuEntry(id="account", label="Account", shortcut="", disabled=false, destructive=false), MenuEntry(id="billing", label="Billing", shortcut="", disabled=false, destructive=false), MenuEntry(id="notifications", label="Notifications", shortcut="", disabled=false, destructive=false), MenuEntry(id="logout", label="Log out", shortcut="", disabled=false, destructive=false)])
+    SidebarRichMenu(id=id + "-menu", title="@ccheever", subtitle="m@example.com", icon="", avatar=true, compact=compact, choose=choose, entries=[MenuEntry(id="upgrade", label="Upgrade to Pro", shortcut="", disabled=false, destructive=false), MenuEntry(id="account", label="Account", shortcut="", disabled=false, destructive=false), MenuEntry(id="billing", label="Billing", shortcut="", disabled=false, destructive=false), MenuEntry(id="notifications", label="Notifications", shortcut="", disabled=false, destructive=false), MenuEntry(id="logout", label="Log out", shortcut="", disabled=false, destructive=false)])
 
 component SidebarBrand
   props

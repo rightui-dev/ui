@@ -37,7 +37,7 @@ component BlockGallery
       if not fullscreen
         column gap="ui.space-16" padding=(narrow ? "ui.space-20" : "ui.space-32")
           text "Blocks" role="heading" aria-level=1 font-size="ui.text-hero-sm" font-weight="ui.weight-semibold" letter-spacing="ui.tracking-display" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          text "The shadcn/ui blocks, rebuilt in Exact." font-size="ui.text-base" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          text "Composable blocks, built with Exact." font-size="ui.text-base" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           Tabs(id="blocks-groups", labels=["Dashboard", "Sidebar", "Login", "Signup"], selected=group, reduced=reduced, choose=setGroup)
           row gap="ui.space-6" flex-wrap="wrap"
             for n in range(group == 0 ? 1 : group == 1 ? 16 : 5) key=n

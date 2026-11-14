@@ -1,3 +1,4 @@
+use ExpoMark from "./brand.contract"
 use uiFontFamily, SidebarTrigger, IconButton from "@rightui/ui"
 use Card, Badge, Tabs, CountedTabs from "@rightui/ui"
 use ControlStyle as Control, InputStyle as Field from "@rightui/ui"
@@ -355,9 +356,10 @@ component DashboardBlock
                   DashboardNavIcon(name=item)
                   text item font-family=uiFontFamily(uiFont) data-rightui-font="body"
           row gap="ui.space-8" align-items="center" padding="ui.space-menu-inset ui.space-8" min-height="ui.space-48" box-sizing="border-box"
-            image "assets/shadcn-avatar.jpg" alt="shadcn" width="ui.space-32" height="ui.space-32" border-radius="ui.radius-lg" filter="grayscale(1)"
+            view width="ui.space-32" height="ui.space-32" flex-shrink=0 border-radius="ui.radius-lg" background-color="ui.muted" color="ui.foreground" display="flex" align-items="center" justify-content="center"
+              ExpoMark()
             column gap="ui.space-0" flex=1
-              text "shadcn" font-size="ui.text-sm" line-height="ui.leading-tight" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text "@ccheever" font-size="ui.text-sm" line-height="ui.leading-tight" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               text "m@example.com" font-size="ui.text-xs" line-height="ui.leading-heading" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.icon-stroke" stroke-linecap="round" aria-hidden=true
               path d="M12 5h.01M12 12h.01M12 19h.01"
