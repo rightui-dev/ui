@@ -605,7 +605,7 @@
     {
       "file": "../landing/tools/app.contract.template",
       "property": "left",
-      "value": "max(ui.space-24, calc((100vw - 96rem) / 2 + ui.space-24))",
+      "value": "calc(max(ui.space-24, (100vw - 96rem) / 2) + clamp(0px, (1100px - 100vw) * 1000, 32px) + ui.space-8 - ui.space-12)",
       "category": "site-layout"
     },
     {
@@ -1255,6 +1255,12 @@
       "property": "max-width",
       "value": "240",
       "category": "geometry"
+    },
+    {
+      "file": "examples/avatar.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
     },
     {
       "file": "examples/button.contract",

@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0-beta.3",
+  "version": "0.2.0-beta.4",
   "asOf": "2026-11-14",
   "exactRevision": "53426cf02bf986a5e781abc4f953d79989c6dc05",
   "platforms": [
@@ -199,6 +199,16 @@
       "id": "sheet-modal-native-pending",
       "description": "The new SheetContent dialog composition has not been built or exercised on native targets.",
       "url": "https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md"
+    },
+    {
+      "id": "avatar-web",
+      "description": "Five isolated web checks cover failed-image recovery after source changes, legacy fallback, clamped counts, account-menu selection and Escape, keyboard navigation and existing text dropdown behavior.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/tools/fixtures/avatar/app.test.contract"
+    },
+    {
+      "id": "avatar-native-pending",
+      "description": "The updated Avatar compositions have not received targeted native validation.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/docs/AVATAR.md"
     }
   ],
   "overrides": [
@@ -470,6 +480,33 @@
       "status": "blocked",
       "evidence": [
         "sheet-modal-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "avatar",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "avatar-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "avatar",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "avatar-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "avatar",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "avatar-native-pending"
       ]
     }
   ]

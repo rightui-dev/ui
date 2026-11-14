@@ -505,6 +505,12 @@
       "category": "geometry"
     },
     {
+      "file": "examples/avatar.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
       "file": "examples/button.contract",
       "property": "height",
       "value": "16",

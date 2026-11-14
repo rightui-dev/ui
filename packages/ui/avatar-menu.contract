@@ -1,0 +1,15 @@
+use ActionMenuTrigger, MenuEntry from "./menu.contract"
+use AvatarFrame from "./composition.contract"
+
+component AvatarMenu
+  props
+    id: string
+    name: string
+    src: string
+    fallback: string
+    entries: MenuEntry[]
+    reduced: bool
+    choose: action
+  view
+    ActionMenuTrigger(id=id, label=(name + " account menu"), entries=entries, contextual=false, circular=true, separateDestructive=true, reduced=reduced, choose=choose)
+      AvatarFrame(id=id + "-avatar", name=name, src=src, fallback=fallback, size="default")

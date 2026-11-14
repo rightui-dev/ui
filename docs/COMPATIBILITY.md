@@ -1,6 +1,6 @@
 # Compatibility
 
-124 catalog entries. Evidence recorded on 2026-11-14 against rightui 0.2.0-beta.3 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
+124 catalog entries. Evidence recorded on 2026-11-14 against rightui 0.2.0-beta.4 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
 
 This records validation evidence, not full compatibility certification. Partial checks cover specific examples or interactions, not every variant. Built only means compilation succeeded, without a targeted interaction result.
 
@@ -22,7 +22,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 | Alert Dialog | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Aspect Ratio | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Attachment | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Avatar | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Avatar | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Badge | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Breadcrumb | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Bubble | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
@@ -189,5 +189,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 - **mac-site-0-2:** The same Contract website was compiled for macOS and manually checked through Home, Blocks and Dashboard, repeated Back/Forward navigation, disabled history endpoints, page titles, immersive blocks and the globe opening the equivalent website URL. The delivered Mac archive was signature-checked and its downloaded SHA-256 matched the approved artifact. This does not certify every native component. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 - **sheet-modal-web:** SheetContent passed six browser interaction tests and targeted desktop/mobile viewport, focus, background interaction and scroll-position checks. Four edges and optional close controls were covered. This is targeted web validation, not full platform certification. [Source](https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md)
 - **sheet-modal-native-pending:** The new SheetContent dialog composition has not been built or exercised on native targets. [Source](https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md)
+- **avatar-web:** Five isolated web checks cover failed-image recovery after source changes, legacy fallback, clamped counts, account-menu selection and Escape, keyboard navigation and existing text dropdown behavior. [Source](https://github.com/rightui-dev/ui/blob/main/tools/fixtures/avatar/app.test.contract)
+- **avatar-native-pending:** The updated Avatar compositions have not received targeted native validation. [Source](https://github.com/rightui-dev/ui/blob/main/docs/AVATAR.md)
 
 The machine-readable row-to-evidence mapping is in [metadata/compatibility.json](https://github.com/rightui-dev/ui/blob/main/metadata/compatibility.json). A successful build does not certify every interaction.

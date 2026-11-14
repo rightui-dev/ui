@@ -1,26 +1,125 @@
-use uiFontFamily, AvatarGroup, AvatarGroupItem, AvatarGroupCount from "@rightui/ui"
-use AvatarFrame, AvatarBadge from "@rightui/ui"
+use uiFontFamily, AvatarFrame, AvatarBadge, AvatarStatus, AvatarGroup, AvatarGroupItemDirected, AvatarGroupCount, AvatarGroupOverflowDirected, AvatarMenu, MenuEntry, Direction from "@rightui/ui"
+
+fn avatarName(person: number): string = person == 0 ? "@ccheever" : person == 1 ? "@maxleiter" : "@evilrabbit"
+fn avatarSource(person: number): string = person == 0 ? "assets/avatars/user-blue.png" : person == 1 ? "assets/avatars/user-violet.png" : "assets/avatars/user-green.png"
+fn avatarInitials(person: number): string = person == 0 ? "CC" : person == 1 ? "ML" : "ER"
 
 component Demo
   props
     width: number
     reduced: bool
+  view
+    column gap="ui.space-32" min-width=0
+      Overview(width=width, reduced=reduced)
+      Examples(width=width, reduced=reduced)
+
+component Overview
+  props
+    width: number
+    reduced: bool
+  view
+    AvatarOverview(id="avatar-overview", compact=(width < 600), direction="ltr")
+
+component Examples
+  props
+    width: number
+    reduced: bool
   inject
     uiFont: string
-  derive narrow = width < 600
-  state name = ""
+  state selected = ""
+  action choose(value: string)
+    selected = value
   view
-    row gap="ui.space-16" align-items="center"
-      for member, i in ["Alex Morgan", "Sam Chen", "Taylor Lee"] key=member
-        AvatarFrame(id="composition-avatar-" + i.toString(), name=member, src="", fallback=member.slice(0, 2), size="default")
-          AvatarBadge(id="composition-avatar-badge-" + i.toString(), label=(i == 0 ? "Available" : "Team member"), size="default")
-            view width="ui.space-3" height="ui.space-3" border-radius="ui.radius-full" background-color="ui.primary-foreground" aria-hidden=true
-      text "Size sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      AvatarFrame(id="avatar-sm", name="Alex Morgan", src="", fallback="AM", size="sm")
-      text "Size lg" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      AvatarFrame(id="avatar-lg", name="Alex Morgan", src="", fallback="AM", size="lg")
-      text "Group with fallback and count" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      AvatarGroup(id="avatar-group", label="Project team")
-        AvatarGroupItem(id="avatar-group-first", first=true)
-          AvatarFrame(id="avatar-fallback", name="Alex Morgan", src="", fallback="AM", size="default")
-        AvatarGroupCount(id="avatar-count", label="More members", count=3, size="default", first=false)
+    column gap="ui.space-32" min-width=0 max-width="100%"
+      AvatarExample(title="Basic", description="A profile image with a fallback when it cannot load.")
+        ProfileAvatar(id="avatar-basic", person=0, size="default")
+      AvatarExample(title="Fallback", description="Initials remain visible when no image is supplied.")
+        AvatarFrame(id="avatar-fallback", name="Charlie Cheever", src="", fallback="CC", size="default")
+      AvatarExample(title="Badge", description="A small status indicator with an accessible label.")
+        AvatarFrame(id="avatar-status", name="@ccheever", src=avatarSource(0), fallback="CC", size="default")
+          AvatarStatus(id="avatar-status-online", label="Available", size="default", tone="success")
+      AvatarExample(title="Badge with Icon", description="Add an icon inside the badge.")
+        AvatarFrame(id="avatar-icon", name="@ccheever", src=avatarSource(0), fallback="CC", size="default")
+          AvatarBadge(id="avatar-icon-badge", label="Add member", size="default")
+            AvatarPlus(small=true)
+      AvatarExample(title="Avatar Group", description="Stack related profiles with a contrasting outline.")
+        ProfileGroup(id="avatar-group", size="default", overflow="none", direction="ltr")
+      AvatarExample(title="Avatar Group Count", description="Show how many additional people belong to the group.")
+        ProfileGroup(id="avatar-group-count", size="default", overflow="count", direction="ltr")
+      AvatarExample(title="Avatar Group with Icon", description="Use custom content in the overflow indicator.")
+        ProfileGroup(id="avatar-group-icon", size="default", overflow="icon", direction="ltr")
+      AvatarExample(title="Sizes", description="Small, default and large avatars share the same image and fallback behavior.")
+        row gap="ui.space-8" align-items="center" flex-wrap="wrap"
+          ProfileAvatar(id="avatar-sm", person=0, size="sm")
+          ProfileAvatar(id="avatar-default", person=0, size="default")
+          ProfileAvatar(id="avatar-lg", person=0, size="lg")
+      AvatarExample(title="Dropdown", description="Open the account menu with a click or the keyboard.")
+        column align-items="center" gap="ui.space-12"
+          AvatarMenu(id="avatar-menu", name="@ccheever", src=avatarSource(0), fallback="CC", entries=[MenuEntry(id="profile", label="Profile", shortcut="", disabled=false, destructive=false), MenuEntry(id="billing", label="Billing", shortcut="", disabled=false, destructive=false), MenuEntry(id="settings", label="Settings", shortcut="", disabled=false, destructive=false), MenuEntry(id="logout", label="Log out", shortcut="", disabled=false, destructive=true)], reduced=reduced, choose=choose)
+          text (selected == "" ? "Choose an account action" : "Selected: " + selected) id="avatar-menu-selection" testId="avatar-menu-selection" role="status" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      AvatarExample(title="RTL", description="The same composition in a right-to-left layout.")
+        Direction(id="avatar-rtl", direction="rtl")
+          AvatarOverview(id="avatar-rtl-overview", compact=(width < 600), direction="rtl")
+
+component AvatarExample
+  props
+    title: string
+    description: string
+  inject
+    uiFont: string
+  slot
+  view
+    column gap="ui.space-12" min-width=0
+      text title role="heading" aria-level=3 font-size="ui.text-base" font-weight="ui.weight-semibold" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text description font-size="ui.text-sm" line-height="ui.leading-relaxed" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      row min-height="ui.space-80" align-items="center" justify-content="center" gap="ui.space-16" flex-wrap="wrap" padding="ui.space-16" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.panel-radius" min-width=0
+        children
+
+component AvatarOverview
+  props
+    id: string
+    compact: bool
+    direction: string
+  view
+    row id=id testId=id min-height="ui.space-80" gap=(compact ? "ui.space-24" : "ui.space-48") align-items="center" justify-content="center" flex-wrap="wrap" min-width=0
+      ProfileAvatar(id=id + "-profile", person=0, size="default")
+      AvatarFrame(id=id + "-status", name="@evilrabbit", src=avatarSource(2), fallback="ER", size="default")
+        AvatarStatus(id=id + "-available", label="Available", size="default", tone="success")
+      ProfileGroup(id=id + "-group", size="default", overflow="count", direction=direction)
+
+component ProfileAvatar
+  props
+    id: string
+    person: number
+    size: string
+  view
+    AvatarFrame(id=id, name=avatarName(person), src=avatarSource(person), fallback=avatarInitials(person), size=size)
+
+component ProfileGroup
+  props
+    id: string
+    size: string
+    overflow: string
+    direction: string
+  inject
+    uiFont: string
+  view
+    AvatarGroup(id=id, label="Project team")
+      for person in [0, 1, 2] key=person
+        AvatarGroupItemDirected(id=id + "-member-" + person.toString(), first=(person == 0), direction=direction)
+          ProfileAvatar(id=id + "-profile-" + person.toString(), person=person, size=size)
+      if overflow == "count" and direction == "rtl"
+        AvatarGroupOverflowDirected(id=id + "-count", label="3 more members", size=size, first=false, direction=direction)
+          text "+3" aria-hidden=true font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      else if overflow == "count"
+        AvatarGroupCount(id=id + "-count", label="3 more members", count=3, size=size, first=false)
+      else if overflow == "icon"
+        AvatarGroupOverflowDirected(id=id + "-more", label="More members", size=size, first=false, direction=direction)
+          AvatarPlus(small=false)
+
+component AvatarPlus
+  props
+    small: bool
+  view
+    svg width=(small ? "ui.space-8" : "ui.space-16") height=(small ? "ui.space-8" : "ui.space-16") viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke" stroke-linecap="round" aria-hidden=true
+      path d="M12 5v14M5 12h14"

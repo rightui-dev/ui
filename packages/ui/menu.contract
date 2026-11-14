@@ -9,16 +9,19 @@ shape MenuEntry
   disabled: bool
   destructive: bool
 
-component ActionMenu
+component ActionMenuTrigger
   props
     id: string
     label: string
     entries: MenuEntry[]
     contextual: bool
+    circular: bool
+    separateDestructive: bool
     reduced: bool
     choose: action
   inject
     uiFont: string
+  slot
   state expanded = false
   state openEpoch = 0
   state contextFocus = false
@@ -107,21 +110,25 @@ component ActionMenu
     column min-width="0px" align-items="flex-start"
       button id=id testId=id class=Control press=toggle contextmenu=context key=triggerKeys
         contextPopover=(contextual ? id + "-menu" : "")
-        aria-haspopup="menu" aria-expanded=expanded aria-controls=(id + "-menu")
-        padding=(contextual ? "ui.space-24 ui.space-16" : "ui.space-8 ui.space-16") border-width=(contextual ? "ui.border-width" : "ui.border-width") border-style=(contextual ? "dashed" : "solid") border-color=(contextual ? "ui.border" : "ui.border")
-        background-color="ui.surface" color="ui.foreground"
-        text label text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        aria-label=label aria-haspopup="menu" aria-expanded=expanded aria-controls=(id + "-menu")
+        display="flex" align-items="center" justify-content="center"
+        width=(circular ? "ui.avatar-size" : "auto") height=(circular ? "ui.avatar-size" : "auto") min-height=(circular ? "ui.avatar-size" : "ui.control")
+        padding=(circular ? "0px" : contextual ? "ui.space-24 ui.space-16" : "ui.space-8 ui.space-16") border-width=(circular ? "0px" : "ui.border-width") border-style=(contextual ? "dashed" : "solid") border-color="ui.border" border-radius=(circular ? "ui.avatar-radius" : "ui.radius")
+        background-color=(circular ? "transparent" : "ui.surface") color="ui.foreground"
+        children
       if expanded
         for epoch in [openEpoch] key=epoch
           column id=(id + "-menu") testId=(id + "-menu") popover="auto" toggle=changed(epoch) keycapture=menuKeys
             role="menu" aria-label=label tabindex=-1
             left="auto" top="auto" position-area="bottom" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
-            width="14rem" min-width="0px" max-width="calc(100vw - ui.space-32)" max-height="min(28rem, 70vh)" overflow="auto" box-sizing="border-box"
+            width=(circular ? "ui.avatar-menu-width" : "14rem") min-width="0px" max-width="calc(100vw - ui.space-32)" max-height="min(28rem, 70vh)" overflow="auto" box-sizing="border-box"
             margin="ui.space-4" padding="ui.space-4" gap="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" box-shadow="ui.shadow-menu"
             animation=(reduced ? "none" : "uiPopupIn ui.duration-fast ui.easing both")
             -exact-exit-animation=(reduced ? "none" : "uiPopupOut ui.duration-fast ui.easing both")
             column role="none" align-items="stretch" gap="0px" min-width="0px"
-              for item in entries key=item.id
+              for item, index in entries key=item.id
+                if separateDestructive and item.destructive and index > 0 and entries.slice(0, index).filter(previous => previous.destructive).length == 0
+                  view role="separator" height="ui.border-width" margin="ui.space-4 ui.space-negative-4" background-color="ui.border"
                 button id=(id + "-item-" + item.id) testId=(id + "-item-" + item.id) class=Control
                   role="menuitem" tabindex=-1 disabled=item.disabled press=pick(item) key=itemKeys(item.id)
                   display="flex" width="100%" box-sizing="border-box" align-items="center" flex-wrap="wrap" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius="ui.radius-item" font-weight="ui.weight-regular" background-color="transparent"
@@ -133,6 +140,20 @@ component ActionMenu
                   text item.label flex="1 1 6rem" min-width="0px" text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                   if item.shortcut != ""
                     text item.shortcut min-width="0px" hyphens="auto" font-size="ui.text-xs" letter-spacing="ui.tracking-wide" color="ui.muted-foreground" aria-hidden=true font-family=uiFontFamily(uiFont) data-rightui-font="body"
+
+component ActionMenu
+  props
+    id: string
+    label: string
+    entries: MenuEntry[]
+    contextual: bool
+    reduced: bool
+    choose: action
+  inject
+    uiFont: string
+  view
+    ActionMenuTrigger(id=id, label=label, entries=entries, contextual=contextual, circular=false, separateDestructive=false, reduced=reduced, choose=choose)
+      text label text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component DropdownMenu
   props

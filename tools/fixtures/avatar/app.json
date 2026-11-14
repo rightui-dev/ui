@@ -1,0 +1,11 @@
+{
+  "name": "RightUI Avatar Check",
+  "id": "dev.rightui.avatarcheck",
+  "data": [
+    "rightui-font"
+  ],
+  "app": {
+    "id": "dev.rightui.avatarcheck",
+    "name": "RightUI Avatar Check"
+  }
+}

@@ -59,7 +59,10 @@ component CardFooter
     row id=id testId=id align-items="center" flex-wrap="wrap" padding=(divided ? "ui.space-24 ui.space-24 0px" : "0px ui.space-24") border-top-width=(divided ? "ui.border-width" : "0px") border-top-style=(divided ? "solid" : "solid") border-top-color=(divided ? "ui.border" : "transparent") min-width="0px"
       children
 
-component AvatarFrame
+fn avatarSize(size: string): string = size == "sm" ? "ui.avatar-sm" : size == "lg" ? "ui.avatar-lg" : "ui.avatar-size"
+
+// Keyed by source in AvatarFrame so changing a failed URL starts a fresh image lifecycle.
+component AvatarPicture
   props
     id: string
     name: string
@@ -68,18 +71,46 @@ component AvatarFrame
     size: string
   inject
     uiFont: string
-  slot
-  state failedSource = ""
-  action markImageFailed(source: string, message: string)
-    failedSource = source
+  state loaded = false
+  state failed = false
+  action imageLoaded
+    loaded = true
+  action imageFailed(message: string)
+    failed = true
+    loaded = false
   view
-    view id=id testId=id position="relative" width=(size == "sm" ? "ui.space-24" : size == "lg" ? "ui.space-40" : "ui.space-32") height=(size == "sm" ? "ui.space-24" : size == "lg" ? "ui.space-40" : "ui.space-32") flex-shrink=0
-      view width="100%" height="100%" overflow="hidden" border-radius="ui.radius-full" background-color="ui.muted" display="flex" align-items="center" justify-content="center" role="img" aria-label=name
-        if src != "" and failedSource != src
-          image src alt="" width="100%" height="100%" object-fit="cover" error=markImageFailed(src)
-        else
-          text fallback aria-hidden=true font-size=(size == "sm" ? "ui.text-xs" : "ui.text-sm") color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    view width="100%" height="100%" position="relative" overflow="hidden" border-radius="ui.avatar-radius" background-color="ui.avatar-background" display="flex" align-items="center" justify-content="center" role="img" aria-label=name
+      if not loaded
+        text fallback id=(id + "-fallback") testId=(id + "-fallback") aria-hidden=true font-size=(size == "sm" ? "ui.text-xs" : "ui.text-sm") line-height="ui.leading-solid" color="ui.avatar-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      if src != "" and not failed
+        image src id=(id + "-image") testId=(id + "-image") alt="" position="absolute" left=0 top=0 width="100%" height="100%" object-fit="cover" load=imageLoaded error=imageFailed
+      view aria-hidden=true pointer-events="none" position="absolute" left=0 right=0 top=0 bottom=0 border-radius="ui.avatar-radius" border-width="ui.avatar-border-width" border-style="solid" border-color="ui.avatar-border"
+
+component AvatarFrame
+  props
+    id: string
+    name: string
+    src: string
+    fallback: string
+    size: string
+  slot
+  view
+    view id=id testId=id position="relative" width=avatarSize(size) height=avatarSize(size) flex-shrink=0
+      for source in [src] key=source
+        AvatarPicture(id=id, name=name, src=source, fallback=fallback, size=size)
       children
+
+component AvatarStatus
+  props
+    id: string
+    label: string
+    size: string
+    tone: string
+  slot
+  view
+    view id=id testId=id role="img" aria-label=label position="absolute" right="0px" bottom="0px" z-index=10 width=(size == "sm" ? "ui.avatar-badge-sm" : size == "lg" ? "ui.avatar-badge-lg" : "ui.avatar-badge-size") height=(size == "sm" ? "ui.avatar-badge-sm" : size == "lg" ? "ui.avatar-badge-lg" : "ui.avatar-badge-size") border-radius="ui.radius-full" background-color=(tone == "success" ? "ui.success" : tone == "destructive" ? "ui.danger" : "ui.primary") color="ui.primary-foreground" box-shadow="ui.avatar-ring" display="flex" align-items="center" justify-content="center"
+      if size != "sm"
+        children
 
 component AvatarBadge
   props
@@ -88,9 +119,8 @@ component AvatarBadge
     size: string
   slot
   view
-    view id=id testId=id role="img" aria-label=label position="absolute" right="0px" bottom="0px" z-index=10 width=(size == "sm" ? "ui.space-8" : size == "lg" ? "ui.space-12" : "ui.space-10") height=(size == "sm" ? "ui.space-8" : size == "lg" ? "ui.space-12" : "ui.space-10") border-radius="ui.radius-full" background-color="ui.primary" color="ui.primary-foreground" box-shadow="ui.shadow-background-ring" display="flex" align-items="center" justify-content="center"
-      if size != "sm"
-        children
+    AvatarStatus(id=id, label=label, size=size, tone="default")
+      children
 
 component AvatarGroup
   props
@@ -101,13 +131,46 @@ component AvatarGroup
     row id=id testId=id role="group" aria-label=label align-items="center" padding="ui.space-2"
       children
 
+component AvatarGroupItemDirected
+  props
+    id: string
+    first: bool
+    direction: string
+  slot
+  view
+    view id=id testId=id margin-left=(not first and direction != "rtl" ? "ui.avatar-overlap" : "0px") margin-right=(not first and direction == "rtl" ? "ui.avatar-overlap" : "0px") border-radius="ui.avatar-radius" box-shadow="ui.avatar-ring" flex-shrink=0 position="relative"
+      children
+
+component AvatarGroupOverflowDirected
+  props
+    id: string
+    label: string
+    size: string
+    first: bool
+    direction: string
+  slot
+  view
+    view id=id testId=id role="img" aria-label=label margin-left=(not first and direction != "rtl" ? "ui.avatar-overlap" : "0px") margin-right=(not first and direction == "rtl" ? "ui.avatar-overlap" : "0px") width=avatarSize(size) height=avatarSize(size) border-radius="ui.avatar-radius" background-color="ui.avatar-background" color="ui.avatar-foreground" box-shadow="ui.avatar-ring" display="flex" align-items="center" justify-content="center" flex-shrink=0 position="relative"
+      children
+
 component AvatarGroupItem
   props
     id: string
     first: bool
   slot
   view
-    view id=id testId=id margin-left=(first ? "0px" : "ui.space-negative-8") border-radius="ui.radius-full" box-shadow="ui.shadow-background-ring" flex-shrink=0
+    AvatarGroupItemDirected(id=id, first=first, direction="ltr")
+      children
+
+component AvatarGroupOverflow
+  props
+    id: string
+    label: string
+    size: string
+    first: bool
+  slot
+  view
+    AvatarGroupOverflowDirected(id=id, label=label, size=size, first=first, direction="ltr")
       children
 
 component AvatarGroupCount
@@ -120,8 +183,8 @@ component AvatarGroupCount
   inject
     uiFont: string
   view
-    view id=id testId=id role="img" aria-label=label margin-left=(first ? "0px" : "ui.space-negative-8") width=(size == "sm" ? "ui.space-24" : size == "lg" ? "ui.space-40" : "ui.space-32") height=(size == "sm" ? "ui.space-24" : size == "lg" ? "ui.space-40" : "ui.space-32") border-radius="ui.radius-full" background-color="ui.muted" box-shadow="ui.shadow-background-ring" display="flex" align-items="center" justify-content="center" flex-shrink=0
-      text ("+" + max(0, floor(count)).toString()) aria-hidden=true font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    AvatarGroupOverflow(id=id, label=label, size=size, first=first)
+      text ("+" + max(0, floor(count)).toString()) aria-hidden=true font-size=(size == "sm" ? "ui.text-xs" : "ui.text-sm") line-height="ui.leading-solid" color="ui.avatar-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component FieldSet
   props

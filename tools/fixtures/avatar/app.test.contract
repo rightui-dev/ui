@@ -1,0 +1,60 @@
+test "image errors recover after the source changes"
+  size 800x900
+  clock data
+  clock +300 real
+  expect tree has "recovery-fallback"
+  expect tree missing "recovery-image"
+  tap "restore"
+  clock +300 real
+  expect tree has "recovery-image"
+  expect tree missing "recovery-fallback"
+  tap "fail"
+  clock +300 real
+  expect tree has "recovery-fallback"
+  expect tree missing "recovery-image"
+  expect no failures
+
+test "legacy avatar and bounded count keep their presentation"
+  size 390x844
+  clock data
+  expect text "legacy-avatar-fallback" == "AM"
+  expect text "bounded-count" == "+0"
+  expect no failures
+
+test "avatar menu selects and can reopen"
+  size 390x844
+  clock data
+  tap "account"
+  clock settle
+  tap "account-item-settings"
+  expect text "chosen" == "settings"
+  tap "account"
+  clock settle
+  type "account-item-profile" key "Escape"
+  clock settle
+  expect tree missing "account-item-settings"
+  expect no failures
+
+test "keyboard skips disabled items and supports typeahead"
+  size 800x900
+  clock data
+  type "account" key "ArrowDown"
+  clock settle
+  type "account-item-profile" key "ArrowDown"
+  type "account-item-settings" key "Enter"
+  expect text "chosen" == "settings"
+  type "account" key "ArrowUp"
+  clock settle
+  type "account-item-logout" key "p"
+  type "account-item-profile" key "Enter"
+  expect text "chosen" == "profile"
+  expect no failures
+
+test "existing text dropdown remains functional"
+  size 800x900
+  clock data
+  tap "legacy-menu"
+  clock settle
+  tap "legacy-menu-item-billing"
+  expect text "chosen" == "billing"
+  expect no failures

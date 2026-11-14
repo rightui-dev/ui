@@ -1,0 +1,31 @@
+font "Geist"
+  100 900 = "assets/fonts/Geist.ttf"
+use Avatar, AvatarFrame, AvatarMenu, AvatarGroupCount, DropdownMenu, MenuEntry, Button from "@rightui/ui"
+use Demo from "./avatar-demo.contract"
+shape Viewport
+  width: number
+  height: number
+  prefersReducedMotion: bool
+component App
+  resource viewport = exactViewport() as shape Viewport
+  state src = "data:image/png;base64,broken"
+  state chosen = "none"
+  action restore
+    src = "assets/avatars/user-blue.png"
+  action fail
+    src = "data:image/png;base64,broken"
+  action pick(value: string)
+    chosen = value
+  provide
+    uiFont = "sans"
+  view
+    column gap=24 padding=24 background-color="ui.background" color="ui.foreground"
+      AvatarFrame(id="recovery", name="Image recovery", src=src, fallback="CC", size="default")
+      Avatar(id="legacy-avatar", name="Legacy avatar", src="", fallback="AM")
+      Button(id="restore", label="Restore image", variant="outline", disabled=false, press=restore)
+      Button(id="fail", label="Fail image", variant="outline", disabled=false, press=fail)
+      AvatarGroupCount(id="bounded-count", label="No additional members", count=-2.4, size="sm", first=true)
+      AvatarMenu(id="account", name="Test account", src="", fallback="TA", entries=[MenuEntry(id="profile", label="Profile", shortcut="", disabled=false, destructive=false), MenuEntry(id="disabled", label="Unavailable", shortcut="", disabled=true, destructive=false), MenuEntry(id="settings", label="Settings", shortcut="", disabled=false, destructive=false), MenuEntry(id="logout", label="Log out", shortcut="", disabled=false, destructive=true)], reduced=true, choose=pick)
+      DropdownMenu(id="legacy-menu", label="Legacy menu", entries=[MenuEntry(id="billing", label="Billing", shortcut="", disabled=false, destructive=false)], reduced=true, choose=pick)
+      text chosen testId="chosen"
+      Demo(width=viewport.width, reduced=viewport.prefersReducedMotion)

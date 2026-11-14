@@ -15,7 +15,7 @@ export function buildRegistry() {
       if(item.name.startsWith('.')||['node_modules','target','dist','generated','Cargo.lock'].includes(item.name))continue;
       const path=dir?`${dir}/${item.name}`:item.name;
       if(item.isDirectory())scan(path);
-      else if(path.startsWith('packages/ui/assets/') && /\.(ttf|otf|woff2?)$/.test(item.name)) {
+      else if(path.startsWith('packages/ui/assets/') && /\.(ttf|otf|woff2?|png|jpg)$/.test(item.name)) {
         const bytes=readFileSync(resolve(root,path));files[path]={path,content:bytes.toString('base64'),encoding:'base64',sha256:createHash('sha256').update(bytes).digest('hex')};
       }
       else if(item.name === 'LICENSE' || /^OFL(?:-[A-Za-z0-9]+)?\.txt$/.test(item.name) || /\.(contract|tamber|ts|rs|toml|json|md|css)$/.test(item.name)) {
@@ -30,6 +30,7 @@ export function buildRegistry() {
       if(found.has(path))return;
       if(!files[path])throw new Error(`Missing registry dependency: ${path}`);
       found.add(path);
+      for (const match of files[path].content.matchAll(/"(assets\/avatars\/[^"]+)"/g)) add(`packages/ui/${match[1]}`);
       if(path==='packages/ui/sheet.contract') { add('packages/ui/assets/sheet.css'); add('packages/ui/docs/SHEET.md'); }
       for(const m of files[path].content.matchAll(/^use .+ from "([^"]+)"/gm)) {
         if(m[1].startsWith('.'))add(relative(root,resolve(root,dirname(path),m[1])));

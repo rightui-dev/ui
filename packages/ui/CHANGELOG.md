@@ -4,6 +4,12 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.2.0-beta.4] - 2026-11-14
+
+- Refine Avatar image loading and failed-source recovery while preserving existing props. Keep one accessible name and reserve the image dimensions.
+- Add theme-linked avatar geometry, status tones, custom group overflow, explicit RTL overlap and an AvatarMenu that shares the existing keyboard-accessible menu behavior.
+- Bundle original user icons on flat color backgrounds and rebuild the Avatar examples with basic, fallback, badge, group, size, dropdown and RTL compositions.
+
 ## [0.2.0-beta.3] - 2026-11-14
 
 - Add SheetContent, SheetBody and SheetFooter with native modal focus, four viewport-edge layouts and a scoped web stylesheet for positioning and scroll locking. Preserve the existing controlled Sheet API.

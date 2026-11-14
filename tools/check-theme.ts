@@ -136,6 +136,9 @@ export function classify(attribute: Attribute, value: string, file: string, sour
     && /path d="(?:M7\.32617 57\.6855|M5\.67188 47\.1367)/.test(source.split('\n')[attribute.line - 1] ?? '')
     && (source.split('\n')[attribute.line - 1] ?? '').includes('fill="currentColor"')) return 'supplied-icon';
   if (/^(?:0(?:px)?|auto)(?:\s+(?:0(?:px)?|auto)){1,3}$/.test(value)) return 'semantics';
+  // Sidebar follows the existing header breakpoint, burger width and text insets.
+  if (file === '../landing/tools/app.contract.template' && attribute.property === 'left'
+    && value === 'calc(max(ui.space-24, (100vw - 96rem) / 2) + clamp(0px, (1100px - 100vw) * 1000, 32px) + ui.space-8 - ui.space-12)') return 'site-layout';
   if (/\bui\./.test(value) && /100vw\s*-/.test(value)) {
     const withoutThresholds = value.replace(/100vw\s*-\s*\d+px/g, 'viewport-threshold');
     if (!/\b[1-9]\d*(?:\.\d+)?(?:px|rem|em|ms)\b/.test(withoutThresholds)) return 'responsive-geometry';

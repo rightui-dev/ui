@@ -64,18 +64,23 @@
   {
     "slug": "avatar",
     "title": "Avatar",
-    "description": "Avatar with accessible presentation and local state.",
-    "usage": "Import Avatar, AvatarFrame from @rightui/ui. Supply content and required properties as shown in the example.",
-    "keyboard": "",
-    "source": "packages/ui/display.contract",
+    "description": "Profile images with initials, status badges, overlapping groups and an account menu.",
+    "usage": "Use AvatarFrame for an image and fallback, then compose AvatarStatus or AvatarBadge inside it. Group profiles with AvatarGroup and AvatarGroupItem. Sizes are sm, default and lg. AvatarMenu adds a keyboard-accessible account menu.",
+    "keyboard": "AvatarMenu: Enter, Space or ArrowDown opens the menu; ArrowUp opens at the last enabled item. Arrow keys, Home, End and typing move focus. Enter or Space selects an item. Escape closes and returns focus to the avatar.",
+    "source": "packages/ui/composition.contract",
     "example": "examples/avatar.contract",
     "exports": [
       "Avatar",
       "AvatarFrame",
       "AvatarBadge",
+      "AvatarStatus",
       "AvatarGroup",
       "AvatarGroupItem",
-      "AvatarGroupCount"
+      "AvatarGroupItemDirected",
+      "AvatarGroupCount",
+      "AvatarGroupOverflow",
+      "AvatarGroupOverflowDirected",
+      "AvatarMenu"
     ]
   },
   {

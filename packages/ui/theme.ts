@@ -226,6 +226,17 @@ token('tabs-height-horizontal-compact','length','calc(ui.space-32 - ui.space-6 -
 token('tabs-height-horizontal-default','length','calc(ui.space-36 - ui.space-6 - ui.border-width)');
 token('tabs-height-vertical-compact','length','calc(ui.space-24 + ui.border-width * 2)');
 token('tabs-height-vertical-default','length','calc(ui.space-28 + ui.border-width * 2)');
+// Avatar geometry and surfaces share the foundation scale and semantic roles.
+for (const [name, value] of Object.entries({
+  'avatar-sm': 'ui.space-24', 'avatar-size': 'ui.space-32', 'avatar-lg': 'ui.space-40',
+  'avatar-radius': 'ui.radius-full', 'avatar-border-width': 'ui.border-width',
+  'avatar-badge-sm': 'ui.space-8', 'avatar-badge-size': 'ui.space-10', 'avatar-badge-lg': 'ui.space-12',
+  'avatar-overlap': 'ui.space-negative-8', 'avatar-menu-width': 'calc(ui.space-64 * 2)',
+})) token(name, 'length', value);
+token('avatar-border', 'color', 'ui.border');
+token('avatar-background', 'color', 'ui.muted');
+token('avatar-foreground', 'color', 'ui.muted-foreground');
+token('avatar-ring', 'box-shadow', 'ui.shadow-background-ring');
 export const themeTokens: readonly ThemeToken[] = tokens;
 export function normalizeTheme(input: Partial<ThemeSettings> = {}): ThemeSettings {
   const result = {...defaultTheme};
