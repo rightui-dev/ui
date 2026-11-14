@@ -1,13 +1,15 @@
-use CodeBlock, CodeBlockAdvanced from "@rightui/ui"
+use uiFontFamily, CodeBlock, CodeBlockAdvanced from "@rightui/ui"
 use codeBlockDemoCode, codeBlockDemoLines from "./code-block-data.contract"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   view
-    column gap=28 min-width=0 width="100%" max-width="32rem" margin="0 auto"
+    column gap="ui.space-28" min-width=0 width="100%" max-width="32rem" margin="ui.space-0 auto"
       CodeBlockAdvanced(id="content-codeblock", title="app/api/chat/route.ts", language="typescript", code=codeBlockDemoCode(), lines=codeBlockDemoLines(), numbers=true, startLine=1, showDownload=true, maxHeight=440, compact=false, variant="default")
-      column gap=12 min-width=0
-        text "Diff" font-size="0.875rem" font-weight=500
+      column gap="ui.space-12" min-width=0
+        text "Diff" font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         CodeBlock(id="code-diff", title="greeting.ts", language="typescript", code=" export function greeting(name: string) {\n-  return 'Hello, ' + name\n+  return `Hello, ${name}!`\n }", numbers=false, diff=true)

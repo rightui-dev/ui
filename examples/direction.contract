@@ -1,21 +1,23 @@
-use Badge, Direction from "@rightui/ui"
+use uiFontFamily, Badge, Direction from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state rtl = false
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Direction(id="controls-direction", direction=(rtl ? "rtl" : "ltr"))
-        row gap=8 align-items="center"
+        row gap="ui.space-8" align-items="center"
           Badge(label="1", variant="outline")
-          text (rtl ? "مرحباً بالعالم" : "Hello world") font-size="0.875rem" color="ui.foreground"
+          text (rtl ? "مرحباً بالعالم" : "Hello world") font-size="ui.text-sm" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           Badge(label="2", variant="outline")
-      text "Nested direction" font-weight=600
+      text "Nested direction" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Direction(id="direction-outer", direction="rtl")
-        column gap=8
-          text "Outer RTL scope"
+        column gap="ui.space-8"
+          text "Outer RTL scope" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           Direction(id="direction-inner", direction="ltr")
-            text "Inner LTR scope"
+            text "Inner LTR scope" font-family=uiFontFamily(uiFont) data-rightui-font="body"

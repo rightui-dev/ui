@@ -1,14 +1,16 @@
-use NavigationMenuEntry, NavigationMenu from "@rightui/ui"
+use uiFontFamily, NavigationMenuEntry, NavigationMenu from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       NavigationMenu(id="controls-navigation", reduced=reduced, label="Documentation", entries=[NavigationMenuEntry(id="intro", title="Introduction", description="Accessible components you can compose.", href="#introduction"), NavigationMenuEntry(id="forms", title="Forms", description="Fields, groups and verification code.", href="#forms")])
-      text "Introduction" id="introduction" font-size="1rem"
-      text "Compose accessible controls with local state." font-size="0.875rem"
-      text "Forms" id="forms" font-size="1rem"
-      text "Connect field values to actions." font-size="0.875rem"
+      text "Introduction" id="introduction" font-size="ui.text-base" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Compose accessible controls with local state." font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Forms" id="forms" font-size="ui.text-base" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Connect field values to actions." font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"

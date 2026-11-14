@@ -6,5 +6,5 @@ component Demo
     reduced: bool
   derive narrow = width < 600
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Skeleton(id="catalog-skeleton", label="Loading content", reduced=reduced)

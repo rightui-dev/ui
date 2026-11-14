@@ -1,0 +1,7 @@
+// Keep the choices as token names so Exact resolves the declared font stacks.
+// "theme" (and unknown values) uses the body's family from app.tamber.
+fn uiFontFamily(value: string): string = value == "sans" ? "ui.font-sans" : (value == "serif" ? "ui.font-serif" : (value == "mono" ? "ui.font-mono" : "ui.font-body"))
+
+// Keep a mixed body/code choice behind one call: the family attribute must not
+// combine a literal family token with an opaque function-call branch.
+fn uiContentFontFamily(value: string, code: bool): string = code ? "ui.font-code" : uiFontFamily(value)

@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 fn buttonFill(variant: string, hovered: bool): string = ((variant == "primary" or variant == "default") ? (hovered ? "ui.primary-hover" : "ui.primary") : variant == "destructive" ? (hovered ? "ui.destructive-hover" : "ui.destructive") : variant == "secondary" ? (hovered ? "ui.secondary-hover" : "ui.muted") : variant == "outline" ? (hovered ? "ui.outline-hover" : "ui.outline") : variant == "link" ? "transparent" : hovered ? "ui.ghost-hover" : "transparent")
 fn buttonInk(variant: string): string = ((variant == "primary" or variant == "default") ? "ui.primary-foreground" : variant == "destructive" ? "ui.on-danger" : variant == "danger" ? "ui.danger" : "ui.foreground")
@@ -14,9 +15,13 @@ component ButtonFrame
     compact: bool
     pressed: option<bool>
     describedBy: string
+  params
+    gap: length = "ui.control-gap" control="token" group="Spacing"
+    outlineWidth: length = "ui.border-width" control="token" group="Border"
+    shadow: box-shadow = "ui.shadow-control" control="token" group="Elevation"
   slot
   derive icon = size.startsWith("icon")
-  derive height = size.endsWith("xs") ? "1.5rem" : size.endsWith("sm") ? (compact ? "1.75rem" : "2rem") : size.endsWith("lg") ? (compact ? "2.25rem" : "2.5rem") : (compact ? "2rem" : "2.25rem")
+  derive height = size.endsWith("xs") ? "ui.control-xs" : size.endsWith("sm") ? (compact ? "ui.ai-control-sm" : "ui.control-sm") : size.endsWith("lg") ? (compact ? "ui.ai-control-lg" : "ui.control-lg") : (compact ? "ui.ai-control-default" : "ui.control")
   state hovered = false
   state tipFocused = false
   action hoverChanged(inside: bool)
@@ -39,15 +44,15 @@ component ButtonFrame
       hidePopover(describedBy)
   view
     button id=id testId=id class=Control press=press disabled=disabled hover=hoverChanged focus=focusTip blur=blurTip key=tipKeys aria-label=label aria-pressed=(match pressed { case some(value) => value ? "true" : "false", case none => "undefined" }) aria-describedby=describedBy
-      display="flex" flex-shrink=0 align-items="center" justify-content="center" padding=(icon ? "0px" : size == "xs" ? "0px 8px" : size == "sm" ? "4px 12px" : size == "lg" ? "8px 24px" : "6px 16px") gap=8
+      display="flex" flex-shrink=0 align-items="center" justify-content="center" padding=(icon ? "0px" : size == "xs" ? "0px ui.space-8" : size == "sm" ? "ui.space-4 ui.space-12" : size == "lg" ? "ui.space-8 ui.space-24" : "ui.space-6 ui.space-16") gap="param.gap"
       width=(icon ? height : "auto") height=height min-height=height
       border-radius=(radius != "" ? radius : size.endsWith("xs") or size.endsWith("sm") ? "ui.radius-md" : "ui.radius-control")
       text-decoration=(variant == "link" and hovered ? "underline" : "none")
       background-color=buttonFill(variant, hovered)
       color=buttonInk(variant)
-      border=(variant == "outline" ? "1px solid ui.input" : "0")
-      box-shadow=(variant == "outline" ? "0 1px 2px 0 ui.shadow" : "none")
-      transition="background-color 150ms ease, color 150ms ease, box-shadow 150ms ease"
+      border-width=(variant == "outline" ? "param.outlineWidth" : "0px") border-style="solid" border-color="ui.input"
+      box-shadow=(variant == "outline" ? "param.shadow" : "none")
+      transition="background-color ui.duration-fast ui.easing, color ui.duration-fast ui.easing, box-shadow ui.duration-fast ui.easing"
       children
 
 component Button
@@ -57,9 +62,11 @@ component Button
     variant: string
     disabled: bool
     press: action
+  inject
+    uiFont: string
   view
     ButtonFrame(id=id, label=label, variant=variant, disabled=disabled, press=press, size="default", radius="", compact=false, pressed=none, describedBy="")
-      text label min-width=0
+      text label min-width=0 font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component IconButton
   props
@@ -101,10 +108,10 @@ component DisclosureButton
     hovered = inside
   view
     button id=id testId=id class=Control press=press hover=hoverChanged aria-label=label aria-expanded=expanded aria-controls=controls
-      display="flex" align-items="center" justify-content=(icon ? "center" : "flex-start") text-align="left" gap=8
-      width=(icon ? "2rem" : "100%") min-height=(icon ? "2rem" : "ui.control") height=(icon ? "2rem" : "auto") flex-shrink=0 padding=(icon ? "0px" : "8px 12px")
-      background-color=buttonFill(variant, hovered) color=buttonInk(variant) border=(variant == "outline" ? "1px solid ui.input" : "0")
-      transition="background-color 150ms ease, color 150ms ease"
+      display="flex" align-items="center" justify-content=(icon ? "center" : "flex-start") text-align="left" gap="ui.control-gap"
+      width=(icon ? "ui.control-sm" : "100%") min-height=(icon ? "ui.control-sm" : "ui.control") height=(icon ? "ui.control-sm" : "auto") flex-shrink=0 padding=(icon ? "0px" : "ui.space-8 ui.space-12")
+      background-color=buttonFill(variant, hovered) color=buttonInk(variant) border-width=(variant == "outline" ? "ui.border-width" : "0px") border-style="solid" border-color="ui.input"
+      transition="background-color ui.duration-fast ui.easing, color ui.duration-fast ui.easing"
       children
 
 component ButtonControl

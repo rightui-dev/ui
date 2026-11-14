@@ -1,13 +1,15 @@
-use Chart, ChartPoint, AreaChart, Button, LineChart, PieChart, RadarChart, RadialChart, SeriesPoint, ChartSeries, ChartSlice from "@rightui/ui"
-fn paritySeries(): ChartSeries[] = [ChartSeries(id="desktop", label="Desktop", color="#8ec5ff"), ChartSeries(id="mobile", label="Mobile", color="#2b7fff")]
+use uiFontFamily, Chart, ChartPoint, AreaChart, Button, LineChart, PieChart, RadarChart, RadialChart, SeriesPoint, ChartSeries, ChartSlice from "@rightui/ui"
+fn paritySeries(): ChartSeries[] = [ChartSeries(id="desktop", label="Desktop", color="ui.chart-1"), ChartSeries(id="mobile", label="Mobile", color="ui.chart-2")]
 fn parityMonths(): SeriesPoint[] = [SeriesPoint(id="jan", label="January", values=[186, 80]), SeriesPoint(id="feb", label="February", values=[305, 200]), SeriesPoint(id="mar", label="March", values=[237, 120]), SeriesPoint(id="apr", label="April", values=[73, 190]), SeriesPoint(id="may", label="May", values=[209, 130]), SeriesPoint(id="jun", label="June", values=[214, 140])]
 fn parityRadar(): SeriesPoint[] = [SeriesPoint(id="jan", label="January", values=[186, 80]), SeriesPoint(id="feb", label="February", values=[305, 200]), SeriesPoint(id="mar", label="March", values=[237, 120]), SeriesPoint(id="apr", label="April", values=[273, 190]), SeriesPoint(id="may", label="May", values=[209, 130]), SeriesPoint(id="jun", label="June", values=[214, 140])]
-fn parityBrowsers(): ChartSlice[] = [ChartSlice(id="chrome", label="Chrome", value=275, color="#8ec5ff"), ChartSlice(id="safari", label="Safari", value=200, color="#2b7fff"), ChartSlice(id="firefox", label="Firefox", value=187, color="#155dfb"), ChartSlice(id="edge", label="Edge", value=173, color="#1447e6"), ChartSlice(id="other", label="Other", value=90, color="#193cb8")]
+fn parityBrowsers(): ChartSlice[] = [ChartSlice(id="chrome", label="Chrome", value=275, color="ui.chart-1"), ChartSlice(id="safari", label="Safari", value=200, color="ui.chart-2"), ChartSlice(id="firefox", label="Firefox", value=187, color="ui.chart-3"), ChartSlice(id="edge", label="Edge", value=173, color="ui.chart-4"), ChartSlice(id="other", label="Other", value=90, color="ui.chart-5")]
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   state donut = false
   state empty = false
   state half = false
@@ -18,20 +20,20 @@ component Demo
   action toggleSweep
     half = not half
   view
-    column gap=24 min-width=0
-      row gap=12 flex-wrap="wrap"
+    column gap="ui.space-24" min-width=0
+      row gap="ui.space-12" flex-wrap="wrap"
         Button(id="parity-empty", label=(empty ? "Restore chart data" : "Show empty charts"), variant="outline", disabled=false, press=toggleEmpty)
       LineChart(id="parity-line", label="Desktop and mobile visitors by month", points=(empty ? [] : parityMonths()), series=paritySeries(), showLegend=true, reduced=reduced)
-      text "Showing total visitors for the last 6 months" font-size="0.875rem" color="ui.muted-foreground"
-      row gap=12
+      text "Showing total visitors for the last 6 months" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      row gap="ui.space-12"
         Button(id="parity-donut", label=(donut ? "Show pie" : "Show donut"), variant="outline", disabled=false, press=toggleDonut)
       PieChart(id="parity-pie", label="Visitors by browser", items=(empty ? [] : parityBrowsers()), donut=donut, showLegend=true, reduced=reduced)
       RadarChart(id="parity-radar", label="Desktop and mobile visitors across six months", points=(empty ? [] : parityRadar()), series=paritySeries(), maximum=0, showLegend=true, reduced=reduced)
-      text "January – June 2024" font-size="0.875rem" color="ui.muted-foreground"
-      row gap=12
+      text "January – June 2024" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      row gap="ui.space-12"
         Button(id="parity-sweep", label=(half ? "Show full circles" : "Show semicircles"), variant="outline", disabled=false, press=toggleSweep)
       RadialChart(id="parity-radial", label="Visitors by browser, concentric radial bars", items=(empty ? [] : parityBrowsers()), maximum=275, sweep=(half ? 180 : 360), showLegend=true, reduced=reduced)
       Chart(id="data-chart", points=[ChartPoint(label="Jan", desktop=186, mobile=80), ChartPoint(label="Feb", desktop=305, mobile=200), ChartPoint(label="Mar", desktop=237, mobile=120), ChartPoint(label="Apr", desktop=73, mobile=190), ChartPoint(label="May", desktop=209, mobile=130), ChartPoint(label="Jun", desktop=214, mobile=140)])
       AreaChart(id="area-chart", points=[ChartPoint(label="Jan", desktop=186, mobile=80), ChartPoint(label="Feb", desktop=305, mobile=200), ChartPoint(label="Mar", desktop=237, mobile=120)])
-      text "Explicit maximum without legend" font-weight=600
+      text "Explicit maximum without legend" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       RadarChart(id="radar-fixed", label="Visitors on a fixed scale", points=parityRadar(), series=paritySeries(), maximum=400, showLegend=false, reduced=reduced)

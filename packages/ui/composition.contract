@@ -1,9 +1,10 @@
+use uiFontFamily from "./typography-context.contract"
 component CardFrame
   props
     id: string
   slot
   view
-    column id=id testId=id gap=24 padding="24px 0px" min-width=0 border="1px solid ui.border" border-radius="ui.panel-radius" background-color="ui.surface" color="ui.foreground" box-shadow="0 1px 3px 0 ui.shadow-sm, 0 1px 2px -1px ui.shadow-sm"
+    column id=id testId=id gap="ui.space-24" padding="ui.space-24 0px" min-width="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.panel-radius" background-color="ui.surface" color="ui.foreground" box-shadow="ui.shadow-control"
       children
 
 component CardHeader
@@ -11,7 +12,7 @@ component CardHeader
     id: string
   slot
   view
-    view id=id testId=id display="grid" grid-template-columns="minmax(0, 1fr) auto" grid-template-rows="auto auto" align-items="start" gap=8 padding="0px 24px" min-width=0
+    view id=id testId=id display="grid" grid-template-columns="minmax(0, 1fr) auto" grid-template-rows="auto auto" align-items="start" gap="ui.space-8" padding="0px ui.space-24" min-width="0px"
       children
 
 component CardTitle
@@ -19,22 +20,26 @@ component CardTitle
     id: string
     title: string
     level: number
+  inject
+    uiFont: string
   view
-    text title id=id testId=id grid-column="1" grid-row="1" min-width=0 font-size="1rem" line-height=1 font-weight=600 role="heading" aria-level=level overflow-wrap="break-word"
+    text title id=id testId=id grid-column="1" grid-row="1" min-width="0px" font-size="ui.text-base" line-height="ui.leading-solid" font-weight="ui.weight-semibold" role="heading" aria-level=level overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component CardDescription
   props
     id: string
     description: string
+  inject
+    uiFont: string
   view
-    text description id=id testId=id grid-column="1" grid-row="2" min-width=0 font-size="0.875rem" line-height=1.5 color="ui.muted-foreground" overflow-wrap="break-word"
+    text description id=id testId=id grid-column="1" grid-row="2" min-width="0px" font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component CardAction
   props
     id: string
   slot
   view
-    view id=id testId=id grid-column="2" grid-row="1 / span 2" align-self="start" min-width=0
+    view id=id testId=id grid-column="2" grid-row="1 / span 2" align-self="start" min-width="0px"
       children
 
 component CardContent
@@ -42,7 +47,7 @@ component CardContent
     id: string
   slot
   view
-    column id=id testId=id padding="0px 24px" min-width=0
+    column id=id testId=id padding="0px ui.space-24" min-width="0px"
       children
 
 component CardFooter
@@ -51,7 +56,7 @@ component CardFooter
     divided: bool
   slot
   view
-    row id=id testId=id align-items="center" flex-wrap="wrap" padding=(divided ? "24px 24px 0px" : "0px 24px") border-top=(divided ? "1px solid ui.border" : "none") min-width=0
+    row id=id testId=id align-items="center" flex-wrap="wrap" padding=(divided ? "ui.space-24 ui.space-24 0px" : "0px ui.space-24") border-top-width=(divided ? "ui.border-width" : "0px") border-top-style=(divided ? "solid" : "solid") border-top-color=(divided ? "ui.border" : "transparent") min-width="0px"
       children
 
 component AvatarFrame
@@ -61,17 +66,19 @@ component AvatarFrame
     src: string
     fallback: string
     size: string
+  inject
+    uiFont: string
   slot
   state failedSource = ""
   action markImageFailed(source: string, message: string)
     failedSource = source
   view
-    view id=id testId=id position="relative" width=(size == "sm" ? "1.5rem" : size == "lg" ? "2.5rem" : "2rem") height=(size == "sm" ? "1.5rem" : size == "lg" ? "2.5rem" : "2rem") flex-shrink=0
+    view id=id testId=id position="relative" width=(size == "sm" ? "ui.space-24" : size == "lg" ? "ui.space-40" : "ui.space-32") height=(size == "sm" ? "ui.space-24" : size == "lg" ? "ui.space-40" : "ui.space-32") flex-shrink=0
       view width="100%" height="100%" overflow="hidden" border-radius="ui.radius-full" background-color="ui.muted" display="flex" align-items="center" justify-content="center" role="img" aria-label=name
         if src != "" and failedSource != src
           image src alt="" width="100%" height="100%" object-fit="cover" error=markImageFailed(src)
         else
-          text fallback aria-hidden=true font-size=(size == "sm" ? "0.75rem" : "0.875rem") color="ui.muted-foreground"
+          text fallback aria-hidden=true font-size=(size == "sm" ? "ui.text-xs" : "ui.text-sm") color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       children
 
 component AvatarBadge
@@ -81,7 +88,7 @@ component AvatarBadge
     size: string
   slot
   view
-    view id=id testId=id role="img" aria-label=label position="absolute" right=0 bottom=0 z-index=10 width=(size == "sm" ? "0.5rem" : size == "lg" ? "0.75rem" : "0.625rem") height=(size == "sm" ? "0.5rem" : size == "lg" ? "0.75rem" : "0.625rem") border-radius="ui.radius-full" background-color="ui.primary" color="ui.primary-foreground" box-shadow="0 0 0 2px ui.background" display="flex" align-items="center" justify-content="center"
+    view id=id testId=id role="img" aria-label=label position="absolute" right="0px" bottom="0px" z-index=10 width=(size == "sm" ? "ui.space-8" : size == "lg" ? "ui.space-12" : "ui.space-10") height=(size == "sm" ? "ui.space-8" : size == "lg" ? "ui.space-12" : "ui.space-10") border-radius="ui.radius-full" background-color="ui.primary" color="ui.primary-foreground" box-shadow="ui.shadow-background-ring" display="flex" align-items="center" justify-content="center"
       if size != "sm"
         children
 
@@ -91,7 +98,7 @@ component AvatarGroup
     label: string
   slot
   view
-    row id=id testId=id role="group" aria-label=label align-items="center" padding=2
+    row id=id testId=id role="group" aria-label=label align-items="center" padding="ui.space-2"
       children
 
 component AvatarGroupItem
@@ -100,7 +107,7 @@ component AvatarGroupItem
     first: bool
   slot
   view
-    view id=id testId=id margin-left=(first ? 0 : -8) border-radius="ui.radius-full" box-shadow="0 0 0 2px ui.background" flex-shrink=0
+    view id=id testId=id margin-left=(first ? "0px" : "ui.space-negative-8") border-radius="ui.radius-full" box-shadow="ui.shadow-background-ring" flex-shrink=0
       children
 
 component AvatarGroupCount
@@ -110,9 +117,11 @@ component AvatarGroupCount
     count: number
     size: string
     first: bool
+  inject
+    uiFont: string
   view
-    view id=id testId=id role="img" aria-label=label margin-left=(first ? 0 : -8) width=(size == "sm" ? "1.5rem" : size == "lg" ? "2.5rem" : "2rem") height=(size == "sm" ? "1.5rem" : size == "lg" ? "2.5rem" : "2rem") border-radius="ui.radius-full" background-color="ui.muted" box-shadow="0 0 0 2px ui.background" display="flex" align-items="center" justify-content="center" flex-shrink=0
-      text ("+" + max(0, floor(count)).toString()) aria-hidden=true font-size="0.875rem" color="ui.muted-foreground"
+    view id=id testId=id role="img" aria-label=label margin-left=(first ? "0px" : "ui.space-negative-8") width=(size == "sm" ? "ui.space-24" : size == "lg" ? "ui.space-40" : "ui.space-32") height=(size == "sm" ? "ui.space-24" : size == "lg" ? "ui.space-40" : "ui.space-32") border-radius="ui.radius-full" background-color="ui.muted" box-shadow="ui.shadow-background-ring" display="flex" align-items="center" justify-content="center" flex-shrink=0
+      text ("+" + max(0, floor(count)).toString()) aria-hidden=true font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component FieldSet
   props
@@ -122,7 +131,7 @@ component FieldSet
     disabled: bool
   slot
   view
-    column id=id testId=id role="group" aria-labelledby=legendId aria-describedby=descriptionId aria-disabled=disabled gap=24 min-width=0
+    column id=id testId=id role="group" aria-labelledby=legendId aria-describedby=descriptionId aria-disabled=disabled gap="ui.space-24" min-width="0px"
       children
 
 component FieldLegend
@@ -130,8 +139,10 @@ component FieldLegend
     id: string
     label: string
     variant: string
+  inject
+    uiFont: string
   view
-    text label id=id testId=id margin-bottom=12 font-size=(variant == "label" ? "0.875rem" : "1rem") font-weight=500 line-height=1.5 color="ui.foreground"
+    text label id=id testId=id margin-bottom="ui.space-12" font-size=(variant == "label" ? "ui.text-sm" : "ui.text-base") font-weight="ui.weight-medium" line-height="ui.leading-normal" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component FieldGroup
   props
@@ -139,7 +150,7 @@ component FieldGroup
     nested: bool
   slot
   view
-    column id=id testId=id gap=(nested ? 16 : 28) min-width=0
+    column id=id testId=id gap=(nested ? "ui.space-16" : "ui.space-28") min-width="0px"
       children
 
 component FieldFrame
@@ -151,7 +162,7 @@ component FieldFrame
     orientation: string
   slot
   view
-    view id=id testId=id role="group" aria-labelledby=labelId aria-describedby=descriptionId aria-invalid=invalid display="flex" flex-direction=(orientation == "horizontal" ? "row" : "column") align-items=(orientation == "horizontal" ? "center" : "stretch") gap=12 min-width=0 color=(invalid ? "ui.danger" : "ui.foreground")
+    view id=id testId=id role="group" aria-labelledby=labelId aria-describedby=descriptionId aria-invalid=invalid display="flex" flex-direction=(orientation == "horizontal" ? "row" : "column") align-items=(orientation == "horizontal" ? "center" : "stretch") gap="ui.space-12" min-width="0px" color=(invalid ? "ui.danger" : "ui.foreground")
       children
 
 component FieldContent
@@ -159,7 +170,7 @@ component FieldContent
     id: string
   slot
   view
-    column id=id testId=id flex=1 gap=6 min-width=0 line-height=1.375
+    column id=id testId=id flex=1 gap="ui.space-6" min-width="0px" line-height="ui.leading-compact"
       children
 
 component FieldLabel
@@ -168,66 +179,76 @@ component FieldLabel
     label: string
     controlId: string
     disabled: bool
+  inject
+    uiFont: string
   action activate
     if not disabled
       focus(controlId)
   view
-    text label id=id testId=id press=activate font-size="0.875rem" font-weight=500 line-height=1.375 color="ui.foreground" opacity=(disabled ? 0.5 : 1)
+    text label id=id testId=id press=activate font-size="ui.text-sm" font-weight="ui.weight-medium" line-height="ui.leading-compact" color="ui.foreground" opacity=(disabled ? "ui.opacity-disabled" : 1) font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component FieldTitle
   props
     id: string
     title: string
     disabled: bool
+  inject
+    uiFont: string
   view
-    text title id=id testId=id font-size="0.875rem" font-weight=500 line-height=1.375 color="ui.foreground" opacity=(disabled ? 0.5 : 1)
+    text title id=id testId=id font-size="ui.text-sm" font-weight="ui.weight-medium" line-height="ui.leading-compact" color="ui.foreground" opacity=(disabled ? "ui.opacity-disabled" : 1) font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component FieldDescription
   props
     id: string
     description: string
+  inject
+    uiFont: string
   view
-    text description id=id testId=id font-size="0.875rem" line-height=1.5 color="ui.muted-foreground" overflow-wrap="break-word"
+    text description id=id testId=id font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component FieldError
   props
     id: string
     messages: string[]
+  inject
+    uiFont: string
   derive unique = messages.filter((message, index) => message.trim() != "" and messages.indexOf(message) == index)
   view
     if unique.length > 0
-      column id=id testId=id role="alert" gap=4 font-size="0.875rem" font-weight=400 color="ui.danger"
+      column id=id testId=id role="alert" gap="ui.space-4" font-size="ui.text-sm" font-weight="ui.weight-regular" color="ui.danger"
         if unique.length == 1
-          text unique.join("") testId=(id + "-message-0") overflow-wrap="break-word"
+          text unique.join("") testId=(id + "-message-0") overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         else
-          column role="list" gap=4 padding-left=16
+          column role="list" gap="ui.space-4" padding-left="ui.space-16"
             for message, i in unique key=message
-              text ("• " + message) testId=(id + "-message-" + i.toString()) role="listitem" overflow-wrap="break-word"
+              text ("• " + message) testId=(id + "-message-" + i.toString()) role="listitem" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component FieldSeparator
   props
     id: string
     label: string
+  inject
+    uiFont: string
   view
-    row id=id testId=id role="separator" aria-orientation="horizontal" aria-label=label align-items="center" min-height="1.25rem" margin="-8px 0px"
-      view height=1 background-color="ui.border" flex=1 aria-hidden=true
+    row id=id testId=id role="separator" aria-orientation="horizontal" aria-label=label align-items="center" min-height="ui.space-20" margin="ui.space-negative-8 0px"
+      view height="ui.border-width" background-color="ui.border" flex=1 aria-hidden=true
       if label != ""
-        text label padding="0px 8px" font-size="0.875rem" line-height=1.5 color="ui.muted-foreground"
-        view height=1 background-color="ui.border" flex=1 aria-hidden=true
+        text label padding="0px ui.space-8" font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        view height="ui.border-width" background-color="ui.border" flex=1 aria-hidden=true
 
 component ButtonGroupText
   props
     id: string
   slot
   view
-    row id=id testId=id align-items="center" gap=8 min-height="2.25rem" padding="0px 16px" border="1px solid ui.border" border-radius="ui.radius-control" background-color="ui.muted" font-size="0.875rem" font-weight=500 color="ui.foreground" box-shadow="0 1px 2px 0 ui.shadow"
+    row id=id testId=id align-items="center" gap="ui.space-8" min-height="ui.space-36" padding="0px ui.space-16" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.muted" font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" box-shadow="ui.shadow-control"
       children
 
 component ButtonGroupSeparator
   props
     vertical: bool
   view
-    view role="separator" aria-orientation=(vertical ? "vertical" : "horizontal") align-self="stretch" flex-shrink=0 width=(vertical ? "1px" : "100%") height=(vertical ? "auto" : "1px") background-color="ui.input"
+    view role="separator" aria-orientation=(vertical ? "vertical" : "horizontal") align-self="stretch" flex-shrink=0 width=(vertical ? "ui.space-1" : "100%") height=(vertical ? "auto" : "ui.space-1") background-color="ui.input"
 
 component KbdGroup
   props
@@ -235,5 +256,5 @@ component KbdGroup
     label: string
   slot
   view
-    row id=id testId=id role="group" aria-label=label align-items="center" gap=4
+    row id=id testId=id role="group" aria-label=label align-items="center" gap="ui.space-4"
       children

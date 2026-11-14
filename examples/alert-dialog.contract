@@ -19,6 +19,6 @@ component Demo
   action openExample
     desktopOverlay = "alert"
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Button(id="alert-dialog-open", label="Open alert dialog", variant="outline", disabled=false, press=openExample)
       AlertDialog(id="desktop-confirm", open=desktopOverlay == "alert", title="Archive this project?", description="This demo project will be archived. You can restore it later.", confirmLabel="Archiver", reduced=reduce, dismiss=closeArchive, confirm=archive)

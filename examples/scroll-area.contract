@@ -1,19 +1,21 @@
-use ScrollAreaAdvanced from "@rightui/ui"
+use uiFontFamily, ScrollAreaAdvanced from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state vertical = 0
   action recordVertical(left: number, top: number, totalWidth: number, totalHeight: number, width: number, height: number)
     verticalPosition = top < 1 ? "Top of list" : totalHeight - top - height < 1 ? "End of list" : "Scrolling"
   state verticalPosition = "Top of list"
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       ScrollAreaAdvanced(id="layout-scroll-vertical", label="Component list", height=240, contentWidth=0, direction="vertical", type="auto", reduced=reduced, observeScroll=recordVertical)
         for item, i in ["Accordion", "Alert Dialog", "Aspect Ratio", "Avatar", "Badge", "Breadcrumb", "Button", "Calendar", "Card", "Carousel", "Checkbox", "Collapsible", "Combobox", "Command", "Context Menu", "Dialog", "Drawer", "Dropdown Menu", "Form", "Hover Card", "Input", "Input OTP", "Label", "Menubar", "Navigation Menu", "Popover", "Progress", "Radio Group", "Scroll Area", "Select"] key=item
-          text item testId=("layout-scroll-row-" + i.toString()) padding="4px 0px" border-bottom="1px solid ui.border" font-size="0.875rem" color="ui.foreground"
-      text "Horizontal scrolling" font-size="0.875rem" font-weight=600
+          text item testId=("layout-scroll-row-" + i.toString()) padding="ui.space-4 ui.space-0" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" font-size="ui.text-sm" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Horizontal scrolling" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       ScrollAreaAdvanced(id="variation-scroll-horizontal", label="Wide content", height=100, contentWidth=1000, direction="horizontal", type="auto", reduced=reduced, observeScroll=recordVertical)
-        text "Overview                              Library                              Timeline                              Export"
+        text "Overview                              Library                              Timeline                              Export" font-family=uiFontFamily(uiFont) data-rightui-font="body"

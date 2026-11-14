@@ -1,12 +1,13 @@
-use BubbleFrame from "../../packages/ui/conversation-parts.contract"
-use ButtonAI as ButtonContent from "../../packages/ui/button.contract"
-use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "../../packages/ui/trace-parts.contract"
+use uiFontFamily, BubbleFrame from "@rightui/ui"
+use ButtonAI as ButtonContent from "@rightui/ui"
+use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
   inject
+    uiFont: string
     rightuiDemoTime: number
     rightuiRunDemo: action
   state started = -1
@@ -19,9 +20,9 @@ component Demo
     started = rightuiDemoTime
     rightuiRunDemo(6700)
   view
-    column gap=16 min-width=0 min-height=288 max-width="24rem" width="100%" padding="24px 0px"
+    column gap="ui.space-16" min-width=0 min-height=288 max-width="24rem" width="100%" padding="ui.space-24 ui.space-0"
       BubbleFrame(id="ai-chain-of-thought-question", align="end", variant="muted")
-        text "Why is the checkout deploy so slow?"
+        text "Why is the checkout deploy so slow?" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       TraceFrame()
         TraceDisclosure(id="ai-chain-of-thought-0", title=(busy ? "Researching" : "Researched in 3 steps"), icon="check", status=(busy ? "running" : ""), open=(researchOpen or busy), reduced=reduced, toggle=toggleResearch)
           TraceCollapsible(id="ai-chain-log", title=(elapsed < 900 ? "Reading the build log for dpl_8Kx2" : "Read the build log for dpl_8Kx2"), icon="check", status=(elapsed < 900 ? "running" : ""), initiallyOpen=true, reduced=reduced)
@@ -33,12 +34,12 @@ component Demo
               TraceSource(title="Build cache | vercel.com", href="https://vercel.com/docs/deployments/troubleshoot-a-build", reduced=reduced)
           if elapsed >= 1800
             TraceCollapsible(id="ai-chain-code", title=(elapsed < 2700 ? "Searching the code for cacheKey" : "Searched the code for cacheKey"), icon="check", status=(elapsed < 2700 ? "running" : ""), initiallyOpen=false, reduced=reduced)
-              row gap=6 flex-wrap="wrap"
-                text "next.config.ts" padding="2px 8px" border-radius=4 background-color="ui.muted" font-family="monospace" font-size="0.75rem"
-                text "scripts/optimize-images.ts" padding="2px 8px" border-radius=4 background-color="ui.muted" font-family="monospace" font-size="0.75rem"
+              row gap="ui.space-6" flex-wrap="wrap"
+                text "next.config.ts" padding="ui.space-2 ui.space-8" border-radius="ui.radius-inline" background-color="ui.muted" font-family="ui.font-code" font-size="ui.text-xs"
+                text "scripts/optimize-images.ts" padding="ui.space-2 ui.space-8" border-radius="ui.radius-inline" background-color="ui.muted" font-family="ui.font-code" font-size="ui.text-xs"
       if elapsed >= 2700
-        text "Image optimization takes almost four minutes because its cache key includes the commit hash. Key it on the image directory instead.".slice(0, started < 0 or reduced ? 131 : floor((elapsed - 2700) / 20)) font-size="0.875rem" line-height=1.625
+        text "Image optimization takes almost four minutes because its cache key includes the commit hash. Key it on the image directory instead.".slice(0, started < 0 or reduced ? 131 : floor((elapsed - 2700) / 20)) font-size="ui.text-sm" line-height="ui.leading-relaxed" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if not busy
         row margin-top="auto" align-items="flex-start"
           ButtonContent(id="ai-chain-of-thought-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
-            text "Replay"
+            text "Replay" font-family=uiFontFamily(uiFont) data-rightui-font="body"

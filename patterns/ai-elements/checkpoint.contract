@@ -1,32 +1,34 @@
-use ButtonAI as ButtonContent from "@rightui/ui"
-use BubbleFrame from "../../packages/ui/conversation-parts.contract"
+use uiFontFamily, ButtonAI as ButtonContent from "@rightui/ui"
+use BubbleFrame from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   state restored = false
   action restore
     restored = true
   action proceed
     restored = false
   view
-    column width="100%" max-width="24rem" min-height=288 gap=16 padding="24px 0" font-size="0.875rem"
+    column width="100%" max-width="24rem" min-height=288 gap="ui.space-16" padding="ui.space-24 ui.space-0" font-size="ui.text-sm"
       BubbleFrame(id="ai-checkpoint-user", align="end", variant="muted")
-        text "Rename the button component to action."
-      text "Renamed Button to Action in components/ui/button.tsx."
-      row gap=8 align-items="center" color="ui.muted-foreground"
-        view flex=1 height=1 background-color="ui.border"
-        text "Button renamed" font-size="0.75rem"
+        text "Rename the button component to action." font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Renamed Button to Action in components/ui/button.tsx." font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      row gap="ui.space-8" align-items="center" color="ui.muted-foreground"
+        view flex=1 height="ui.border-width" background-color="ui.border"
+        text "Button renamed" font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if not restored
           ButtonContent(id="ai-checkpoint-restore", label="Restore to Button renamed", variant="outline", size="xs", disabled=false, press=restore)
-            text "Restore"
-        view flex=1 height=1 background-color="ui.border"
+            text "Restore" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        view flex=1 height="ui.border-width" background-color="ui.border"
       if not restored
         BubbleFrame(id="ai-checkpoint-docs", align="end", variant="muted")
-          text "Update the docs to match."
-        text "Updated the Button page to say Action."
+          text "Update the docs to match." font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text "Updated the Button page to say Action." font-family=uiFontFamily(uiFont) data-rightui-font="body"
       else
         row margin-top="auto"
           ButtonContent(id="ai-checkpoint-continue", label="Continue", variant="outline", size="sm", disabled=false, press=proceed)
-            text "Continue"
+            text "Continue" font-family=uiFontFamily(uiFont) data-rightui-font="body"

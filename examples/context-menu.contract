@@ -1,9 +1,11 @@
-use ContextMenuAdvanced, AdvancedMenuEntry, AdvancedMenuSelection from "@rightui/ui"
+use uiFontFamily, ContextMenuAdvanced, AdvancedMenuEntry, AdvancedMenuSelection from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state checks: string[] = ["status", "bookmarks"]
   state radios: AdvancedMenuSelection[] = [AdvancedMenuSelection(group="position", value="bottom"), AdvancedMenuSelection(group="person", value="pedro"), AdvancedMenuSelection(group="zoom", value="100")]
@@ -15,7 +17,7 @@ component Demo
     radios = radios.filter(item => item.group != group).concat([AdvancedMenuSelection(group=group, value=value)])
   state chosen = "No action"
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       ContextMenuAdvanced(id="parity-context", label="Right click here", entries=[AdvancedMenuEntry(id="back", parent="", label="Back", kind="item", shortcut="⌘[", disabled=false, group="", value=""), AdvancedMenuEntry(id="forward", parent="", label="Forward", kind="item", shortcut="⌘]", disabled=true, group="", value=""), AdvancedMenuEntry(id="reload", parent="", label="Reload", kind="item", shortcut="⌘R", disabled=false, group="", value=""), AdvancedMenuEntry(id="tools", parent="", label="More Tools", kind="submenu", shortcut="", disabled=false, group="", value=""), AdvancedMenuEntry(id="save", parent="tools", label="Save Page As…", kind="item", shortcut="⇧⌘S", disabled=false, group="", value=""), AdvancedMenuEntry(id="shortcut", parent="tools", label="Create Shortcut…", kind="item", shortcut="", disabled=false, group="", value=""), AdvancedMenuEntry(id="developer", parent="tools", label="Developer Tools", kind="item", shortcut="⌥⌘I", disabled=false, group="", value=""), AdvancedMenuEntry(id="context-separator", parent="", label="", kind="separator", shortcut="", disabled=false, group="", value=""), AdvancedMenuEntry(id="bookmarks", parent="", label="Show Bookmarks Bar", kind="checkbox", shortcut="⇧⌘B", disabled=false, group="", value=""), AdvancedMenuEntry(id="urls", parent="", label="Show Full URLs", kind="checkbox", shortcut="", disabled=false, group="", value=""), AdvancedMenuEntry(id="people-separator", parent="", label="", kind="separator", shortcut="", disabled=false, group="", value=""), AdvancedMenuEntry(id="people-label", parent="", label="People", kind="label", shortcut="", disabled=false, group="", value=""), AdvancedMenuEntry(id="people", parent="", label="People", kind="group", shortcut="", disabled=false, group="", value=""), AdvancedMenuEntry(id="pedro", parent="people", label="Pedro Duarte", kind="radio", shortcut="", disabled=false, group="person", value="pedro"), AdvancedMenuEntry(id="colm", parent="people", label="Colm Tuite", kind="radio", shortcut="", disabled=false, group="person", value="colm")], checks=checks, radios=radios, reduced=reduced, choose=choose, check=check, radio=radio)
-      text "Destructive action" font-weight=600
+      text "Destructive action" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       ContextMenuAdvanced(id="context-destructive", label="Right click to manage project", entries=[AdvancedMenuEntry(id="delete-project", parent="", label="Delete project", kind="destructive", shortcut="", disabled=false, group="", value="")], checks=[], radios=[], reduced=reduced, choose=choose, check=check, radio=radio)

@@ -8,13 +8,12 @@ style Control
   min-height="ui.control"
   border-radius="ui.radius"
   font-size="ui.type"
-  font-weight=500
-  font-family="Geist"
-  line-height=1.428571
+  font-weight="ui.weight-medium"
+  line-height="ui.leading-control"
   :focus-visible
-    box-shadow="0 0 0 3px ui.ring"
+    box-shadow="ui.shadow-focus"
   :disabled
-    opacity=0.5
+    opacity="ui.opacity-disabled"
 
 style Pressable
   cursor="pointer"
@@ -28,17 +27,106 @@ style Field
   width="100%"
   min-height="ui.control"
   height="auto"
-  border="1px solid ui.input"
+  border-width="ui.border-input-width"
+  border-style="solid"
+  border-color="ui.input"
   border-radius="ui.radius"
-  padding="4px 12px"
+  padding="ui.space-4 ui.space-12"
   font-size="ui.type"
-  font-family="Geist"
-  line-height=1.428571
+  line-height="ui.leading-control"
   color="ui.foreground"
   background-color="transparent"
-  box-shadow="0 1px 2px 0 ui.shadow"
+  box-shadow="ui.shadow-control"
   :focus-visible
     border-color="ui.ring"
-    box-shadow="0 0 0 3px ui.ring"
+    box-shadow="ui.shadow-focus"
   :disabled
-    opacity=0.5
+    opacity="ui.opacity-disabled"
+
+style Hit
+  appearance="none"
+  font-size="ui.text-sm"
+  font-weight="ui.weight-medium"
+  color="ui.foreground"
+  background-color="transparent"
+  border="0"
+  border-radius="ui.radius-item"
+  cursor="pointer"
+  text-decoration="none"
+  box-sizing="border-box"
+  min-width=0
+  :hover
+    background-color="ui.muted"
+  :focus-visible
+    box-shadow="ui.shadow-focus"
+  :disabled
+    opacity="ui.opacity-disabled"
+
+style QuietLink
+  color="ui.muted-foreground"
+  text-decoration="none"
+  font-size="ui.text-caption"
+  line-height="ui.leading-normal"
+  :hover
+    color="ui.foreground"
+  :focus-visible
+    box-shadow="ui.shadow-focus"
+
+style Heading
+  min-width=0
+  max-width="100%"
+  hyphens="auto"
+  font-size="ui.text-3xl"
+  font-weight="ui.weight-semibold"
+  letter-spacing="ui.tracking-heading"
+  line-height="ui.leading-tight"
+  margin=0
+
+style Paragraph
+  min-width=0
+  max-width="100%"
+  hyphens="auto"
+  font-size="ui.text-md"
+  line-height="ui.leading-relaxed"
+  margin=0
+  color="ui.foreground"
+
+style CardStyle
+  min-width=0
+  box-sizing="border-box"
+  background-color="ui.surface"
+  color="ui.foreground"
+  border-width="ui.border-width"
+  border-style="solid"
+  border-color="ui.border"
+  border-radius="ui.panel-radius"
+  padding="ui.card-inset"
+  gap="ui.card-gap"
+  box-shadow="ui.shadow-panel"
+
+style MutedStyle
+  min-width=0
+  background-color="ui.muted"
+  color="ui.muted-foreground"
+  border-radius="ui.radius-item"
+
+style FeatureCardStyle
+  min-width=0
+  box-sizing="border-box"
+  background-color="ui.surface"
+  color="ui.foreground"
+  border-width="ui.border-width"
+  border-style="solid"
+  border-color="ui.border"
+  border-radius="ui.radius-feature"
+  padding="ui.feature-card-inset"
+  gap="ui.feature-card-gap"
+
+style InsetCardStyle
+  min-width=0
+  box-sizing="border-box"
+  background-color="ui.muted"
+  color="ui.muted-foreground"
+  border-radius="ui.radius-card"
+  padding="ui.inset-card-inset"
+  gap="ui.inset-card-gap"

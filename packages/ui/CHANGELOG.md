@@ -4,6 +4,25 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.2.0-beta.1] - 2026-11-14
+
+- Breaking: typography now requires a root `provide uiFont` binding. Use `"theme"` to retain the body family selected by the exported Tamber configuration, or choose `"sans"`, `"serif"` or `"mono"` dynamically. See `docs/MIGRATION-0.2.md`.
+- Add a shared `uiFontFamily()` Contract helper and three static family roles. Move typography out of the design axes so all six palettes, two densities and three corner styles remain independently selectable within 36 Exact mode combinations, supporting 108 appearance settings with the three typefaces.
+- Bundle Newsreader regular and italic variable faces (weights 200–800) for the existing `serif` choice, with the original OFL license, pinned source revision and file hashes. Extend font setup helpers and registry resources to include both faces.
+- Add Violet as a complete light/dark palette for backgrounds, cards, text, controls, borders, focus, sidebars and charts; verify targeted text, button and focus contrast.
+- Keep copied configurations self-contained, including their chosen body family. Remove the former `ui-font` axis; typography previews now use an explicit provider.
+- Breaking: code-block variants with copy feedback require the root clipboard controller documented in `docs/CODE-BLOCK.md`. Feedback clears after three seconds; another copy restarts the interval.
+- Add a segmented variant to `RadioGroupAdvanced` for shared application selectors.
+- Declare `rightui-font` in consuming applications' `app.json` data arrays; document the required typography and clipboard migration.
+- Add shared theme foundations, semantic aliases and component recipes, plus neutral, indigo, forest, rose and amber presets with independent density, corners and typeface settings.
+- Give Rose and Amber complete light/dark surface, control and chart palettes with targeted text, button and focus contrast checks. Exported settings types and palette branches derive from the same options.
+- Export a pure `@rightui/ui/theme` configuration helper and document app-level axes and system-owned appearance boundaries.
+- Share code surfaces, control primitives and presentation recipes with consuming applications; migrate examples, blocks, charts and AI patterns to the same configuration.
+- Add a themeable MarkdownDocument renderer for explicit supported syntax and AST input. Preserve the legacy Markdown renderer and document its host-owned appearance limitations.
+- Export PopoverFrame for controlled popovers with a custom trigger, shared styling, Escape focus return and outside-click dismissal.
+- Fix Switch state rendering and shared recipe sizing. Separate desktop and mobile dashboard sidebar state, and keep the mobile menu above content.
+- Include migration, theming, code-block, composition and Markdown guides in the npm archive.
+
 ## [0.1.0-beta.5] - 2026-11-14
 
 ### Components

@@ -1,19 +1,21 @@
-use Switch, Field from "@rightui/ui"
+use uiFontFamily, Switch, Field from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state notifications = true
   derive reduce = reduced
   action setNotifications(v: bool)
     notifications = v
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Switch(id="notifications", label="Notifications", checked=notifications, disabled=false, reduced=reduce, change=setNotifications)
-      text "Disabled" font-size="0.875rem" font-weight=600
+      text "Disabled" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Switch(id="variation-switch-disabled", label="Notifications", checked=notifications, disabled=true, reduced=reduce, change=setNotifications)
-      text "Description" font-size="0.875rem" font-weight=600
+      text "Description" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Field(id="variation-switch-description", description="Receive updates when an export completes.", error="")
         Switch(id="variation-switch-described", label="Export updates", checked=notifications, disabled=false, reduced=reduced, change=setNotifications)

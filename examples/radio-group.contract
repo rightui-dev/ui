@@ -1,17 +1,19 @@
-use RadioGroup from "@rightui/ui"
+use uiFontFamily, RadioGroup from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state quality = "Balanced"
   action setQuality(v: string)
     quality = v
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       RadioGroup(id="catalog-quality", label="Export quality", options=["Fast", "Balanced", "Maximum"], value=quality, disabled=false, required=true, descriptionId="catalog-quality-hint", change=setQuality)
-      text "Disabled" font-size="0.875rem" font-weight=600
+      text "Disabled" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       RadioGroup(id="variation-radio-group-disabled", label="Export quality", options=["Fast", "Balanced", "Maximum"], value=quality, disabled=true, required=true, descriptionId="catalog-quality-hint", change=setQuality)
-      text "Description" font-size="0.875rem" font-weight=600
-      text "Choose the balance between speed and detail." id="catalog-quality-hint"
+      text "Description" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Choose the balance between speed and detail." id="catalog-quality-hint" font-family=uiFontFamily(uiFont) data-rightui-font="body"

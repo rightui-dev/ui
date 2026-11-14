@@ -1,6 +1,59 @@
+use uiFontFamily from "./typography-context.contract"
 use Button from "./button.contract"
 use Control from "./styles.contract"
 use uiModalFadeIn, uiModalFadeOut, uiModalZoomIn, uiModalZoomOut from "./overlays.contract"
+component DialogFrame
+  props
+    id: string
+    open: bool
+    reduced: bool
+    title: string
+    description: string
+    focusIds: string[]
+    dismiss: action
+  inject
+    uiFont: string
+  slot
+  state focused = ""
+  action rememberFocus(e: FocusEvent)
+    focused = e.target
+  action keys(k: string, e: KeyboardEvent)
+    if not e.isComposing
+      if k == "Escape"
+        preventDefault()
+        stopPropagation()
+        dismiss()
+      else if k == "Tab"
+        preventDefault()
+        stopPropagation()
+        let targets = [id + "-close"].concat(focusIds)
+        let index = targets.indexOf(focused)
+        let next = index < 0 ? (e.shiftKey ? targets.length - 1 : 0) : (index + (e.shiftKey ? targets.length - 1 : 1)) % max(1, targets.length)
+        match targets.at(next)
+          case some(target)
+            focus(target)
+          case none
+            focus(id + "-close")
+  view
+    column position="absolute" inset=0 z-index=110 pointer-events="none" align-items="center" justify-content="center" padding="ui.space-16" box-sizing="border-box"
+      if open
+        view id=(id + "-backdrop") testId=(id + "-backdrop") position="absolute" inset=0 background-color="ui.overlay" pointer-events="auto" aria-hidden=true press=dismiss
+          animation=(reduced ? "none" : "uiModalFadeIn ui.duration-normal ui.easing both")
+          -exact-exit-animation=(reduced ? "none" : "uiModalFadeOut ui.duration-normal ui.easing both")
+      if open
+        column id=id testId=id role="dialog" aria-modal=true aria-labelledby=(id + "-title")
+          aria-describedby=(id + "-description") pointer-events="auto" position="relative" keycapture=keys focusin=rememberFocus width="100%" max-width="32rem" max-height="100%" box-sizing="border-box"
+          background-color="ui.surface" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-panel" padding="ui.space-24" gap="ui.space-16" box-shadow="ui.shadow-panel"
+          animation=(reduced ? "none" : "uiModalZoomIn ui.duration-normal ui.easing both")
+          -exact-exit-animation=(reduced ? "none" : "uiModalZoomOut ui.duration-normal ui.easing both")
+          button id=(id + "-close") testId=(id + "-close") class=Control autofocus=true press=dismiss aria-label="Close" position="absolute" top="ui.space-16" right="ui.space-16" width="ui.space-16" height="ui.space-16" min-height="ui.space-16" padding="0px" border="none" background-color="transparent" color="ui.foreground" opacity="ui.opacity-soft"
+            svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
+              path d="m6 6 12 12M6 18 18 6"
+          column gap="ui.space-8" padding-right="ui.space-24" flex-shrink=0
+            text title hyphens="auto" id=(id + "-title") role="heading" aria-level=2 font-size="ui.text-lg" font-weight="ui.weight-semibold" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text description hyphens="auto" id=(id + "-description") font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          children
+
 component Dialog
   props
     id: string
@@ -12,49 +65,18 @@ component Dialog
     focusIds: string[]
     dismiss: action
     confirm: action
+  inject
+    uiFont: string
   slot
-  state focused = ""
-  action rememberFocus(e: FocusEvent)
-    focused = e.target
-  action keys(k: string, e: KeyboardEvent)
-    if k == "Escape"
-      preventDefault()
-      dismiss()
-    if k == "Tab"
-      preventDefault()
-      let targets = [id + "-close"].concat(focusIds)
-      let index = targets.indexOf(focused)
-      let next = (index + (e.shiftKey ? targets.length - 1 : 1)) % max(1, targets.length)
-      match targets.at(next)
-        case some(target)
-          focus(target)
-        case none
-          focus(id + "-cancel")
   view
-    column position="absolute" inset=0 z-index=110 pointer-events="none" align-items="center" justify-content="center" padding=16 box-sizing="border-box"
-      if open
-        view id=(id + "-backdrop") testId=(id + "-backdrop") position="absolute" inset=0 background-color="ui.overlay" pointer-events="auto" aria-hidden=true press=dismiss
-          animation=(reduced ? "none" : "uiModalFadeIn 200ms ease-in-out both")
-          -exact-exit-animation=(reduced ? "none" : "uiModalFadeOut 200ms ease-in-out both")
-      if open
-        column id=id testId=id role="dialog" aria-modal=true aria-labelledby=(id + "-title")
-          aria-describedby=(id + "-description") pointer-events="auto" position="relative" keycapture=keys focusin=rememberFocus width="100%" max-width="32rem" max-height="100%" box-sizing="border-box"
-          background-color="ui.surface" border="1px solid ui.border" border-radius="ui.radius-panel" padding=24 gap=16 box-shadow="0 10px 15px -3px ui.shadow, 0 4px 6px -4px ui.shadow"
-          animation=(reduced ? "none" : "uiModalZoomIn 200ms ease-in-out both")
-          -exact-exit-animation=(reduced ? "none" : "uiModalZoomOut 200ms ease-in-out both")
-          button id=(id + "-close") testId=(id + "-close") class=Control press=dismiss aria-label="Close" position="absolute" top=16 right=16 width=16 height=16 min-height=16 padding=0 border="none" background-color="transparent" color="ui.foreground" opacity=0.7
-            svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
-              path d="m6 6 12 12M6 18 18 6"
-          scroll flex="1 1 auto" min-height=0
-            column gap=16
-              column gap=8 padding-right=24
-                text title hyphens="auto" id=(id + "-title") role="heading" aria-level=2 font-size="1.125rem" font-weight=600 color="ui.foreground"
-                text description hyphens="auto" id=(id + "-description") font-size="0.875rem" line-height=1.5 color="ui.muted-foreground"
-              children
-          row gap=8 flex-shrink=0 justify-content="flex-end" flex-wrap="wrap"
-            button id=(id + "-cancel") testId=(id + "-cancel") autofocus=true appearance="none" press=dismiss
-              min-height="2.25rem" max-width="100%" border="1px solid ui.border" border-radius="ui.radius-control" padding="8px 16px" background-color="ui.surface" color="ui.foreground"
-              :focus-visible
-                box-shadow="0 0 0 3px ui.ring"
-              text "Cancel" font-size="0.875rem"
-            Button(id=id + "-confirm", label=confirmLabel, variant="primary", disabled=false, press=confirm)
+    DialogFrame(id=id, open=open, reduced=reduced, title=title, description=description, focusIds=focusIds, dismiss=dismiss)
+      scroll flex="1 1 auto" min-height="0px"
+        column gap="ui.space-16"
+          children
+      row gap="ui.space-8" flex-shrink=0 justify-content="flex-end" flex-wrap="wrap"
+        button id=(id + "-cancel") testId=(id + "-cancel") appearance="none" press=dismiss
+          min-height="ui.space-36" max-width="100%" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" padding="ui.space-8 ui.space-16" background-color="ui.surface" color="ui.foreground"
+          :focus-visible
+            box-shadow="ui.shadow-focus"
+          text "Cancel" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        Button(id=id + "-confirm", label=confirmLabel, variant="primary", disabled=false, press=confirm)

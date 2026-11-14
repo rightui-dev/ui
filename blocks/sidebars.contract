@@ -1,15 +1,18 @@
-use Button, IconButton, SidebarTrigger from "@rightui/ui"
-use Control, Field from "../packages/ui/styles.contract"
-use DropdownMenu, MenuEntry from "../packages/ui/menu.contract"
+use uiFontFamily, Button, IconButton, SidebarTrigger from "@rightui/ui"
+use ControlStyle as Control, InputStyle as Field from "@rightui/ui"
+use DropdownMenu, MenuEntry from "@rightui/ui"
 use SidebarIcon, SidebarLink from "./sidebar-parts.contract"
 use SidebarDocs, SidebarPlatform, SidebarNotion from "./sidebar-navigation.contract"
 use SidebarMail, SidebarFiles, SidebarCalendar from "./sidebar-special.contract"
 use sidebarSettings from "./sidebar-data.contract"
+
 component SidebarSettings
   props
     id: string
     narrow: bool
     dismiss: action
+  inject
+    uiFont: string
   state selected = "Messages & media"
   state focused = ""
   action choose(value: string)
@@ -34,28 +37,28 @@ component SidebarSettings
         case none
           focus(id + "-close")
   view
-    column position="absolute" inset=0 z-index=110 padding=16 background-color="ui.overlay" align-items="center" justify-content="center" box-sizing="border-box"
+    column position="absolute" inset=0 z-index=110 padding="ui.space-16" background-color="ui.overlay" align-items="center" justify-content="center" box-sizing="border-box"
       button id=(id + "-backdrop") testId=(id + "-backdrop") press=closeSettings tabindex=-1 aria-label="Close settings" position="absolute" inset=0 appearance="none" border="0" background-color="transparent"
       row id=(id + "-dialog") testId=(id + "-dialog") role="dialog" aria-modal=true aria-label="Settings" keycapture=keys focusin=remember
-        position="relative" width="100%" box-sizing="border-box" max-width="50rem" height=480 min-height=0 overflow="hidden" border="1px solid ui.border" border-radius=12 background-color="ui.surface" box-shadow="0 20px 40px #00000025"
+        position="relative" width="100%" box-sizing="border-box" max-width="50rem" height=480 min-height=0 overflow="hidden" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-card" background-color="ui.surface" box-shadow="ui.shadow-preview"
         if not narrow
-          scroll width="16rem" flex-shrink=0 background-color="ui.muted" padding=8 box-sizing="border-box"
-            column gap=2
+          scroll width="ui.sidebar-width" flex-shrink=0 background-color="ui.muted" padding="ui.space-8" box-sizing="border-box"
+            column gap="ui.space-2"
               for item, i in sidebarSettings() key=item.title
                 SidebarLink(id=id + "-setting-" + i.toString(), label=item.title, icon=item.icon, selected=(selected == item.title), compact=false, badge="", choose=choose)
         column flex=1 min-width=0 min-height=0
-          row padding=16 gap=8 align-items="center" min-height=64 box-sizing="border-box"
+          row padding="ui.space-16" gap="ui.space-8" align-items="center" min-height="ui.space-64" box-sizing="border-box"
             if not narrow
-              text "Settings" font-size="0.875rem" color="ui.muted-foreground"
+              text "Settings" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               SidebarIcon(name="ChevronRight")
-            text selected testId=(id + "-selected") font-size="0.875rem" color="ui.foreground" flex=1
-            button id=(id + "-close") testId=(id + "-close") class=Control autofocus=true press=closeSettings aria-label="Close dialog" padding=4 min-height=28 border="0" background-color="transparent" color="ui.muted-foreground"
-              svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+            text selected testId=(id + "-selected") font-size="ui.text-sm" color="ui.foreground" flex=1 font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            button id=(id + "-close") testId=(id + "-close") class=Control autofocus=true press=closeSettings aria-label="Close dialog" padding="ui.space-4" min-height="ui.space-28" border="0" background-color="transparent" color="ui.muted-foreground"
+              svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke" aria-hidden=true
                 path d="m6 6 12 12M6 18 18 6"
-          scroll flex=1 min-height=0 padding="0px 16px 16px"
-            column gap=16
+          scroll flex=1 min-height=0 padding="ui.space-0 ui.space-16 ui.space-16"
+            column gap="ui.space-16"
               for i in range(10) key=i
-                view height=140 border-radius=12 background-color="ui.muted"
+                view height=140 border-radius="ui.radius-card" background-color="ui.muted"
 
 
 component SidebarBlock
@@ -64,6 +67,8 @@ component SidebarBlock
     narrow: bool
     reduced: bool
     openSettings: action
+  inject
+    uiFont: string
   state expanded = true
   state mobileOpen = false
   state mobileFocused = ""
@@ -73,7 +78,7 @@ component SidebarBlock
   derive id = "block-sidebar-" + (variant < 10 ? "0" : "") + variant.toString()
   derive compact = not narrow and not expanded and (variant == 7 or variant == 9)
   derive visible = narrow ? mobileOpen : expanded or compact
-  derive desktopWidth = compact ? "3rem" : variant == 9 ? "21.875rem" : variant == 4 ? "19rem" : variant == 12 ? "18rem" : "16rem"
+  derive desktopWidth = compact ? "ui.sidebar-width-compact" : variant == 9 ? "ui.sidebar-width-mail" : variant == 4 ? "ui.sidebar-width-floating" : variant == 12 ? "ui.sidebar-width-wide" : "ui.sidebar-width"
   derive current = selected == "" ? (variant == 9 ? "Inbox" : variant == 10 or variant == 15 ? "Project Management & Task Tracking" : variant == 11 ? "button.tsx" : variant == 12 ? "October 2024" : "Data Fetching") : selected
   action toggle
     if narrow
@@ -121,33 +126,33 @@ component SidebarBlock
     else
       column id=id testId=id key=keys position="relative" height="100%" min-height=700 min-width=0 overflow="hidden" background-color=(variant == 8 ? "ui.sidebar" : "ui.background") color="ui.foreground"
         if variant == 16
-          row inert=(narrow and mobileOpen) height=56 flex-shrink=0 gap=12 align-items="center" padding="0px 16px" border-bottom="1px solid ui.border" background-color="ui.background"
+          row inert=(narrow and mobileOpen) height="ui.space-56" flex-shrink=0 gap="ui.space-12" align-items="center" padding="ui.space-0 ui.space-16" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" background-color="ui.background"
             view order=(variant == 14 ? 4 : 0)
               SidebarTrigger(id=id + "-trigger", expanded=(narrow ? mobileOpen : expanded), controls=id + "-sidebar", press=toggle)
             if not narrow
-              text "Build Your Application" font-size="0.875rem" color="ui.muted-foreground"
+              text "Build Your Application" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               SidebarIcon(name="ChevronRight")
-              text current font-size="0.875rem"
+              text current font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             view flex=1
-            input id=(id + "-global-search") testId=(id + "-global-search") class=Field value=query input=editQuery placeholder="Search..." aria-label="Search" width=(narrow ? "10rem" : "15rem") min-height=32 padding="4px 8px"
+            input id=(id + "-global-search") testId=(id + "-global-search") class=Field value=query input=editQuery placeholder="Search..." aria-label="Search" width=(narrow ? "10rem" : "15rem") min-height="ui.space-32" padding="ui.space-4 ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         row position="relative" flex=1 min-height=0 min-width=0 flex-direction=(variant == 14 ? "row-reverse" : "row")
           if not narrow
             view id=(id + "-gap") width=(expanded or compact ? desktopWidth : "0rem") flex-shrink=0 min-width=0
-              -exact-layout-transition=(reduced ? "none" : "200ms linear")
+              -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing-linear")
           column id=(id + "-sidebar") testId=(visible ? id + "-sidebar" : "") role="navigation" aria-label="Sidebar" inert=(not visible) aria-hidden=(not visible) keycapture=mobileKeys focusin=rememberMobile
             position="absolute" z-index=(narrow ? 40 : 10) top=0 bottom=0 left=(variant == 14 ? "auto" : "0px") right=(variant == 14 ? "0px" : "auto")
-            width=(narrow ? "18rem" : desktopWidth) max-width=(narrow ? "calc(100% - 48px)" : "none")
-            flex-shrink=0 min-height=0 box-sizing="border-box" padding=(not narrow and (variant == 4 or variant == 8) ? "8px" : "0px")
+            width=(narrow ? "ui.sidebar-width-wide" : desktopWidth) max-width="calc(100% - ui.space-48)"
+            flex-shrink=0 min-height=0 box-sizing="border-box" padding=(not narrow and (variant == 4 or variant == 8) ? "ui.space-8" : "ui.space-0")
             translate=(visible ? "0% 0px" : variant == 14 ? "100% 0px" : "-100% 0px") pointer-events=(visible ? "auto" : "none")
-            transition=(reduced ? "none" : "translate 200ms linear")
-            border="0" border-right=(narrow or variant == 4 or variant == 14 or variant == 8 or variant == 10 or variant == 15 ? "0" : "1px solid ui.border")
-            border-left=(not narrow and variant == 14 ? "1px solid ui.border" : "0") background-color=(not narrow and variant == 4 ? "transparent" : "ui.sidebar") overflow="hidden"
-            column flex=1 min-height=0 min-width=0 -exact-layout-transition=(reduced ? "none" : "200ms linear") border=(not narrow and variant == 4 ? "1px solid ui.border" : "0") border-radius=(not narrow and variant == 4 ? "10px" : "0px") background-color="ui.sidebar" box-shadow=(not narrow and variant == 4 ? "0 1px 3px #0000001a, 0 1px 2px -1px #0000001a" : "none") overflow="hidden"
+            transition=(reduced ? "none" : "translate ui.duration-normal ui.easing-linear")
+            border="0" border-right-width=(narrow or variant == 4 or variant == 14 or variant == 8 or variant == 10 or variant == 15 ? "0px" : "ui.border-width") border-right-style="solid" border-right-color="ui.border"
+            border-left-width=(not narrow and variant == 14 ? "ui.border-width" : "0px") border-left-style="solid" border-left-color="ui.border" background-color=(not narrow and variant == 4 ? "transparent" : "ui.sidebar") overflow="hidden"
+            column flex=1 min-height=0 min-width=0 -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing-linear") border-width=(not narrow and variant == 4 ? "ui.border-width" : "0px") border-style="solid" border-color="ui.border" border-radius=(not narrow and variant == 4 ? "ui.radius-lg" : "ui.radius-flat") background-color="ui.sidebar" box-shadow=(not narrow and variant == 4 ? "ui.shadow-panel" : "none") overflow="hidden"
               for contentVariant in [variant] key=contentVariant
                 if narrow
-                  view align-self="flex-end" margin=8
+                  view align-self="flex-end" margin="ui.space-8"
                     IconButton(id=id + "-mobile-close", label="Close sidebar", variant="ghost", disabled=false, press=dismiss)
-                      svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+                      svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke" aria-hidden=true
                         path d="m6 6 12 12M6 18 18 6"
                 if variant <= 6 or variant == 14
                   SidebarDocs(id=id, variant=variant, selected=current, reduced=reduced, choose=choose)
@@ -161,46 +166,49 @@ component SidebarBlock
                   SidebarFiles(id=id, selected=current, choose=choose)
                 else if variant == 12
                   SidebarCalendar(id=id, reduced=reduced, choose=choose)
-          column inert=(narrow and mobileOpen) aria-hidden=(narrow and mobileOpen) flex=1 min-width=0 min-height=0 margin=(variant == 8 and not narrow ? (expanded ? "8px 8px 8px 0px" : "8px") : "0px") border-radius=(variant == 8 and not narrow ? "14px" : "0px") background-color="ui.background" overflow="hidden"
-            box-shadow=(variant == 8 and not narrow ? "0 1px 3px #0000001a, 0 1px 2px -1px #0000001a" : "none")
-            -exact-layout-transition=(reduced ? "none" : "200ms linear")
+          column inert=(narrow and mobileOpen) aria-hidden=(narrow and mobileOpen) flex=1 min-width=0 min-height=0 margin=(variant == 8 and not narrow ? (expanded ? "ui.space-8 ui.space-8 ui.space-8 ui.space-0" : "ui.space-8") : "ui.space-0") border-radius=(variant == 8 and not narrow ? "ui.radius-xl" : "ui.radius-flat") background-color="ui.background" overflow="hidden"
+            box-shadow=(variant == 8 and not narrow ? "ui.shadow-panel" : "none")
+            -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing-linear")
             if variant != 16
-              row height=(variant == 10 or variant == 15 ? 56 : variant == 7 and compact ? 48 : 64) -exact-layout-transition=(reduced ? "none" : "200ms linear") flex-shrink=0 gap=12 align-items="center" padding="0px 16px"
-                border-bottom=(variant == 4 or variant == 7 or variant == 8 or variant == 10 or variant == 15 ? "0" : "1px solid ui.border")
+              row height=(variant == 10 or variant == 15 ? "ui.space-56" : variant == 7 and compact ? "ui.space-48" : "ui.space-64") -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing-linear") flex-shrink=0 gap="ui.space-12" align-items="center" padding="ui.space-0 ui.space-16"
+                border-bottom-width=(variant == 4 or variant == 7 or variant == 8 or variant == 10 or variant == 15 ? "0px" : "ui.border-width") border-bottom-style="solid" border-bottom-color="ui.border"
                 view order=(variant == 14 ? 4 : 0)
                   SidebarTrigger(id=id + "-trigger", expanded=(narrow ? mobileOpen : expanded), controls=id + "-sidebar", press=toggle)
                 if not narrow and variant != 10 and variant != 12 and variant != 15
-                  view width=1 height=16 background-color="ui.border"
-                  text (variant == 9 ? "All Inboxes" : variant == 11 ? "components / ui" : "Build Your Application") font-size="0.875rem" color="ui.muted-foreground"
+                  view width="ui.border-width" height="ui.space-16" background-color="ui.border"
+                  text (variant == 9 ? "All Inboxes" : variant == 11 ? "components / ui" : "Build Your Application") font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                   SidebarIcon(name="ChevronRight")
-                text current testId=(id + "-current") font-size="0.875rem" flex=1 min-width=0 white-space="nowrap" overflow="hidden" text-overflow="ellipsis"
+                text current testId=(id + "-current") font-size="ui.text-sm" flex=1 min-width=0 white-space="nowrap" overflow="hidden" text-overflow="ellipsis" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 if variant == 10
                   if not narrow
-                    text "Edit Oct 08" font-size="0.875rem" color="ui.muted-foreground"
-                  button id=(id + "-star") testId=(id + "-star") class=Control press=toggleStar aria-label="Favorite page" aria-pressed=starred min-height=28 padding=4 border="0" background-color=(starred ? "ui.muted" : "transparent") color="ui.foreground"
+                    text "Edit Oct 08" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                  button id=(id + "-star") testId=(id + "-star") class=Control press=toggleStar aria-label="Favorite page" aria-pressed=starred min-height="ui.space-28" padding="ui.space-4" border="0" background-color=(starred ? "ui.muted" : "transparent") color="ui.foreground"
                     SidebarIcon(name="Star")
                   DropdownMenu(id=id + "-actions", label="Actions", reduced=reduced, choose=choose, entries=[MenuEntry(id="Customize Page", label="Customize Page", shortcut="", disabled=false, destructive=false), MenuEntry(id="Turn into wiki", label="Turn into wiki", shortcut="", disabled=false, destructive=false), MenuEntry(id="Copy Link", label="Copy Link", shortcut="", disabled=false, destructive=false), MenuEntry(id="Duplicate", label="Duplicate", shortcut="", disabled=false, destructive=false), MenuEntry(id="Move to", label="Move to", shortcut="", disabled=false, destructive=false), MenuEntry(id="Move to Trash", label="Move to Trash", shortcut="", disabled=false, destructive=true), MenuEntry(id="Undo", label="Undo", shortcut="", disabled=false, destructive=false), MenuEntry(id="View analytics", label="View analytics", shortcut="", disabled=false, destructive=false), MenuEntry(id="Version History", label="Version History", shortcut="", disabled=false, destructive=false), MenuEntry(id="Notifications", label="Notifications", shortcut="", disabled=false, destructive=false), MenuEntry(id="Import", label="Import", shortcut="", disabled=false, destructive=false), MenuEntry(id="Export", label="Export", shortcut="", disabled=false, destructive=false)])
-            scroll flex=1 min-height=0 padding=(variant == 10 ? "40px 16px" : variant == 4 or variant == 7 or variant == 8 ? "0px 16px 16px" : "16px")
-              column gap=16 min-width=0
+            scroll flex=1 min-height=0 padding=(variant == 10 ? "ui.space-40 ui.space-16" : variant == 4 or variant == 7 or variant == 8 ? "ui.space-0 ui.space-16 ui.space-16" : "ui.space-16")
+              column gap="ui.space-16" min-width=0
                 if query != ""
-                  text ("Search: " + query) role="status" font-size="0.875rem" color="ui.muted-foreground"
+                  text ("Search: " + query) role="status" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 if variant == 2 or variant == 9
                   for i in range(24) key=i
-                    view height=48 border-radius=8 background-color="ui.muted" opacity=0.5
+                    view height="ui.space-48" border-radius="ui.radius-md" background-color="ui.muted" opacity="ui.opacity-muted"
                 else if variant == 12
-                  view display="grid" grid-template-columns=(narrow ? "repeat(2, minmax(0, 1fr))" : "repeat(5, minmax(0, 1fr))") gap=16
+                  view display="grid" grid-template-columns=(narrow ? "repeat(2, minmax(0, 1fr))" : "repeat(5, minmax(0, 1fr))") gap="ui.space-16"
                     for i in range(20) key=i
-                      view aspect-ratio="1" border-radius=12 background-color="ui.muted" opacity=0.5
+                      view aspect-ratio="1" border-radius="ui.radius-card" background-color="ui.muted" opacity="ui.opacity-muted"
                 else if variant == 10 or variant == 15
-                  view height=96 width="100%" max-width="48rem" align-self="center" border-radius=12 background-color="ui.muted" opacity=0.5
-                  view height=680 width="100%" max-width="48rem" align-self="center" border-radius=12 background-color="ui.muted" opacity=0.5
+                  view height="ui.space-96" width="100%" max-width="48rem" align-self="center" border-radius="ui.radius-card" background-color="ui.muted" opacity="ui.opacity-muted"
+                  view height=680 width="100%" max-width="48rem" align-self="center" border-radius="ui.radius-card" background-color="ui.muted" opacity="ui.opacity-muted"
                 else
-                  view display="grid" grid-template-columns=(narrow ? "minmax(0, 1fr)" : "repeat(3, minmax(0, 1fr))") gap=16
+                  view display="grid" grid-template-columns=(narrow ? "minmax(0, 1fr)" : "repeat(3, minmax(0, 1fr))") gap="ui.space-16"
                     for i in range(3) key=i
-                      view aspect-ratio="16/9" border-radius=12 background-color="ui.muted" opacity=0.5
-                  view min-height=400 flex=1 border-radius=12 background-color="ui.muted" opacity=0.5
+                      view aspect-ratio="16/9" border-radius="ui.radius-card" background-color="ui.muted" opacity="ui.opacity-muted"
+                  view min-height=400 flex=1 border-radius="ui.radius-card" background-color="ui.muted" opacity="ui.opacity-muted"
           if variant == 15 and not narrow
-            column width="18rem" min-height=0 flex-shrink=0 border-left="1px solid ui.border" background-color="ui.muted"
+            column width="ui.sidebar-width-wide" min-height=0 flex-shrink=0 border-left-width="ui.border-width" border-left-style="solid" border-left-color="ui.border" background-color="ui.muted"
               SidebarCalendar(id=id + "-right", reduced=reduced, choose=choose)
           if narrow and mobileOpen
-            button id=(id + "-backdrop") testId=(id + "-backdrop") press=dismiss aria-label="Close sidebar" tabindex=-1 position="absolute" top=0 bottom=0 left=(variant == 14 ? "0px" : "min(18rem, calc(100% - 48px))") right=(variant == 14 ? "min(18rem, calc(100% - 48px))" : "0px") z-index=30 appearance="none" border="0" background-color="ui.overlay"
+            if variant == 14
+              button id=(id + "-backdrop") testId=(id + "-backdrop") press=dismiss aria-label="Close sidebar" tabindex=-1 position="absolute" top=0 bottom=0 left=0 right="min(ui.sidebar-width-wide, calc(100% - ui.space-48))" z-index=30 appearance="none" border="0" background-color="ui.overlay"
+            else
+              button id=(id + "-backdrop") testId=(id + "-backdrop") press=dismiss aria-label="Close sidebar" tabindex=-1 position="absolute" top=0 bottom=0 left="min(ui.sidebar-width-wide, calc(100% - ui.space-48))" right=0 z-index=30 appearance="none" border="0" background-color="ui.overlay"

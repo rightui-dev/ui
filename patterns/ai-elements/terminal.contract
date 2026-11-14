@@ -1,12 +1,13 @@
-use BubbleFrame from "../../packages/ui/conversation-parts.contract"
-use ButtonAI as ButtonContent from "../../packages/ui/button.contract"
-use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "../../packages/ui/trace-parts.contract"
+use uiFontFamily, BubbleFrame from "@rightui/ui"
+use ButtonAI as ButtonContent from "@rightui/ui"
+use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
   inject
+    uiFont: string
     rightuiDemoTime: number
     rightuiRunDemo: action
   state started = -1
@@ -19,9 +20,9 @@ component Demo
     started = rightuiDemoTime
     rightuiRunDemo(8200)
   view
-    column gap=16 min-width=0 min-height=288 max-width="24rem" width="100%" padding="24px 0px"
+    column gap="ui.space-16" min-width=0 min-height=288 max-width="24rem" width="100%" padding="ui.space-24 ui.space-0"
       BubbleFrame(id="ai-terminal-question", align="end", variant="muted")
-        text "Run the checks, then build the app."
+        text "Run the checks, then build the app." font-family=uiFontFamily(uiFont) data-rightui-font="body"
       TraceFrame()
         if elapsed >= 0
           TraceDisclosure(id="ai-terminal-lint", title=((elapsed < 400 ? "Running " : "Ran ") + "pnpm lint"), icon="terminal", status=(elapsed < 400 ? "running" : ""), open=(terminalOpen == "lint" or (busy and elapsed < 400)), reduced=reduced, toggle=toggleTerminal("lint"))
@@ -33,8 +34,8 @@ component Demo
           TraceDisclosure(id="ai-terminal-build", title=((elapsed < 4200 ? "Running " : "Ran ") + "pnpm build"), icon="terminal", status=(elapsed < 4200 ? "running" : ""), open=(terminalOpen == "build" or (busy and elapsed < 4200)), reduced=reduced, toggle=toggleTerminal("build"))
             CodeBlockContent(id="ai-terminal-build-output", code="> acme-chat@0.1.0 build\n> next build\n\n   \u25b2 Next.js 16.3.0\n   Creating an optimized production build ...\n \u2713 Compiled successfully in 4.2s\n \u2713 Generating static pages (12/12)\n\nRoute (app)                Size  First Load JS\n\u250c \u25cb /                     1.9 kB       112 kB\n\u2514 \u0192 /api/chat              141 B       102 kB".split("\n").slice(0, min(11, max(1, floor((elapsed - 2000) / 200) + 1))).join("\n"))
       if elapsed >= 4200
-        text "Lint and tests pass, and the build compiled both routes.".slice(0, started < 0 or reduced ? 56 : floor((elapsed - 4200) / 20)) font-size="0.875rem" line-height=1.625
+        text "Lint and tests pass, and the build compiled both routes.".slice(0, started < 0 or reduced ? 56 : floor((elapsed - 4200) / 20)) font-size="ui.text-sm" line-height="ui.leading-relaxed" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if not busy
         row margin-top="auto" align-items="flex-start"
           ButtonContent(id="ai-terminal-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
-            text "Replay"
+            text "Replay" font-family=uiFontFamily(uiFont) data-rightui-font="body"

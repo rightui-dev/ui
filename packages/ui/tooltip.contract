@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 keyframes uiTooltipDelay
   from opacity=0
@@ -8,6 +9,8 @@ component Tooltip
     id: string
     label: string
     description: string
+  inject
+    uiFont: string
   state focused = false
   state delayed = false
   state expanded = false
@@ -37,12 +40,12 @@ component Tooltip
   view
     column align-items="flex-start" hover=hover
       button id=id testId=id class=Control aria-describedby=(id + "-tip") focus=enter blur=leave press=show key=keys
-        padding="8px 12px" border="1px solid ui.border" background-color="ui.surface" color="ui.foreground"
-        text label
+        padding="ui.space-8 ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground"
+        text label font-family=uiFontFamily(uiFont) data-rightui-font="body"
       view id=(id + "-tip") testId=(id + "-tip") role="tooltip" popover="auto" toggle=changed hover=hover
         position-area="top" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
-        width="auto" max-width="calc(100vw - 32px)" box-sizing="border-box" margin=4 padding="6px 12px"
+        width="auto" max-width="calc(100vw - ui.space-32)" box-sizing="border-box" margin="ui.space-4" padding="ui.space-6 ui.space-12"
         background-color="ui.foreground" color="ui.background" border="0" border-radius="ui.radius-item" overflow="visible"
-        animation=(delayed ? "uiTooltipDelay 1ms linear 700ms both" : "none")
-        text description font-size="0.75rem" line-height=1.5
-        view position="absolute" left="50%" bottom=-5 width=10 height=10 rotate="45deg" border-radius="ui.radius-detail" background-color="ui.foreground" aria-hidden=true
+        animation=(delayed ? "uiTooltipDelay ui.duration-instant ui.easing-linear ui.duration-tooltip-delay both" : "none")
+        text description font-size="ui.text-xs" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        view position="absolute" left="50%" bottom="ui.space-negative-5" width="ui.space-10" height="ui.space-10" rotate="45deg" border-radius="ui.radius-detail" background-color="ui.foreground" aria-hidden=true

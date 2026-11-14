@@ -1,12 +1,14 @@
-use Alert from "@rightui/ui"
+use uiFontFamily, Alert from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Alert(id="catalog-alert", title="Your workspace is ready", description="The theme and components share the same design system.", variant="default")
-      text "Destructive" font-weight=600
+      text "Destructive" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Alert(id="alert-destructive", title="Unable to save", description="Check your connection and try again.", variant="destructive")

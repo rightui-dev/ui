@@ -8,13 +8,16 @@ export function buildRegistry() {
   const aiElements = JSON.parse(read('metadata/ai-elements.json'));
   const charts = JSON.parse(read('metadata/charts.json'));
   const blocks = JSON.parse(read('metadata/blocks.json'));
-  const files:Record<string,{path:string,content:string,sha256:string}>= {};
+  const files:Record<string,{path:string,content:string,sha256:string,encoding?:"base64"}>= {};
   function scan(dir:string) {
     for(const item of readdirSync(resolve(root,dir),{withFileTypes:true}).sort((a,b)=>a.name.localeCompare(b.name))) {
       if(item.name.startsWith('.')||['node_modules','target','dist','generated','Cargo.lock'].includes(item.name))continue;
       const path=dir?`${dir}/${item.name}`:item.name;
       if(item.isDirectory())scan(path);
-      else if(item.name === 'LICENSE' || /\.(contract|tamber|ts|rs|toml|json|md)$/.test(item.name)) {
+      else if(path.startsWith('packages/ui/assets/') && /\.(ttf|otf|woff2?)$/.test(item.name)) {
+        const bytes=readFileSync(resolve(root,path));files[path]={path,content:bytes.toString('base64'),encoding:'base64',sha256:createHash('sha256').update(bytes).digest('hex')};
+      }
+      else if(item.name === 'LICENSE' || /^OFL(?:-[A-Za-z0-9]+)?\.txt$/.test(item.name) || /\.(contract|tamber|ts|rs|toml|json|md)$/.test(item.name)) {
         const content=read(path);files[path]={path,content,sha256:createHash('sha256').update(content).digest('hex')};
       }
     }
@@ -32,7 +35,7 @@ export function buildRegistry() {
         else if(m[1].startsWith('@rightui/registry/'))add(m[1].replace('@rightui/registry/','')+'.contract');
       }
     };
-    initial.forEach(add);add('packages/ui/ui.tamber');add('LICENSE');add('THIRD_PARTY_NOTICES.md');return [...found].sort();
+    initial.forEach(add);add('packages/ui/ui.tamber');add('packages/ui/theme.ts');add('packages/ui/assets/fonts/Geist.ttf');add('packages/ui/assets/fonts/Geist-Italic.ttf');add('packages/ui/assets/fonts/Newsreader.ttf');add('packages/ui/assets/fonts/Newsreader-Italic.ttf');add('packages/ui/assets/fonts/OFL.txt');add('packages/ui/assets/fonts/OFL-Italic.txt');add('packages/ui/assets/fonts/OFL-Newsreader.txt');add('packages/ui/assets/fonts/provenance.json');add('LICENSE');add('THIRD_PARTY_NOTICES.md');return [...found].sort();
   };
   const result={schema:'rightui-contract/v1',name:'rightui',aiElements:aiElements.map((c:any)=>({...c,files:closure([c.source])})),components:components.map((c:any)=>({...c,files:closure([c.source,c.example])})),blocks:blocks.map((b:any)=>({...b,files:closure([b.source])})),charts:charts.map((c:any)=>({...c,files:closure([c.source])})),files:Object.values(files)};
   mkdirSync(resolve(root,'generated'),{recursive:true});writeFileSync(resolve(root,'generated/registry.json'),JSON.stringify(result,null,2)+'\n');

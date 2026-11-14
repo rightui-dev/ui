@@ -1,4 +1,36 @@
+use uiFontFamily from "./typography-context.contract"
 use Pressable from "./styles.contract"
+component SwitchFrame
+  props
+    id: string
+    label: string
+    checked: bool
+    disabled: bool
+    reduced: bool
+    change: action
+    showLabel: bool
+  inject
+    uiFont: string
+  action toggle
+    if not disabled
+      change(not checked)
+  view
+    button id=id testId=id appearance="none" class=Pressable press=toggle disabled=disabled
+      role="switch" aria-checked=checked aria-label=label
+      display="flex" align-items="center" justify-content="space-between" gap="ui.space-16"
+      min-height="ui.touch-target" width=(showLabel ? "auto" : "ui.touch-target") padding="ui.space-8 0px" flex-wrap="wrap" border="0" background-color="transparent" color="ui.foreground"
+      :focus-visible
+        box-shadow="ui.shadow-focus"
+      :disabled
+        opacity="ui.opacity-disabled"
+      if showLabel
+        text label text-align="left" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      view flex-shrink=0 width="ui.switch-track-width" height="ui.switch-track-height" border-radius="ui.radius-full" background-color=(checked ? "ui.primary" : "ui.border") position="relative" aria-hidden=true
+        transition=(reduced ? "none" : "background-color ui.duration-fast ui.easing")
+        view width="ui.switch-thumb-size" height="ui.switch-thumb-size" border-radius="ui.radius-full" position="absolute" left=(checked ? "ui.switch-thumb-on" : "ui.switch-inset") top="ui.switch-inset"
+          background-color=(checked ? "ui.primary-foreground" : "ui.surface")
+          -exact-layout-transition=(reduced ? "none" : "ui.duration-fast ui.easing")
+
 component Switch
   props
     id: string
@@ -7,22 +39,16 @@ component Switch
     disabled: bool
     reduced: bool
     change: action
-  action toggle
-    if not disabled
-      change(not checked)
   view
-    button id=id testId=id appearance="none" class=Pressable press=toggle disabled=disabled
-      role="switch" aria-checked=checked aria-label=label
-      display="flex" align-items="center" justify-content="space-between" gap=16
-      min-height=44 padding="8px 0px" flex-wrap="wrap" border="0" background-color="transparent" color="ui.foreground"
-      :focus-visible
-        box-shadow="0 0 0 3px ui.ring"
-      :disabled
-        opacity=0.5
-      text label text-align="left" font-size="0.875rem"
-      view flex-shrink=0 width=32 height=18 border-radius="ui.radius-full" background-color=(checked ? "ui.primary" : "ui.border") position="relative" aria-hidden=true
-        transition=(reduced ? "none" : "background-color 140ms ease-out")
-        view width=16 height=16 border-radius="ui.radius-full" position="absolute" left=1 top=1
-          background-color=(checked ? "ui.primary-foreground" : "ui.surface")
-          translate=(checked ? "14px 0px" : "0px 0px")
-          transition=(reduced ? "none" : "translate 140ms ease-out")
+    SwitchFrame(id=id, label=label, checked=checked, disabled=disabled, reduced=reduced, change=change, showLabel=true)
+
+component SwitchControl
+  props
+    id: string
+    label: string
+    checked: bool
+    disabled: bool
+    reduced: bool
+    change: action
+  view
+    SwitchFrame(id=id, label=label, checked=checked, disabled=disabled, reduced=reduced, change=change, showLabel=false)

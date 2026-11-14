@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 use uiModalFadeIn, uiModalFadeOut, uiPanelBottomIn, uiPanelBottomOut from "./overlays.contract"
 component Drawer
@@ -9,6 +10,8 @@ component Drawer
     reduced: bool
     focusIds: string[]
     dismiss: action
+  inject
+    uiFont: string
   slot
   state pointer = -1
   state start = 0
@@ -57,19 +60,19 @@ component Drawer
     column position="absolute" inset=0 z-index=110 pointer-events="none" justify-content="flex-end"
       if open
         view id=(id + "-backdrop") testId=(id + "-backdrop") position="absolute" inset=0 background-color="ui.overlay" pointer-events="auto" aria-hidden=true press=dismiss
-          animation=(reduced ? "none" : "uiModalFadeIn 200ms ease-in-out both")
-          -exact-exit-animation=(reduced ? "none" : "uiModalFadeOut 200ms ease-in-out both")
+          animation=(reduced ? "none" : "uiModalFadeIn ui.duration-normal ui.easing both")
+          -exact-exit-animation=(reduced ? "none" : "uiModalFadeOut ui.duration-normal ui.easing both")
       if open
         column id=id testId=id role="dialog" aria-modal=true aria-labelledby=(id + "-title") aria-describedby=(id + "-description") keycapture=keys focusin=remember
-          position="relative" pointer-events="auto" width="100%" max-height="80%" min-height=0 box-sizing="border-box" background-color="ui.surface" border-top="1px solid ui.border" border-top-left-radius="ui.radius-panel" border-top-right-radius="ui.radius-panel"
-          animation=(reduced ? "none" : "uiPanelBottomIn 500ms ease-in-out both")
-          -exact-exit-animation=(reduced ? "none" : "uiPanelBottomOut 300ms ease-in-out both")
-          column min-height=0 translate=("0px " + distance.toString() + "px")
-            button id=(id + "-handle") testId=(id + "-handle") class=Control autofocus=true aria-label="Drag down or press to close" press=dismiss key=handleKeys align-self="center" width="6.25rem" min-height="1.5rem" height="1.5rem" padding="8px 0px" margin-top=8 border="0" background-color="transparent" touch-action="none" pointerdown=begin pointermove=move pointerup=end
-              view width="6.25rem" height=8 border-radius="ui.radius-full" background-color="ui.muted"
-            scroll min-height=0 flex="1 1 auto"
-              column max-width="24rem" width="100%" align-self="center" box-sizing="border-box" min-width=0
-                column gap=6 padding=16 text-align="center"
-                  text title id=(id + "-title") role="heading" aria-level=2 font-size="1.125rem" font-weight=600 color="ui.foreground"
-                  text description id=(id + "-description") font-size="0.875rem" line-height=1.5 color="ui.muted-foreground"
+          position="relative" pointer-events="auto" width="100%" max-height="80%" min-height="0px" box-sizing="border-box" background-color="ui.surface" border-top-width="ui.border-width" border-top-style="solid" border-top-color="ui.border" border-top-left-radius="ui.radius-panel" border-top-right-radius="ui.radius-panel"
+          animation=(reduced ? "none" : "uiPanelBottomIn ui.duration-enter ui.easing both")
+          -exact-exit-animation=(reduced ? "none" : "uiPanelBottomOut ui.duration-slow ui.easing both")
+          column min-height="0px" translate=("0px" + distance.toString() + "px")
+            button id=(id + "-handle") testId=(id + "-handle") class=Control autofocus=true aria-label="Drag down or press to close" press=dismiss key=handleKeys align-self="center" width="6.25rem" min-height="ui.space-24" height="ui.space-24" padding="ui.space-8 0px" margin-top="ui.space-8" border="0" background-color="transparent" touch-action="none" pointerdown=begin pointermove=move pointerup=end
+              view width="6.25rem" height="ui.space-8" border-radius="ui.radius-full" background-color="ui.muted"
+            scroll min-height="0px" flex="1 1 auto"
+              column max-width="24rem" width="100%" align-self="center" box-sizing="border-box" min-width="0px"
+                column gap="ui.space-6" padding="ui.space-16" text-align="center"
+                  text title id=(id + "-title") role="heading" aria-level=2 font-size="ui.text-lg" font-weight="ui.weight-semibold" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                  text description id=(id + "-description") font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 children

@@ -1,10 +1,12 @@
-use ButtonGroupSeparator from "@rightui/ui"
+use uiFontFamily, ButtonGroupSeparator from "@rightui/ui"
 use Button, ButtonGroup from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state hasItem = false
   action createItem
@@ -12,11 +14,11 @@ component Demo
   action removeItem
     hasItem = false
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       ButtonGroup(label="Manage items")
         Button(id="catalog-create", label="Add", variant="primary", disabled=false, press=createItem)
         Button(id="catalog-remove", label="Remove", variant="outline", disabled=not hasItem, press=removeItem)
-      text "Separated nested groups" font-weight=600
+      text "Separated nested groups" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       ButtonGroup(label="Nested actions")
         ButtonGroup(label="Create actions")
           Button(id="group-nested-add", label="Add", variant="outline", disabled=false, press=createItem)

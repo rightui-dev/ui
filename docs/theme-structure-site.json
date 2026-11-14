@@ -1,0 +1,2898 @@
+{
+  "schema": "rightui-theme-structure/v1",
+  "scope": [
+    "packages/ui",
+    "examples",
+    "blocks",
+    "charts",
+    "patterns",
+    "../landing/apps/site/components",
+    "../landing/tools/app.contract.template"
+  ],
+  "reasons": {
+    "geometry": "Viewport, preview, media, chart or algorithm geometry. Review together with interaction math; not a density claim.",
+    "svg-geometry": "SVG coordinate-system geometry, not a page spacing or CSS radius decision.",
+    "chart-coordinates": "Tooltip anchor is aligned to the fixed chart coordinate system (228/230). It must change with that coordinate system, not with UI density.",
+    "responsive-geometry": "Viewport threshold and clamp multiplier select a responsive layout. Actual spacing inside this expression uses shared tokens; thresholds do not scale with density.",
+    "native-chrome": "The native macOS title lane reserves 150px on each side for OS traffic lights and history actions; its inset follows the host titlebar-area geometry, independently of UI density.",
+    "site-layout": "Site composition: 96rem maximum canvas, 20rem reserved documentation column, and 14rem search-label span. These reading/layout widths are independent of control density; their insets use shared spacing tokens.",
+    "hidden-test-node": "Invisible, aria-hidden dashboard counter keeps a one-pixel frame for test discovery; it is neither a separator nor a visible control.",
+    "supplied-icon": "The supplied iPhone and desktop SVG paths retain their original 0.85 ink opacity. Their tint follows currentColor; this exception is limited to these two PlatformIcon assets.",
+    "fixed-media": "The AppDrop QR image keeps its white surrounding quiet zone in every theme so its fixed dark modules remain scannable. This exception applies only to the view immediately containing that QR asset.",
+    "pattern": "Explicit border or line pattern recipe. Exact Tamber has no generic string/enum token.",
+    "semantics": "Intrinsic layout, inheritance, transparent paint, reset or full/hidden state endpoint.",
+    "typography": "Semantic italic/normal distinction; real font faces remain required.",
+    "sdk-motion": "Exact currently rejects number/length tokens in these keyframe rows. Geometry or opacity must remain literal; durations and easing are still shared tokens.",
+    "needs-review": "Unclassified visual decision: move to a shared token or document a specific exception."
+  },
+  "observations": [
+    {
+      "file": "../landing/apps/site/components/ai-install-prompt.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/apps/site/components/ai-install-prompt.contract",
+      "property": "height",
+      "value": "12",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/ai-install-prompt.contract",
+      "property": "rotate",
+      "value": "0deg",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/ai-install-prompt.contract",
+      "property": "rotate",
+      "value": "180deg",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/ai-install-prompt.contract",
+      "property": "width",
+      "value": "12",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "height",
+      "value": "1000",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "height",
+      "value": "13",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "height",
+      "value": "14",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "height",
+      "value": "18",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "height",
+      "value": "20",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "height",
+      "value": "850",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "min-height",
+      "value": "1000",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "min-height",
+      "value": "100vh",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "min-height",
+      "value": "850",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "min-width",
+      "value": "160",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "padding",
+      "value": "0 clamp(0px, (1100px - 100vw) * 1000, ui.space-16)",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "transform",
+      "value": "rotate(90deg)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "width",
+      "value": "10",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "width",
+      "value": "14",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "width",
+      "value": "16rem",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/blocks.contract",
+      "property": "width",
+      "value": "18",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/compatibility.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/apps/site/components/compatibility.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/apps/site/components/compatibility.contract",
+      "property": "max-height",
+      "value": "80vh",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/compatibility.contract",
+      "property": "min-width",
+      "value": "10rem",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/compatibility.contract",
+      "property": "min-width",
+      "value": "44rem",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/doc-actions.contract",
+      "property": "border-left-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/apps/site/components/doc-actions.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/apps/site/components/doc-actions.contract",
+      "property": "height",
+      "value": "12",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/doc-actions.contract",
+      "property": "max-height",
+      "value": "min(28rem, 70vh)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/doc-actions.contract",
+      "property": "max-width",
+      "value": "18rem",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/doc-actions.contract",
+      "property": "width",
+      "value": "12",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/doc-actions.contract",
+      "property": "width",
+      "value": "14rem",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/exact-overview.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/apps/site/components/exact-overview.contract",
+      "property": "border-style",
+      "value": "dashed",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/apps/site/components/exact-overview.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/apps/site/components/exact-overview.contract",
+      "property": "border-top-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/apps/site/components/exact-overview.contract",
+      "property": "transform",
+      "value": "rotate(90deg)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/exact-overview.contract",
+      "property": "width",
+      "value": "24%",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/exact-overview.contract",
+      "property": "width",
+      "value": "38%",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/hero.contract",
+      "property": "max-width",
+      "value": "min(50rem, 100%)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/hero.contract",
+      "property": "max-width",
+      "value": "min(64rem, 100%)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/hero.contract",
+      "property": "padding",
+      "value": "calc(ui.space-64 + clamp(0px, (100vw - 767px) * 1000, ui.space-80)) calc(ui.space-20 + clamp(0px, (100vw - 767px) * 1000, ui.space-4)) ui.space-48",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "height",
+      "value": "112",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "height",
+      "value": "120",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "height",
+      "value": "120",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "height",
+      "value": "135",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "height",
+      "value": "160",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "height",
+      "value": "165",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "height",
+      "value": "175",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "height",
+      "value": "200",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "margin-left",
+      "value": "clamp(0px, (100vw - 1023px) * 1000, ui.space-24)",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "margin-left",
+      "value": "clamp(0px, (100vw - 1399px) * 1000, ui.space-24)",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "margin-left",
+      "value": "clamp(0px, (100vw - 1899px) * 1000, ui.space-24)",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "margin-left",
+      "value": "clamp(0px, (100vw - 767px) * 1000, ui.space-24)",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "max-height",
+      "value": "max(0px, (100vw - 1023px) * 1000000)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "max-height",
+      "value": "max(0px, (100vw - 1399px) * 1000000)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "max-height",
+      "value": "max(0px, (100vw - 1899px) * 1000000)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "max-height",
+      "value": "max(0px, (100vw - 767px) * 1000000)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "max-width",
+      "value": "1900",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "max-width",
+      "value": "clamp(0px, (100vw - 1023px) * 1000, 100vw)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "max-width",
+      "value": "clamp(0px, (100vw - 1399px) * 1000, 100vw)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "max-width",
+      "value": "clamp(0px, (100vw - 1899px) * 1000, 100vw)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "max-width",
+      "value": "clamp(0px, (100vw - 767px) * 1000, 100vw)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "min-height",
+      "value": "318",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "min-height",
+      "value": "350",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "width",
+      "value": "14rem",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "width",
+      "value": "160",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/home-cards.contract",
+      "property": "width",
+      "value": "28",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/page-insets.contract",
+      "property": "width",
+      "value": "max(ui.space-24, calc((100vw - 96rem) / 2 + ui.space-24))",
+      "category": "site-layout"
+    },
+    {
+      "file": "../landing/apps/site/components/page-insets.contract",
+      "property": "width",
+      "value": "max(ui.space-24, calc(clamp(0px, (100vw - 1023px) * 1000, 20rem) + max(0px, (100vw - 96rem) / 2)))",
+      "category": "site-layout"
+    },
+    {
+      "file": "../landing/apps/site/components/themes.contract",
+      "property": "max-width",
+      "value": "80rem",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "background-color",
+      "value": "#ffffff",
+      "category": "fixed-media"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "fill-opacity",
+      "value": "0.85",
+      "category": "supplied-icon"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "height",
+      "value": "16",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "height",
+      "value": "208",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "height",
+      "value": "32",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "height",
+      "value": "7",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "max-width",
+      "value": "32rem",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "max-width",
+      "value": "36rem",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "max-width",
+      "value": "42rem",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "max-width",
+      "value": "48rem",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "width",
+      "value": "16",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "width",
+      "value": "208",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "width",
+      "value": "32",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/apps/site/components/try-app.contract",
+      "property": "width",
+      "value": "7",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "border-top-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "height",
+      "value": "16",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "height",
+      "value": "28",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "height",
+      "value": "max(32px, env(titlebar-area-height, 0px))",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "left",
+      "value": "150",
+      "category": "native-chrome"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "left",
+      "value": "max(ui.space-24, calc((100vw - 96rem) / 2 + ui.space-24))",
+      "category": "site-layout"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "margin-left",
+      "value": "clamp(0px, (100vw - 1023px) * 1000, ui.space-12)",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "margin-left",
+      "value": "clamp(0px, (100vw - 1279px) * 1000, ui.space-64)",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "margin-right",
+      "value": "calc(0px - clamp(0px, (100vw - 1023px) * 1000, ui.space-8))",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "margin-right",
+      "value": "clamp(0px, (100vw - 1023px) * 1000, ui.space-12)",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "max-height",
+      "value": "clamp(0px, (100vw - 1279px) * 1000, 100vh)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "max-width",
+      "value": "68.75rem",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "max-width",
+      "value": "96rem",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "max-width",
+      "value": "clamp(0px, (100vw - 1023px) * 1000, 14rem)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "max-width",
+      "value": "clamp(0px, (100vw - 1023px) * 1000, 28rem)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "max-width",
+      "value": "clamp(0px, (100vw - 1023px) * 1000, 3rem)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "max-width",
+      "value": "max(40rem, calc((1280px - 100vw) * 1000))",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "min-height",
+      "value": "64",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "padding-left",
+      "value": "env(titlebar-area-x, 0px)",
+      "category": "native-chrome"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "padding",
+      "value": "0 calc(ui.space-16 + clamp(0px, (100vw - 599px) * 1000, ui.space-24)) calc(ui.space-64 + clamp(0px, (100vw - 599px) * 1000, ui.space-16))",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "padding",
+      "value": "0 clamp(0px, (100vw - 1099px) * 1000, ui.space-40) ui.space-64",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "padding",
+      "value": "calc(ui.space-20 + clamp(0px, (100vw - 599px) * 1000, ui.space-20))",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "padding",
+      "value": "calc(ui.space-32 + clamp(0px, (100vw - 1023px) * 1000, ui.space-16)) 0 ui.space-64",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "padding",
+      "value": "ui.space-0 ui.space-24 calc(ui.space-64 + clamp(0px, (100vw - 767px) * 1000, ui.space-32))",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "padding",
+      "value": "ui.space-24 clamp(0px, (1100px - 100vw) * 1000, ui.space-16)",
+      "category": "responsive-geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "right",
+      "value": "150",
+      "category": "native-chrome"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "width",
+      "value": "16",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "width",
+      "value": "28",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "width",
+      "value": "calc(ui.control-sm + clamp(0px, (100vw - 1023px) * 1000, 14rem))",
+      "category": "site-layout"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "width",
+      "value": "clamp(0px, (100vw - 1023px) * 1000, 14.5rem)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "width",
+      "value": "clamp(0px, (100vw - 1279px) * 1000, 12rem)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "width",
+      "value": "clamp(0px, (1100px - 100vw) * 1000, 32px)",
+      "category": "geometry"
+    },
+    {
+      "file": "../landing/tools/app.contract.template",
+      "property": "width",
+      "value": "clamp(0px, (1100px - 100vw) * 1000, ui.control-sm)",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/auth.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/auth.contract",
+      "property": "max-width",
+      "value": "20rem",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/auth.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/auth.contract",
+      "property": "max-width",
+      "value": "56rem",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/auth.contract",
+      "property": "min-height",
+      "value": "740",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/brand.contract",
+      "property": "height",
+      "value": "12",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/brand.contract",
+      "property": "width",
+      "value": "18",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "border-left-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "border-style",
+      "value": "dashed",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "height",
+      "value": "1",
+      "category": "hidden-test-node"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "height",
+      "value": "100vh",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "height",
+      "value": "14",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "max-height",
+      "value": "580",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "max-width",
+      "value": "20rem",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "min-height",
+      "value": "180",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "min-width",
+      "value": "760",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "translate",
+      "value": "-100% 0px",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "width",
+      "value": "1",
+      "category": "hidden-test-node"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "width",
+      "value": "14rem",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "width",
+      "value": "18",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "width",
+      "value": "4rem",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/dashboard.contract",
+      "property": "width",
+      "value": "5rem",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/gallery.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/gallery.contract",
+      "property": "min-height",
+      "value": "740",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/gallery.contract",
+      "property": "min-height",
+      "value": "740px",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebar-navigation.contract",
+      "property": "border-left-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/sidebar-navigation.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/sidebar-navigation.contract",
+      "property": "rotate",
+      "value": "0deg",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebar-navigation.contract",
+      "property": "rotate",
+      "value": "90deg",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "height",
+      "value": "11",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "height",
+      "value": "12",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "height",
+      "value": "14",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "height",
+      "value": "16",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "height",
+      "value": "18",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "height",
+      "value": "4",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "height",
+      "value": "7",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "max-height",
+      "value": "80vh",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "width",
+      "value": "12",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "width",
+      "value": "14",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "width",
+      "value": "18",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "width",
+      "value": "20",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "width",
+      "value": "224",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebar-parts.contract",
+      "property": "width",
+      "value": "7",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "blocks/sidebar-special.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/sidebar-special.contract",
+      "property": "border-right-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/sidebar-special.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/sidebar-special.contract",
+      "property": "border-top-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/sidebar-special.contract",
+      "property": "rotate",
+      "value": "0deg",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebar-special.contract",
+      "property": "rotate",
+      "value": "90deg",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "border-left-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "border-right-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "height",
+      "value": "140",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "height",
+      "value": "480",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "height",
+      "value": "680",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "max-width",
+      "value": "48rem",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "max-width",
+      "value": "50rem",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "min-height",
+      "value": "400",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "min-height",
+      "value": "560",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "min-height",
+      "value": "700",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "translate",
+      "value": "-100% 0px",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "translate",
+      "value": "0% 0px",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "translate",
+      "value": "100% 0px",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "width",
+      "value": "10rem",
+      "category": "geometry"
+    },
+    {
+      "file": "blocks/sidebars.contract",
+      "property": "width",
+      "value": "15rem",
+      "category": "geometry"
+    },
+    {
+      "file": "charts/chart-area-axes.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "charts/chart-area-default.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "charts/chart-area-gradient.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "charts/chart-area-icons.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "charts/chart-area-interactive.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "charts/chart-area-legend.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "charts/chart-area-linear.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "charts/chart-area-stacked-expand.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "charts/chart-area-stacked.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "charts/chart-area-step.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "examples/aspect-ratio.contract",
+      "property": "max-width",
+      "value": "240",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/button.contract",
+      "property": "height",
+      "value": "16",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "examples/button.contract",
+      "property": "width",
+      "value": "20",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "examples/carousel.contract",
+      "property": "height",
+      "value": "200",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/carousel.contract",
+      "property": "height",
+      "value": "320",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/code-block.contract",
+      "property": "max-width",
+      "value": "32rem",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/dialog.contract",
+      "property": "max-height",
+      "value": "180",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/drawer.contract",
+      "property": "max-height",
+      "value": "180",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/field.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "examples/item.contract",
+      "property": "height",
+      "value": "60",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/item.contract",
+      "property": "width",
+      "value": "80",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/native/block-preview.contract",
+      "property": "min-height",
+      "value": "640",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/resizable.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "examples/resizable.contract",
+      "property": "height",
+      "value": "200",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/resizable.contract",
+      "property": "height",
+      "value": "360",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/scroll-area.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "examples/scroll-area.contract",
+      "property": "height",
+      "value": "100",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/scroll-area.contract",
+      "property": "height",
+      "value": "240",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/tabs.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "examples/tabs.contract",
+      "property": "width",
+      "value": "25rem",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/trace.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "examples/trace.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "examples/trace.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/advanced-controls.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/advanced-controls.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/advanced-controls.contract",
+      "property": "height",
+      "value": "192",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/advanced-controls.contract",
+      "property": "left",
+      "value": "50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/advanced-controls.contract",
+      "property": "rotate",
+      "value": "0deg",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/advanced-controls.contract",
+      "property": "rotate",
+      "value": "180deg",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/advanced-controls.contract",
+      "property": "top",
+      "value": "50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/advanced-controls.contract",
+      "property": "translate",
+      "value": "-50% -50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/advanced-controls.contract",
+      "property": "translate",
+      "value": "-50% 0px",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/advanced-controls.contract",
+      "property": "translate",
+      "value": "-50% 50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/advanced-controls.contract",
+      "property": "translate",
+      "value": "0px -50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/ai-controls.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/ai-controls.contract",
+      "property": "min-width",
+      "value": "120",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/ai-controls.contract",
+      "property": "width",
+      "value": "12rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/ai-controls.contract",
+      "property": "width",
+      "value": "9rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/area-chart.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/area-chart.contract",
+      "property": "height",
+      "value": "220",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/area-chart.contract",
+      "property": "height",
+      "value": "260",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/area-chart.contract",
+      "property": "top",
+      "value": "230",
+      "category": "chart-coordinates"
+    },
+    {
+      "file": "packages/ui/area-chart.contract",
+      "property": "translate",
+      "value": "-50% 0px",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/badge.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/button.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/calendar-advanced.contract",
+      "property": "left",
+      "value": "50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/calendar-advanced.contract",
+      "property": "min-width",
+      "value": "14rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/calendar-advanced.contract",
+      "property": "right",
+      "value": "50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/calendar-advanced.contract",
+      "property": "width",
+      "value": "15.5rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/calendar.contract",
+      "property": "min-width",
+      "value": "14rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/calendar.contract",
+      "property": "width",
+      "value": "15.5rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/carousel.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/carousel.contract",
+      "property": "min-height",
+      "value": "13.75rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart-series.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/chart-series.contract",
+      "property": "height",
+      "value": "250",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart-series.contract",
+      "property": "height",
+      "value": "250",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/chart-series.contract",
+      "property": "left",
+      "value": "50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart-series.contract",
+      "property": "top",
+      "value": "230",
+      "category": "chart-coordinates"
+    },
+    {
+      "file": "packages/ui/chart-series.contract",
+      "property": "top",
+      "value": "50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart-series.contract",
+      "property": "translate",
+      "value": "-50% -50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart-series.contract",
+      "property": "translate",
+      "value": "-50% 0px",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart-series.contract",
+      "property": "width",
+      "value": "11rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart-series.contract",
+      "property": "width",
+      "value": "250",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart-series.contract",
+      "property": "width",
+      "value": "560",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/chart.contract",
+      "property": "height",
+      "value": "11.25rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart.contract",
+      "property": "height",
+      "value": "11.25rem",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/chart.contract",
+      "property": "height",
+      "value": "250",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/chart.contract",
+      "property": "left",
+      "value": "5",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/chart.contract",
+      "property": "max-height",
+      "value": "30rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart.contract",
+      "property": "top",
+      "value": "228",
+      "category": "chart-coordinates"
+    },
+    {
+      "file": "packages/ui/chart.contract",
+      "property": "translate",
+      "value": "-50% 0px",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart.contract",
+      "property": "translate",
+      "value": "0px -50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart.contract",
+      "property": "width",
+      "value": "11rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart.contract",
+      "property": "width",
+      "value": "560",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/chart.contract",
+      "property": "width",
+      "value": "calc(100% - 10px)",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/checkbox.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/code-block.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/code-block.contract",
+      "property": "height",
+      "value": "12",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/code-block.contract",
+      "property": "width",
+      "value": "12",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/combobox.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/combobox.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/combobox.contract",
+      "property": "max-height",
+      "value": "18rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/combobox.contract",
+      "property": "max-height",
+      "value": "min(30rem, 70vh)",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/combobox.contract",
+      "property": "width",
+      "value": "280",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/command.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/command.contract",
+      "property": "max-height",
+      "value": "18rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/composition.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/composition.contract",
+      "property": "border-top-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/conversation-parts.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/conversation-parts.contract",
+      "property": "height",
+      "value": "13",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/conversation-parts.contract",
+      "property": "max-width",
+      "value": "80%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/conversation-parts.contract",
+      "property": "width",
+      "value": "13",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/conversation.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/conversation.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/conversation.contract",
+      "property": "max-width",
+      "value": "80%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/data-grid.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/data-grid.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/data-grid.contract",
+      "property": "max-height",
+      "value": "30rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/data-grid.contract",
+      "property": "max-width",
+      "value": "20rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/data-grid.contract",
+      "property": "width",
+      "value": "7rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/data-table.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/data-table.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/data-table.contract",
+      "property": "max-height",
+      "value": "480",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/data-table.contract",
+      "property": "max-width",
+      "value": "20rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/date-picker.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/date-picker.contract",
+      "property": "height",
+      "value": "16",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/date-picker.contract",
+      "property": "width",
+      "value": "15rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/date-picker.contract",
+      "property": "width",
+      "value": "18",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/date-range-picker.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/date-range-picker.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/date-range-picker.contract",
+      "property": "height",
+      "value": "16",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/date-range-picker.contract",
+      "property": "scale",
+      "value": "0.95",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/date-range-picker.contract",
+      "property": "width",
+      "value": "18.75rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/date-range-picker.contract",
+      "property": "width",
+      "value": "18",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/dialog.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/dialog.contract",
+      "property": "max-width",
+      "value": "32rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/disclosure.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/disclosure.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/disclosure.contract",
+      "property": "max-height",
+      "value": "min(30rem, 70vh)",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/disclosure.contract",
+      "property": "rotate",
+      "value": "0deg",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/disclosure.contract",
+      "property": "rotate",
+      "value": "180deg",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/disclosure.contract",
+      "property": "width",
+      "value": "18rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/display.contract",
+      "property": "border-bottom-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/display.contract",
+      "property": "border-style",
+      "value": "dashed",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/display.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/display.contract",
+      "property": "max-height",
+      "value": "30rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/display.contract",
+      "property": "opacity",
+      "value": "0.5",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/display.contract",
+      "property": "width",
+      "value": "60%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/display.contract",
+      "property": "width",
+      "value": "85%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/drawer.contract",
+      "property": "border-top-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/drawer.contract",
+      "property": "max-height",
+      "value": "80%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/drawer.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/drawer.contract",
+      "property": "width",
+      "value": "6.25rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/forms.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/forms.contract",
+      "property": "max-height",
+      "value": "20rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/hover-card.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/hover-card.contract",
+      "property": "width",
+      "value": "16rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/hover-card.contract",
+      "property": "width",
+      "value": "20rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/input-group.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/input-otp.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/layout-advanced.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/layout-advanced.contract",
+      "property": "left",
+      "value": "50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/layout-advanced.contract",
+      "property": "rotate",
+      "value": "0deg",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/layout-advanced.contract",
+      "property": "rotate",
+      "value": "90deg",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/layout-advanced.contract",
+      "property": "top",
+      "value": "50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/layout-advanced.contract",
+      "property": "translate",
+      "value": "-50% 0px",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/layout-advanced.contract",
+      "property": "translate",
+      "value": "0px -50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/markdown.contract",
+      "property": "border-left-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/markdown.contract",
+      "property": "font-style",
+      "value": "italic",
+      "category": "typography"
+    },
+    {
+      "file": "packages/ui/menu-advanced.contract",
+      "property": "border-style",
+      "value": "dashed",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/menu-advanced.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/menu-advanced.contract",
+      "property": "max-height",
+      "value": "min(28rem, 75vh)",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/menu-advanced.contract",
+      "property": "min-width",
+      "value": "8rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/menu-advanced.contract",
+      "property": "scale",
+      "value": "0.95",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/menu-advanced.contract",
+      "property": "translate",
+      "value": "-8px 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/menu-advanced.contract",
+      "property": "width",
+      "value": "14rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/menu.contract",
+      "property": "border-style",
+      "value": "dashed",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/menu.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/menu.contract",
+      "property": "max-height",
+      "value": "min(28rem, 70vh)",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/menu.contract",
+      "property": "width",
+      "value": "14rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/menubar.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/menubar.contract",
+      "property": "min-width",
+      "value": "12rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/message-scroller.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/message-scroller.contract",
+      "property": "height",
+      "value": "17.5rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/message-scroller.contract",
+      "property": "max-width",
+      "value": "90%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/motion.contract",
+      "property": "scale",
+      "value": "0.98",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/motion.contract",
+      "property": "translate",
+      "value": "-32px 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/motion.contract",
+      "property": "translate",
+      "value": "0px -32px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/motion.contract",
+      "property": "translate",
+      "value": "0px 32px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/motion.contract",
+      "property": "translate",
+      "value": "0px 4px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/motion.contract",
+      "property": "translate",
+      "value": "32px 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/native-select.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/navigation-menu.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/navigation-menu.contract",
+      "property": "width",
+      "value": "25rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/navigation.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/overlays.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/overlays.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/overlays.contract",
+      "property": "max-width",
+      "value": "32rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/overlays.contract",
+      "property": "scale",
+      "value": "0.95",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/overlays.contract",
+      "property": "translate",
+      "value": "-100% 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/overlays.contract",
+      "property": "translate",
+      "value": "0px -100%",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/overlays.contract",
+      "property": "translate",
+      "value": "0px 100%",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/overlays.contract",
+      "property": "translate",
+      "value": "100% 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/overlays.contract",
+      "property": "width",
+      "value": "75%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/popup-motion.contract",
+      "property": "scale",
+      "value": "0.95",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/popup-motion.contract",
+      "property": "translate",
+      "value": "0px -8px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/questionnaire.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/questionnaire.contract",
+      "property": "min-height",
+      "value": "6.25rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/resizable.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/resizable.contract",
+      "property": "left",
+      "value": "50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/resizable.contract",
+      "property": "rotate",
+      "value": "0deg",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/resizable.contract",
+      "property": "rotate",
+      "value": "90deg",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/resizable.contract",
+      "property": "top",
+      "value": "50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/resizable.contract",
+      "property": "translate",
+      "value": "-50% -50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/select.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/select.contract",
+      "property": "max-height",
+      "value": "min(24rem, 60vh)",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/select.contract",
+      "property": "width",
+      "value": "240",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/sidebar.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/sidebar.contract",
+      "property": "height",
+      "value": "18",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/sidebar.contract",
+      "property": "width",
+      "value": "18",
+      "category": "svg-geometry"
+    },
+    {
+      "file": "packages/ui/slider.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/slider.contract",
+      "property": "top",
+      "value": "50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/slider.contract",
+      "property": "translate",
+      "value": "-50% -50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/slider.contract",
+      "property": "translate",
+      "value": "0px -50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/spinner.contract",
+      "property": "rotate",
+      "value": "0deg",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/spinner.contract",
+      "property": "rotate",
+      "value": "360deg",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/styles.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/tabs.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/toast.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/toast.contract",
+      "property": "max-width",
+      "value": "26rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/tooltip.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/tooltip.contract",
+      "property": "left",
+      "value": "50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/tooltip.contract",
+      "property": "rotate",
+      "value": "45deg",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "border-left-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "max-height",
+      "value": "256",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "rotate",
+      "value": "0deg",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "rotate",
+      "value": "0deg",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "rotate",
+      "value": "360deg",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "rotate",
+      "value": "90deg",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "translate",
+      "value": "-1024px 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "translate",
+      "value": "-128px 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "translate",
+      "value": "-256px 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "translate",
+      "value": "-512px 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "translate",
+      "value": "-64px 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "translate",
+      "value": "1024px 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "translate",
+      "value": "128px 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "translate",
+      "value": "256px 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "translate",
+      "value": "512px 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "translate",
+      "value": "64px 0px",
+      "category": "sdk-motion"
+    },
+    {
+      "file": "packages/ui/trace-parts.contract",
+      "property": "width",
+      "value": "64",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/typography.contract",
+      "property": "border-left-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/typography.contract",
+      "property": "font-style",
+      "value": "italic",
+      "category": "typography"
+    },
+    {
+      "file": "patterns/ai-elements/chain-of-thought.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/chain-of-thought.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/chat.contract",
+      "property": "height",
+      "value": "800",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/chat.contract",
+      "property": "max-width",
+      "value": "20rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/checkpoint.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/checkpoint.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/confirmation.contract",
+      "property": "height",
+      "value": "1",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/confirmation.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/confirmation.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/confirmation.contract",
+      "property": "width",
+      "value": "1",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/context.contract",
+      "property": "width",
+      "value": "8%",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/file-tree.contract",
+      "property": "max-width",
+      "value": "20rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/file-tree.contract",
+      "property": "rotate",
+      "value": "0deg",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/file-tree.contract",
+      "property": "rotate",
+      "value": "90deg",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/inline-citation.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "patterns/ai-elements/inline-citation.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/inline-citation.contract",
+      "property": "width",
+      "value": "16rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/message.contract",
+      "property": "max-width",
+      "value": "28rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/model-selector.contract",
+      "property": "max-width",
+      "value": "32rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/plan.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/plan.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/prompt-input.contract",
+      "property": "max-width",
+      "value": "32rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/queue.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/queue.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/reasoning.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/reasoning.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/sources.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/sources.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/stack-trace.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/stack-trace.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/subagent.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/subagent.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/suggestion.contract",
+      "property": "max-width",
+      "value": "32rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/task.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/task.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/terminal.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/terminal.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/test-results.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/test-results.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/tool.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "patterns/ai-elements/tool.contract",
+      "property": "min-height",
+      "value": "288",
+      "category": "geometry"
+    }
+  ]
+}

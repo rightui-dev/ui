@@ -1,5 +1,5 @@
-use MessageFrame, MessageContent, MessageFooter, BubbleFrame, MessageAction, MessageEditor from "../../packages/ui/conversation-parts.contract"
-use Markdown from "../../packages/ui/markdown.contract"
+use uiFontFamily, MessageFrame, MessageContent, MessageFooter, BubbleFrame, MessageAction, MessageEditor from "@rightui/ui"
+use Markdown from "@rightui/ui"
 
 component Demo
   props
@@ -8,6 +8,7 @@ component Demo
   state prompt = "How do I add a settings dialog? It should open from the gear icon in the header."
   state editing = false
   inject
+    uiFont: string
     rightuiDemoTime: number
     rightuiRunDemo: action
   state copiedUntil = 0
@@ -33,14 +34,14 @@ component Demo
     replayUntil = rightuiDemoTime + 800
     rightuiRunDemo(800)
   view
-    column width="100%" max-width="28rem" margin="0 auto" gap=32 padding="24px 0" min-width=0
+    column width="100%" max-width="28rem" margin="ui.space-0 auto" gap="ui.space-32" padding="ui.space-24 ui.space-0" min-width=0
       MessageFrame(id="ai-message-user", align="end")
         MessageContent(id="ai-message-user-content", align="end")
           if editing
             MessageEditor(id="ai-message-editor", value=prompt, edit=edit, save=toggleEdit)
           else
             BubbleFrame(id="ai-message-bubble", align="end", variant="muted")
-              text prompt
+              text prompt font-family=uiFontFamily(uiFont) data-rightui-font="body"
           MessageFooter(id="ai-message-user-footer", align="end")
             MessageAction(id="ai-message-user-copy", label="Copy", icon="copy", pressed=false, press=copyUser)
             MessageAction(id="ai-message-edit", label="Edit", icon="pencil", pressed=editing, press=toggleEdit)
@@ -53,4 +54,4 @@ component Demo
             MessageAction(id="ai-message-unhelpful", label="Bad response", icon="hand.thumbsdown", pressed=(feedback == "dislike"), press=dislike)
             MessageAction(id="ai-message-retry", label="Retry", icon="arrow.clockwise", pressed=false, press=retry)
           if replaying
-            text "Replaying response…" role="status" font-size="0.75rem" color="ui.muted-foreground"
+            text "Replaying response…" role="status" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

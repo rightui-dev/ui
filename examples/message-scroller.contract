@@ -19,5 +19,5 @@ component Demo
       case none
         preventDefault()
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       MessageScroller(id="content-scroller", messages=thread, historyLoaded=historyLoaded, loadHistory=loadHistory, send=post, latest=latest)

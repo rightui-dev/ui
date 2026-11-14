@@ -1,13 +1,22 @@
+use uiFontFamily from "./typography-context.contract"
+use CardStyle from "./styles.contract"
 component Card
   props
     id: string
     title: string
     description: string
+  inject
+    uiFont: string
+  params
+    inset: length = "ui.card-inset" control="token" group="Spacing"
+    gap: length = "ui.card-gap" control="token" group="Spacing"
+    radius: length = "ui.panel-radius" control="token" group="Shape"
+    borderWidth: length = "ui.border-width" control="token" group="Border"
+    fill: color = "ui.surface" control="color" group="Color"
   slot
   view
-    column testId=id background-color="ui.surface" border="1px solid ui.border"
-      box-shadow="0 1px 3px 0 ui.shadow" border-radius="ui.panel-radius" padding=24 gap=24 min-width=0 box-sizing="border-box"
-      column gap=8
-        text title font-size="1.0rem" font-weight=600 color="ui.foreground" role="heading" aria-level=2
-        text description font-size="0.875rem" color="ui.muted-foreground" line-height=1.5
+    column testId=id class=CardStyle background-color="param.fill" border-width="param.borderWidth" border-radius="param.radius" padding="param.inset" gap="param.gap"
+      column gap="ui.space-8"
+        text title font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-base" font-weight="ui.weight-semibold" color="ui.foreground" role="heading" aria-level=2
+        text description font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-sm" color="ui.muted-foreground" line-height="ui.leading-normal"
       children

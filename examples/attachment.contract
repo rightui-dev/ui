@@ -1,9 +1,11 @@
-use Attachment, Button from "@rightui/ui"
+use uiFontFamily, Attachment, Button from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   action remove
     attached = false
@@ -19,13 +21,13 @@ component Demo
     uploading = true
     failed = true
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       if attached
         Attachment(id="content-attachment", name="brief.txt", metadata="Text · Session brief · Ready", content="Photo session\nBedroom, restaurant and terrace.\nNatural morning light.\nDelivery: selected photos and a short video.", status="done", remove=remove)
       Button(id="attachment-restore", label="Attach brief", variant="outline", disabled=(attached and uploading and failed), press=restore)
-      text "Uploading" font-weight=600
+      text "Uploading" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if uploading
         Attachment(id="attachment-uploading", name="preview.txt", metadata="Uploading", content="Preview document", status="uploading", remove=removeUpload)
-      text "Error" font-weight=600
+      text "Error" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if failed
         Attachment(id="attachment-error", name="preview.txt", metadata="Error", content="Preview document", status="error", remove=removeError)

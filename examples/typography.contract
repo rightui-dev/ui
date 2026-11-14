@@ -1,30 +1,32 @@
-use Typography from "@rightui/ui"
+use uiFontFamily, Typography from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Typography(id="controls-heading", variant="h1", content="The Joke Tax Chronicles")
-      text "h2" font-size="0.875rem" font-weight=600
+      text "h2" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Typography(id="variation-type-h2", variant="h2", content="Design with clear, readable content.")
-      text "h3" font-size="0.875rem" font-weight=600
+      text "h3" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Typography(id="variation-type-h3", variant="h3", content="Design with clear, readable content.")
-      text "h4" font-size="0.875rem" font-weight=600
+      text "h4" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Typography(id="variation-type-h4", variant="h4", content="Design with clear, readable content.")
-      text "p" font-size="0.875rem" font-weight=600
+      text "p" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Typography(id="variation-type-p", variant="p", content="Design with clear, readable content.")
-      text "blockquote" font-size="0.875rem" font-weight=600
+      text "blockquote" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Typography(id="variation-type-blockquote", variant="blockquote", content="Design with clear, readable content.")
-      text "code" font-size="0.875rem" font-weight=600
+      text "code" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Typography(id="variation-type-code", variant="code", content="npm install @rightui/ui")
-      text "lead" font-size="0.875rem" font-weight=600
+      text "lead" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Typography(id="variation-type-lead", variant="lead", content="Design with clear, readable content.")
-      text "large" font-size="0.875rem" font-weight=600
+      text "large" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Typography(id="variation-type-large", variant="large", content="Design with clear, readable content.")
-      text "small" font-size="0.875rem" font-weight=600
+      text "small" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Typography(id="variation-type-small", variant="small", content="Design with clear, readable content.")
-      text "muted" font-size="0.875rem" font-weight=600
+      text "muted" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Typography(id="variation-type-muted", variant="muted", content="Design with clear, readable content.")

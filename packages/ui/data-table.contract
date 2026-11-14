@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Button from "./button.contract"
 use Control, Field from "./styles.contract"
 shape DataRow
@@ -10,6 +11,8 @@ component DataTable
     id: string
     rows: DataRow[]
     pageSize: number
+  inject
+    uiFont: string
   state query = ""
   state sort = "email"
   state descending = false
@@ -37,37 +40,37 @@ component DataTable
   action next
     page = min(count - 1, currentPage + 1)
   view
-    column id=id testId=id gap=16 min-width=0 color="ui.foreground"
-      input id=(id + "-search") testId=(id + "-search") class=Field value=query input=search placeholder="Filter emails or status..." aria-label="Filter payments" max-width="20rem"
-      scroll max-height=480 overflow="auto" border="1px solid ui.border" border-radius="ui.radius-control" min-width=0
-        table width="100%" border-spacing=0 font-size="0.875rem"
+    column id=id testId=id gap="ui.space-16" min-width="0px" color="ui.foreground"
+      input id=(id + "-search") testId=(id + "-search") class=Field value=query input=search placeholder="Filter emails or status..." aria-label="Filter payments" max-width="20rem" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      scroll max-height=480 overflow="auto" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" min-width="0px"
+        table width="100%" border-spacing=0 font-size="ui.text-sm"
           thead
-            tr border-bottom="1px solid ui.border"
-              th border-bottom="1px solid ui.border" scope="col" padding="0 12px" width=44
+            tr border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border"
+              th border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" scope="col" padding="0px ui.space-12" width="ui.space-44"
                 DataTableCheck(id=id + "-all", label="Select page", checked=visible.length > 0 and visible.filter(r => selected.includes(r.id)).length == visible.length, disabled=visible.length == 0, change=pickAll)
               for col in ["status", "email", "amount"] key=col
-                th border-bottom="1px solid ui.border" scope="col" padding="8px 12px" text-align=(col == "amount" ? "right" : "left") aria-sort=(sort == col ? (descending ? "descending" : "ascending") : "none")
-                  button class=Control id=(id + "-sort-" + col) testId=(id + "-sort-" + col) press=order(col) padding="4px 8px" border="0" background-color="transparent" color="ui.muted-foreground" min-height=32
-                    text ((col == "status" ? "Status" : col == "email" ? "Email" : "Amount") + (sort == col ? (descending ? " ↓" : " ↑") : ""))
+                th border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" scope="col" padding="ui.space-8 ui.space-12" text-align=(col == "amount" ? "right" : "left") aria-sort=(sort == col ? (descending ? "descending" : "ascending") : "none")
+                  button class=Control id=(id + "-sort-" + col) testId=(id + "-sort-" + col) press=order(col) padding="ui.space-4 ui.space-8" border="0" background-color="transparent" color="ui.muted-foreground" min-height="ui.space-32"
+                    text ((col == "status" ? "Status" : col == "email" ? "Email" : "Amount") + (sort == col ? (descending ? " ↓" : " ↑") : "")) font-family=uiFontFamily(uiFont) data-rightui-font="body"
           tbody
             for r in visible key=r.id
-              tr testId=(id + "-row-" + r.id) border-bottom="1px solid ui.border" background-color=(selected.includes(r.id) ? "ui.muted" : "transparent")
-                td border-bottom="1px solid ui.border" padding="4px 12px"
+              tr testId=(id + "-row-" + r.id) border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" background-color=(selected.includes(r.id) ? "ui.muted" : "transparent")
+                td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-4 ui.space-12"
                   DataTableCheck(id=id + "-select-" + r.id, label="Select " + r.email, checked=selected.includes(r.id), disabled=false, change=pick(r.id))
-                td border-bottom="1px solid ui.border" padding="12px" text-transform="capitalize"
-                  text r.status
-                td border-bottom="1px solid ui.border" padding="12px"
-                  text r.email
-                td border-bottom="1px solid ui.border" padding="12px" text-align="right" font-weight=500
-                  text ("$" + r.amount.toFixed(2))
+                td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-12" text-transform="capitalize"
+                  text r.status font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-12"
+                  text r.email font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-12" text-align="right" font-weight="ui.weight-medium"
+                  text ("$" + r.amount.toFixed(2)) font-family=uiFontFamily(uiFont) data-rightui-font="body"
             if visible.length == 0
               tr
-                td colspan=4 padding=32 text-align="center"
-                  text "No results." testId=(id + "-empty")
-      row align-items="center" justify-content="space-between" gap=12 flex-wrap="wrap"
-        text (selected.filter(s => rows.map(r => r.id).includes(s)).length.toString() + " of " + rows.length.toString() + " row(s) selected.") testId=(id + "-selection") font-size="0.875rem" color="ui.muted-foreground"
-        row gap=8 align-items="center"
-          text ("Page " + (currentPage + 1).toString() + " of " + count.toString()) testId=(id + "-page") font-size="0.875rem" color="ui.muted-foreground"
+                td colspan=4 padding="ui.space-32" text-align="center"
+                  text "No results." testId=(id + "-empty") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      row align-items="center" justify-content="space-between" gap="ui.space-12" flex-wrap="wrap"
+        text (selected.filter(s => rows.map(r => r.id).includes(s)).length.toString() + " of " + rows.length.toString() + " row(s) selected.") testId=(id + "-selection") font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        row gap="ui.space-8" align-items="center"
+          text ("Page " + (currentPage + 1).toString() + " of " + count.toString()) testId=(id + "-page") font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           Button(id=id + "-previous", label="Previous", variant="outline", disabled=currentPage == 0, press=previous)
           Button(id=id + "-next", label="Next", variant="outline", disabled=currentPage >= count - 1, press=next)
 
@@ -83,8 +86,8 @@ component DataTableCheck
       change(not checked)
   view
     button id=id testId=id class=Control press=toggle role="checkbox" aria-checked=checked aria-label=label disabled=disabled
-      width=32 min-height=32 height=32 padding=8 border="0" background-color="transparent" display="flex" align-items="center" justify-content="center"
-      view width=16 height=16 border-radius="ui.radius-checkbox" border="1px solid ui.border" background-color=(checked ? "ui.primary" : "ui.surface") display="flex" align-items="center" justify-content="center" aria-hidden=true
+      width="ui.space-32" min-height="ui.space-32" height="ui.space-32" padding="ui.space-8" border="0" background-color="transparent" display="flex" align-items="center" justify-content="center"
+      view width="ui.space-16" height="ui.space-16" border-radius="ui.radius-checkbox" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color=(checked ? "ui.primary" : "ui.surface") display="flex" align-items="center" justify-content="center" aria-hidden=true
         if checked
-          svg width=12 height=12 viewBox="0 0 24 24" fill="none" stroke="ui.primary-foreground" stroke-width=3
+          svg width="ui.space-12" height="ui.space-12" viewBox="0 0 24 24" fill="none" stroke="ui.primary-foreground" stroke-width="ui.stroke-strong"
             path d="m5 12 4 4L19 6"

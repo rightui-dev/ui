@@ -1,15 +1,25 @@
-use Button from "@rightui/ui"
+font "Geist"
+  100 900 = "assets/fonts/Geist.ttf"
+  100 900 italic = "assets/fonts/Geist-Italic.ttf"
+
+font "Newsreader"
+  200 800 = "assets/fonts/Newsreader.ttf"
+  200 800 italic = "assets/fonts/Newsreader-Italic.ttf"
+
+use uiFontFamily, Button from "@rightui/ui"
 
 shape Greeting
   label: string
 
 component App
+  provide
+    uiFont = "theme"
   resource greeting = greeting() as shape Greeting
   state count = 0
   action increment
     count = count + 1
   view
     column padding=24 gap=12
-      text greeting.label
-      text count.toString()
+      text greeting.label font-family=uiFontFamily("theme") data-rightui-font="body"
+      text count.toString() font-family=uiFontFamily("theme") data-rightui-font="body"
       Button(id="increment", label="Increment", variant="primary", disabled=false, press=increment)

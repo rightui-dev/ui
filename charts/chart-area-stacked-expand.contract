@@ -1,13 +1,15 @@
-use ChartPoint, Button from "@rightui/ui"
-use AreaGalleryChart from "../packages/ui/area-chart.contract"
+use uiFontFamily, ChartPoint, Button from "@rightui/ui"
+use AreaGalleryChart from "@rightui/ui"
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   view
-    column gap=20 padding=24 min-width=0 border="1px solid ui.border" border-radius=12 background-color="ui.surface"
-      text "Area Chart - Stacked Expand" font-size=16 font-weight=600
-      text "Showing total visitors for the last 6 months" font-size=14 color="ui.muted-foreground"
+    column gap="ui.space-20" padding="ui.space-24" min-width=0 border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-card" background-color="ui.surface"
+      text "Area Chart - Stacked Expand" font-size="ui.text-base" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Showing total visitors for the last 6 months" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       AreaGalleryChart(id="chart-area-stacked-expand", points=[ChartPoint(label="January", desktop=186, mobile=80), ChartPoint(label="February", desktop=305, mobile=200), ChartPoint(label="March", desktop=237, mobile=120), ChartPoint(label="April", desktop=73, mobile=190), ChartPoint(label="May", desktop=209, mobile=130), ChartPoint(label="June", desktop=214, mobile=140)], others=[45, 100, 150, 50, 100, 160], mode="stacked-expand", width=width, reduced=reduced)
-      text "Trending up by 5.2% this month ↗" font-size=14 font-weight=500
-      text "January - June 2024" font-size=14 color="ui.muted-foreground"
+      text "Trending up by 5.2% this month ↗" font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "January - June 2024" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

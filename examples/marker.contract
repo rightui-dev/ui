@@ -1,14 +1,16 @@
-use Marker from "@rightui/ui"
+use uiFontFamily, Marker from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Marker(id="content-marker", label="Today", variant="separator")
-      text "Border" font-size="0.875rem" font-weight=600
+      text "Border" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Marker(id="variation-marker-border", label="Yesterday", variant="border")
-      text "Plain" font-size="0.875rem" font-weight=600
+      text "Plain" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Marker(id="variation-marker-plain", label="Yesterday", variant="plain")

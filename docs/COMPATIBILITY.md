@@ -1,6 +1,6 @@
 # Compatibility
 
-124 catalog entries. Evidence recorded on 2026-11-14 against rightui 0.1.0-beta.5 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
+124 catalog entries. Evidence recorded on 2026-11-14 against rightui 0.2.0-beta.1 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
 
 This records validation evidence, not full compatibility certification. Partial checks cover specific examples or interactions, not every variant. Built only means compilation succeeded, without a targeted interaction result.
 
@@ -10,7 +10,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 
 - **✅ Partial checks:** Targeted checks completed. Coverage varies by component.
 - **✅ Built only:** Compiled successfully. Interactions have not been verified.
-- **⚠️ Partial checks:** Validation incomplete. No successful iOS build or device checks recorded.
+- **⚠️ Partial checks:** Validation incomplete for the current release.
 - **❌ Not supported:** Outside rightui support. The project targets web, iOS and macOS.
 
 ## Components
@@ -73,7 +73,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 | Skeleton | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Slider | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Spinner | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Switch | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Switch | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Table | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Tabs | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Textarea | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
@@ -114,10 +114,10 @@ iOS validation is incomplete. Windows and Android are not supported.
 
 | Component | iOS | macOS | Web | Windows | Android |
 | --- | --- | --- | --- | --- | --- |
-| dashboard-01 — A dashboard with sidebar, charts and data table | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| dashboard-01 — A dashboard with sidebar, charts and data table | ⚠️ Partial checks | ✅ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | sidebar-01 — Sidebar layout 1 | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | sidebar-02 — Sidebar layout 2 | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| sidebar-03 — A sidebar with submenus | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| sidebar-03 — A sidebar with submenus | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | sidebar-04 — Sidebar layout 4 | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | sidebar-05 — Sidebar layout 5 | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | sidebar-06 — Sidebar layout 6 | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
@@ -184,5 +184,8 @@ iOS validation is incomplete. Windows and Android are not supported.
 - **web-manual-inline-citation:** Recorded manual browser check in VALIDATION.md: Inline citations opened on keyboard focus, exposed content and closed with Escape. Limited to the documented sample and gestures. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 - **web-accordion-spacing:** Accordion and AccordionMultiple from the beta.4 archive passed a browser interaction test for single and independent expansion. Focus moved between triggers with ArrowDown. At a 390px viewport, browser measurements confirmed 16px heading, content and chevron insets with no horizontal document overflow; hover retained its underline. These are targeted web checks only. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 - **web-code-block:** A targeted web test in the 28-test website run checked tokenized text, wrap interaction, copy feedback and retained text after mobile resize. Browser checks confirmed wrapping without document overflow at 390px; the UTF-8 downloaded file matched the original 337-byte code passed to the clipboard. Clipboard write succeeded with browser write permission granted. No new native checks are claimed. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
+- **web-0-2-release:** The 0.2 release candidate passed 34 browser interaction tests, including theme choices, code-copy feedback reset after three seconds, repeated mobile dashboard/sidebar opening, package-manager commands and shared component demonstrations. The production web build includes all catalog entries. This is targeted coverage, not full variant certification. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
+- **web-switch-0-2:** At 390px, pointer activation changed Switch from on to off, Space changed it back to on, and a pointer press on the disabled Switch left the shared state unchanged. The documentation article retained 24px side insets without document overflow. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
+- **mac-site-0-2:** The same Contract website was compiled for macOS and manually checked through Home, Blocks and Dashboard, repeated Back/Forward navigation, disabled history endpoints, page titles, immersive blocks and the globe opening the equivalent website URL. The delivered Mac archive was signature-checked and its downloaded SHA-256 matched the approved artifact. This does not certify every native component. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 
 The machine-readable row-to-evidence mapping is in [metadata/compatibility.json](https://github.com/rightui-dev/ui/blob/main/metadata/compatibility.json). A successful build does not certify every interaction.

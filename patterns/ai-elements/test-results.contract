@@ -1,12 +1,13 @@
-use BubbleFrame from "../../packages/ui/conversation-parts.contract"
-use ButtonAI as ButtonContent from "../../packages/ui/button.contract"
-use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "../../packages/ui/trace-parts.contract"
+use uiFontFamily, BubbleFrame from "@rightui/ui"
+use ButtonAI as ButtonContent from "@rightui/ui"
+use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
   inject
+    uiFont: string
     rightuiDemoTime: number
     rightuiRunDemo: action
   state started = -1
@@ -16,9 +17,9 @@ component Demo
     started = rightuiDemoTime
     rightuiRunDemo(5500)
   view
-    column gap=16 min-width=0 min-height=288 max-width="24rem" width="100%" padding="24px 0px"
+    column gap="ui.space-16" min-width=0 min-height=288 max-width="24rem" width="100%" padding="ui.space-24 ui.space-0"
       BubbleFrame(id="ai-test-results-question", align="end", variant="muted")
-        text "Run the checkout tests."
+        text "Run the checkout tests." font-family=uiFontFamily(uiFont) data-rightui-font="body"
       TraceFrame()
         if elapsed < 1500
           TraceLine(title="Running pnpm test checkout", icon="flask", status="running", reduced=reduced)
@@ -33,8 +34,8 @@ component Demo
               TraceCollapsible(id="ai-test-failure", title="retries a declined card", icon="x", status="error", initiallyOpen=true, reduced=reduced)
                 CodeBlockContent(id="ai-test-error", code="Expected 2 charge attempts, received 1\n\n  at Object.<anonymous> (src/payment.test.ts:58:22)")
       if elapsed >= 1500
-        text "One test failed. The payment client does not retry a declined card, so the second charge attempt never happens.".slice(0, started < 0 or reduced ? 111 : floor((elapsed - 1500) / 20)) font-size="0.875rem" line-height=1.625
+        text "One test failed. The payment client does not retry a declined card, so the second charge attempt never happens.".slice(0, started < 0 or reduced ? 111 : floor((elapsed - 1500) / 20)) font-size="ui.text-sm" line-height="ui.leading-relaxed" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if not busy
         row margin-top="auto" align-items="flex-start"
           ButtonContent(id="ai-test-results-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
-            text "Replay"
+            text "Replay" font-family=uiFontFamily(uiFont) data-rightui-font="body"

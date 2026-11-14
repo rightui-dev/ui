@@ -1,6 +1,6 @@
 {
   "name": "@rightui/ui",
-  "version": "0.1.0-beta.5",
+  "version": "0.2.0-beta.1",
   "description": "Composable Exact Contract UI components for web, iOS and macOS",
   "repository": {
     "type": "git",
@@ -15,10 +15,13 @@
     "LICENSE",
     "README.md",
     "CHANGELOG.md",
-    "THIRD_PARTY_NOTICES.md"
+    "THIRD_PARTY_NOTICES.md",
+    "theme.ts",
+    "docs/"
   ],
   "exports": {
-    ".": "./index.contract"
+    ".": "./index.contract",
+    "./theme": "./theme.ts"
   },
   "tamber": "ui.tamber",
   "license": "MIT",

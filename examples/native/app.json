@@ -1,13 +1,16 @@
 {
   "$schema": "../../../.tooling/exact/scripts/app.schema.json",
-  "name": "rightui Demo",
-  "short_name": "rightui Demo",
-  "id": "dev.rightui.demo",
+  "name": "RightUI",
+  "short_name": "RightUI",
+  "id": "dev.rightui",
   "start_url": "/",
   "display": "standalone",
+  "data": [
+    "rightui-font"
+  ],
   "app": {
-    "id": "dev.rightui.demo",
-    "name": "rightui Demo"
+    "id": "dev.rightui",
+    "name": "RightUI"
   },
   "host": {
     "web": {},
@@ -36,7 +39,7 @@
   "icons": [
     {
       "src": "assets/icon.png",
-      "sizes": "1024x1024",
+      "sizes": "1254x1254",
       "type": "image/png",
       "purpose": "any"
     }

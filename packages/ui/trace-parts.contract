@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 keyframes traceSweep64
   from translate="-64px 0px"
   to translate="64px 0px"
@@ -44,7 +45,7 @@ component TraceIcon
     status: string
     reduced: bool
   view
-    svg width=16 height=16 flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke=(status == "error" ? "ui.danger" : "currentColor") stroke-width=2 stroke-linecap="round" stroke-linejoin="round" animation=(status == "running" and (icon == "check" or icon == "loader") and not reduced ? "traceSpin 1s linear infinite" : "none") aria-hidden=true
+    svg width="ui.space-16" height="ui.space-16" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke=(status == "error" ? "ui.danger" : "currentColor") stroke-width="ui.stroke-standard" stroke-linecap="round" stroke-linejoin="round" animation=(status == "running" and (icon == "check" or icon == "loader") and not reduced ? "traceSpin ui.duration-spin ui.easing-linear infinite" : "none") aria-hidden=true
       if icon == "loader" or (status == "running" and icon == "check")
         path d="M12 2a10 10 0 1 0 10 10"
       else if icon == "dot"
@@ -92,12 +93,12 @@ component TraceIcon
 component TraceFrame
   slot
   view
-    column gap=8 min-width=0 color="ui.muted-foreground" font-size="0.875rem"
+    column gap="ui.space-8" min-width="0px" color="ui.muted-foreground" font-size="ui.text-sm"
       children
 style TraceTitleText
-  font-size="0.875rem"
-  line-height=1.428571
-  font-weight=400
+  font-size="ui.text-sm"
+  line-height="ui.leading-control"
+  font-weight="ui.weight-regular"
   white-space="nowrap"
 
 component TraceTitle
@@ -105,16 +106,18 @@ component TraceTitle
     title: string
     running: bool
     reduced: bool
+  inject
+    uiFont: string
   state width = 64
   action measure(w: number, h: number)
     width = w
   derive band = width <= 64 ? "64" : width <= 128 ? "128" : width <= 256 ? "256" : width <= 512 ? "512" : "1024"
   view
-    view position="relative" flex="0 1 auto" min-width=0 max-width="100%" overflow="hidden" resize=measure
-      text title class=TraceTitleText min-width=0 overflow="hidden" text-overflow="ellipsis"
+    view position="relative" flex="0 1 auto" min-width="0px" max-width="100%" overflow="hidden" resize=measure
+      text title class=TraceTitleText min-width="0px" overflow="hidden" text-overflow="ellipsis" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if running and not reduced
-        view position="absolute" left=0 top=0 bottom=0 width=64 pointer-events="none" aria-hidden=true mask-image="linear-gradient(to right, transparent 0%, #000000 50%, transparent 100%)" animation=("traceSweep" + band + " 2s linear infinite")
-          text title class=TraceTitleText position="absolute" left=0 top=0 width=width color="ui.trace-shimmer" animation=("traceCounter" + band + " 2s linear infinite")
+        view position="absolute" left="0px" top="0px" bottom="0px" width=64 pointer-events="none" aria-hidden=true mask-image="linear-gradient(to right, transparent 0%, #000000 50%, transparent 100%)" animation=("traceSweep" + band + " ui.duration-shimmer ui.easing-linear infinite")
+          text title class=TraceTitleText position="absolute" left="0px" top="0px" width=width color="ui.trace-shimmer" animation=("traceCounter" + band + " ui.duration-shimmer ui.easing-linear infinite") font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component TraceLine
   props
@@ -123,15 +126,17 @@ component TraceLine
     status: string
     reduced: bool
   view
-    row gap=8 align-items="center" flex="0 1 auto" min-width=0 max-width="100%" color=(status == "error" ? "ui.danger" : "ui.muted-foreground") opacity=(status == "pending" ? 0.6 : 1)
+    row gap="ui.space-8" align-items="center" flex="0 1 auto" min-width="0px" max-width="100%" color=(status == "error" ? "ui.danger" : "ui.muted-foreground") opacity=(status == "pending" ? "ui.opacity-quiet" : 1)
       if icon != "none"
         TraceIcon(icon=icon, status=status, reduced=reduced)
       TraceTitle(title=title, running=(status == "running"), reduced=reduced)
 component TraceDescription
   props
     description: string
+  inject
+    uiFont: string
   view
-    text description flex-shrink=0 font-size="0.75rem" line-height=1.5 color="ui.muted-foreground" font-variant-numeric="tabular-nums"
+    text description flex-shrink=0 font-size="ui.text-xs" line-height="ui.leading-normal" color="ui.muted-foreground" font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 component TraceDisclosure
   props
     id: string
@@ -143,18 +148,18 @@ component TraceDisclosure
     toggle: action
   slot
   view
-    column min-width=0
+    column min-width="0px"
       button id=id testId=id class=Control press=toggle aria-label=title aria-expanded=open aria-controls=(id + "-content")
-        display="flex" align-items="center" align-self="flex-start" text-align="left" gap=4 padding="4px 0px" margin="-4px 0px" min-height=28 border="0" border-radius="ui.radius-md" background-color="transparent" color=(status == "error" ? "ui.danger" : "ui.muted-foreground")
-        transition=(reduced ? "none" : "color 150ms ease")
+        display="flex" align-items="center" align-self="flex-start" text-align="left" gap="ui.space-4" padding="ui.space-4 0px" margin="ui.space-negative-4 0px" min-height="ui.space-28" border="0" border-radius="ui.radius-md" background-color="transparent" color=(status == "error" ? "ui.danger" : "ui.muted-foreground")
+        transition=(reduced ? "none" : "color ui.duration-fast ui.easing")
         :hover
           color="ui.foreground"
         TraceLine(title=title, icon=icon, status=status, reduced=reduced)
-        svg width=16 height=16 flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 rotate=(open ? "90deg" : "0deg") transition=(reduced ? "none" : "rotate 200ms ease") aria-hidden=true
+        svg width="ui.space-16" height="ui.space-16" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" rotate=(open ? "90deg" : "0deg") transition=(reduced ? "none" : "rotate ui.duration-normal ui.easing") aria-hidden=true
           path d="m9 6 6 6-6 6"
-      column id=(id + "-content") testId=(open ? id + "-content" : "") height=(open ? "auto" : "0px") min-height=0 overflow="hidden" aria-hidden=(not open) inert=(not open)
-        -exact-layout-transition=(reduced ? "none" : "200ms ease-out")
-        column margin="8px 4px 4px 7px" padding-left=16 border-left="1px solid ui.border" gap=8 min-width=0 font-size="0.875rem" color="ui.muted-foreground" line-height=1.625
+      column id=(id + "-content") testId=(open ? id + "-content" : "") height=(open ? "auto" : "0px") min-height="0px" overflow="hidden" aria-hidden=(not open) inert=(not open)
+        -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing")
+        column margin="ui.space-8 ui.space-4 ui.space-4 ui.space-7" padding-left="ui.space-16" border-left-width="ui.border-width" border-left-style="solid" border-left-color="ui.border" gap="ui.space-8" min-width="0px" font-size="ui.text-sm" color="ui.muted-foreground" line-height="ui.leading-code"
           children
 component TraceCollapsible
   props
@@ -176,20 +181,22 @@ component TraceSource
     title: string
     href: string
     reduced: bool
+  inject
+    uiFont: string
   view
-    link href=href target="_blank" rel="noopener noreferrer" aria-label=(title + " (opens in a new tab)") color="ui.muted-foreground" text-decoration="none" min-width=0 max-width="100%" border-radius="ui.radius-md"
+    link href=href target="_blank" rel="noopener noreferrer" aria-label=(title + " (opens in a new tab)") color="ui.muted-foreground" text-decoration="none" min-width="0px" max-width="100%" border-radius="ui.radius-md"
       :hover
         color="ui.foreground"
       :focus-visible
-        box-shadow="0 0 0 3px ui.ring"
-      row gap=8 align-items="center" min-width=0
+        box-shadow="ui.shadow-focus"
+      row gap="ui.space-8" align-items="center" min-width="0px"
         TraceIcon(icon="globe", status="", reduced=reduced)
-        text title font-size="0.875rem" line-height=1.428571 min-width=0 overflow="hidden" text-overflow="ellipsis" white-space="nowrap"
+        text title font-size="ui.text-sm" line-height="ui.leading-control" min-width="0px" overflow="hidden" text-overflow="ellipsis" white-space="nowrap" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         TraceIcon(icon="external", status="", reduced=reduced)
 component CodeBlockContent
   props
     id: string
     code: string
   view
-    scroll id=id testId=id max-height=256 min-width=0 border-radius="ui.ai-radius-control" background-color="ui.muted" box-shadow="0 0 0 1px ui.border"
-      text code padding=12 color="ui.foreground" font-family="monospace" font-size="0.75rem" line-height=1.625 white-space="pre-wrap" overflow-wrap="break-word"
+    scroll id=id testId=id max-height=256 min-width="0px" border-radius="ui.ai-radius-control" background-color="ui.muted" box-shadow="ui.shadow-border"
+      text code padding="ui.space-12" color="ui.foreground" font-family="ui.font-code" font-size="ui.text-xs" line-height="ui.leading-code" white-space="pre-wrap" overflow-wrap="break-word"

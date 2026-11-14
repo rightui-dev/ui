@@ -1,9 +1,11 @@
-use Toast, Button from "@rightui/ui"
+use uiFontFamily, Toast, Button from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   action undo
     dismissToast()
@@ -20,11 +22,11 @@ component Demo
   action hideDanger
     dangerVisible = false
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Button(id="toast-show", label="Save project", variant="outline", disabled=false, press=show)
       if activated
         Toast(id="controls-toast", title="Project saved", description="Your change is saved. Dismiss the notification or undo the action.", actionLabel="Cancel", destructive=false, dismiss=dismissToast, act=undo)
-      text "Destructive notification" font-size="0.875rem" font-weight=600
+      text "Destructive notification" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Button(id="variation-toast-danger-show", label="Show failed save", variant="outline", disabled=false, press=showDanger)
       if dangerVisible
         Toast(id="variation-toast-danger", title="Save failed", description="Try saving again.", actionLabel="Retry", destructive=true, dismiss=hideDanger, act=hideDanger)

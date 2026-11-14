@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Control, Field from "./styles.contract"
 
 shape CommandEntry
@@ -13,6 +14,8 @@ component Command
     label: string
     entries: CommandEntry[]
     choose: action
+  inject
+    uiFont: string
   state query = ""
   derive filtered = entries.filter(item => (item.label + " " + item.keywords).toLowerCase().includes(query.trim().toLowerCase()))
   derive enabled = filtered.filter(item => not item.disabled)
@@ -56,21 +59,21 @@ component Command
         case none
           focus(id + "-search")
   view
-    column id=id testId=id role="region" aria-label=label min-width=0 border="1px solid ui.border" border-radius="ui.radius-panel" background-color="ui.surface" padding=6 gap=6
-      input id=(id + "-search") testId=(id + "-search") class=Field value=query input=edit key=searchKeys
+    column id=id testId=id role="region" aria-label=label min-width="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-panel" background-color="ui.surface" padding="ui.space-6" gap="ui.space-6"
+      input id=(id + "-search") testId=(id + "-search") class=Field value=query input=edit key=searchKeys font-family=uiFontFamily(uiFont) data-rightui-font="body"
         aria-label=label aria-controls=(id + "-results") placeholder="Rechercher une commande…"
-      scroll max-height="18rem" min-height=0
-        column id=(id + "-results") gap=2
+      scroll max-height="18rem" min-height="0px"
+        column id=(id + "-results") gap="ui.space-2"
           for item in filtered key=item.id
             button id=(id + "-item-" + item.id) testId=(id + "-item-" + item.id) class=Control
               disabled=item.disabled press=pick(item) key=itemKeys(item.id)
-              display="flex" align-items="center" flex-wrap="wrap" gap=12 padding="10px 12px" border-radius="ui.radius-sm" border="0" background-color="transparent" color="ui.foreground"
+              display="flex" align-items="center" flex-wrap="wrap" gap="ui.space-12" padding="ui.space-10 ui.space-12" border-radius="ui.radius-sm" border="0" background-color="transparent" color="ui.foreground"
               :hover
                 background-color="ui.muted"
               :focus-visible
                 background-color="ui.muted"
-              text item.label flex="1 1 8rem" min-width=0 text-align="left"
+              text item.label flex="1 1 8rem" min-width="0px" text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               if item.shortcut != ""
-                text item.shortcut font-size="0.75rem" color="ui.muted-foreground" aria-hidden=true
+                text item.shortcut font-size="ui.text-xs" color="ui.muted-foreground" aria-hidden=true font-family=uiFontFamily(uiFont) data-rightui-font="body"
           if filtered.length == 0
-            text "Aucune commande." testId=(id + "-empty") role="status" padding=16 font-size="0.8125rem" color="ui.muted-foreground"
+            text "Aucune commande." testId=(id + "-empty") role="status" padding="ui.space-16" font-size="ui.text-caption" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

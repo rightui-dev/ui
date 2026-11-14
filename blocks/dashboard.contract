@@ -1,8 +1,9 @@
-use SidebarTrigger, IconButton from "@rightui/ui"
+use uiFontFamily, SidebarTrigger, IconButton from "@rightui/ui"
 use Card, Badge, Tabs, CountedTabs from "@rightui/ui"
-use Control, Field from "../packages/ui/styles.contract"
-use AreaChart, ChartPoint from "../packages/ui/chart.contract"
-use DataTableCheck from "../packages/ui/data-table.contract"
+use ControlStyle as Control, InputStyle as Field from "@rightui/ui"
+use AreaChart, ChartPoint from "@rightui/ui"
+use DataTableCheck from "@rightui/ui"
+
 shape DashboardDocument
   id: number
   header: string
@@ -178,7 +179,11 @@ component DashboardBlock
   props
     narrow: bool
     reduced: bool
-  state sidebar = not narrow
+  inject
+    uiFont: string
+  state desktopSidebar = true
+  state mobileSidebar = false
+  derive sidebar = narrow ? mobileSidebar : desktopSidebar
   state section = ""
   state period = narrow ? "7d" : "90d"
   state query = ""
@@ -203,7 +208,10 @@ component DashboardBlock
   derive current = min(page, pages - 1)
   derive visible = ordered.slice(current * pageSize, (current + 1) * pageSize)
   action toggleSidebar
-    sidebar = not sidebar
+    if narrow
+      mobileSidebar = not mobileSidebar
+    else
+      desktopSidebar = not desktopSidebar
   action navigateTo(v: string)
     section = v
     notice = v == "Search" ? "Filter documents below." : v + " selected."
@@ -307,162 +315,162 @@ component DashboardBlock
     descending = false
     notice = "New section added."
   view
-    row testId="dashboard-block" position="relative" align-items="stretch" min-width=0 background-color="ui.sidebar" overflow="clip" color="ui.foreground" line-height=1.5
-      view width=(narrow ? 0 : sidebar ? 288 : 0) flex-shrink=0 min-width=0 position="relative" overflow=(narrow ? "visible" : "clip") -exact-layout-transition=(reduced ? "none" : "200ms linear")
-        column id="dashboard-sidebar-panel" testId="dashboard-sidebar-panel" aria-hidden=(not sidebar) inert=(not sidebar) translate=(sidebar ? "0px 0px" : "-100% 0px") transition=(reduced ? "none" : "translate 200ms linear") position=(narrow ? "absolute" : "sticky") height="100vh" align-self="flex-start" z-index=20 left=0 top=0 bottom=0 width=288 max-width=(narrow ? "calc(100vw - 48px)" : "288px") flex-shrink=0 padding=16 gap=16 box-sizing="border-box" background-color="ui.sidebar"
-          row gap=8 padding="4px 6px" align-items="center"
+    row testId="dashboard-block" position="relative" align-items="stretch" min-width=0 background-color="ui.sidebar" overflow="clip" color="ui.foreground" line-height="ui.leading-normal"
+      view width=(narrow or not sidebar ? "0px" : "ui.sidebar-width-dashboard") flex-shrink=0 min-width=0 position="relative" z-index=20 overflow=(narrow ? "visible" : "clip") -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing-linear")
+        column id="dashboard-sidebar-panel" testId="dashboard-sidebar-panel" aria-hidden=(not sidebar) inert=(not sidebar) translate=(sidebar ? "0px 0px" : "-100% 0px") transition=(reduced ? "none" : "translate ui.duration-normal ui.easing-linear") position=(narrow ? "absolute" : "sticky") height="100vh" align-self="flex-start" z-index=20 left=0 top=0 bottom=0 width="ui.sidebar-width-dashboard" max-width="calc(100vw - ui.space-48)" flex-shrink=0 padding="ui.space-16" gap="ui.space-16" box-sizing="border-box" background-color="ui.sidebar"
+          row gap="ui.space-8" padding="ui.space-4 ui.space-6" align-items="center"
             DashboardNavIcon(name="Acme Inc.")
-            text "Acme Inc." font-size="1rem" font-weight=600 flex=1
+            text "Acme Inc." font-size="ui.text-base" font-weight="ui.weight-semibold" flex=1 font-family=uiFontFamily(uiFont) data-rightui-font="body"
             if narrow
               IconButton(id="dashboard-sidebar-close", label="Close sidebar", variant="ghost", disabled=false, press=toggleSidebar)
-                svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+                svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke" aria-hidden=true
                   path d="m6 6 12 12M6 18 18 6"
-          row gap=8 margin-bottom=-8
-            button class=Control id="dashboard-quick-create" testId="dashboard-quick-create" press=addSection padding="6px 8px" min-height=32 font-weight=400 flex=1 background-color="ui.primary" color="ui.primary-foreground" border="0" text-align="left"
-              row gap=8 align-items="center"
+          row gap="ui.space-8" margin-bottom="ui.space-negative-8"
+            button class=Control id="dashboard-quick-create" testId="dashboard-quick-create" press=addSection padding="ui.space-6 ui.space-8" min-height="ui.space-32" font-weight="ui.weight-regular" flex=1 background-color="ui.primary" color="ui.primary-foreground" border="0" text-align="left"
+              row gap="ui.space-8" align-items="center"
                 DashboardNavIcon(name="Quick Create")
-                text "Quick Create"
-            button class=Control press=navigateTo("Inbox") min-height=32 width=32 padding=6 border="1px solid ui.border" background-color="ui.surface" aria-label="Inbox"
-              svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=1.7 aria-hidden=true
+                text "Quick Create" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            button class=Control press=navigateTo("Inbox") min-height="ui.space-32" width="ui.space-32" padding="ui.space-6" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" aria-label="Inbox"
+              svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.icon-stroke-soft" aria-hidden=true
                 rect x=3 y=5 width=18 height=14 rx=2
                 path d="m3 6 9 7 9-7"
-          column gap=4
+          column gap="ui.space-4"
             for item in ["Dashboard", "Lifecycle", "Analytics", "Projects", "Team"] key=item
-              button class=Control press=navigateTo(item) testId=("dashboard-nav-" + item) padding="6px 8px" min-height=32 font-weight=400 border="0" background-color=(section == item ? "ui.muted" : "transparent") color="ui.foreground" text-align="left"
-                row gap=8 align-items="center"
+              button class=Control press=navigateTo(item) testId=("dashboard-nav-" + item) padding="ui.space-6 ui.space-8" min-height="ui.space-32" font-weight="ui.weight-regular" border="0" background-color=(section == item ? "ui.muted" : "transparent") color="ui.foreground" text-align="left"
+                row gap="ui.space-8" align-items="center"
                   DashboardNavIcon(name=item)
-                  text item
-          column gap=4 padding="8px 0px"
-            text "Documents" min-height=32 display="flex" align-items="center" padding="0 8px" margin-bottom=-4 font-size="0.75rem" line-height=1.333333 color="ui.sidebar-label"
+                  text item font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          column gap="ui.space-4" padding="ui.space-8 ui.space-0"
+            text "Documents" min-height="ui.space-32" display="flex" align-items="center" padding="ui.space-0 ui.space-8" margin-bottom="ui.space-negative-4" font-size="ui.text-xs" line-height="ui.leading-heading" color="ui.sidebar-label" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             for item in ["Data Library", "Reports", "Word Assistant", "More"] key=item
-              button class=Control press=navigateTo(item) padding="6px 8px" min-height=32 font-weight=400 border="0" background-color="transparent" color="ui.foreground" text-align="left"
-                row gap=8 align-items="center"
+              button class=Control press=navigateTo(item) padding="ui.space-6 ui.space-8" min-height="ui.space-32" font-weight="ui.weight-regular" border="0" background-color="transparent" color="ui.foreground" text-align="left"
+                row gap="ui.space-8" align-items="center"
                   DashboardNavIcon(name=item)
-                  text item
+                  text item font-family=uiFontFamily(uiFont) data-rightui-font="body"
           view flex=1
-          column gap=4
+          column gap="ui.space-4"
             for item in ["Settings", "Get Help", "Search"] key=item
-              button class=Control press=navigateTo(item) padding="6px 8px" min-height=32 font-weight=400 border="0" background-color="transparent" color="ui.foreground" text-align="left"
-                row gap=8 align-items="center"
+              button class=Control press=navigateTo(item) padding="ui.space-6 ui.space-8" min-height="ui.space-32" font-weight="ui.weight-regular" border="0" background-color="transparent" color="ui.foreground" text-align="left"
+                row gap="ui.space-8" align-items="center"
                   DashboardNavIcon(name=item)
-                  text item
-          row gap=8 align-items="center" padding="7.25px 8px" min-height=48 box-sizing="border-box"
-            image "assets/shadcn-avatar.jpg" alt="shadcn" width=32 height=32 border-radius=10 filter="grayscale(1)"
-            column gap=0 flex=1
-              text "shadcn" font-size="0.875rem" line-height=1.25 font-weight=500
-              text "m@example.com" font-size="0.75rem" line-height=1.333333 color="ui.muted-foreground"
-            svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 stroke-linecap="round" aria-hidden=true
+                  text item font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          row gap="ui.space-8" align-items="center" padding="ui.space-menu-inset ui.space-8" min-height="ui.space-48" box-sizing="border-box"
+            image "assets/shadcn-avatar.jpg" alt="shadcn" width="ui.space-32" height="ui.space-32" border-radius="ui.radius-lg" filter="grayscale(1)"
+            column gap="ui.space-0" flex=1
+              text "shadcn" font-size="ui.text-sm" line-height="ui.leading-tight" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text "m@example.com" font-size="ui.text-xs" line-height="ui.leading-heading" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.icon-stroke" stroke-linecap="round" aria-hidden=true
               path d="M12 5h.01M12 12h.01M12 19h.01"
-      column flex=1 min-width=0 background-color="ui.background" box-shadow="0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a" border-radius=(narrow ? 0 : 14) margin=(narrow ? "0px" : sidebar ? "8px 8px 8px 0px" : "8px") -exact-layout-transition=(reduced ? "none" : "200ms linear")
-        row min-height=48 box-sizing="border-box" padding="0 24px" gap=16 align-items="center" border-bottom="1px solid ui.border"
-          view margin-left=-4
+      column flex=1 min-width=0 background-color="ui.background" box-shadow="ui.shadow-panel" border-radius=(narrow ? "ui.radius-flat" : "ui.radius-xl") margin=(narrow ? "ui.space-0" : sidebar ? "ui.space-8 ui.space-8 ui.space-8 ui.space-0" : "ui.space-8") -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing-linear")
+        row min-height="ui.space-48" box-sizing="border-box" padding="ui.space-0 ui.space-24" gap="ui.space-16" align-items="center" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border"
+          view margin-left="ui.space-negative-4"
             SidebarTrigger(id="dashboard-sidebar", expanded=sidebar, controls="dashboard-sidebar-panel", press=toggleSidebar)
-          view width=1 height=16 background-color="ui.border"
-          text "Documents" font-size="1rem" font-weight=500 flex=1
-          link href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard" color="ui.foreground" font-size="0.875rem" text-decoration="none" padding="6px 12px"
-            text "GitHub"
-        column id="dashboard-content" resize=measureContent padding=(narrow ? 16 : 24) gap=24 min-width=0
-          view display="grid" grid-template-columns=(contentWidth >= 1024 ? "repeat(4, minmax(0, 1fr))" : contentWidth >= 576 ? "repeat(2, minmax(0, 1fr))" : "minmax(0, 1fr)") gap=16
+          view width="ui.border-width" height="ui.space-16" background-color="ui.border"
+          text "Documents" font-size="ui.text-base" font-weight="ui.weight-medium" flex=1 font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          link href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard" color="ui.foreground" font-size="ui.text-sm" text-decoration="none" padding="ui.space-6 ui.space-12"
+            text "GitHub" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        column id="dashboard-content" resize=measureContent padding=(narrow ? "ui.space-16" : "ui.space-24") gap="ui.space-24" min-width=0
+          view display="grid" grid-template-columns=(contentWidth >= 1024 ? "repeat(4, minmax(0, 1fr))" : contentWidth >= 576 ? "repeat(2, minmax(0, 1fr))" : "minmax(0, 1fr)") gap="ui.space-16"
             DashboardMetric(label="Total Revenue", value="$1,250.00", change="+12.5%", trend="Trending up this month", detail="Visitors for the last 6 months")
             DashboardMetric(label="New Customers", value="1,234", change="-20%", trend="Down 20% this period", detail="Acquisition needs attention")
             DashboardMetric(label="Active Accounts", value="45,678", change="+12.5%", trend="Strong user retention", detail="Engagement exceed targets")
             DashboardMetric(label="Growth Rate", value="4.5%", change="+4.5%", trend="Steady performance increase", detail="Meets growth projections")
-          column padding=24 gap=24 border="1px solid ui.border" border-radius=14 background-color="ui.surface" min-width=0 box-shadow="0 1px 2px 0 ui.shadow"
-            row gap=16 min-height=44 justify-content="space-between" flex-wrap="wrap" align-items="flex-start"
-              column gap=8
-                text "Total Visitors" font-size="1rem" line-height=1 font-weight=600
-                text "Total for the last 3 months" font-size="0.875rem" line-height=1.428571 color="ui.muted-foreground"
-              row gap=0 border="0" border-radius=8 overflow="hidden" flex-wrap="wrap"
+          column padding="ui.space-24" gap="ui.space-24" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-xl" background-color="ui.surface" min-width=0 box-shadow="ui.shadow-control"
+            row gap="ui.space-16" min-height="ui.space-44" justify-content="space-between" flex-wrap="wrap" align-items="flex-start"
+              column gap="ui.space-8"
+                text "Total Visitors" font-size="ui.text-base" line-height="ui.leading-none" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                text "Total for the last 3 months" font-size="ui.text-sm" line-height="ui.leading-control" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              row gap="ui.space-0" border="0" border-radius="ui.radius-md" overflow="hidden" flex-wrap="wrap"
                 for p in ["90d", "30d", "7d"] key=p
-                  button class=Control id=("dashboard-period-" + p) testId=("dashboard-period-" + p) press=changePeriod(p) aria-pressed=period == p height=36 min-height=36 box-sizing="border-box" padding="0 16px" border="1px solid ui.border" border-left=(p == "90d" ? "1px solid ui.border" : "0") border-radius=0 background-color=(period == p ? "ui.muted" : "transparent") color="ui.foreground" font-size="0.875rem"
-                    text (p == "90d" ? "Last 3 months" : p == "30d" ? "Last 30 days" : "Last 7 days")
-            view padding-top=24 min-width=0
+                  button class=Control id=("dashboard-period-" + p) testId=("dashboard-period-" + p) press=changePeriod(p) aria-pressed=period == p height="ui.space-36" min-height="ui.space-36" box-sizing="border-box" padding="ui.space-0 ui.space-16" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-left-width=(p == "90d" ? "ui.border-width" : "0px") border-left-style="solid" border-left-color="ui.border" border-radius="ui.radius-flat" background-color=(period == p ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm"
+                    text (p == "90d" ? "Last 3 months" : p == "30d" ? "Last 30 days" : "Last 7 days") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            view padding-top="ui.space-24" min-width=0
               AreaChart(id="dashboard-chart", points=points)
-            text (points.length.toString() + " daily observations") testId="dashboard-period-count" font-size="0.75rem" position="absolute" width="0.0625rem" height="0.0625rem" overflow="hidden" opacity=0 aria-hidden=true
-          row gap=12 justify-content="space-between" align-items="center" flex-wrap="wrap"
+            text (points.length.toString() + " daily observations") testId="dashboard-period-count" font-size="ui.text-xs" position="absolute" width=1 height=1 overflow="hidden" opacity=0 aria-hidden=true font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          row gap="ui.space-12" justify-content="space-between" align-items="center" flex-wrap="wrap"
             CountedTabs(id="dashboard-document-tabs", labels=["Outline", "Past Performance", "Key Personnel", "Focus Documents"], counts=["", "3", "2", ""], selected=["Outline", "Past Performance", "Key Personnel", "Focus Documents"].indexOf(tab), reduced=reduced, choose=chooseTab)
-            row gap=8
-              button class=Control id="dashboard-columns" testId="dashboard-columns" press=toggleColumns aria-expanded=columns aria-haspopup="menu" aria-controls="dashboard-columns-popup" min-height=32 height=32 box-sizing="border-box" padding="0 12px" border="1px solid ui.border" background-color="ui.surface" color="ui.foreground" font-size="0.75rem"
-                text "Customize Columns"
-              button class=Control id="dashboard-add-section" testId="dashboard-add-section" press=addSection min-height=32 height=32 box-sizing="border-box" padding="0 12px" border="1px solid ui.border" background-color="ui.surface" color="ui.foreground" font-size="0.75rem"
-                text "+ Add Section"
+            row gap="ui.space-8"
+              button class=Control id="dashboard-columns" testId="dashboard-columns" press=toggleColumns aria-expanded=columns aria-haspopup="menu" aria-controls="dashboard-columns-popup" min-height="ui.space-32" height="ui.space-32" box-sizing="border-box" padding="ui.space-0 ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground" font-size="ui.text-xs"
+                text "Customize Columns" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              button class=Control id="dashboard-add-section" testId="dashboard-add-section" press=addSection min-height="ui.space-32" height="ui.space-32" box-sizing="border-box" padding="ui.space-0 ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground" font-size="ui.text-xs"
+                text "+ Add Section" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           if columns
             column id="dashboard-columns-popup" testId="dashboard-columns-popup" role="menu" aria-label="Customize Columns" popover="auto" toggle=columnsChanged tabindex=-1
-              position-area="bottom span-left" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline" margin=4 padding=4 width="14rem" max-width="calc(100vw - 32px)" box-sizing="border-box" border="1px solid ui.border" border-radius=6 background-color="ui.surface" box-shadow="0 4px 6px -1px ui.shadow"
+              position-area="bottom span-left" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline" margin="ui.space-4" padding="ui.space-4" width="14rem" max-width="calc(100vw - ui.space-32)" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-sm" background-color="ui.surface" box-shadow="ui.shadow-menu"
               for col, i in ["Section Type", "Status", "Target", "Limit", "Reviewer"] key=col
                 button id=("dashboard-column-" + col) testId=("dashboard-column-" + col) class=Control role="menuitemcheckbox" aria-checked=(not hidden.includes(col)) key=columnKeys(i) press=toggleColumn(col)
-                  display="flex" align-items="center" gap=8 min-height=32 padding="6px 8px" border="0" border-radius=4 background-color="transparent" color="ui.foreground" font-size="0.875rem" font-weight=400 text-align="left"
-                  view width=16 height=16 display="flex" align-items="center" justify-content="center" aria-hidden=true
+                  display="flex" align-items="center" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius="ui.radius-inline" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-regular" text-align="left"
+                  view width="ui.space-16" height="ui.space-16" display="flex" align-items="center" justify-content="center" aria-hidden=true
                     if not hidden.includes(col)
-                      svg width=14 height=14 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2
+                      svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.icon-stroke"
                         path d="m5 12 4 4L19 6"
-                  text col
+                  text col font-family=uiFontFamily(uiFont) data-rightui-font="body"
           if tab != "Outline"
-            view id="dashboard-document-tabs-panel" role="tabpanel" aria-labelledby=("dashboard-document-tabs-" + ["Outline", "Past Performance", "Key Personnel", "Focus Documents"].indexOf(tab).toString()) border="1px dashed ui.border" border-radius=12 min-height=180 display="flex" align-items="center" justify-content="center"
-              text tab color="ui.muted-foreground"
+            view id="dashboard-document-tabs-panel" role="tabpanel" aria-labelledby=("dashboard-document-tabs-" + ["Outline", "Past Performance", "Key Personnel", "Focus Documents"].indexOf(tab).toString()) border-width="ui.border-width" border-style="dashed" border-color="ui.border" border-radius="ui.radius-card" min-height=180 display="flex" align-items="center" justify-content="center"
+              text tab color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           else
-            column id="dashboard-document-tabs-panel" role="tabpanel" aria-labelledby="dashboard-document-tabs-0" gap=16 min-width=0
-              input id="dashboard-search" testId="dashboard-search" class=Field value=query input=search placeholder="Filter documents..." aria-label="Filter documents" max-width="20rem"
-              scroll max-height=580 overflow="auto" min-width=0 border="1px solid ui.border" border-radius=8
-                table width="100%" min-width=760 border-spacing=0 font-size="0.8125rem"
+            column id="dashboard-document-tabs-panel" role="tabpanel" aria-labelledby="dashboard-document-tabs-0" gap="ui.space-16" min-width=0
+              input id="dashboard-search" testId="dashboard-search" class=Field value=query input=search placeholder="Filter documents..." aria-label="Filter documents" max-width="20rem" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              scroll max-height=580 overflow="auto" min-width=0 border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-md"
+                table width="100%" min-width=760 border-spacing=0 font-size="ui.text-caption"
                   thead background-color="ui.muted"
                     tr
-                      th scope="col" padding="4px 8px" border-bottom="1px solid ui.border"
+                      th scope="col" padding="ui.space-4 ui.space-8" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border"
                         DataTableCheck(id="dashboard-select-all", label="Select all", checked=visible.length > 0 and visible.filter(r => selected.includes(r.id)).length == visible.length, disabled=visible.length == 0, change=selectAll)
                       for col in ["Header", "Section Type", "Status", "Target", "Limit", "Reviewer"] key=col
                         if not hidden.includes(col)
-                          th scope="col" text-align="left" padding="8px" border-bottom="1px solid ui.border" aria-sort=(sort == col ? (descending ? "descending" : "ascending") : "none")
-                            button class=Control press=order(col) id=("dashboard-sort-" + col) testId=("dashboard-sort-" + col) padding=0 min-height=28 border="0" background-color="transparent" color="ui.foreground" font-size="0.75rem"
-                              text col
+                          th scope="col" text-align="left" padding="ui.space-8" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" aria-sort=(sort == col ? (descending ? "descending" : "ascending") : "none")
+                            button class=Control press=order(col) id=("dashboard-sort-" + col) testId=("dashboard-sort-" + col) padding="ui.space-0" min-height="ui.space-28" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-xs"
+                              text col font-family=uiFontFamily(uiFont) data-rightui-font="body"
                   tbody
                     for r in visible key=r.id
                       tr testId=("dashboard-row-" + r.id.toString()) background-color=(selected.includes(r.id) ? "ui.muted" : "transparent")
-                        td border-bottom="1px solid ui.border" padding="4px 8px"
+                        td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-4 ui.space-8"
                           DataTableCheck(id="dashboard-select-" + r.id.toString(), label="Select " + r.header, checked=selected.includes(r.id), disabled=false, change=selectRow(r.id))
-                        td border-bottom="1px solid ui.border" padding="12px 8px" font-weight=500
-                          text r.header
+                        td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-12 ui.space-8" font-weight="ui.weight-medium"
+                          text r.header font-family=uiFontFamily(uiFont) data-rightui-font="body"
                         if not hidden.includes("Section Type")
-                          td border-bottom="1px solid ui.border" padding="12px 8px"
+                          td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-12 ui.space-8"
                             Badge(label=r.type, variant="outline")
                         if not hidden.includes("Status")
-                          td border-bottom="1px solid ui.border" padding="12px 8px"
+                          td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-12 ui.space-8"
                             Badge(label=r.status, variant="outline")
                         if not hidden.includes("Target")
-                          td border-bottom="1px solid ui.border" padding="12px 8px" text-align="right"
-                            input class=Field id=("dashboard-target-" + r.id.toString()) testId=("dashboard-target-" + r.id.toString()) value=r.target input=editDocument(r.id, "target") aria-label=("Target for " + r.header) width="4rem" min-height="2rem" height="auto" padding="0.25rem 0.5rem" border="1px solid transparent" background-color="transparent" text-align="right"
+                          td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-12 ui.space-8" text-align="right"
+                            input class=Field id=("dashboard-target-" + r.id.toString()) testId=("dashboard-target-" + r.id.toString()) value=r.target input=editDocument(r.id, "target") aria-label=("Target for " + r.header) width="4rem" min-height="ui.space-32" height="auto" padding="ui.space-4 ui.space-8" border-width="ui.border-width" border-style="solid" border-color="transparent" background-color="transparent" text-align="right" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                         if not hidden.includes("Limit")
-                          td border-bottom="1px solid ui.border" padding="12px 8px" text-align="right"
-                            input class=Field id=("dashboard-limit-" + r.id.toString()) testId=("dashboard-limit-" + r.id.toString()) value=r.limit input=editDocument(r.id, "limit") aria-label=("Limit for " + r.header) width="4rem" min-height="2rem" height="auto" padding="0.25rem 0.5rem" border="1px solid transparent" background-color="transparent" text-align="right"
+                          td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-12 ui.space-8" text-align="right"
+                            input class=Field id=("dashboard-limit-" + r.id.toString()) testId=("dashboard-limit-" + r.id.toString()) value=r.limit input=editDocument(r.id, "limit") aria-label=("Limit for " + r.header) width="4rem" min-height="ui.space-32" height="auto" padding="ui.space-4 ui.space-8" border-width="ui.border-width" border-style="solid" border-color="transparent" background-color="transparent" text-align="right" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                         if not hidden.includes("Reviewer")
-                          td border-bottom="1px solid ui.border" padding="12px 8px"
-                            text r.reviewer
+                          td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-12 ui.space-8"
+                            text r.reviewer font-family=uiFontFamily(uiFont) data-rightui-font="body"
                     if visible.length == 0
                       tr
-                        td colspan=7 padding=32 text-align="center"
-                          text "No results."
-              row justify-content="space-between" align-items="center" gap=16 padding="0 16px" flex-wrap="wrap"
-                text (selected.filter(s => filtered.map(r => r.id).includes(s)).length.toString() + " of " + filtered.length.toString() + " row(s) selected.") testId="dashboard-selection" font-size="0.875rem" color="ui.muted-foreground" flex=1
-                row gap=32 align-items="center" flex-wrap="wrap"
-                  row gap=8 align-items="center"
-                    text "Rows per page" font-size="0.875rem" font-weight=500
-                    button id="dashboard-page-size" testId="dashboard-page-size" class=Control press=togglePageSizes key=pageSizeTriggerKeys role="combobox" aria-expanded=pageSizes aria-haspopup="listbox" aria-controls="dashboard-page-size-options" aria-label="Rows per page" width="5rem" height="2rem" min-height="2rem" padding="0 12px" border="1px solid ui.border" background-color="ui.surface" color="ui.foreground" display="flex" align-items="center" justify-content="space-between" gap=8 font-size="0.875rem" font-weight=400
-                      text pageSize.toString()
-                      svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=2 aria-hidden=true
+                        td colspan=7 padding="ui.space-32" text-align="center"
+                          text "No results." font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              row justify-content="space-between" align-items="center" gap="ui.space-16" padding="ui.space-0 ui.space-16" flex-wrap="wrap"
+                text (selected.filter(s => filtered.map(r => r.id).includes(s)).length.toString() + " of " + filtered.length.toString() + " row(s) selected.") testId="dashboard-selection" font-size="ui.text-sm" color="ui.muted-foreground" flex=1 font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                row gap="ui.space-32" align-items="center" flex-wrap="wrap"
+                  row gap="ui.space-8" align-items="center"
+                    text "Rows per page" font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                    button id="dashboard-page-size" testId="dashboard-page-size" class=Control press=togglePageSizes key=pageSizeTriggerKeys role="combobox" aria-expanded=pageSizes aria-haspopup="listbox" aria-controls="dashboard-page-size-options" aria-label="Rows per page" width="5rem" height="ui.space-32" min-height="ui.space-32" padding="ui.space-0 ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground" display="flex" align-items="center" justify-content="space-between" gap="ui.space-8" font-size="ui.text-sm" font-weight="ui.weight-regular"
+                      text pageSize.toString() font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                      svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.icon-stroke" aria-hidden=true
                         path d="m6 9 6 6 6-6"
-                  text ("Page " + (current + 1).toString() + " of " + pages.toString()) testId="dashboard-page" font-size="0.875rem" font-weight=500
-                  row gap=8 align-items="center"
+                  text ("Page " + (current + 1).toString() + " of " + pages.toString()) testId="dashboard-page" font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                  row gap="ui.space-8" align-items="center"
                     for direction in ["first", "previous", "next", "last"] key=direction
                       if not narrow or direction == "previous" or direction == "next"
-                        button class=Control id=("dashboard-" + direction) testId=("dashboard-" + direction) press=changePage(direction == "first" ? -pages : direction == "previous" ? -1 : direction == "next" ? 1 : pages) disabled=(direction == "first" or direction == "previous" ? current == 0 : current == pages - 1) aria-label=("Go to " + direction + " page") width=32 height=32 min-height=32 padding=0 border="1px solid ui.border" background-color="ui.surface" color="ui.foreground" display="flex" align-items="center" justify-content="center"
-                          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
+                        button class=Control id=("dashboard-" + direction) testId=("dashboard-" + direction) press=changePage(direction == "first" ? -pages : direction == "previous" ? -1 : direction == "next" ? 1 : pages) disabled=(direction == "first" or direction == "previous" ? current == 0 : current == pages - 1) aria-label=("Go to " + direction + " page") width="ui.space-32" height="ui.space-32" min-height="ui.space-32" padding="ui.space-0" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground" display="flex" align-items="center" justify-content="center"
+                          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.icon-stroke" stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
                             path d=(direction == "first" ? "m11 7-5 5 5 5m6-10-5 5 5 5" : direction == "previous" ? "m15 18-6-6 6-6" : direction == "next" ? "m9 18 6-6-6-6" : "m7 7 5 5-5 5m6-10 5 5-5 5")
               if pageSizes
-                column id="dashboard-page-size-options" testId="dashboard-page-size-options" role="listbox" aria-label="Rows per page" popover="auto" toggle=pageSizesChanged position-area="top span-right" position-try-fallbacks="flip-block, flip-inline" width="5rem" margin=4 padding=4 border="1px solid ui.border" border-radius=6 background-color="ui.surface" box-shadow="0 4px 6px -1px ui.shadow"
+                column id="dashboard-page-size-options" testId="dashboard-page-size-options" role="listbox" aria-label="Rows per page" popover="auto" toggle=pageSizesChanged position-area="top span-right" position-try-fallbacks="flip-block, flip-inline" width="5rem" margin="ui.space-4" padding="ui.space-4" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-sm" background-color="ui.surface" box-shadow="ui.shadow-menu"
                   for size in [10, 20, 30, 40, 50] key=size
-                    button id=("dashboard-size-" + size.toString()) testId=("dashboard-size-" + size.toString()) class=Control role="option" aria-selected=pageSize == size press=changeSize(size) key=pageSizeKeys(size) min-height=32 padding="6px 8px" border="0" border-radius=4 background-color=(pageSize == size ? "ui.muted" : "transparent") color="ui.foreground" font-size="0.875rem" font-weight=400 text-align="left"
-                      text size.toString()
+                    button id=("dashboard-size-" + size.toString()) testId=("dashboard-size-" + size.toString()) class=Control role="option" aria-selected=pageSize == size press=changeSize(size) key=pageSizeKeys(size) min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius="ui.radius-inline" background-color=(pageSize == size ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-regular" text-align="left"
+                      text size.toString() font-family=uiFontFamily(uiFont) data-rightui-font="body"
           if notice != ""
-            text notice testId="dashboard-notice" aria-live="polite" font-size="0.75rem" color="ui.muted-foreground"
+            text notice testId="dashboard-notice" aria-live="polite" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component DashboardMetric
   props
@@ -471,34 +479,30 @@ component DashboardMetric
     change: string
     trend: string
     detail: string
-  state rootSize = 16
-  action measureFont(w: number, h: number)
-    if h != rootSize
-      rootSize = max(1, h)
+  inject
+    uiFont: string
   view
-    column position="relative" border="1px solid ui.border" border-radius=14 background-image="linear-gradient(to top, ui.metric-shade, ui.surface)" padding=24 gap=24 min-width=0 box-shadow="0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a"
-      view position="absolute" inset=0 overflow="clip" opacity=0 aria-hidden=true pointer-events="none"
-        text "M" position="absolute" left=0 top=0 font-size="1rem" line-height=1 resize=measureFont aria-hidden=true pointer-events="none"
-      row justify-content="space-between" gap=8 align-items="flex-start" flex-wrap="wrap"
-        column gap=8 min-width=0 flex="1 1 8rem"
-          text label font-size="0.875rem" line-height=1.428571 color="ui.muted-foreground"
-          text value font-size="1.875rem" line-height=(max(1.2, 1.3 - 3 / (rootSize * 1.875))) font-weight=600 font-variant-numeric="tabular-nums" overflow-wrap="anywhere"
-        row gap=4 padding="2px 8px" border="1px solid ui.border" border-radius=99 align-items="center"
-          svg width=12 height=12 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 aria-hidden=true
+    column position="relative" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-xl" background-image="linear-gradient(to top, ui.metric-shade, ui.surface)" padding="ui.space-24" gap="ui.space-24" min-width=0 box-shadow="ui.shadow-panel"
+      row justify-content="space-between" gap="ui.space-8" align-items="flex-start" flex-wrap="wrap"
+        column gap="ui.space-8" min-width=0 flex="1 1 8rem"
+          text label font-size="ui.text-sm" line-height="ui.leading-control" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          text value font-size="ui.text-3xl" line-height="ui.leading-metric" font-weight="ui.weight-semibold" font-variant-numeric="tabular-nums" overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        row gap="ui.space-4" padding="ui.space-2 ui.space-8" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-full" align-items="center"
+          svg width="ui.space-12" height="ui.space-12" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.icon-stroke" aria-hidden=true
             path d=(change.startsWith("-") ? "m3 6 6 6 4-4 8 8M15 16h6v-6" : "m3 18 6-6 4 4 8-8M15 8h6v6")
-          text change font-size="0.75rem" font-weight=500
-      column gap=6
-        row gap=8 align-items="center"
-          text trend font-size="0.875rem" line-height=1.428571 font-weight=500 min-width=0
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 aria-hidden=true
+          text change font-size="ui.text-xs" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      column gap="ui.space-6"
+        row gap="ui.space-8" align-items="center"
+          text trend font-size="ui.text-sm" line-height="ui.leading-control" font-weight="ui.weight-medium" min-width=0 font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.icon-stroke" aria-hidden=true
             path d=(change.startsWith("-") ? "m3 6 6 6 4-4 8 8M15 16h6v-6" : "m3 18 6-6 4 4 8-8M15 8h6v6")
-        text detail font-size="0.875rem" line-height=1.428571 color="ui.muted-foreground"
+        text detail font-size="ui.text-sm" line-height="ui.leading-control" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component DashboardNavIcon
   props
     name: string
   view
-    svg width=(name == "Acme Inc." ? 20 : 16) height=(name == "Acme Inc." ? 20 : 16) viewBox="0 0 24 24" fill=(name == "Quick Create" ? "ui.primary-foreground" : "none") stroke=(name == "Quick Create" ? "none" : "ui.foreground") stroke-width=2 stroke-linecap="round" stroke-linejoin="round" opacity=(name == "More" ? 0.7 : 1) aria-hidden=true
+    svg width=(name == "Acme Inc." ? "ui.space-20" : "ui.space-16") height=(name == "Acme Inc." ? "ui.space-20" : "ui.space-16") viewBox="0 0 24 24" fill=(name == "Quick Create" ? "ui.primary-foreground" : "none") stroke=(name == "Quick Create" ? "none" : "ui.foreground") stroke-width="ui.icon-stroke" stroke-linecap="round" stroke-linejoin="round" opacity=(name == "More" ? "ui.opacity-soft" : 1) aria-hidden=true
       if name == "Acme Inc."
         path d="M5.636 5.636a9 9 0 1 0 12.728 12.728a9 9 0 0 0 -12.728 -12.728z"
         path d="M16.243 7.757a6 6 0 0 0 -8.486 0"

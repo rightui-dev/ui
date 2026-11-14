@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0-beta.5",
+  "version": "0.2.0-beta.1",
   "asOf": "2026-11-14",
   "exactRevision": "53426cf02bf986a5e781abc4f953d79989c6dc05",
   "platforms": [
@@ -26,19 +26,19 @@
   ],
   "statuses": {
     "checked": {
-      "label": "\u2705 Partial checks",
+      "label": "✅ Partial checks",
       "description": "Targeted checks completed. Coverage varies by component."
     },
     "built": {
-      "label": "\u2705 Built only",
+      "label": "✅ Built only",
       "description": "Compiled successfully. Interactions have not been verified."
     },
     "blocked": {
-      "label": "\u26a0\ufe0f Partial checks",
-      "description": "Validation incomplete. No successful iOS build or device checks recorded."
+      "label": "⚠️ Partial checks",
+      "description": "Validation incomplete for the current release."
     },
     "unsupported": {
-      "label": "\u274c Not supported",
+      "label": "❌ Not supported",
       "description": "Outside rightui support. The project targets web, iOS and macOS."
     }
   },
@@ -173,6 +173,21 @@
     {
       "id": "web-code-block",
       "description": "A targeted web test in the 28-test website run checked tokenized text, wrap interaction, copy feedback and retained text after mobile resize. Browser checks confirmed wrapping without document overflow at 390px; the UTF-8 downloaded file matched the original 337-byte code passed to the clipboard. Clipboard write succeeded with browser write permission granted. No new native checks are claimed.",
+      "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    },
+    {
+      "id": "web-0-2-release",
+      "description": "The 0.2 release candidate passed 34 browser interaction tests, including theme choices, code-copy feedback reset after three seconds, repeated mobile dashboard/sidebar opening, package-manager commands and shared component demonstrations. The production web build includes all catalog entries. This is targeted coverage, not full variant certification.",
+      "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    },
+    {
+      "id": "web-switch-0-2",
+      "description": "At 390px, pointer activation changed Switch from on to off, Space changed it back to on, and a pointer press on the disabled Switch left the shared state unchanged. The documentation article retained 24px side insets without document overflow.",
+      "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    },
+    {
+      "id": "mac-site-0-2",
+      "description": "The same Contract website was compiled for macOS and manually checked through Home, Blocks and Dashboard, repeated Back/Forward navigation, disabled history endpoints, page titles, immersive blocks and the globe opening the equivalent website URL. The delivered Mac archive was signature-checked and its downloaded SHA-256 matched the approved artifact. This does not certify every native component.",
       "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
     }
   ],
@@ -380,7 +395,44 @@
       "platform": "web",
       "status": "checked",
       "evidence": [
-        "web-code-block"
+        "web-code-block",
+        "web-0-2-release"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "switch",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-switch-0-2"
+      ]
+    },
+    {
+      "kind": "block",
+      "slug": "dashboard-01",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-0-2-release"
+      ]
+    },
+    {
+      "kind": "block",
+      "slug": "sidebar-03",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-0-2-release"
+      ]
+    },
+    {
+      "kind": "block",
+      "slug": "dashboard-01",
+      "platform": "macos",
+      "status": "checked",
+      "evidence": [
+        "mac-site-0-2"
       ]
     }
   ]

@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use TraceIcon, TraceDisclosure from "./trace-parts.contract"
 
 component Trace
@@ -7,23 +8,25 @@ component Trace
     status: string
     steps: string[]
     details: string[]
+  inject
+    uiFont: string
   state expanded = -1
   derive normalizedStatus = ["error", "failed", "erreur"].includes(status.toLowerCase()) ? "error" : ["running", "loading"].includes(status.toLowerCase()) ? "running" : status.toLowerCase() == "pending" ? "pending" : ""
   action toggle(i: number)
     expanded = expanded == i ? -1 : i
   view
-    column id=id testId=id gap=12 min-width=0
-      row gap=8 align-items="center" flex-wrap="wrap" color=(normalizedStatus == "error" ? "ui.danger" : "ui.muted-foreground")
-        text title flex="1 1 10rem" min-width=0 font-size="0.875rem" font-weight=500 color="ui.foreground"
-        row gap=6 align-items="center"
+    column id=id testId=id gap="ui.space-12" min-width="0px"
+      row gap="ui.space-8" align-items="center" flex-wrap="wrap" color=(normalizedStatus == "error" ? "ui.danger" : "ui.muted-foreground")
+        text title flex="1 1 10rem" min-width="0px" font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        row gap="ui.space-6" align-items="center"
           TraceIcon(icon="check", status=normalizedStatus, reduced=true)
-          text status testId=(id + "-status") role="status" font-size="0.75rem" line-height=1.5
-      column gap=8 min-width=0
+          text status testId=(id + "-status") role="status" font-size="ui.text-xs" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      column gap="ui.space-8" min-width="0px"
         for step, i in steps key=step
           TraceDisclosure(id=id + "-step-" + i.toString(), title=step, icon="none", status="", open=(expanded == i), reduced=true, toggle=toggle(i))
             if expanded == i
               match details.at(i)
                 case some(detail)
-                  text detail id=(id + "-detail-" + i.toString()) testId=(id + "-detail-" + i.toString()) font-size="0.875rem" line-height=1.625 overflow-wrap="break-word"
+                  text detail id=(id + "-detail-" + i.toString()) testId=(id + "-detail-" + i.toString()) font-size="ui.text-sm" line-height="ui.leading-code" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 case none
-                  text "No details." font-size="0.875rem" line-height=1.625
+                  text "No details." font-size="ui.text-sm" line-height="ui.leading-code" font-family=uiFontFamily(uiFont) data-rightui-font="body"

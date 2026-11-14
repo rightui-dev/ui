@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 use uiPopupIn, uiPopupOut from "./popup-motion.contract"
 
@@ -44,86 +45,88 @@ component AdvancedMenuLine
     activate: action
     hover: action
     keys: action
+  inject
+    uiFont: string
   derive checked = entry.kind == "checkbox" ? checks.includes(entry.id) : advancedMenuRadio(entry, radios)
   view
     if entry.kind == "separator"
-      view testId=(id + "-separator-" + entry.id) role="separator" height=1 margin="4px -4px" background-color="ui.border"
+      view testId=(id + "-separator-" + entry.id) role="separator" height="ui.border-width" margin="ui.space-4 ui.space-negative-4" background-color="ui.border"
     else if entry.kind == "label"
-      text entry.label testId=(id + "-label-" + entry.id) padding="6px 8px" font-size="0.875rem" font-weight=500 color="ui.foreground"
+      text entry.label testId=(id + "-label-" + entry.id) padding="ui.space-6 ui.space-8" font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
     else if entry.kind == "checkbox" or entry.kind == "radio"
       button id=(id + "-item-" + entry.id) testId=(id + "-item-" + entry.id) class=Control press=activate hover=hover key=keys disabled=entry.disabled tabindex=-1
         aria-label=entry.label role=(entry.kind == "checkbox" ? "menuitemcheckbox" : "menuitemradio") aria-checked=checked
-        display="flex" width="100%" box-sizing="border-box" align-items="center" gap=8 min-height=32 padding="6px 8px" border="0" border-radius=radius
+        display="flex" width="100%" box-sizing="border-box" align-items="center" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius=radius
         background-color=(openParents.includes(entry.id) ? "ui.muted" : "transparent") color=(entry.kind == "destructive" ? "ui.danger" : "ui.foreground")
-        font-size="0.875rem" font-weight=400 cursor="default"
+        font-size="ui.text-sm" font-weight="ui.weight-regular" cursor="default"
         :hover
           background-color="ui.muted"
         :focus-visible
           box-shadow="none"
           background-color="ui.muted"
         if entry.kind == "checkbox" or entry.kind == "radio"
-          view width=16 height=16 flex-shrink=0 display="flex" align-items="center" justify-content="center" aria-hidden=true
+          view width="ui.space-16" height="ui.space-16" flex-shrink=0 display="flex" align-items="center" justify-content="center" aria-hidden=true
             if checked
-              svg width=(entry.kind == "radio" ? 8 : 16) height=(entry.kind == "radio" ? 8 : 16) viewBox="0 0 24 24" fill=(entry.kind == "radio" ? "currentColor" : "none") stroke="currentColor" stroke-width=2
+              svg width=(entry.kind == "radio" ? "ui.space-8" : "ui.space-16") height=(entry.kind == "radio" ? "ui.space-8" : "ui.space-16") viewBox="0 0 24 24" fill=(entry.kind == "radio" ? "currentColor" : "none") stroke="currentColor" stroke-width="ui.stroke-standard"
                 if entry.kind == "radio"
                   circle cx=12 cy=12 r=10
                 else
                   path d="m5 12 4 4L19 6"
-        text entry.label flex=1 min-width=0 text-align="left"
+        text entry.label flex=1 min-width="0px" text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if entry.shortcut != ""
-          text entry.shortcut font-size="0.75rem" letter-spacing="0.1em" color="ui.muted-foreground" aria-hidden=true
+          text entry.shortcut font-size="ui.text-xs" letter-spacing="ui.tracking-wide" color="ui.muted-foreground" aria-hidden=true font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if entry.kind == "submenu"
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=2 aria-hidden=true
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" aria-hidden=true
             path d="m9 5 7 7-7 7"
     else if entry.kind == "submenu"
       button id=(id + "-item-" + entry.id) testId=(id + "-item-" + entry.id) class=Control press=activate hover=hover key=keys disabled=entry.disabled tabindex=-1
         aria-label=entry.label role="menuitem" aria-haspopup="menu" aria-expanded=openParents.includes(entry.id) aria-controls=(id + "-sub-" + entry.id)
-        display="flex" width="100%" box-sizing="border-box" align-items="center" gap=8 min-height=32 padding="6px 8px" border="0" border-radius=radius
+        display="flex" width="100%" box-sizing="border-box" align-items="center" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius=radius
         background-color=(openParents.includes(entry.id) ? "ui.muted" : "transparent") color=(entry.kind == "destructive" ? "ui.danger" : "ui.foreground")
-        font-size="0.875rem" font-weight=400 cursor="default"
+        font-size="ui.text-sm" font-weight="ui.weight-regular" cursor="default"
         :hover
           background-color="ui.muted"
         :focus-visible
           box-shadow="none"
           background-color="ui.muted"
         if entry.kind == "checkbox" or entry.kind == "radio"
-          view width=16 height=16 flex-shrink=0 display="flex" align-items="center" justify-content="center" aria-hidden=true
+          view width="ui.space-16" height="ui.space-16" flex-shrink=0 display="flex" align-items="center" justify-content="center" aria-hidden=true
             if checked
-              svg width=(entry.kind == "radio" ? 8 : 16) height=(entry.kind == "radio" ? 8 : 16) viewBox="0 0 24 24" fill=(entry.kind == "radio" ? "currentColor" : "none") stroke="currentColor" stroke-width=2
+              svg width=(entry.kind == "radio" ? "ui.space-8" : "ui.space-16") height=(entry.kind == "radio" ? "ui.space-8" : "ui.space-16") viewBox="0 0 24 24" fill=(entry.kind == "radio" ? "currentColor" : "none") stroke="currentColor" stroke-width="ui.stroke-standard"
                 if entry.kind == "radio"
                   circle cx=12 cy=12 r=10
                 else
                   path d="m5 12 4 4L19 6"
-        text entry.label flex=1 min-width=0 text-align="left"
+        text entry.label flex=1 min-width="0px" text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if entry.shortcut != ""
-          text entry.shortcut font-size="0.75rem" letter-spacing="0.1em" color="ui.muted-foreground" aria-hidden=true
+          text entry.shortcut font-size="ui.text-xs" letter-spacing="ui.tracking-wide" color="ui.muted-foreground" aria-hidden=true font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if entry.kind == "submenu"
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=2 aria-hidden=true
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" aria-hidden=true
             path d="m9 5 7 7-7 7"
     else if entry.kind != "group"
       button id=(id + "-item-" + entry.id) testId=(id + "-item-" + entry.id) class=Control press=activate hover=hover key=keys disabled=entry.disabled tabindex=-1
         aria-label=entry.label role="menuitem"
-        display="flex" width="100%" box-sizing="border-box" align-items="center" gap=8 min-height=32 padding="6px 8px" border="0" border-radius=radius
+        display="flex" width="100%" box-sizing="border-box" align-items="center" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius=radius
         background-color=(openParents.includes(entry.id) ? "ui.muted" : "transparent") color=(entry.kind == "destructive" ? "ui.danger" : "ui.foreground")
-        font-size="0.875rem" font-weight=400 cursor="default"
+        font-size="ui.text-sm" font-weight="ui.weight-regular" cursor="default"
         :hover
           background-color="ui.muted"
         :focus-visible
           box-shadow="none"
           background-color="ui.muted"
         if entry.kind == "checkbox" or entry.kind == "radio"
-          view width=16 height=16 flex-shrink=0 display="flex" align-items="center" justify-content="center" aria-hidden=true
+          view width="ui.space-16" height="ui.space-16" flex-shrink=0 display="flex" align-items="center" justify-content="center" aria-hidden=true
             if checked
-              svg width=(entry.kind == "radio" ? 8 : 16) height=(entry.kind == "radio" ? 8 : 16) viewBox="0 0 24 24" fill=(entry.kind == "radio" ? "currentColor" : "none") stroke="currentColor" stroke-width=2
+              svg width=(entry.kind == "radio" ? "ui.space-8" : "ui.space-16") height=(entry.kind == "radio" ? "ui.space-8" : "ui.space-16") viewBox="0 0 24 24" fill=(entry.kind == "radio" ? "currentColor" : "none") stroke="currentColor" stroke-width="ui.stroke-standard"
                 if entry.kind == "radio"
                   circle cx=12 cy=12 r=10
                 else
                   path d="m5 12 4 4L19 6"
-        text entry.label flex=1 min-width=0 text-align="left"
+        text entry.label flex=1 min-width="0px" text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if entry.shortcut != ""
-          text entry.shortcut font-size="0.75rem" letter-spacing="0.1em" color="ui.muted-foreground" aria-hidden=true
+          text entry.shortcut font-size="ui.text-xs" letter-spacing="ui.tracking-wide" color="ui.muted-foreground" aria-hidden=true font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if entry.kind == "submenu"
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=2 aria-hidden=true
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" aria-hidden=true
             path d="m9 5 7 7-7 7"
 
 component AdvancedMenuPanel
@@ -145,15 +148,15 @@ component AdvancedMenuPanel
   view
     column id=id testId=id popover="auto" toggle=changed key=panelKeys role="menu" aria-label=label tabindex=-1
       position-area=(panel == "" ? "bottom" : "right span-bottom") position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
-      margin=4 width="14rem" min-width="8rem" max-width="calc(100vw - 32px)" max-height="min(28rem, 75vh)" overflow="auto" box-sizing="border-box"
-      padding=4 gap=0 border="1px solid ui.border" border-radius="ui.radius-menu" background-color="ui.surface" color="ui.foreground"
-      box-shadow=(panel == "" ? "0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a" : "0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a")
-      animation=(reduced ? "none" : panel == "" ? "uiPopupIn 150ms ease-out both" : "advancedSubmenuIn 150ms ease-out both")
-      -exact-exit-animation=(reduced ? "none" : "uiPopupOut 100ms ease-in both")
-      column role="none" align-items="stretch" gap=0 min-width=0
+      margin="ui.space-4" width="14rem" min-width="8rem" max-width="calc(100vw - ui.space-32)" max-height="min(28rem, 75vh)" overflow="auto" box-sizing="border-box"
+      padding="ui.space-4" gap="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" color="ui.foreground"
+      box-shadow=(panel == "" ? "ui.shadow-menu" : "ui.shadow-panel")
+      animation=(reduced ? "none" : panel == "" ? "uiPopupIn ui.duration-fast ui.easing both" : "advancedSubmenuIn ui.duration-fast ui.easing both")
+      -exact-exit-animation=(reduced ? "none" : "uiPopupOut ui.duration-fast ui.easing both")
+      column role="none" align-items="stretch" gap="0px" min-width="0px"
         for entry in entries.filter(item => item.parent == panel) key=entry.id
           if entry.kind == "group"
-            column role="group" aria-label=entry.label gap=0 min-width=0
+            column role="group" aria-label=entry.label gap="0px" min-width="0px"
               for child in entries.filter(item => item.parent == entry.id) key=child.id
                 AdvancedMenuLine(radius="ui.radius-item", id=prefix, entry=child, checks=checks, radios=radios, openParents=openParents, activate=activate(panel, child), hover=hover(panel, child), keys=keys(panel, child))
           else
@@ -172,6 +175,8 @@ component AdvancedMenuRoot
     choose: action
     check: action
     radio: action
+  inject
+    uiFont: string
   state active = 0
   state expanded = false
   state opening = 0
@@ -359,15 +364,15 @@ component AdvancedMenuRoot
       closeRoot()
   view
     row id=(bar ? id : id + "-container") testId=(bar ? id : id + "-container") role=(bar ? "menubar" : "group") aria-label=label
-      gap=4 align-items="center" flex-wrap="wrap" padding=(bar ? "4px" : "0px") border=(bar ? "1px solid ui.border" : "0") border-radius="ui.radius-menu" background-color=(bar ? "ui.surface" : "transparent")
+      gap="ui.space-4" align-items="center" flex-wrap="wrap" padding=(bar ? "ui.space-4" : "0px") border-width=(bar ? "ui.border-width" : "0px") border-style=(bar ? "solid" : "solid") border-color=(bar ? "ui.border" : "transparent") border-radius="ui.radius-menu" background-color=(bar ? "ui.surface" : "transparent")
       for menu, index in menus key=menu.id
         column align-items="flex-start"
           button id=advancedMenuPrefix(id, bar, menu.id) testId=advancedMenuPrefix(id, bar, menu.id) class=Control role=(bar ? "menuitem" : "button")
             press=toggle(index) hover=hoverTrigger(index) contextmenu=context(index) key=triggerKeys(index) contextPopover=(contextual ? advancedMenuPrefix(id, bar, menu.id) + "-menu" : "") tabindex=(not bar or active == index ? 0 : -1)
             aria-haspopup="menu" aria-expanded=(expanded and active == index) aria-controls=(advancedMenuPrefix(id, bar, menu.id) + "-menu")
-            padding=(contextual ? "24px 32px" : bar ? "4px 8px" : "8px 16px") min-height=(bar ? 28 : 36)
-            border=(contextual ? "1px dashed ui.border" : bar ? "0" : "1px solid ui.border") border-radius=(bar ? "ui.radius-sm" : "ui.radius-control") background-color=(bar and expanded and active == index ? "ui.muted" : "ui.surface") color="ui.foreground" font-size="0.875rem" font-weight=(bar ? 500 : 500)
-            text menu.label
+            padding=(contextual ? "ui.space-24 ui.space-32" : bar ? "ui.space-4 ui.space-8" : "ui.space-8 ui.space-16") min-height=(bar ? "ui.space-28" : "ui.space-36")
+            border-width=(contextual ? "ui.border-width" : bar ? "0px" : "ui.border-width") border-style=(contextual ? "dashed" : bar ? "solid" : "solid") border-color=(contextual ? "ui.border" : bar ? "transparent" : "ui.border") border-radius=(bar ? "ui.radius-sm" : "ui.radius-control") background-color=(bar and expanded and active == index ? "ui.muted" : "ui.surface") color="ui.foreground" font-size="ui.text-sm" font-weight=(bar ? "ui.weight-medium" : "ui.weight-medium")
+            text menu.label font-family=uiFontFamily(uiFont) data-rightui-font="body"
           if expanded and active == index
             for epoch in [opening] key=epoch
               AdvancedMenuPanel(id=advancedMenuPrefix(id, bar, menu.id) + "-menu", prefix=advancedMenuPrefix(id, bar, menu.id), label=menu.label, panel="", entries=menu.entries, checks=checks, radios=radios, openParents=openParents, reduced=reduced, activate=activate, hover=hoverEntry, keys=rowKeys, panelKeys=panelKeys(""), changed=rootChanged(index, epoch))

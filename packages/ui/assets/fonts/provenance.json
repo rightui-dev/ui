@@ -1,0 +1,47 @@
+{
+  "Geist-Italic.ttf": {
+    "source": "https://github.com/vercel/geist-font/blob/ef2597cfc42f4797676df105517ccc0a1cfa6569/fonts/Geist/variable/Geist-Italic%5Bwght%5D.ttf",
+    "commit": "ef2597cfc42f4797676df105517ccc0a1cfa6569",
+    "sha256": "a464348abe41a6392f18d04c0ac2ad3c26619357ff5fdd76aff3059116f45e62",
+    "license": "OFL-Italic.txt",
+    "style": "italic",
+    "weightRange": [
+      100,
+      900
+    ]
+  },
+  "Newsreader.ttf": {
+    "source": "https://github.com/google/fonts/blob/8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5/ofl/newsreader/Newsreader%5Bopsz,wght%5D.ttf",
+    "commit": "8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5",
+    "sha256": "8a08d13f8a6c0d51be379a60af84f945f65369a67e509ee3c3bdcc421254d7c1",
+    "license": "OFL-Newsreader.txt",
+    "licenseSha256": "fdfad38143ec470553cae82a1e45320bdd1b9ec70415d37bd0171051d8a4ded8",
+    "style": "normal",
+    "weightRange": [
+      200,
+      800
+    ],
+    "opticalSizeRange": [
+      6,
+      72
+    ],
+    "upstream": "https://github.com/productiontype/Newsreader"
+  },
+  "Newsreader-Italic.ttf": {
+    "source": "https://github.com/google/fonts/blob/8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5/ofl/newsreader/Newsreader-Italic%5Bopsz,wght%5D.ttf",
+    "commit": "8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5",
+    "sha256": "796668611f80b64d5adf182fde3b6f29ed83b4e7cbec7b96937e84ac01364792",
+    "license": "OFL-Newsreader.txt",
+    "licenseSha256": "fdfad38143ec470553cae82a1e45320bdd1b9ec70415d37bd0171051d8a4ded8",
+    "style": "italic",
+    "weightRange": [
+      200,
+      800
+    ],
+    "opticalSizeRange": [
+      6,
+      72
+    ],
+    "upstream": "https://github.com/productiontype/Newsreader"
+  }
+}

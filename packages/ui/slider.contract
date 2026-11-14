@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 component Slider
   props
     id: string
@@ -8,6 +9,8 @@ component Slider
     step: number
     disabled: bool
     change: action
+  inject
+    uiFont: string
   state start = 0
   state trackWidth = 1
   derive ratio = max(0, min(1, (value - minimum) / max(1, maximum - minimum)))
@@ -15,9 +18,9 @@ component Slider
     if not disabled
       change(max(minimum, min(maximum, minimum + round((n - minimum) / step) * step)))
   action begin(e: PointerEvent)
-    let box = frame(id)
-    let width = max(1, box.width - 20)
-    let position = max(0, min(width, e.clientX - box.x - 10))
+    let box = frame(id + "-track")
+    let width = max(1, box.width)
+    let position = max(0, min(width, e.clientX - box.x))
     trackWidth = width
     start = position
     update(minimum + position / width * (maximum - minimum))
@@ -46,16 +49,16 @@ component Slider
       preventDefault()
       update(value - step * 10)
   view
-    column gap=8 min-width=0
-      row justify-content="space-between" align-items="center" flex-wrap="wrap" gap=8
-        text label flex="1 1 8rem" min-width=0 hyphens="auto" font-size="0.875rem" color="ui.foreground"
-        text value.toFixed(0) flex-shrink=0 font-size="0.8125rem" color="ui.muted-foreground" font-variant-numeric="tabular-nums" testId=(id + "-value")
+    column gap="ui.space-8" min-width="0px"
+      row justify-content="space-between" align-items="center" flex-wrap="wrap" gap="ui.space-8"
+        text label flex="1 1 8rem" min-width="0px" hyphens="auto" font-size="ui.text-sm" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text value.toFixed(0) flex-shrink=0 font-size="ui.text-caption" color="ui.muted-foreground" font-variant-numeric="tabular-nums" testId=(id + "-value") font-family=uiFontFamily(uiFont) data-rightui-font="body"
       view id=id testId=id role="slider" aria-label=label aria-valuemin=minimum aria-valuemax=maximum aria-valuenow=value
         aria-disabled=disabled tabindex=(disabled ? -1 : 0) key=keys pointerdown=begin pan=move
-        height=44 width="100%" position="relative" touch-action="none" cursor="pointer" opacity=(disabled ? 0.4 : 1)
+        height="ui.touch-target" width="100%" position="relative" touch-action="none" cursor="pointer" opacity=(disabled ? "ui.opacity-disabled" : 1)
         :focus-visible
-          box-shadow="0 0 0 3px ui.ring"
-        view position="absolute" left=10 right=10 top=19 height=6 border-radius="ui.radius-full" background-color="ui.muted" pointer-events="none"
+          box-shadow="ui.shadow-focus"
+        view id=(id + "-track") position="absolute" left="ui.space-10" right="ui.space-10" top="50%" translate="0px -50%" height="ui.space-6" border-radius="ui.radius-full" background-color="ui.muted" pointer-events="none"
           view height="100%" width=((ratio * 100).toString() + "%") border-radius="ui.radius-full" background-color="ui.primary"
-          view position="absolute" left=((ratio * 100).toString() + "%") top=-7 width=20 height=20 translate="-10px 0px"
-            border-radius="ui.radius-full" background-color="ui.surface" border="2px solid ui.primary" box-sizing="border-box"
+          view position="absolute" left=((ratio * 100).toString() + "%") top="50%" width="ui.space-20" height="ui.space-20" translate="-50% -50%"
+            border-radius="ui.radius-full" background-color="ui.surface" border-width="ui.border-strong-width" border-style="solid" border-color="ui.primary" box-sizing="border-box"

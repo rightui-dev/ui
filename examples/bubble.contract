@@ -6,5 +6,5 @@ component Demo
     reduced: bool
   derive narrow = width < 600
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Bubble(id="content-bubble-in", body="Here is the session brief.\nPlease check the spaces and lighting before our appointment.", align="start", variant="muted", collapsible=true)

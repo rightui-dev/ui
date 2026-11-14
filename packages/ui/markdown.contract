@@ -1,14 +1,90 @@
+use uiFontFamily, uiContentFontFamily from "./typography-context.contract"
 use CodeBlockAI from "./code-block.contract"
+
+shape MarkdownInline
+  text: string
+  href: string
+  bold: bool
+  italic: bool
+  code: bool
+
+shape MarkdownBlock
+  kind: string
+  text: string
+  level: number
+  language: string
+  items: string[]
+  inlines: MarkdownInline[]
+
+fn markdownRun(value: string, bold: bool, italic: bool, code: bool): MarkdownInline = MarkdownInline(text=value, href="", bold=bold, italic=italic, code=code)
+fn markdownSafeHref(value: string): bool = value.startsWith("https://") or value.startsWith("http://") or value.startsWith("mailto:") or value.startsWith("#") or (value.startsWith("/") and not value.startsWith("//"))
+fn markdownLinkTail(value: string, bold: bool, italic: bool): MarkdownInline[] = value.indexOf("](") >= 0 and value.slice(value.indexOf("](") + 2).indexOf(")") >= 0 ? [MarkdownInline(text=value.slice(0, value.indexOf("](")), href=(markdownSafeHref(value.slice(value.indexOf("](") + 2, value.indexOf("](") + 2 + value.slice(value.indexOf("](") + 2).indexOf(")"))) ? value.slice(value.indexOf("](") + 2, value.indexOf("](") + 2 + value.slice(value.indexOf("](") + 2).indexOf(")")) : ""), bold=bold, italic=italic, code=false), markdownRun(value.slice(value.indexOf("](") + 3 + value.slice(value.indexOf("](") + 2).indexOf(")")), bold, italic, false)] : [markdownRun("[" + value, bold, italic, false)]
+fn markdownLinks(value: string, bold: bool, italic: bool): MarkdownInline[] = value.split("[").map((part, i) => i == 0 ? [markdownRun(part, bold, italic, false)] : markdownLinkTail(part, bold, italic)).flat()
+fn markdownEmphasis(value: string, bold: bool): MarkdownInline[] = value.split("*").map((part, i) => markdownLinks((i == value.split("*").length - 1 and i % 2 == 1 ? "*" : "") + part, bold, i % 2 == 1 and i < value.split("*").length - 1)).flat()
+fn markdownStrong(value: string): MarkdownInline[] = value.split("**").map((part, i) => markdownEmphasis((i == value.split("**").length - 1 and i % 2 == 1 ? "**" : "") + part, i % 2 == 1 and i < value.split("**").length - 1)).flat()
+fn parseMarkdownInline(value: string): MarkdownInline[] = value.split("`").map((part, i) => i % 2 == 1 and i < value.split("`").length - 1 ? [markdownRun(part, false, false, true)] : markdownStrong((i % 2 == 1 ? "`" : "") + part)).flat().filter(run => run.text != "")
+fn markdownHeading(line: string): number = line.startsWith("###### ") ? 6 : line.startsWith("##### ") ? 5 : line.startsWith("#### ") ? 4 : line.startsWith("### ") ? 3 : line.startsWith("## ") ? 2 : line.startsWith("# ") ? 1 : 0
+fn markdownOrdered(line: string): bool = line.indexOf(". ") > 0 and line.indexOf(". ") < 10 ? match parseNumber(line.slice(0, line.indexOf(". "))) { case some(n) => n >= 0 and n == floor(n), case none => false } : false
+fn markdownList(line: string): bool = line.startsWith("- ") or line.startsWith("* ") or line.startsWith("+ ") or markdownOrdered(line)
+fn markdownListText(line: string): string = markdownOrdered(line) ? line.slice(line.indexOf(". ") + 2) : line.slice(2)
+fn markdownListLength(lines: string[], i: number): number = lines.slice(i).map(line => markdownList(line.trim())).indexOf(false) < 0 ? lines.length - i : lines.slice(i).map(line => markdownList(line.trim())).indexOf(false)
+fn markdownLine(line: string): MarkdownBlock = MarkdownBlock(kind=(line == "---" or line == "***" or line == "___" ? "rule" : markdownHeading(line) > 0 ? "heading" : line.startsWith("> ") ? "quote" : "paragraph"), text=(markdownHeading(line) > 0 ? line.slice(markdownHeading(line) + 1) : line.startsWith("> ") ? line.slice(2) : line), level=markdownHeading(line), language="", items=[], inlines=parseMarkdownInline(markdownHeading(line) > 0 ? line.slice(markdownHeading(line) + 1) : line.startsWith("> ") ? line.slice(2) : line))
+fn markdownLines(lines: string[]): MarkdownBlock[] = lines.map((line, i) => markdownList(line.trim()) ? MarkdownBlock(kind="list", text="", level=(markdownOrdered(line.trim()) ? 1 : 0), language="", items=lines.slice(i, i + markdownListLength(lines, i)).map(item => markdownListText(item.trim())), inlines=[]) : markdownLine(line.trim())).filter((block, i) => (block.kind != "paragraph" or block.text != "") and (block.kind != "list" or i == 0 or not markdownList(match lines.at(i - 1) { case some(line) => line.trim(), case none => "" })))
+fn markdownFenceBody(part: string): string = part.indexOf("\n") >= 0 ? part.slice(part.indexOf("\n") + 1) : part
+fn markdownFenceCode(part: string, closed: bool): string = closed and markdownFenceBody(part).endsWith("\n") ? markdownFenceBody(part).slice(0, -1) : markdownFenceBody(part)
+fn parseMarkdown(content: string): MarkdownBlock[] = content.replaceAll("\u{D}\n", "\n").split("```").map((part, i) => i % 2 == 0 ? markdownLines(part.split("\n")) : [MarkdownBlock(kind="code", text=markdownFenceCode(part, i < content.replaceAll("\u{D}\n", "\n").split("```").length - 1), level=0, language=(part.indexOf("\n") >= 0 ? part.slice(0, part.indexOf("\n")).trim() : "text"), items=[], inlines=[])]).flat()
+
+component MarkdownText
+  props
+    inlines: MarkdownInline[]
+    heading: number
+    quote: bool
+  inject
+    uiFont: string
+  view
+    text font-size=(heading == 1 ? "ui.text-3xl" : heading == 2 ? "ui.text-2xl" : heading == 3 ? "ui.text-xl" : heading > 0 ? "ui.text-lg" : "ui.text-sm") font-weight=(heading > 0 ? "ui.weight-semibold" : "ui.weight-regular") line-height=(heading > 0 ? "ui.leading-tight" : "ui.leading-code") color=(quote ? "ui.muted-foreground" : "ui.foreground") min-width="0px" overflow-wrap="break-word" role=(heading > 0 ? "heading" : "") aria-level=heading
+      for run, i in inlines key=i
+        if run.href != "" and markdownSafeHref(run.href)
+          text run.text href=run.href font-family=uiFontFamily(uiFont) data-rightui-font="body" color="ui.primary" text-decoration="underline" font-weight=(run.bold ? "ui.weight-bold" : heading > 0 ? "ui.weight-semibold" : "ui.weight-regular") font-style=(run.italic ? "italic" : "normal")
+        else
+          text run.text font-family=uiContentFontFamily(uiFont, run.code) data-rightui-font=(run.code ? "code" : "body") font-size=(run.code ? "ui.text-caption" : "inherit") font-weight=(run.bold ? "ui.weight-bold" : heading > 0 ? "ui.weight-semibold" : "ui.weight-regular") font-style=(run.italic ? "italic" : "normal") background-color=(run.code ? "ui.muted" : "transparent") border-radius=(run.code ? "ui.radius-detail" : "0px")
+
+component MarkdownDocument
+  props
+    id: string
+    blocks: MarkdownBlock[]
+  inject
+    uiFont: string
+  view
+    column id=id testId=id gap="ui.space-12" width="100%" min-width="0px"
+      for block, i in blocks key=i
+        if block.kind == "code"
+          CodeBlockAI(id=id + "-code-" + i.toString(), title=block.language, language="", code=block.text, numbers=true, diff=false)
+        else if block.kind == "rule"
+          view role="separator" height="ui.border-width" background-color="ui.border" width="100%"
+        else if block.kind == "list"
+          column role="list" gap="ui.space-6" padding-left="ui.space-8"
+            for item, j in block.items key=j
+              row role="listitem" gap="ui.space-8" align-items="flex-start" min-width="0px"
+                text (block.level > 0 ? (j + 1).toString() + "." : "•") aria-hidden=true font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-sm" line-height="ui.leading-code" min-width="ui.space-16" color="ui.muted-foreground"
+                MarkdownText(inlines=parseMarkdownInline(item), heading=0, quote=false)
+        else if block.kind == "quote"
+          view border-left-width="ui.border-strong-width" border-left-style="solid" border-left-color="ui.border" padding-left="ui.space-16"
+            MarkdownText(inlines=block.inlines, heading=0, quote=true)
+        else
+          MarkdownText(inlines=block.inlines, heading=(block.kind == "heading" ? block.level : 0), quote=false)
 
 component Markdown
   props
     id: string
     content: string
+  inject
+    uiFont: string
   view
-    column id=id testId=id gap=16 width="100%" min-width=0
+    column id=id testId=id gap="ui.space-16" width="100%" min-width="0px"
       for part, i in content.split("```") key=i
         if i % 2 == 0
           if part.trim() != ""
-            text part.trim() markup="markdown" font-size="0.875rem" line-height=1.625 color="ui.foreground" min-width=0 overflow-wrap="break-word"
+            text part.trim() markup="markdown" font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-sm" line-height="ui.leading-code" color="ui.foreground" min-width="0px" overflow-wrap="break-word"
         else
-          CodeBlockAI(id=id + "-code-" + i.toString(), title=(part.indexOf("\n") >= 0 ? part.slice(0, part.indexOf("\n")) : "text"), language="", code=(part.indexOf("\n") >= 0 ? part.slice(part.indexOf("\n") + 1).trim() : part), numbers=true, diff=false)
+          CodeBlockAI(id=id + "-code-" + i.toString(), title=(part.indexOf("\n") >= 0 ? part.slice(0, part.indexOf("\n")) : "text"), language="", code=markdownFenceCode(part, i < content.split("```").length - 1), numbers=true, diff=false)

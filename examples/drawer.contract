@@ -1,9 +1,11 @@
-use Dialog, Button, Drawer from "@rightui/ui"
+use uiFontFamily, Dialog, Button, Drawer from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state drawerShown = false
   state responsiveShown = false
@@ -22,28 +24,28 @@ component Demo
   action openExample
     drawerShown = true
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Button(id="drawer-open", label="Open drawer", variant="outline", disabled=false, press=openExample)
       Drawer(id="controls-drawer", open=drawerShown, title="Move Goal", description="Set your daily activity goal.", reduced=reduce, focusIds=["controls-goal-less", "controls-goal-more", "controls-drawer-submit"], dismiss=hideDrawer)
-        column gap=16 align-items="center" padding=16
-          row gap=24 align-items="center" justify-content="center"
+        column gap="ui.space-16" align-items="center" padding="ui.space-16"
+          row gap="ui.space-24" align-items="center" justify-content="center"
             Button(id="controls-goal-less", label="−", variant="outline", disabled=(activityGoal == 200), press=adjustGoal(-10))
             column align-items="center"
-              text activityGoal.toString() testId="controls-goal" font-size="3.75rem" font-weight=700
-              text "CALORIES/DAY" font-size="0.75rem" color="ui.muted-foreground"
+              text activityGoal.toString() testId="controls-goal" font-size="ui.text-6xl" font-weight="ui.weight-bold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text "CALORIES/DAY" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             Button(id="controls-goal-more", label="+", variant="outline", disabled=(activityGoal == 500), press=adjustGoal(10))
-          row gap=6 align-items="flex-end" height=80 aria-hidden=true
+          row gap="ui.space-6" align-items="flex-end" height="ui.space-80" aria-hidden=true
             for height, i in [30, 50, 40, 65, 45, 70, 55, 80, 62, 48] key=i
-              view width=20 height=height border-radius=3 background-color="ui.primary"
+              view width="ui.space-20" height=height border-radius="ui.radius-xs" background-color="ui.primary"
           Button(id="controls-drawer-submit", label="Submit", variant="primary", disabled=false, press=hideDrawer)
-        column id="drawer-long-content" max-height=180 overflow="auto" gap=12
+        column id="drawer-long-content" max-height=180 overflow="auto" gap="ui.space-12"
           for section in ["Overview", "Preferences", "Permissions", "Storage", "Notifications", "Accessibility", "Review"] key=section
-            text (section + ": review the project settings before continuing.")
-      text "Responsive dialog" font-weight=600
+            text (section + ": review the project settings before continuing.") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Responsive dialog" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Button(id="drawer-responsive-open", label="Open responsive dialog", variant="outline", disabled=false, press=openResponsive)
       if narrow
         Drawer(id="drawer-responsive-small", open=responsiveShown, title="Responsive drawer", description="A drawer on narrow screens, a dialog on wide screens.", reduced=reduced, focusIds=["drawer-responsive-save"], dismiss=closeResponsive)
           Button(id="drawer-responsive-save", label="Save", variant="primary", disabled=false, press=closeResponsive)
       else
         Dialog(id="drawer-responsive-dialog", open=responsiveShown, reduced=reduced, title="Responsive dialog", description="A dialog on wide screens, a drawer on narrow screens.", confirmLabel="Save", focusIds=["drawer-responsive-dialog-cancel", "drawer-responsive-dialog-confirm"], dismiss=closeResponsive, confirm=closeResponsive)
-          text "Resize the viewport to try each presentation."
+          text "Resize the viewport to try each presentation." font-family=uiFontFamily(uiFont) data-rightui-font="body"

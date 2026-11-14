@@ -1,13 +1,15 @@
-use Spinner, Empty from "@rightui/ui"
+use uiFontFamily, Spinner, Empty from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Spinner(id="catalog-spinner", label="Processing", reduced=reduced)
-      text "Loading empty state" font-size="0.875rem" font-weight=600
+      text "Loading empty state" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Empty(id="variation-spinner-empty", title="Loading projects", description="Your projects will appear here.")
         Spinner(id="variation-spinner-loading", label="Loading", reduced=reduced)

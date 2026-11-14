@@ -6,9 +6,9 @@ component ResizablePanelGroup
     value: number
   slot
   derive ratio = max(0, min(100, value))
-  derive tracks = "minmax(0, " + ratio.toString() + "fr) 1px minmax(0, " + (100 - ratio).toString() + "fr)"
+  derive tracks = "minmax(0, " + ratio.toString() + "fr) auto minmax(0, " + (100 - ratio).toString() + "fr)"
   view
-    view id=id testId=id display="grid" width="100%" height="100%" min-width=0 min-height=0 direction=(dir == "rtl" ? "rtl" : "ltr")
+    view id=id testId=id display="grid" width="100%" height="100%" min-width="0px" min-height="0px" direction=(dir == "rtl" ? "rtl" : "ltr")
       grid-template-columns=(orientation == "horizontal" ? tracks : "minmax(0, 1fr)")
       grid-template-rows=(orientation == "vertical" ? tracks : "minmax(0, 1fr)")
       children
@@ -20,11 +20,11 @@ component ResizablePanel
     minContentWidth: string
   slot
   view
-    column id=id testId=id role="group" aria-label=label min-width=0 min-height=0 padding=20 box-sizing="border-box"
-      scroll id=(id + "-scroll") testId=(id + "-scroll") aria-label=label flex=1 min-width=0 min-height=0 overflow="auto" tabindex=0
+    column id=id testId=id role="group" aria-label=label min-width="0px" min-height="0px" padding="ui.space-20" box-sizing="border-box"
+      scroll id=(id + "-scroll") testId=(id + "-scroll") aria-label=label flex=1 min-width="0px" min-height="0px" overflow="auto" tabindex=0
         :focus-visible
-          box-shadow="inset 0 0 0 2px ui.ring"
-        column gap=12 min-width=minContentWidth width="100%" box-sizing="border-box"
+          box-shadow="ui.shadow-focus-inset"
+        column gap="ui.space-12" min-width=minContentWidth width="100%" box-sizing="border-box"
           children
 
 component ResizableHandle
@@ -54,10 +54,11 @@ component ResizableHandle
       stopPropagation()
       preventDefault()
       let bounds = frame(groupId)
+      let divider = frame(id + "-track")
       pointer = e.pointerId
       origin = value
       start = (orientation == "horizontal" ? e.clientX : e.clientY)
-      extent = max(1, (orientation == "horizontal" ? bounds.width : bounds.height) - 1)
+      extent = max(1, (orientation == "horizontal" ? bounds.width - divider.width : bounds.height - divider.height))
       if e.pointerType == "mouse"
         focus(id)
   action move(e: PointerEvent)
@@ -83,29 +84,29 @@ component ResizableHandle
         let delta = (k == "ArrowLeft" or k == "ArrowUp" ? -1 : 1) * (e.shiftKey ? 10 : 1)
         change(max(low, min(high, value + delta * (reverse ? -1 : 1))))
   view
-    view position="relative" z-index=2 min-width=0 min-height=0 touch-action="none" user-select="none"
+    view id=(id + "-track") width=(orientation == "horizontal" ? "ui.border-width" : "100%") height=(orientation == "vertical" ? "ui.border-width" : "100%") position="relative" z-index=2 min-width="0px" min-height="0px" touch-action="none" user-select="none"
       cursor=(disabled ? "default" : orientation == "horizontal" ? "col-resize" : "row-resize")
       pointerdown=begin pointermove=move pointerup=end
       view position="absolute" pointer-events="none" background-color="ui.border"
-        width=(orientation == "horizontal" ? "1px" : "100%") height=(orientation == "horizontal" ? "100%" : "1px")
-        left=(orientation == "horizontal" ? "50%" : "0px") top=(orientation == "horizontal" ? "0px" : "50%")
+        width=(orientation == "horizontal" ? "ui.border-width" : "100%") height=(orientation == "horizontal" ? "100%" : "ui.border-width")
+        left="0px" top="0px"
       button id=id testId=id role="separator" aria-label=label aria-controls=primaryId
         aria-orientation=(orientation == "horizontal" ? "vertical" : "horizontal")
         aria-valuemin=low aria-valuemax=high aria-valuenow=value aria-valuetext=(value.toFixed(0) + " %") disabled=disabled
         key=keys pointerdown=begin pointermove=move pointerup=end
-        position="absolute" z-index=2 left="50%" top="50%" translate="-50% -50%" width=(orientation == "horizontal" ? "12px" : "100%") height=(orientation == "horizontal" ? "100%" : "12px")
-        appearance="none" padding=0 border="0" background-color="transparent" touch-action="none" user-select="none"
+        position="absolute" z-index=2 left="50%" top="50%" translate="-50% -50%" width=(orientation == "horizontal" ? "ui.space-12" : "100%") height=(orientation == "horizontal" ? "100%" : "ui.space-12")
+        appearance="none" padding="0px" border="0" background-color="transparent" touch-action="none" user-select="none"
         cursor=(disabled ? "default" : orientation == "horizontal" ? "col-resize" : "row-resize")
         display="flex" align-items="center" justify-content="center" border-radius="ui.radius-control"
         :focus-visible
-          box-shadow="0 0 0 3px ui.ring"
+          box-shadow="ui.shadow-focus"
         :disabled
-          opacity=0.4
+          opacity="ui.opacity-disabled"
         if withHandle
-          view id=(id + "-grip") testId=(id + "-grip") width=(orientation == "horizontal" ? 12 : 16) height=(orientation == "horizontal" ? 16 : 12)
-            border="1px solid ui.border" border-radius="ui.radius-detail" background-color="ui.border"
+          view id=(id + "-grip") testId=(id + "-grip") width=(orientation == "horizontal" ? "ui.space-12" : "ui.space-16") height=(orientation == "horizontal" ? "ui.space-16" : "ui.space-12")
+            border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-detail" background-color="ui.border"
             display="flex" align-items="center" justify-content="center" pointer-events="none"
-            svg width=10 height=10 viewBox="0 0 10 16" fill="ui.muted-foreground" aria-hidden=true rotate=(orientation == "horizontal" ? "0deg" : "90deg")
+            svg width="ui.space-10" height="ui.space-10" viewBox="0 0 10 16" fill="ui.muted-foreground" aria-hidden=true rotate=(orientation == "horizontal" ? "0deg" : "90deg")
               circle cx=3 cy=4 r=1
               circle cx=7 cy=4 r=1
               circle cx=3 cy=8 r=1

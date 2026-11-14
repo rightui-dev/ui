@@ -1,22 +1,27 @@
+use uiFontFamily from "./typography-context.contract"
 use Control, Field as FieldStyle from "./styles.contract"
 component Label
   props
     id: string
     text: string
     required: bool
+  inject
+    uiFont: string
   view
-    text (text + (required ? " *" : "")) id=id font-size="0.875rem" font-weight=500 color="ui.foreground"
+    text (text + (required ? " *" : "")) id=id font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component Field
   props
     id: string
     description: string
     error: string
+  inject
+    uiFont: string
   slot
   view
-    column gap=8 min-width=0 role="group" aria-describedby=(id + "-hint")
+    column gap="ui.space-8" min-width="0px" role="group" aria-describedby=(id + "-hint")
       children
-      text (error != "" ? error : description) id=(id + "-hint") testId=(id + "-hint") font-size="0.75rem" line-height=1.5 color=(error != "" ? "ui.danger" : "ui.muted-foreground")
+      text (error != "" ? error : description) id=(id + "-hint") testId=(id + "-hint") font-size="ui.text-xs" line-height="ui.leading-normal" color=(error != "" ? "ui.danger" : "ui.muted-foreground") font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component Textarea
   props
@@ -27,13 +32,13 @@ component Textarea
     error: string
     disabled: bool
     edit: action
+  inject
+    uiFont: string
   view
-    column gap=8 min-width=0
+    column gap="ui.space-8" min-width="0px"
       Label(id=id + "-label", text=label, required=false)
-      textarea id=id testId=id class=FieldStyle value=value input=edit placeholder=placeholder disabled=disabled
-        aria-labelledby=(id + "-label") aria-invalid=(error != "") aria-describedby=(id + "-error")
-        min-height=64 max-height="20rem" resize="vertical"
-      text error id=(id + "-error") font-size="0.75rem" color="ui.danger" display=(error == "" ? "none" : "block")
+      TextareaControl(id=id, label=label, value=value, placeholder=placeholder, error=error, descriptionId=id + "-error", disabled=disabled, edit=edit)
+      text error id=(id + "-error") font-size="ui.text-xs" color="ui.danger" display=(error == "" ? "none" : "block") font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component RadioGroup
   props
@@ -45,6 +50,22 @@ component RadioGroup
     required: bool
     descriptionId: string
     change: action
+  view
+    RadioGroupAdvanced(id=id, label=label, options=options, value=value, disabled=disabled, required=required, descriptionId=descriptionId, change=change, variant="default")
+
+component RadioGroupAdvanced
+  props
+    id: string
+    label: string
+    options: string[]
+    value: string
+    disabled: bool
+    required: bool
+    descriptionId: string
+    change: action
+    variant: string
+  inject
+    uiFont: string
   action pick(i: number)
     if not disabled
       match options.at(i)
@@ -59,15 +80,20 @@ component RadioGroup
       let index = max(0, options.indexOf(value))
       pick(k == "Home" ? 0 : k == "End" ? options.length - 1 : (index + (k == "ArrowDown" or k == "ArrowRight" ? 1 : options.length - 1)) % options.length)
   view
-    column id=id testId=id role="radiogroup" aria-label=label aria-required=required aria-describedby=descriptionId gap=12
+    view id=id testId=id role="radiogroup" aria-label=label aria-required=required aria-describedby=descriptionId
+      display="flex" flex-direction=(variant == "segmented" ? "row" : "column") flex-wrap=(variant == "segmented" ? "wrap" : "nowrap") min-width="0px"
+      gap=(variant == "segmented" ? "ui.space-4" : "ui.space-12") padding=(variant == "segmented" ? "ui.space-4" : "0px")
+      border-radius=(variant == "segmented" ? "ui.radius-control" : "0px") background-color=(variant == "segmented" ? "ui.muted" : "transparent")
       for option, i in options key=option
         button id=(id + "-" + i.toString()) testId=(id + "-" + i.toString()) class=Control role="radio" aria-checked=(value == option)
           tabindex=(value == option or (options.indexOf(value) == -1 and i == 0) ? 0 : -1) disabled=disabled press=pick(i) key=keys
-          display="flex" align-items="center" gap=8 padding="0px" min-height=20 border="0" background-color="transparent" color="ui.foreground"
-          view width=16 height=16 flex-shrink=0 border-radius="ui.radius-full" border=(value == option ? "1px solid ui.primary" : "1px solid ui.border") display="flex" align-items="center" justify-content="center" aria-hidden=true
-            if value == option
-              view width=8 height=8 border-radius="ui.radius-full" background-color="ui.primary"
-          text option font-size="0.875rem" text-align="left"
+          display="flex" align-items="center" justify-content=(variant == "segmented" ? "center" : "flex-start") gap="ui.space-8" flex=(variant == "segmented" ? "1 1 auto" : "0 1 auto")
+          padding=(variant == "segmented" ? "ui.space-6 ui.space-8" : "0px") min-height=(variant == "segmented" ? "ui.control-sm" : "ui.space-20")
+          border-width=(variant == "segmented" ? "ui.border-width" : "0px") border-style="solid" border-color=(variant == "segmented" and value == option ? "ui.tab-active-border" : "transparent")
+          background-color=(variant == "segmented" and value == option ? "ui.tab-active" : "transparent") color="ui.foreground" box-shadow=(variant == "segmented" and value == option ? "ui.shadow-control" : "none")
+          if variant != "segmented"
+            RadioIndicator(checked=(value == option))
+          text option font-size=(variant == "segmented" ? "ui.text-xs" : "ui.text-sm") text-align=(variant == "segmented" ? "center" : "left") font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component Toggle
   props
@@ -77,14 +103,16 @@ component Toggle
     disabled: bool
     reduced: bool
     change: action
+  inject
+    uiFont: string
   action toggle
     if not disabled
       change(not pressed)
   view
     button id=id testId=id class=Control aria-pressed=pressed disabled=disabled press=toggle
-      padding="0px 8px" min-width=36 height=36 border="1px solid ui.border" background-color=(pressed ? "ui.muted" : "transparent") color="ui.foreground"
-      transition=(reduced ? "none" : "background-color 140ms ease-out")
-      text label
+      padding="0px ui.space-8" min-width="ui.space-36" height="ui.space-36" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color=(pressed ? "ui.muted" : "transparent") color="ui.foreground"
+      transition=(reduced ? "none" : "background-color ui.duration-fast ui.easing")
+      text label font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component ToggleGroup
   props
@@ -95,6 +123,8 @@ component ToggleGroup
     disabled: bool
     reduced: bool
     change: action
+  inject
+    uiFont: string
   action toggle(value: string)
     if not disabled
       change(selected.includes(value) ? selected.filter(item => item != value) : selected.concat([value]))
@@ -111,9 +141,48 @@ component ToggleGroup
       let next = (k == "Home" ? 0 : k == "End" ? options.length - 1 : (i + (k == "ArrowRight" ? 1 : options.length - 1)) % max(1, options.length))
       focus(id + "-" + next.toString())
   view
-    row id=id testId=id role="group" aria-label=label gap=4 flex-wrap="wrap"
+    row id=id testId=id role="group" aria-label=label gap="ui.space-4" flex-wrap="wrap"
       for option, i in options key=option
         button id=(id + "-" + i.toString()) testId=(id + "-" + i.toString()) class=Control aria-pressed=selected.includes(option) disabled=disabled press=toggle(option) key=keys(i)
-          padding="0px 8px" min-width=36 height=36 border="1px solid ui.border" background-color=(selected.includes(option) ? "ui.muted" : "transparent") color="ui.foreground"
-          transition=(reduced ? "none" : "background-color 140ms ease-out")
-          text option
+          padding="0px ui.space-8" min-width="ui.space-36" height="ui.space-36" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color=(selected.includes(option) ? "ui.muted" : "transparent") color="ui.foreground"
+          transition=(reduced ? "none" : "background-color ui.duration-fast ui.easing")
+          text option font-family=uiFontFamily(uiFont) data-rightui-font="body"
+
+component TextareaControl
+  props
+    id: string
+    label: string
+    value: string
+    placeholder: string
+    error: string
+    descriptionId: string
+    disabled: bool
+    edit: action
+  inject
+    uiFont: string
+  view
+    textarea id=id testId=id class=FieldStyle value=value input=edit placeholder=placeholder disabled=disabled font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      aria-label=label aria-invalid=(error != "") aria-describedby=descriptionId
+      min-height="ui.space-64" max-height="20rem" resize="vertical"
+
+component RadioControl
+  props
+    id: string
+    label: string
+    checked: bool
+    disabled: bool
+    tabIndex: number
+    press: action
+    keys: action
+  view
+    button id=id testId=id class=Control role="radio" aria-label=label aria-checked=checked tabindex=tabIndex disabled=disabled press=press key=keys
+      display="flex" align-items="center" justify-content="center" padding="0px" min-height="ui.touch-target" min-width="ui.touch-target" border="0" background-color="transparent" color="ui.foreground"
+      RadioIndicator(checked=checked)
+
+component RadioIndicator
+  props
+    checked: bool
+  view
+    view width="ui.space-16" height="ui.space-16" flex-shrink=0 border-radius="ui.radius-full" border-width="ui.border-width" border-style="solid" border-color=(checked ? "ui.primary" : "ui.border") display="flex" align-items="center" justify-content="center" aria-hidden=true
+      if checked
+        view width="ui.space-8" height="ui.space-8" border-radius="ui.radius-full" background-color="ui.primary"

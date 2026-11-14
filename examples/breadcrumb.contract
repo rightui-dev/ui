@@ -9,5 +9,5 @@ component Demo
   action chooseBreadcrumb(i: number)
     breadcrumb = (i == 0 ? "Home" : "Library")
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Breadcrumb(id="catalog-breadcrumb", labels=["Home", "Library", "Components"], choose=chooseBreadcrumb)

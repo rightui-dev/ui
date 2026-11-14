@@ -1,4 +1,4 @@
-use Control from "../../packages/ui/styles.contract"
+use uiFontFamily, ControlStyle as Control from "@rightui/ui"
 
 component TreeFile
   props
@@ -6,19 +6,23 @@ component TreeFile
     name: string
     selected: string
     choose: action
+  inject
+    uiFont: string
   state hovered = false
   action hover(inside: bool)
     hovered = inside
   view
-    button class=Control hover=hover testId=("ai-file-tree-" + path) press=choose(path) aria-current=(selected == path ? "true" : "false") display="flex" align-items="center" gap=8 width="100%" height=32 min-height=32 padding="4px 12px" border="0" border-radius=6 background-color=(selected == path or hovered ? "ui.muted" : "transparent") color="ui.foreground" font-size="0.875rem" text-align="left"
-      svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2
+    button class=Control hover=hover testId=("ai-file-tree-" + path) press=choose(path) aria-current=(selected == path ? "true" : "false") display="flex" align-items="center" gap="ui.space-8" width="100%" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-12" border="0" border-radius="ui.radius-sm" background-color=(selected == path or hovered ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm" text-align="left"
+      svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke"
         path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6"
-      text name
+      text name font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   state appOpen = true
   state componentsOpen = true
   state uiOpen = true
@@ -32,41 +36,41 @@ component Demo
   action choose(path: string)
     selected = path
   view
-    column width="100%" max-width="20rem" padding="24px 0" font-size="0.875rem"
-      button id="ai-file-tree-app" testId="ai-file-tree-app" class=Control aria-label="app" aria-controls="ai-file-tree-app-files" aria-expanded=appOpen press=appToggle display="flex" align-items="center" width="100%" height=32 min-height=32 padding="4px 12px" border="0" background-color="transparent" color="ui.foreground" font-size="0.875rem" font-weight=400 text-align="left"
+    column width="100%" max-width="20rem" padding="ui.space-24 ui.space-0" font-size="ui.text-sm"
+      button id="ai-file-tree-app" testId="ai-file-tree-app" class=Control aria-label="app" aria-controls="ai-file-tree-app-files" aria-expanded=appOpen press=appToggle display="flex" align-items="center" width="100%" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-12" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-regular" text-align="left"
         :hover
           background-color="ui.muted"
-        row gap=8 align-items="center"
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 rotate=(appOpen ? "90deg" : "0deg") aria-hidden=true
+        row gap="ui.space-8" align-items="center"
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke" rotate=(appOpen ? "90deg" : "0deg") aria-hidden=true
             path d="m9 6 6 6-6 6"
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke" aria-hidden=true
             path d="M20 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5l2 2h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2Z"
-          text "app"
+          text "app" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if appOpen
-        column id="ai-file-tree-app-files" padding-left=16
+        column id="ai-file-tree-app-files" padding-left="ui.space-16"
           TreeFile(path="app/layout.tsx", name="layout.tsx", selected=selected, choose=choose)
           TreeFile(path="app/page.tsx", name="page.tsx", selected=selected, choose=choose)
-      button id="ai-file-tree-components" testId="ai-file-tree-components" class=Control aria-label="components" aria-controls="ai-file-tree-component-files" aria-expanded=componentsOpen press=componentsToggle display="flex" align-items="center" width="100%" height=32 min-height=32 padding="4px 12px" border="0" background-color="transparent" color="ui.foreground" font-size="0.875rem" font-weight=400 text-align="left"
+      button id="ai-file-tree-components" testId="ai-file-tree-components" class=Control aria-label="components" aria-controls="ai-file-tree-component-files" aria-expanded=componentsOpen press=componentsToggle display="flex" align-items="center" width="100%" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-12" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-regular" text-align="left"
         :hover
           background-color="ui.muted"
-        row gap=8 align-items="center"
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 rotate=(componentsOpen ? "90deg" : "0deg") aria-hidden=true
+        row gap="ui.space-8" align-items="center"
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke" rotate=(componentsOpen ? "90deg" : "0deg") aria-hidden=true
             path d="m9 6 6 6-6 6"
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke" aria-hidden=true
             path d="M20 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5l2 2h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2Z"
-          text "components"
+          text "components" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if componentsOpen
-        column id="ai-file-tree-component-files" padding-left=16
-          button id="ai-file-tree-ui" testId="ai-file-tree-ui" class=Control aria-label="ui" aria-controls="ai-file-tree-ui-files" aria-expanded=uiOpen press=uiToggle display="flex" align-items="center" width="100%" height=32 min-height=32 padding="4px 12px" border="0" background-color="transparent" color="ui.foreground" font-size="0.875rem" font-weight=400 text-align="left"
+        column id="ai-file-tree-component-files" padding-left="ui.space-16"
+          button id="ai-file-tree-ui" testId="ai-file-tree-ui" class=Control aria-label="ui" aria-controls="ai-file-tree-ui-files" aria-expanded=uiOpen press=uiToggle display="flex" align-items="center" width="100%" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-12" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-regular" text-align="left"
             :hover
               background-color="ui.muted"
-            row gap=8 align-items="center"
-              svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 rotate=(uiOpen ? "90deg" : "0deg") aria-hidden=true
+            row gap="ui.space-8" align-items="center"
+              svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke" rotate=(uiOpen ? "90deg" : "0deg") aria-hidden=true
                 path d="m9 6 6 6-6 6"
-              svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 aria-hidden=true
+              svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke" aria-hidden=true
                 path d="M20 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5l2 2h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2Z"
-              text "ui"
+              text "ui" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           if uiOpen
-            column id="ai-file-tree-ui-files" padding-left=16
+            column id="ai-file-tree-ui-files" padding-left="ui.space-16"
               TreeFile(path="components/ui/button.tsx", name="button.tsx", selected=selected, choose=choose)
           TreeFile(path="components/login-form.tsx", name="login-form.tsx", selected=selected, choose=choose)

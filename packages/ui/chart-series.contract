@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 use chartNiceStep from "./chart.contract"
 shape SeriesPoint
@@ -48,18 +49,20 @@ component SeriesLegend
     series: ChartSeries[]
     hidden: string[]
     change: action
+  inject
+    uiFont: string
   action keys(itemId: string, k: string)
     if k == "Enter" or k == " "
       preventDefault()
       stopPropagation()
       change(itemId)
   view
-    row gap=12 flex-wrap="wrap" justify-content="center" font-family="Geist"
+    row gap="ui.space-12" flex-wrap="wrap" justify-content="center"
       for item in series key=item.id
         button id=(id + "-legend-" + item.id) testId=(id + "-legend-" + item.id) class=Control press=change(item.id) key=keys(item.id) role="checkbox" aria-checked=(not hidden.includes(item.id)) aria-label=("Show " + item.label)
-          display="flex" align-items="center" gap=6 border="0" padding="4px 6px" min-height="2rem" background-color="transparent" color="ui.foreground" font-size="0.75rem" font-weight=400 text-decoration=(hidden.includes(item.id) ? "line-through" : "none")
-          view width=10 height=10 border-radius="ui.radius-detail" background-color=item.color
-          text item.label
+          display="flex" align-items="center" gap="ui.space-6" border="0" padding="ui.space-4 ui.space-6" min-height="ui.space-32" background-color="transparent" color="ui.foreground" font-size="ui.text-xs" font-weight="ui.weight-regular" text-decoration=(hidden.includes(item.id) ? "line-through" : "none")
+          view width="ui.space-10" height="ui.space-10" border-radius="ui.radius-detail" background-color=item.color
+          text item.label font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component SeriesValuesTooltip
   props
@@ -68,16 +71,18 @@ component SeriesValuesTooltip
     series: ChartSeries[]
     values: number[]
     hidden: string[]
+  inject
+    uiFont: string
   view
-    column id=(id + "-tooltip") testId=(id + "-tooltip") role="tooltip" aria-live="polite" position="absolute" top=12 left=12 z-index=10 pointer-events="none" padding=10 gap=8 width="11rem" max-width="calc(100% - 24px)" box-sizing="border-box" border="1px solid ui.border" border-radius="ui.radius-control" background-color="ui.surface" box-shadow="0 4px 6px -1px ui.shadow" font-family="Geist" font-size="0.75rem" line-height=1.333333
+    column id=(id + "-tooltip") testId=(id + "-tooltip") role="tooltip" aria-live="polite" position="absolute" top="ui.space-12" left="ui.space-12" z-index=10 pointer-events="none" padding="ui.space-10" gap="ui.space-8" width="11rem" max-width="calc(100% - ui.space-24)" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.surface" box-shadow="ui.shadow-menu" font-size="ui.text-xs" line-height="ui.leading-heading"
       if title != ""
-        text title font-weight=500
+        text title font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       for item, i in series key=item.id
         if not hidden.includes(item.id)
-          row gap=8 align-items="center"
-            view width=10 height=10 border-radius="ui.radius-detail" background-color=item.color
-            text item.label flex=1 color="ui.muted-foreground"
-            text seriesValue(values, i).toString() testId=(id + "-value-" + item.id) font-weight=500 font-variant-numeric="tabular-nums"
+          row gap="ui.space-8" align-items="center"
+            view width="ui.space-10" height="ui.space-10" border-radius="ui.radius-detail" background-color=item.color
+            text item.label flex=1 color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text seriesValue(values, i).toString() testId=(id + "-value-" + item.id) font-weight="ui.weight-medium" font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component SliceTooltip
   props
@@ -94,6 +99,8 @@ component LineChart
     series: ChartSeries[]
     showLegend: bool
     reduced: bool
+  inject
+    uiFont: string
   state active = -1
   state pinned = false
   state hidden: string[] = []
@@ -146,33 +153,33 @@ component LineChart
       pinned = true
       active = k == "Home" ? 0 : k == "End" ? points.length - 1 : k == "Enter" or k == " " ? max(0, active) : max(0, min(points.length - 1, active + (k == "ArrowLeft" ? -1 : 1)))
   view
-    column id=id testId=id gap=16 min-width=0 font-family="Geist" color="ui.foreground" role="group" aria-label=label tabindex=0 key=keys focusout=leaveFocus outline="none"
+    column id=id testId=id gap="ui.space-16" min-width="0px" color="ui.foreground" role="group" aria-label=label tabindex=0 key=keys focusout=leaveFocus outline="none"
       :focus-visible
-        box-shadow="0 0 0 3px ui.ring"
-      view id=(id + "-plot") testId=(id + "-plot") position="relative" height=(max(250, 230 + labelHeight)) min-width=0 resize=measurePlot pointermove=inspect pointerdown=press hover=hover
+        box-shadow="ui.shadow-focus"
+      view id=(id + "-plot") testId=(id + "-plot") position="relative" height=(max(250, 230 + labelHeight)) min-width="0px" resize=measurePlot pointermove=inspect pointerdown=press hover=hover
         svg viewBox="0 0 560 250" width="100%" height=250 preserveAspectRatio="none" aria-hidden=true
           for tick in range(5) key=tick
-            line x1=20 x2=540 y1=(20 + tick * 47.5) y2=(20 + tick * 47.5) stroke="ui.chart-grid" stroke-width=1 vector-effect="non-scaling-stroke"
+            line x1=20 x2=540 y1=(20 + tick * 47.5) y2=(20 + tick * 47.5) stroke="ui.chart-grid" stroke-width="ui.stroke-thin" vector-effect="non-scaling-stroke"
           for item, i in series key=item.id
             if not hidden.includes(item.id) and points.length > 0
-              path d=seriesMonotone(seriesLineY(points, i, low, high)) fill="none" stroke=item.color stroke-width=2 vector-effect="non-scaling-stroke" transition=(reduced ? "none" : "d 220ms ease-out")
+              path d=seriesMonotone(seriesLineY(points, i, low, high)) fill="none" stroke=item.color stroke-width="ui.stroke-standard" vector-effect="non-scaling-stroke" transition=(reduced ? "none" : "d ui.duration-normal ui.easing")
         view position="absolute" inset=0 overflow="clip" opacity=0 aria-hidden=true pointer-events="none"
-          text "May" position="absolute" left=0 top=0 font-family="Geist" font-size="0.75rem" resize=measureLabel aria-hidden=true pointer-events="none" white-space="nowrap"
+          text "May" position="absolute" left="0px" top="0px" font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-xs" resize=measureLabel aria-hidden=true pointer-events="none" white-space="nowrap"
         for p, i in points key=p.id
           if i % max(1, ceil(points.length / max(1, floor(width / max(32, labelWidth + 5))))) == 0
-            text p.label.slice(0, 3) position="absolute" top=230 left=(max(min(width, labelWidth) / 2, min(width - min(width, labelWidth) / 2, width * (20 + i * 520 / max(1, points.length - 1)) / 560))) max-width="100%" overflow="hidden" translate="-50% 0px" font-size="0.75rem" color="ui.muted-foreground" pointer-events="none" white-space="nowrap"
+            text p.label.slice(0, 3) position="absolute" top=230 left=(max(min(width, labelWidth) / 2, min(width - min(width, labelWidth) / 2, width * (20 + i * 520 / max(1, points.length - 1)) / 560))) max-width="100%" overflow="hidden" translate="-50% 0px" font-size="ui.text-xs" color="ui.muted-foreground" pointer-events="none" white-space="nowrap" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if current >= 0
           for item, i in series key=item.id
             if not hidden.includes(item.id)
               for p, j in points key=p.id
                 if j == current
-                  view position="absolute" left=(((20 + j * 520 / max(1, points.length - 1)) / 560 * 100).toString() + "%") top=(210 - (seriesValue(p.values, i) - low) / (high > low ? high - low : 1) * 190) width=8 height=8 border-radius="ui.radius-full" border="2px solid ui.surface" box-sizing="border-box" background-color=item.color translate="-50% -50%" pointer-events="none" aria-hidden=true
+                  view position="absolute" left=(((20 + j * 520 / max(1, points.length - 1)) / 560 * 100).toString() + "%") top=(210 - (seriesValue(p.values, i) - low) / (high > low ? high - low : 1) * 190) width="ui.space-8" height="ui.space-8" border-radius="ui.radius-full" border-width="ui.border-strong-width" border-style="solid" border-color="ui.surface" box-sizing="border-box" background-color=item.color translate="-50% -50%" pointer-events="none" aria-hidden=true
         if current >= 0
           for p, i in points key=p.id
             if i == current
               SeriesValuesTooltip(id=id, title=(series.length > 1 ? p.label : ""), series=series, values=p.values, hidden=hidden)
         if points.length == 0 or series.length == 0
-          text "No chart data." testId=(id + "-empty") position="absolute" inset=0 display="flex" align-items="center" justify-content="center" color="ui.muted-foreground" font-size="0.875rem"
+          text "No chart data." testId=(id + "-empty") position="absolute" inset=0 display="flex" align-items="center" justify-content="center" color="ui.muted-foreground" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if showLegend
         SeriesLegend(id=id, series=series, hidden=hidden, change=toggle)
 
@@ -182,18 +189,20 @@ component SliceLegend
     items: ChartSlice[]
     active: number
     choose: action
+  inject
+    uiFont: string
   action keys(i: number, k: string)
     if k == "Enter" or k == " "
       preventDefault()
       stopPropagation()
       choose(i)
   view
-    row gap=12 flex-wrap="wrap" justify-content="center" font-family="Geist"
+    row gap="ui.space-12" flex-wrap="wrap" justify-content="center"
       for item, i in items key=item.id
         button id=(id + "-legend-" + item.id) testId=(id + "-legend-" + item.id) class=Control press=choose(i) key=keys(i) aria-pressed=(active == i) aria-label=("Inspect " + item.label)
-          display="flex" align-items="center" gap=6 border="0" padding="4px 6px" min-height="2rem" background-color=(active == i ? "ui.muted" : "transparent") color="ui.foreground" font-size="0.75rem" font-weight=400
-          view width=10 height=10 border-radius="ui.radius-detail" background-color=item.color
-          text item.label
+          display="flex" align-items="center" gap="ui.space-6" border="0" padding="ui.space-4 ui.space-6" min-height="ui.space-32" background-color=(active == i ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-xs" font-weight="ui.weight-regular"
+          view width="ui.space-10" height="ui.space-10" border-radius="ui.radius-detail" background-color=item.color
+          text item.label font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component PieChart
   props
@@ -203,6 +212,8 @@ component PieChart
     donut: bool
     showLegend: bool
     reduced: bool
+  inject
+    uiFont: string
   state active = -1
   state pinned = false
   derive current = min(active, items.length - 1)
@@ -251,9 +262,9 @@ component PieChart
       pinned = true
       active = k == "Home" ? 0 : k == "End" ? items.length - 1 : active < 0 ? (k == "ArrowLeft" ? items.length - 1 : 0) : k == "ArrowLeft" ? (active + items.length - 1) % items.length : k == "ArrowRight" ? (active + 1) % items.length : active
   view
-    column id=id testId=id role="group" aria-label=label tabindex=0 key=keys focusout=leaveFocus outline="none" gap=16 align-items="center" min-width=0 font-family="Geist" color="ui.foreground"
+    column id=id testId=id role="group" aria-label=label tabindex=0 key=keys focusout=leaveFocus outline="none" gap="ui.space-16" align-items="center" min-width="0px" color="ui.foreground"
       :focus-visible
-        box-shadow="0 0 0 3px ui.ring"
+        box-shadow="ui.shadow-focus"
       view id=(id + "-plot") testId=(id + "-plot") position="relative" width=250 max-width="100%" height=250 pointermove=inspect pointerdown=press hover=hover
         svg width="100%" height=250 viewBox="0 0 240 240" preserveAspectRatio="xMidYMid meet" aria-hidden=true
           if total > 0
@@ -261,19 +272,19 @@ component PieChart
               if sector.sweep > 0
                 match items.at(sector.index)
                   case some(item)
-                    path d=seriesWedge(sector.start, sector.sweep) fill=item.color stroke="none" transition=(reduced ? "none" : "d 220ms ease-out")
+                    path d=seriesWedge(sector.start, sector.sweep) fill=item.color stroke="none" transition=(reduced ? "none" : "d ui.duration-normal ui.easing")
                   case none
                     circle cx=120 cy=120 r=0 fill="none"
           else
-            circle cx=120 cy=120 r=90 fill="none" stroke="ui.muted" stroke-width=24
+            circle cx=120 cy=120 r=90 fill="none" stroke="ui.muted" stroke-width="ui.chart-ring-width"
           if donut
             circle cx=120 cy=120 r=60 fill="ui.surface"
         if donut
-          column position="absolute" left="50%" top="50%" translate="-50% -50%" align-items="center" pointer-events="none" gap=2
-            text total.toString() testId=(id + "-total") font-size="1.875rem" line-height=1.2 font-weight=700 font-variant-numeric="tabular-nums"
-            text "Visitors" font-size="0.75rem" color="ui.muted-foreground"
+          column position="absolute" left="50%" top="50%" translate="-50% -50%" align-items="center" pointer-events="none" gap="ui.space-2"
+            text total.toString() testId=(id + "-total") font-size="ui.text-3xl" line-height="ui.leading-tight" font-weight="ui.weight-bold" font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text "Visitors" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if total <= 0
-          text "No chart data." testId=(id + "-empty") position="absolute" bottom=0 left=0 right=0 text-align="center" font-size="0.875rem" color="ui.muted-foreground"
+          text "No chart data." testId=(id + "-empty") position="absolute" bottom="0px" left="0px" right="0px" text-align="center" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if current >= 0
           match items.at(current)
             case some(item)
@@ -292,6 +303,8 @@ component RadarChart
     maximum: number
     showLegend: bool
     reduced: bool
+  inject
+    uiFont: string
   state active = -1
   state pinned = false
   state hidden: string[] = []
@@ -341,26 +354,27 @@ component RadarChart
       pinned = true
       active = k == "Home" ? 0 : k == "End" ? points.length - 1 : active < 0 ? (k == "ArrowLeft" ? points.length - 1 : 0) : k == "ArrowLeft" ? (active + points.length - 1) % points.length : k == "ArrowRight" ? (active + 1) % points.length : active
   view
-    column id=id testId=id role="group" aria-label=label tabindex=0 key=keys focusout=leaveFocus outline="none" gap=16 min-width=0 align-items="center" font-family="Geist" color="ui.foreground"
+    column id=id testId=id role="group" aria-label=label tabindex=0 key=keys focusout=leaveFocus outline="none" gap="ui.space-16" min-width="0px" align-items="center" color="ui.foreground"
       :focus-visible
-        box-shadow="0 0 0 3px ui.ring"
+        box-shadow="ui.shadow-focus"
       view id=(id + "-plot") testId=(id + "-plot") position="relative" width=250 max-width="100%" height=250 pointermove=inspect pointerdown=press hover=hover
         svg width="100%" height=250 viewBox="0 0 240 240" preserveAspectRatio="xMidYMid meet" aria-hidden=true
           for ring in range(5) key=ring
-            path d=seriesRadarGrid(points.length, 16 * (ring + 1)) fill="none" stroke="ui.chart-grid" stroke-width=1
+            path d=seriesRadarGrid(points.length, 16 * (ring + 1)) fill="none" stroke="ui.chart-grid" stroke-width="ui.stroke-thin"
           for point, i in points key=point.id
-            line x1=120 y1=120 x2=seriesX(1.5707963267948966 - i * 6.283185307179586 / max(1, points.length), 80) y2=seriesY(1.5707963267948966 - i * 6.283185307179586 / max(1, points.length), 80) stroke="ui.chart-grid" stroke-width=1
+            line x1=120 y1=120 x2=seriesX(1.5707963267948966 - i * 6.283185307179586 / max(1, points.length), 80) y2=seriesY(1.5707963267948966 - i * 6.283185307179586 / max(1, points.length), 80) stroke="ui.chart-grid" stroke-width="ui.stroke-thin"
           for item, i in series key=item.id
             if not hidden.includes(item.id) and points.length >= 3
-              path d=seriesRadarPath(points, i, domain, 80) fill=item.color fill-opacity=0.6 stroke=item.color stroke-width=1 transition=(reduced ? "none" : "d 220ms ease-out")
+              path d=seriesRadarPath(points, i, domain, 80) fill=item.color opacity="ui.opacity-quiet" stroke="none" transition=(reduced ? "none" : "d ui.duration-normal ui.easing")
+              path d=seriesRadarPath(points, i, domain, 80) fill="none" stroke=item.color stroke-width="ui.stroke-thin" transition=(reduced ? "none" : "d ui.duration-normal ui.easing")
               if current >= 0
                 for point, j in points key=point.id
                   if j == current
-                    circle cx=seriesX(1.5707963267948966 - j * 6.283185307179586 / max(1, points.length), 80 * max(0, min(1, seriesValue(point.values, i) / domain))) cy=seriesY(1.5707963267948966 - j * 6.283185307179586 / max(1, points.length), 80 * max(0, min(1, seriesValue(point.values, i) / domain))) r=4 fill=item.color stroke="ui.surface" stroke-width=2
+                    circle cx=seriesX(1.5707963267948966 - j * 6.283185307179586 / max(1, points.length), 80 * max(0, min(1, seriesValue(point.values, i) / domain))) cy=seriesY(1.5707963267948966 - j * 6.283185307179586 / max(1, points.length), 80 * max(0, min(1, seriesValue(point.values, i) / domain))) r=4 fill=item.color stroke="ui.surface" stroke-width="ui.stroke-standard"
         for point, i in points key=point.id
-          text point.label position="absolute" left=((seriesX(1.5707963267948966 - i * 6.283185307179586 / max(1, points.length), 100) / 240 * 100).toString() + "%") top=((seriesY(1.5707963267948966 - i * 6.283185307179586 / max(1, points.length), 100) / 240 * 100).toString() + "%") translate="-50% -50%" font-size="min(-exact-caption1, 16px)" color="ui.muted-foreground" pointer-events="none" max-width="5rem" text-align="center" white-space="nowrap"
+          text point.label position="absolute" left=((seriesX(1.5707963267948966 - i * 6.283185307179586 / max(1, points.length), 100) / 240 * 100).toString() + "%") top=((seriesY(1.5707963267948966 - i * 6.283185307179586 / max(1, points.length), 100) / 240 * 100).toString() + "%") translate="-50% -50%" font-size="ui.text-xs" color="ui.muted-foreground" pointer-events="none" max-width="ui.space-80" text-align="center" white-space="nowrap" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if points.length < 3 or series.length == 0
-          text "At least three axes are required." testId=(id + "-empty") position="absolute" bottom=0 left=0 right=0 text-align="center" color="ui.muted-foreground" font-size="0.875rem"
+          text "At least three axes are required." testId=(id + "-empty") position="absolute" bottom="0px" left="0px" right="0px" text-align="center" color="ui.muted-foreground" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if current >= 0
           for point, i in points key=point.id
             if i == current
@@ -377,6 +391,8 @@ component RadialChart
     sweep: number
     showLegend: bool
     reduced: bool
+  inject
+    uiFont: string
   state active = -1
   state pinned = false
   derive current = min(active, items.length - 1)
@@ -424,17 +440,17 @@ component RadialChart
       pinned = true
       active = k == "Home" ? 0 : k == "End" ? items.length - 1 : active < 0 ? (k == "ArrowLeft" ? items.length - 1 : 0) : k == "ArrowLeft" ? (active + items.length - 1) % items.length : k == "ArrowRight" ? (active + 1) % items.length : active
   view
-    column id=id testId=id role="group" aria-label=label tabindex=0 key=keys focusout=leaveFocus outline="none" gap=16 min-width=0 align-items="center" font-family="Geist" color="ui.foreground"
+    column id=id testId=id role="group" aria-label=label tabindex=0 key=keys focusout=leaveFocus outline="none" gap="ui.space-16" min-width="0px" align-items="center" color="ui.foreground"
       :focus-visible
-        box-shadow="0 0 0 3px ui.ring"
+        box-shadow="ui.shadow-focus"
       view id=(id + "-plot") testId=(id + "-plot") position="relative" width=250 max-width="100%" height=250 pointermove=inspect pointerdown=press hover=hover
         svg width="100%" height=250 viewBox="0 0 240 240" preserveAspectRatio="xMidYMid meet" aria-hidden=true
           for item, i in items key=item.id
             path d=seriesArc(0, angle, 30 + (i + 0.5) * step) fill="none" stroke="ui.muted" stroke-width=max(1, step * 0.8)
             if item.value > 0 and angle > 0
-              path d=seriesArc(0, angle * max(0, min(1, item.value / domain)), 30 + (i + 0.5) * step) fill="none" stroke=item.color stroke-width=max(1, step * 0.8) transition=(reduced ? "none" : "d 220ms ease-out")
+              path d=seriesArc(0, angle * max(0, min(1, item.value / domain)), 30 + (i + 0.5) * step) fill="none" stroke=item.color stroke-width=max(1, step * 0.8) transition=(reduced ? "none" : "d ui.duration-normal ui.easing")
         if items.length == 0
-          text "No chart data." testId=(id + "-empty") position="absolute" inset=0 display="flex" align-items="center" justify-content="center" font-size="0.875rem" color="ui.muted-foreground"
+          text "No chart data." testId=(id + "-empty") position="absolute" inset=0 display="flex" align-items="center" justify-content="center" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if current >= 0
           match items.at(current)
             case some(item)

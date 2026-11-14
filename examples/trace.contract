@@ -1,10 +1,11 @@
-use ButtonAI, BubbleFrame, TraceFrame, TraceLine, TraceDisclosure, TraceSource, CodeBlockContent from "@rightui/ui"
+use uiFontFamily, ButtonAI, BubbleFrame, TraceFrame, TraceLine, TraceDisclosure, TraceSource, CodeBlockContent from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
   inject
+    uiFont: string
     rightuiDemoTime: number
     rightuiRunDemo: action
   state started = -1
@@ -38,14 +39,14 @@ component Demo
   action toggleSources
     sourcesOpen = not sourcesOpen
   view
-    column id="content-trace" testId="content-trace" aria-busy=busy gap=16 min-width=0 max-width="24rem" width="100%" min-height=288 padding="24px 0px" font-size="0.875rem" line-height=1.5
+    column id="content-trace" testId="content-trace" aria-busy=busy gap="ui.space-16" min-width=0 max-width="24rem" width="100%" min-height=288 padding="ui.space-24 ui.space-0" font-size="ui.text-sm" line-height="ui.leading-normal"
       BubbleFrame(id="content-trace-question", align="end", variant="muted")
-        text "Why does this install fail in CI?"
+        text "Why does this install fail in CI?" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       column testId=(thinking ? "content-trace-thinking" : busy ? "content-trace-working" : "content-trace-complete") min-width=0
         TraceFrame()
           TraceDisclosure(id="content-trace-step-0", title=(thinking ? "Thinking" : "Thought for 2s"), icon="check", status=(thinking ? "running" : ""), open=thinkingOpen, reduced=reduced, toggle=toggleThinking)
             if thinkingOpen
-              text (thinking and not reduced ? reasoning.slice(0, floor(elapsed / 2000 * reasoning.length)) : reasoning) id="content-trace-detail-0" testId="content-trace-detail-0" line-height=1.625
+              text (thinking and not reduced ? reasoning.slice(0, floor(elapsed / 2000 * reasoning.length)) : reasoning) id="content-trace-detail-0" testId="content-trace-detail-0" line-height="ui.leading-relaxed" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           if elapsed >= 2000
             if elapsed < 2800
               TraceLine(title="Running git status --short", icon="check", status="running", reduced=reduced)
@@ -63,17 +64,17 @@ component Demo
               TraceLine(title="Running pnpm install --frozen-lockfile", icon="check", status="running", reduced=reduced)
             else
               TraceDisclosure(id="content-trace-step-3", title="Failed to run pnpm install --frozen-lockfile", icon="check", status="error", open=errorOpen, reduced=reduced, toggle=toggleError)
-                column min-width=0 padding=12 border-radius="ui.ai-radius-control" background-color="ui.code-destructive-background" border="1px solid ui.border"
-                  text "ERR_PNPM_OUTDATED_LOCKFILE" testId="content-trace-error-code" color="ui.danger" font-family="monospace" font-size="0.75rem" line-height=1.625 overflow-wrap="anywhere"
-                  text "Cannot install with frozen-lockfile because pnpm-lock.yaml is not up to date with package.json." testId="content-trace-error-output" color="ui.danger" font-family="monospace" font-size="0.75rem" line-height=1.625 overflow-wrap="anywhere"
+                column min-width=0 padding="ui.space-12" border-radius="ui.ai-radius-control" background-color="ui.code-destructive-background" border-width="ui.border-width" border-style="solid" border-color="ui.border"
+                  text "ERR_PNPM_OUTDATED_LOCKFILE" testId="content-trace-error-code" color="ui.danger" font-family="ui.font-code" font-size="ui.text-xs" line-height="ui.leading-relaxed" overflow-wrap="anywhere"
+                  text "Cannot install with frozen-lockfile because pnpm-lock.yaml is not up to date with package.json." testId="content-trace-error-output" color="ui.danger" font-family="ui.font-code" font-size="ui.text-xs" line-height="ui.leading-relaxed" overflow-wrap="anywhere"
           if elapsed >= 5000
             TraceDisclosure(id="content-trace-sources", title="Used 2 sources", icon="globe", status="", open=sourcesOpen, reduced=reduced, toggle=toggleSources)
               TraceFrame()
                 TraceSource(title="pnpm install", href="https://pnpm.io/cli/install#--frozen-lockfile", reduced=reduced)
                 TraceSource(title="Continuous Integration", href="https://pnpm.io/continuous-integration", reduced=reduced)
       if elapsed >= 5500
-        text (started < 0 or reduced ? answer : answer.slice(0, floor((elapsed - 5500) / 3000 * answer.length))) testId="content-trace-answer" line-height=1.5
+        text (started < 0 or reduced ? answer : answer.slice(0, floor((elapsed - 5500) / 3000 * answer.length))) testId="content-trace-answer" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if not busy
         row margin-top="auto"
           ButtonAI(id="content-trace-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
-            text "Replay"
+            text "Replay" font-family=uiFontFamily(uiFont) data-rightui-font="body"

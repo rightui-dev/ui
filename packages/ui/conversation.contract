@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 component Attachment
   props
@@ -7,22 +8,24 @@ component Attachment
     content: string
     status: string
     remove: action
+  inject
+    uiFont: string
   state preview = false
   action toggle
     preview = not preview
   view
-    column gap=8 min-width=0
-      row gap=8 padding="8px 10px" align-items="center" border=(status == "error" ? "1px solid ui.danger" : "1px solid ui.border") border-radius="ui.radius-panel" background-color="ui.surface"
-        view width="2.5rem" height="2.5rem" border-radius="ui.radius-lg" background-color="ui.muted" display="flex" align-items="center" justify-content="center"
-          image "symbol:document" width=16 height=16
-        button id=(id + "-preview") testId=(id + "-preview") class=Control press=toggle aria-expanded=preview aria-controls=(id + "-content") flex=1 padding=0 border="none" background-color="transparent" color="ui.foreground" text-align="left"
-          column gap=2 min-width=0
-            text name font-size="0.875rem" font-weight=500 overflow-wrap="break-word"
-            text metadata font-size="0.75rem" color="ui.muted-foreground" overflow-wrap="break-word"
-        button testId=(id + "-remove") class=Control press=remove aria-label=("Retirer " + name) padding=8 border="none" background-color="transparent" color="ui.muted-foreground"
-          image "symbol:close" width=14 height=14
+    column gap="ui.space-8" min-width="0px"
+      row gap="ui.space-8" padding="ui.space-8 ui.space-10" align-items="center" border-width="ui.border-width" border-style="solid" border-color=(status == "error" ? "ui.danger" : "ui.border") border-radius="ui.radius-panel" background-color="ui.surface"
+        view width="ui.space-40" height="ui.space-40" border-radius="ui.radius-lg" background-color="ui.muted" display="flex" align-items="center" justify-content="center"
+          image "symbol:document" width="ui.space-16" height="ui.space-16"
+        button id=(id + "-preview") testId=(id + "-preview") class=Control press=toggle aria-expanded=preview aria-controls=(id + "-content") flex=1 padding="0px" border="none" background-color="transparent" color="ui.foreground" text-align="left"
+          column gap="ui.space-2" min-width="0px"
+            text name font-size="ui.text-sm" font-weight="ui.weight-medium" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text metadata font-size="ui.text-xs" color="ui.muted-foreground" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        button testId=(id + "-remove") class=Control press=remove aria-label=("Retirer " + name) padding="ui.space-8" border="none" background-color="transparent" color="ui.muted-foreground"
+          image "symbol:close" width="ui.space-14" height="ui.space-14"
       if preview
-        text content id=(id + "-content") testId=(id + "-content") padding=12 border="1px solid ui.border" border-radius="ui.radius-panel" font-size="0.875rem" line-height=1.5 color="ui.foreground" white-space="pre-wrap" overflow-wrap="break-word"
+        text content id=(id + "-content") testId=(id + "-content") padding="ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-panel" font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.foreground" white-space="pre-wrap" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component Bubble
   props
@@ -31,6 +34,8 @@ component Bubble
     align: string
     variant: string
     collapsible: bool
+  inject
+    uiFont: string
   state bubbleCollapsed: bool = false
   state bubbleReacted: bool = false
   action toggle
@@ -38,28 +43,30 @@ component Bubble
   action react
     bubbleReacted = not bubbleReacted
   view
-    column id=id testId=id gap=4 max-width="80%" min-width=0 align-self=(align == "end" ? "flex-end" : "flex-start")
-      column gap=6 padding="8px 12px" border-radius="ui.radius-panel" border=(variant == "outline" ? "1px solid ui.border" : "1px solid transparent") background-color=((variant == "primary" or variant == "default") ? "ui.primary" : variant == "ghost" or variant == "outline" ? "transparent" : "ui.muted") color=((variant == "primary" or variant == "default") ? "ui.primary-foreground" : variant == "destructive" ? "ui.danger" : "ui.foreground")
+    column id=id testId=id gap="ui.space-4" max-width="80%" min-width="0px" align-self=(align == "end" ? "flex-end" : "flex-start")
+      column gap="ui.space-6" padding="ui.space-8 ui.space-12" border-radius="ui.radius-panel" border-width="ui.border-width" border-style="solid" border-color=(variant == "outline" ? "ui.border" : "transparent") background-color=((variant == "primary" or variant == "default") ? "ui.primary" : variant == "ghost" or variant == "outline" ? "transparent" : "ui.muted") color=((variant == "primary" or variant == "default") ? "ui.primary-foreground" : variant == "destructive" ? "ui.danger" : "ui.foreground")
         if not bubbleCollapsed
-          text body testId=(id + "-body") font-size="0.875rem" line-height=1.625 white-space="pre-wrap" overflow-wrap="break-word"
+          text body testId=(id + "-body") font-size="ui.text-sm" line-height="ui.leading-code" white-space="pre-wrap" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if collapsible
-          button testId=(id + "-collapse") class=Control press=toggle aria-expanded=(not bubbleCollapsed) padding=0 min-height="1.5rem" border="none" background-color="transparent" color="inherit"
-            text (bubbleCollapsed ? "Afficher le message" : "Collapse") font-size="0.75rem"
-      button testId=(id + "-reaction") class=Control press=react aria-pressed=bubbleReacted aria-label="Helpful reaction" align-self="flex-end" min-height="1.5rem" padding="2px 8px" border="1px solid ui.border" border-radius="ui.radius-full" background-color="ui.muted" color="ui.foreground"
-        text (bubbleReacted ? "Utile · 1" : "Utile") font-size="0.75rem"
+          button testId=(id + "-collapse") class=Control press=toggle aria-expanded=(not bubbleCollapsed) padding="0px" min-height="ui.space-24" border="none" background-color="transparent" color="inherit"
+            text (bubbleCollapsed ? "Afficher le message" : "Collapse") font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      button testId=(id + "-reaction") class=Control press=react aria-pressed=bubbleReacted aria-label="Helpful reaction" align-self="flex-end" min-height="ui.space-24" padding="ui.space-2 ui.space-8" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-full" background-color="ui.muted" color="ui.foreground"
+        text (bubbleReacted ? "Utile · 1" : "Utile") font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component Marker
   props
     id: string
     label: string
     variant: string
+  inject
+    uiFont: string
   view
-    row id=id testId=id gap=8 align-items="center" min-height=16 padding-bottom=(variant == "border" ? 8 : 0) border-bottom=(variant == "border" ? "1px solid ui.border" : "none")
+    row id=id testId=id gap="ui.space-8" align-items="center" min-height="ui.space-16" padding-bottom=(variant == "border" ? "ui.space-8" : "0px") border-bottom-width=(variant == "border" ? "ui.border-width" : "0px") border-bottom-style="solid" border-bottom-color="ui.border"
       if variant == "separator"
-        view flex=1 height=1 background-color="ui.border" aria-hidden=true
-      text label font-size="0.875rem" color="ui.muted-foreground" overflow-wrap="break-word"
+        view flex=1 height="ui.border-width" background-color="ui.border" aria-hidden=true
+      text label font-size="ui.text-sm" color="ui.muted-foreground" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if variant == "separator"
-        view flex=1 height=1 background-color="ui.border" aria-hidden=true
+        view flex=1 height="ui.border-width" background-color="ui.border" aria-hidden=true
 
 component Message
   props
@@ -68,13 +75,15 @@ component Message
     initials: string
     time: string
     align: string
+  inject
+    uiFont: string
   slot
   view
-    row id=id testId=id gap=8 min-width=0 flex-direction=(align == "end" ? "row-reverse" : "row")
-      view width="2rem" height="2rem" flex-shrink=0 align-self="flex-end" border-radius="ui.radius-full" background-color="ui.muted" display="flex" align-items="center" justify-content="center"
-        text initials font-size="0.75rem" color="ui.foreground" aria-label=author
-      column gap=10 flex=1 min-width=0 align-items=(align == "end" ? "flex-end" : "flex-start")
-        text author padding="0px 12px" font-size="0.75rem" font-weight=500 color="ui.muted-foreground"
+    row id=id testId=id gap="ui.space-8" min-width="0px" flex-direction=(align == "end" ? "row-reverse" : "row")
+      view width="ui.space-32" height="ui.space-32" flex-shrink=0 align-self="flex-end" border-radius="ui.radius-full" background-color="ui.muted" display="flex" align-items="center" justify-content="center"
+        text initials font-size="ui.text-xs" color="ui.foreground" aria-label=author font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      column gap="ui.space-10" flex=1 min-width="0px" align-items=(align == "end" ? "flex-end" : "flex-start")
+        text author padding="0px ui.space-12" font-size="ui.text-xs" font-weight="ui.weight-medium" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         children
         if time != ""
-          text time padding="0px 12px" font-size="0.75rem" color="ui.muted-foreground"
+          text time padding="0px ui.space-12" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

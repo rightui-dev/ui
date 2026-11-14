@@ -1,9 +1,12 @@
+use uiFontFamily from "./typography-context.contract"
 component Badge
   props
     label: string
     variant: string
+  inject
+    uiFont: string
   view
-    row align-items="center" justify-content="center" padding="2px 8px" border-radius="ui.radius-4xl" border=(variant == "outline" ? "1px solid ui.border" : "1px solid transparent")
+    row align-items="center" justify-content="center" padding="ui.space-2 ui.space-8" border-radius="ui.radius-4xl" border-width="ui.border-width" border-style="solid" border-color=(variant == "outline" ? "ui.border" : "transparent")
       background-color=((variant == "primary" or variant == "default") ? "ui.primary" : variant == "outline" or variant == "ghost" or variant == "link" ? "transparent" : variant == "destructive" ? "ui.destructive" : "ui.muted")
       color=((variant == "primary" or variant == "default") ? "ui.primary-foreground" : variant == "success" ? "ui.success" : variant == "destructive" ? "ui.on-danger" : "ui.foreground")
-      text label font-size="0.75rem" line-height=1.333333 font-weight=500
+      text label font-size="ui.text-xs" line-height="ui.leading-heading" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"

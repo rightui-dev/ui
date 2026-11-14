@@ -1,9 +1,11 @@
-use QuestionnaireQuestion, QuestionnaireAnswer, Questionnaire, Card, Button, Dialog from "@rightui/ui"
+use uiFontFamily, QuestionnaireQuestion, QuestionnaireAnswer, Questionnaire, Card, Button, Dialog from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   action completed(v: QuestionnaireAnswer[])
     result = v
@@ -14,12 +16,12 @@ component Demo
   action closeQuestions
     questionsOpen = false
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Questionnaire(id="content-questionnaire", questions=[QuestionnaireQuestion(id="format", title="Which format do you prefer?", description="Choose an answer.", kind="single", options=["Photo", "Video", "Both"], optional=true), QuestionnaireQuestion(id="contenus", title="Which content do you need?", description="Select all that apply.", kind="multi", options=["Chambre", "Restaurant", "Outdoors"], optional=true), QuestionnaireQuestion(id="precisions", title="Anything else to add?", description="Describe what you need.", kind="freeform", options=[], optional=true)], complete=completed)
-      text "Card questionnaire" font-size="0.875rem" font-weight=600
+      text "Card questionnaire" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Card(id="variation-questionnaire-card", title="Project preferences", description="Complete the short questionnaire.")
         Questionnaire(id="variation-questionnaire-card-form", questions=[QuestionnaireQuestion(id="format", title="Which format do you prefer?", description="Choose an answer.", kind="single", options=["Photo", "Video", "Both"], optional=true), QuestionnaireQuestion(id="contenus", title="Which content do you need?", description="Select all that apply.", kind="multi", options=["Chambre", "Restaurant", "Outdoors"], optional=true), QuestionnaireQuestion(id="precisions", title="Anything else to add?", description="Describe what you need.", kind="freeform", options=[], optional=true)], complete=completed)
-      text "Dialog questionnaire" font-size="0.875rem" font-weight=600
+      text "Dialog questionnaire" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Button(id="variation-questionnaire-open", label="Open questionnaire", variant="outline", disabled=false, press=openQuestions)
       Dialog(id="variation-questionnaire-dialog", open=questionsOpen, reduced=reduced, title="Project preferences", description="Complete your preferences.", confirmLabel="Done", focusIds=[], dismiss=closeQuestions, confirm=closeQuestions)
         Questionnaire(id="variation-questionnaire-dialog-form", questions=[QuestionnaireQuestion(id="format", title="Which format do you prefer?", description="Choose an answer.", kind="single", options=["Photo", "Video", "Both"], optional=true), QuestionnaireQuestion(id="contenus", title="Which content do you need?", description="Select all that apply.", kind="multi", options=["Chambre", "Restaurant", "Outdoors"], optional=true), QuestionnaireQuestion(id="precisions", title="Anything else to add?", description="Describe what you need.", kind="freeform", options=[], optional=true)], complete=completed)

@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 use IconButton from "./button.contract"
 fn calendarLeap(y: number): bool = y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)
@@ -16,6 +17,8 @@ component Calendar
     mode: string
     disabled: bool
     change: action
+  inject
+    uiFont: string
   state hoveredDay = -1
   state active = match parseNumber(value.slice(8, 10)) { case some(d) => max(1, min(31, floor(d))), case none => 1 }
   derive days = calendarDays(year, month)
@@ -66,35 +69,35 @@ component Calendar
       change(calendarISO(y, m, day))
       active = day
   view
-    column id=id testId=id gap=16 padding=12 width="15.5rem" max-width="100%" box-sizing="border-box" color="ui.foreground" font-family="Geist" overflow="auto"
-      row align-items="center" justify-content="space-between" gap=4 min-height="2rem" min-width="14rem"
+    column id=id testId=id gap="ui.space-16" padding="ui.space-12" width="15.5rem" max-width="100%" box-sizing="border-box" color="ui.foreground" overflow="auto"
+      row align-items="center" justify-content="space-between" gap="ui.space-4" min-height="ui.space-32" min-width="14rem"
         IconButton(id=(id + "-previous"), label="Previous month", variant="ghost", disabled=disabled, press=shiftMonth(-1))
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 aria-hidden=true
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.stroke-standard" aria-hidden=true
             path d="m15 18-6-6 6-6"
-        text (calendarMonth(month) + " " + year.toString()) testId=(id + "-month") font-size="0.875rem" font-weight=500 aria-live="polite"
+        text (calendarMonth(month) + " " + year.toString()) testId=(id + "-month") font-size="ui.text-sm" font-weight="ui.weight-medium" aria-live="polite" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         IconButton(id=(id + "-next"), label="Next month", variant="ghost", disabled=disabled, press=shiftMonth(1))
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 aria-hidden=true
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.stroke-standard" aria-hidden=true
             path d="m9 18 6-6-6-6"
-      view display="grid" grid-template-columns="repeat(7, minmax(2rem, 1fr))" column-gap=0 row-gap=8 min-width="14rem" role="group" aria-label=(calendarMonth(month) + " " + year.toString())
+      view display="grid" grid-template-columns="repeat(7, minmax(2rem, 1fr))" column-gap="0px" row-gap="ui.space-8" min-width="14rem" role="group" aria-label=(calendarMonth(month) + " " + year.toString())
         for name in ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] key=name
-          text name text-align="center" font-size="0.8rem" color="ui.muted-foreground" height="1.25rem" display="flex" align-items="center" justify-content="center"
+          text name text-align="center" font-size="ui.text-tiny" color="ui.muted-foreground" height="ui.space-20" display="flex" align-items="center" justify-content="center" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         for cell in range(ceil((offset + days) / 7) * 7) key=cell
           if cell < offset or cell >= offset + days
             button class=Control testId=(id + "-outside-" + cell.toString()) press=selectOutside(cell < offset ? -1 : 1, cell < offset ? calendarDays(month == 1 ? year - 1 : year, month == 1 ? 12 : month - 1) - offset + cell + 1 : cell - offset - days + 1) disabled=disabled tabindex=-1
-              height="2rem" min-height="2rem" padding=0 border="0" font-size="0.875rem" font-weight=400 border-radius="ui.radius-control" background-color="transparent" color="ui.muted-foreground"
+              height="ui.space-32" min-height="ui.space-32" padding="0px" border="0" font-size="ui.text-sm" font-weight="ui.weight-regular" border-radius="ui.radius-control" background-color="transparent" color="ui.muted-foreground"
               :hover
                 background-color="ui.muted"
                 color="ui.foreground"
-              text (cell < offset ? calendarDays(month == 1 ? year - 1 : year, month == 1 ? 12 : month - 1) - offset + cell + 1 : cell - offset - days + 1).toString()
+              text (cell < offset ? calendarDays(month == 1 ? year - 1 : year, month == 1 ? 12 : month - 1) - offset + cell + 1 : cell - offset - days + 1).toString() font-family=uiFontFamily(uiFont) data-rightui-font="body"
           else
-            view height="2rem" min-height="2rem" min-width=0
+            view height="ui.space-32" min-height="ui.space-32" min-width="0px"
               background-color=(mode == "range" and value != "" and end != "" and (value == calendarISO(year, month, cell - offset + 1) or end == calendarISO(year, month, cell - offset + 1)) ? "ui.muted" : "transparent")
               border-radius=(mode == "range" and value != end ? (value == calendarISO(year, month, cell - offset + 1) ? "ui.radius-control 0px 0px ui.radius-control" : end == calendarISO(year, month, cell - offset + 1) ? "0px ui.radius-control ui.radius-control 0px" : "0px") : "ui.radius-control")
               button id=(id + "-day-" + (cell - offset + 1).toString()) testId=(id + "-day-" + (cell - offset + 1).toString()) class=Control
                 press=select(cell - offset + 1) key=keys(cell - offset + 1) hover=hoverDay(cell - offset + 1) disabled=disabled tabindex=(activeDay == cell - offset + 1 ? 0 : -1)
                 aria-label=calendarISO(year, month, cell - offset + 1) aria-pressed=(value == calendarISO(year, month, cell - offset + 1) or end == calendarISO(year, month, cell - offset + 1))
-                height="2rem" min-height="2rem" width="100%" box-sizing="border-box" padding=0 border="0" font-size="0.875rem" font-weight=400
+                height="ui.space-32" min-height="ui.space-32" width="100%" box-sizing="border-box" padding="0px" border="0" font-size="ui.text-sm" font-weight="ui.weight-regular"
                 border-radius=(mode == "range" and value != "" and end != "" and calendarISO(year, month, cell - offset + 1) > value and calendarISO(year, month, cell - offset + 1) < end ? (cell % 7 == 0 ? "ui.radius-control 0px 0px ui.radius-control" : cell % 7 == 6 ? "0px ui.radius-control ui.radius-control 0px" : "0px") : "ui.radius-control")
                 background-color=(value == calendarISO(year, month, cell - offset + 1) or end == calendarISO(year, month, cell - offset + 1) ? "ui.primary" : hoveredDay == cell - offset + 1 ? "ui.muted" : mode == "range" and value != "" and end != "" and calendarISO(year, month, cell - offset + 1) > value and calendarISO(year, month, cell - offset + 1) < end ? "ui.muted" : "transparent")
                 color=(value == calendarISO(year, month, cell - offset + 1) or end == calendarISO(year, month, cell - offset + 1) ? "ui.primary-foreground" : "ui.foreground")
-                text (cell - offset + 1).toString()
+                text (cell - offset + 1).toString() font-family=uiFontFamily(uiFont) data-rightui-font="body"

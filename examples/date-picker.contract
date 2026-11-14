@@ -1,10 +1,12 @@
-use DatePicker from "@rightui/ui"
+use uiFontFamily, DatePicker from "@rightui/ui"
 use DateRangePicker, DateRangePreset from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state low = "2026-03-09"
   state high = "2026-03-12"
@@ -15,7 +17,7 @@ component Demo
   action chooseDate(v: string)
     selectedDate = v
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       DateRangePicker(id="dates-range", low=low, high=high, initialYear=2026, initialMonth=3, minimum="2026-03-05", maximum="2026-05-25", disabledDates=["2026-03-17"], disabledWeekends=true, disabled=false, narrow=narrow, reduced=reduced, presets=[DateRangePreset(label="March 9–12", low="2026-03-09", high="2026-03-12"), DateRangePreset(label="April 6–10", low="2026-04-06", high="2026-04-10")], change=chooseRange)
-      text "Single date" font-weight=600
+      text "Single date" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       DatePicker(id="date-single-picker", value=selectedDate, initialYear=2026, initialMonth=3, disabled=false, change=chooseDate)

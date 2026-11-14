@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 component HoverCardFrame
   props
@@ -6,6 +7,8 @@ component HoverCardFrame
     variant: string
     size: string
     ai: bool
+  inject
+    uiFont: string
   slot
   state expanded = false
   state focused = false
@@ -46,10 +49,10 @@ component HoverCardFrame
   view
     row position="relative" align-items="center" hover=hover focusin=enter focusout=leave key=keys
       button id=id testId=id class=Control press=toggle aria-expanded=expanded aria-controls=(id + "-content")
-        display="flex" align-items="center" height=(size == "xs" ? 24 : 28) min-height=(size == "xs" ? 24 : 28) padding=(size == "xs" ? "0 8px" : "0 12px") border=(variant == "outline" ? "1px solid ui.input" : "0") border-radius=(ai ? "ui.ai-radius-control" : "ui.radius-control") background-color=(variant == "secondary" ? "ui.muted" : "ui.surface") color="ui.foreground" font-size=(size == "xs" ? "0.75rem" : "0.875rem") font-weight=500 text-decoration=(variant == "link" ? "underline" : "none")
-        text label
-      column id=(id + "-content") testId=(id + "-content") role="region" aria-label=label popover="auto" toggle=changed position-area="bottom span-right" position-try-fallbacks="flip-block, flip-inline" margin=0 gap=12 padding=16 box-sizing="border-box" min-width=0 align-items="stretch" width=(ai ? "16rem" : "20rem") max-width="calc(100vw - 32px)"
-        border="1px solid ui.border" border-radius=(ai ? "ui.ai-radius-popover" : "ui.radius-popover") background-color="ui.surface" color="ui.foreground" box-shadow="0 4px 12px #00000018"
+        display="flex" align-items="center" height=(size == "xs" ? "ui.space-24" : "ui.space-28") min-height=(size == "xs" ? "ui.space-24" : "ui.space-28") padding=(size == "xs" ? "0px ui.space-8" : "0px ui.space-12") border-width=(variant == "outline" ? "ui.border-width" : "0px") border-style="solid" border-color="ui.input" border-radius=(ai ? "ui.ai-radius-control" : "ui.radius-control") background-color=(variant == "secondary" ? "ui.muted" : "ui.surface") color="ui.foreground" font-size=(size == "xs" ? "ui.text-xs" : "ui.text-sm") font-weight="ui.weight-medium" text-decoration=(variant == "link" ? "underline" : "none")
+        text label font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      column id=(id + "-content") testId=(id + "-content") role="region" aria-label=label popover="auto" toggle=changed position-area="bottom span-right" position-try-fallbacks="flip-block, flip-inline" margin="0px" gap="ui.space-12" padding="ui.space-16" box-sizing="border-box" min-width="0px" align-items="stretch" width=(ai ? "16rem" : "20rem") max-width="calc(100vw - ui.space-32)"
+        border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius=(ai ? "ui.ai-radius-popover" : "ui.radius-popover") background-color="ui.surface" color="ui.foreground" box-shadow="ui.shadow-menu"
         children
 
 component HoverCard

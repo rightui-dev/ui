@@ -1,15 +1,17 @@
-use Progress, Slider from "@rightui/ui"
+use uiFontFamily, Progress, Slider from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state progress = 64
   action updateProgress(v: number)
     progress = v
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Progress(id="catalog-progress", label="Preparation", value=progress)
-      text "Controlled progress" font-size="0.875rem" font-weight=600
+      text "Controlled progress" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Slider(id="variation-progress-control", label="Preparation progress", value=progress, minimum=0, maximum=100, step=1, disabled=false, change=updateProgress)

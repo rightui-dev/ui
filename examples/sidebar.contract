@@ -12,5 +12,5 @@ component Demo
   action toggleSidebar
     collapsed = not collapsed
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Sidebar(id="desktop-sidebar", label="Workspace navigation", entries=[SidebarEntry(id="projects", label="Projets", symbol="◈"), SidebarEntry(id="media", label="Media", symbol="▧"), SidebarEntry(id="favorites", label="Favoris", symbol="☆")], selected=location, collapsed=collapsed, reduced=reduced, choose=navigate, toggle=toggleSidebar)

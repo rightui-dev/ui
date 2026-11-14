@@ -1,9 +1,11 @@
-use CalendarAdvanced from "@rightui/ui"
+use uiFontFamily, CalendarAdvanced from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state year = 2026
   state month = 3
@@ -22,12 +24,12 @@ component Demo
   action chooseMultiple(start: string, finish: string, values: string[])
     multipleDates = values
   view
-    column gap=16 min-width=0 max-width="100%"
-      text "Single date with constraints" font-weight=600
+    column gap="ui.space-16" min-width=0 max-width="100%"
+      text "Single date with constraints" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       CalendarAdvanced(id="dates-single", low=single, high="", selected=[], mode="single", navigation="both", year=year, month=month, minimum="2026-03-05", maximum="2026-05-25", disabledDates=["2026-03-17"], disabledWeekends=true, disabled=false, changeMonth=calendarMonth, change=chooseSingle)
-      text "Date range" font-weight=600
+      text "Date range" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       CalendarAdvanced(id="dates-range", low=low, high=high, selected=[], mode="range", navigation="both", year=year, month=month, minimum="2026-03-01", maximum="2026-05-25", disabledDates=[], disabledWeekends=false, disabled=false, changeMonth=calendarMonth, change=chooseRange)
-      text "Disabled" font-weight=600
+      text "Disabled" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       CalendarAdvanced(id="dates-disabled", low=single, high="", selected=[], mode="single", navigation="both", year=year, month=month, minimum="", maximum="", disabledDates=[], disabledWeekends=false, disabled=true, changeMonth=calendarMonth, change=chooseSingle)
-      text "Multiple selection" font-weight=600
+      text "Multiple selection" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       CalendarAdvanced(id="dates-multiple", low="", high="", selected=multipleDates, mode="multiple", navigation="both", year=year, month=month, minimum="", maximum="", disabledDates=[], disabledWeekends=false, disabled=false, changeMonth=calendarMonth, change=chooseMultiple)

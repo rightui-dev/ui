@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use ChartPoint from "./chart.contract"
 fn naturalPower(k: number): number = k > 44 ? 0 : k == 0 ? 1 : k == 1 ? 0.26794919243112281 : k == 2 ? 0.07179676972449088 : k == 3 ? 0.019237886466840617 : k == 4 ? 0.0051547761428715703 : k == 5 ? 0.0013812181046456555 : k == 6 ? 0.00037009627571104941 : k == 7 ? 9.9166998198541869e-05 : k == 8 ? 2.6571717083117901e-05 : k == 9 ? 7.119870133929712e-06 : k == 10 ? 1.9077634526009366e-06 : k == 11 ? 5.1118367647403156e-07 : k == 12 ? 1.3697125329518911e-07 : k == 13 ? 3.6701336706724693e-08 : k == 14 ? 9.8340935317096054e-09 : k == 15 ? 2.6350374201137172e-09 : k == 16 ? 7.0605614874525981e-10 : k == 17 ? 1.8918717486732108e-10 : k == 18 ? 5.0692550724024295e-11 : k == 19 ? 1.358302802877604e-11 : k == 20 ? 3.6395613910798461e-12 : k == 21 ? 9.7521753554333854e-13 : k == 22 ? 2.6130875109350738e-13 : k == 23 ? 7.0017468830690579e-14 : k == 24 ? 1.8761124229254853e-14 : k == 25 ? 5.0270280863288097e-15 : k == 26 ? 1.3469881160603771e-15 : k == 27 ? 3.6092437791269757e-16 : k == 28 ? 9.6709395590412697e-17 : k == 29 ? 2.591320444895307e-17 : k == 30 ? 6.9434222053995546e-18 : k == 31 ? 1.8604843726451361e-18 : k == 32 ? 4.9851528518098844e-19 : k == 33 ? 1.3357676807881673e-19 : k == 34 ? 3.5791787134278322e-20 : k == 35 ? 9.5903804582965288e-21 : k == 36 ? 2.5697346989077761e-21 : k == 37 ? 6.8855833733457311e-22 : k == 38 ? 1.8449865043051551e-22 : k == 39 ? 4.9436264387488662e-23 : k == 40 ? 1.3246407119439064e-23 : k == 41 ? 3.5493640902675723e-24 : k == 42 ? 9.5104924163122292e-25 : k == 43 ? 2.5483287625731797e-25 : k == 44 ? 6.8282263398048592e-26 : 0
 fn naturalValue(values: number[], i: number): number = match values.at(i) { case some(v) => v, case none => 0 }
@@ -29,6 +30,8 @@ component AreaGalleryChart
     mode: string
     width: number
     reduced: bool
+  inject
+    uiFont: string
   state active = -1
   state measured = 560
   derive single = mode == "default" or mode == "linear" or mode == "step"
@@ -36,12 +39,12 @@ component AreaGalleryChart
   derive peak = match first(sortBy(points, p => single ? p.desktop : p.desktop + p.mobile, "desc")) { case some(p) => max(1, ceil((single ? p.desktop : p.desktop + p.mobile) / 100) * 100), case none => 1 }
   derive curve = mode == "linear" ? "linear" : mode == "step" ? "step" : "natural"
   derive layers = expanded ? 3 : single ? 1 : 2
-  derive series = range(layers).map(layer => AreaLayer(outline=areaLine(areaValues(points, others, layer, expanded, single, peak), curve), area=areaBand(areaValues(points, others, layer, expanded, single, peak), areaLower(points, others, layer, layers, expanded, single, peak), curve, single or layer == layers - 1), color=(layer == 0 ? "#8ec5ff" : layer == 1 ? "#2b7fff" : "#155dfb")))
+  derive series = range(layers).map(layer => AreaLayer(outline=areaLine(areaValues(points, others, layer, expanded, single, peak), curve), area=areaBand(areaValues(points, others, layer, expanded, single, peak), areaLower(points, others, layer, layers, expanded, single, peak), curve, single or layer == layers - 1), color=(layer == 0 ? "ui.chart-1" : layer == 1 ? "ui.chart-2" : "ui.chart-3")))
   action measure(w: number, h: number)
     measured = max(1, w)
   action inspect(e: PointerEvent)
-    let bounds = frame(id)
-    active = max(0, min(points.length - 1, round((e.clientX - bounds.x - 24) / max(1, bounds.width - 48) * (points.length - 1))))
+    let bounds = frame(id + "-plot")
+    active = max(0, min(points.length - 1, round((e.clientX - bounds.x) / max(1, bounds.width) * (points.length - 1))))
   action hover(inside: bool)
     if not inside
       active = -1
@@ -50,41 +53,42 @@ component AreaGalleryChart
       preventDefault()
       active = k == "Home" ? 0 : k == "End" ? points.length - 1 : max(0, min(points.length - 1, active + (k == "ArrowLeft" ? -1 : 1)))
   view
-    column gap=12 min-width=0
-      view id=id testId=id resize=measure tabindex=0 role="group" aria-label="Visitor area chart. Use arrow keys to inspect values." key=keys pointermove=inspect pointerdown=inspect hover=hover position="relative" height=260 min-width=0
-        svg position="absolute" left=24 top=0 width="calc(100% - 48px)" height=220 viewBox="20 0 520 250" preserveAspectRatio="none" aria-hidden=true
-          defs
-            for layer in range(layers) key=layer
-              linearGradient id=(id + "-gradient-" + layer.toString()) x1="0" y1="0" x2="0" y2="1"
-                stop offset="5%" stop-color=(layer == 0 ? "#8ec5ff" : layer == 1 ? "#2b7fff" : "#155dfb") stop-opacity=0.8
-                stop offset="95%" stop-color=(layer == 0 ? "#8ec5ff" : layer == 1 ? "#2b7fff" : "#155dfb") stop-opacity=0.1
-          for tick in range(5) key=tick
-            line x1=20 x2=540 y1=(5 + tick * 52.5) y2=(5 + tick * 52.5) stroke="ui.chart-grid" stroke-width=1 vector-effect="non-scaling-stroke"
-          for seriesItem, layer in series key=seriesItem.color
-            path d=seriesItem.area fill=(mode == "gradient" or mode == "interactive" ? "url(#" + id + "-gradient-" + layer.toString() + ")" : seriesItem.color) fill-opacity=0.4
-            path d=seriesItem.outline fill="none" stroke=seriesItem.color stroke-width=1 vector-effect="non-scaling-stroke"
-        for p, i in points key=p.label
-          if points.length <= 6 or i % max(1, ceil(points.length / max(2, floor(measured / 80)))) == 0
-            text (points.length <= 6 ? p.label.slice(0, 3) : p.label.slice(5, 10)) position="absolute" top=230 left=(24 + i * max(1, measured - 48) / max(1, points.length - 1)) translate="-50% 0px" font-size=12 color="ui.muted-foreground"
+    column gap="ui.space-12" min-width="0px"
+      view id=id testId=id resize=measure tabindex=0 role="group" aria-label="Visitor area chart. Use arrow keys to inspect values." key=keys pointermove=inspect pointerdown=inspect hover=hover position="relative" height=260 min-width="0px"
+        view id=(id + "-plot") position="absolute" left="ui.space-24" right="ui.space-24" top="0px" height=220
+          svg width="100%" height="100%" viewBox="20 0 520 250" preserveAspectRatio="none" aria-hidden=true
+            defs
+              for layer in range(layers) key=layer
+                linearGradient id=(id + "-gradient-" + layer.toString()) x1="0" y1="0" x2="0" y2="1"
+                  stop offset="5%" stop-color=(layer == 0 ? "ui.chart-1-gradient-start" : layer == 1 ? "ui.chart-2-gradient-start" : "ui.chart-3-gradient-start")
+                  stop offset="95%" stop-color=(layer == 0 ? "ui.chart-1-gradient-end" : layer == 1 ? "ui.chart-2-gradient-end" : "ui.chart-3-gradient-end")
+            for tick in range(5) key=tick
+              line x1=20 x2=540 y1=(5 + tick * 52.5) y2=(5 + tick * 52.5) stroke="ui.chart-grid" stroke-width="ui.stroke-thin" vector-effect="non-scaling-stroke"
+            for seriesItem, layer in series key=seriesItem.color
+              path d=seriesItem.area fill=(mode == "gradient" or mode == "interactive" ? "url(#" + id + "-gradient-" + layer.toString() + ")" : seriesItem.color) opacity="ui.chart-opacity-area"
+              path d=seriesItem.outline fill="none" stroke=seriesItem.color stroke-width="ui.stroke-thin" vector-effect="non-scaling-stroke"
+          for p, i in points key=p.label
+            if points.length <= 6 or i % max(1, ceil(points.length / max(2, floor(measured / 80)))) == 0
+              text (points.length <= 6 ? p.label.slice(0, 3) : p.label.slice(5, 10)) position="absolute" top=230 left=((i * 100 / max(1, points.length - 1)).toString() + "%") translate="-50% 0px" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if mode == "axes"
           for tick in range(3) key=tick
-            text (600 - tick * 300).toString() position="absolute" left=0 top=(tick * 92) font-size=12 color="ui.muted-foreground"
+            text (600 - tick * 300).toString() position="absolute" left="0px" top=(tick * 92) font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         for p, i in points key=p.label
           if i == active
-            column role="tooltip" aria-live="polite" position="absolute" z-index=20 top=24 left=(max(8, min(measured - 180, i * measured / max(1, points.length)))) padding=12 gap=6 border="1px solid ui.border" border-radius="ui.radius-control" background-color="ui.surface" font-size=12 pointer-events="none"
-              text p.label font-weight=500
-              text ("Desktop  " + p.desktop.toString())
+            column role="tooltip" aria-live="polite" position="absolute" z-index=20 top="ui.space-24" left=(max(8, min(measured - 180, i * measured / max(1, points.length)))) padding="ui.space-12" gap="ui.space-6" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.surface" font-size="ui.text-xs" pointer-events="none"
+              text p.label font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text ("Desktop  " + p.desktop.toString()) font-family=uiFontFamily(uiFont) data-rightui-font="body"
               if not single
-                text ("Mobile  " + p.mobile.toString())
+                text ("Mobile  " + p.mobile.toString()) font-family=uiFontFamily(uiFont) data-rightui-font="body"
               if expanded
-                text ("Other  " + naturalValue(others, i).toString())
+                text ("Other  " + naturalValue(others, i).toString()) font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if mode == "legend" or mode == "icons" or mode == "interactive"
-        row gap=16 justify-content="center" font-size=12
+        row gap="ui.space-16" justify-content="center" font-size="ui.text-xs"
           for label, i in ["Desktop", "Mobile"] key=label
-            row gap=6 align-items="center"
+            row gap="ui.space-6" align-items="center"
               if mode == "icons"
-                svg width=14 height=14 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=2 aria-hidden=true
+                svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" aria-hidden=true
                   path d=(i == 0 ? "M3 4h18v13H3zM8 21h8M12 17v4" : "M7 2h10v20H7zM11 18h2")
               else
-                view width=8 height=8 border-radius="ui.radius-detail" background-color=(i == 0 ? "#8ec5ff" : "#2b7fff") aria-hidden=true
-              text label color="ui.foreground"
+                view width="ui.space-8" height="ui.space-8" border-radius="ui.radius-detail" background-color=(i == 0 ? "ui.chart-1" : "ui.chart-2") aria-hidden=true
+              text label color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

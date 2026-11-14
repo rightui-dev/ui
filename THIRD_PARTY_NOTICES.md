@@ -55,6 +55,14 @@ SOFTWARE.
 
 `packages/ui/assets/fonts/Geist.ttf` is Geist, distributed under the SIL Open Font License 1.1. The full license is included at `packages/ui/assets/fonts/OFL.txt`. Source: https://github.com/google/fonts/tree/main/ofl/geist
 
+# Newsreader
+
+`packages/ui/assets/fonts/Newsreader.ttf` and `Newsreader-Italic.ttf` are unmodified Newsreader variable fonts, with real regular and italic faces covering weights 200–800. The native example also bundles these files.
+
+Copyright 2020 The Newsreader Project Authors (http://github.com/productiontype/Newsreader)
+
+Newsreader is distributed under the SIL Open Font License 1.1. The full license is included at `packages/ui/assets/fonts/OFL-Newsreader.txt` and `examples/native/assets/fonts/OFL-Newsreader.txt`. Original project: https://github.com/productiontype/Newsreader . Pinned distribution: https://github.com/google/fonts/tree/8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5/ofl/newsreader . Source URLs and file hashes are recorded in `packages/ui/assets/fonts/provenance.json`.
+
 # Tabler Icons
 
 The dashboard sidebar SVG paths are adapted from Tabler Icons, as shipped in the official shadcn/ui dashboard-01 reference. Source: https://github.com/tabler/tabler-icons

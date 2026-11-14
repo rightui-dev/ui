@@ -6,5 +6,5 @@ component Demo
     reduced: bool
   derive narrow = width < 600
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Table(id="catalog-table", label="Derniers exports", headers=["Project", "Statut", "Duration"], rows=[TableRow(id="interview", cells=["Interview", "Done", "02:34"]), TableRow(id="presentation", cells=["Overview", "En cours", "01:12"]), TableRow(id="trailer", cells=["Bande-annonce", "Brouillon", "00:45"])])

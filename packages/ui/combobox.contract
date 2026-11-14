@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use uiPopupIn, uiPopupOut from "./popup-motion.contract"
 use Field, Control from "./styles.contract"
 component Combobox
@@ -9,6 +10,8 @@ component Combobox
     disabled: bool
     reduced: bool
     change: action
+  inject
+    uiFont: string
   state expanded = false
   state openEpoch = 0
   state query = ""
@@ -70,28 +73,28 @@ component Combobox
       let next = (k == "Home" ? 0 : k == "End" ? filtered.length - 1 : min(filtered.length - 1, i + (k == "ArrowDown" ? 1 : -1)))
       focus(next < 0 ? id + "-search" : id + "-option-" + next.toString())
   view
-    column gap=8 min-width=0
-      text label id=(id + "-label") font-size="0.875rem" font-weight=500 color="ui.foreground"
+    column gap="ui.space-8" min-width="0px"
+      text label id=(id + "-label") font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       button id=id testId=id class=Field disabled=disabled press=open aria-expanded=expanded aria-controls=(id + "-list") aria-haspopup="listbox" aria-labelledby=(id + "-label")
-        display="flex" align-items="center" justify-content="space-between" gap=8
-        text (value == "" ? "Choose…" : value) flex=1 min-width=0 text-align="left"
-        svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=1.5 aria-hidden=true
+        display="flex" align-items="center" justify-content="space-between" gap="ui.space-8"
+        text (value == "" ? "Choose…" : value) flex=1 min-width="0px" text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-medium" aria-hidden=true
           path d="m8 9 4-4 4 4m-8 6 4 4 4-4"
       if expanded
         for epoch in [openEpoch] key=epoch
           column id=(id + "-list") testId=(id + "-list") popover="auto" toggle=changed(epoch)
             position-area="bottom" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
-            animation=(reduced ? "none" : "uiPopupIn 150ms ease-out both")
-            -exact-exit-animation=(reduced ? "none" : "uiPopupOut 100ms ease-in both")
-            width=width max-width="calc(100vw - 32px)" max-height="min(30rem, 70vh)" box-sizing="border-box" margin=4 padding=0 gap=0
-            border="1px solid ui.border" border-radius="ui.radius-menu" background-color="ui.surface" box-shadow="0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a"
-            input id=(id + "-search") testId=(id + "-search") class=Field value=query input=edit key=searchKeys
-              role="combobox" aria-expanded=true aria-controls=(id + "-options") aria-description="Type to filter, then use Arrow Down to browse results." aria-label=("Rechercher : " + label) placeholder="Rechercher…" border="none" border-bottom="1px solid ui.border" border-radius=0 min-height=40 padding="8px 12px"
-            scroll min-height=0 flex="1 1 auto" max-height="18rem"
-              column id=(id + "-options") role="listbox" aria-label=label gap=0 padding=4
+            animation=(reduced ? "none" : "uiPopupIn ui.duration-fast ui.easing both")
+            -exact-exit-animation=(reduced ? "none" : "uiPopupOut ui.duration-fast ui.easing both")
+            width=width max-width="calc(100vw - ui.space-32)" max-height="min(30rem, 70vh)" box-sizing="border-box" margin="ui.space-4" padding="0px" gap="0px"
+            border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" box-shadow="ui.shadow-menu"
+            input id=(id + "-search") testId=(id + "-search") class=Field value=query input=edit key=searchKeys font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              role="combobox" aria-expanded=true aria-controls=(id + "-options") aria-description="Type to filter, then use Arrow Down to browse results." aria-label=("Rechercher : " + label) placeholder="Rechercher…" border="none" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" border-radius="0px" min-height="ui.space-40" padding="ui.space-8 ui.space-12"
+            scroll min-height="0px" flex="1 1 auto" max-height="18rem"
+              column id=(id + "-options") role="listbox" aria-label=label gap="0px" padding="ui.space-4"
                 for option, i in filtered key=option
                   button id=(id + "-option-" + i.toString()) testId=(id + "-option-" + i.toString()) class=Control role="option" aria-selected=(value == option)
-                    press=pick(option) key=optionKeys(i) tabindex=-1 min-height=32 padding="6px 8px" border="0" border-radius="ui.radius-item" font-weight=400 background-color=(value == option ? "ui.muted" : "ui.surface") color="ui.foreground"
-                    text option text-align="left" font-size="0.875rem"
+                    press=pick(option) key=optionKeys(i) tabindex=-1 min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius="ui.radius-item" font-weight="ui.weight-regular" background-color=(value == option ? "ui.muted" : "ui.surface") color="ui.foreground"
+                    text option text-align="left" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 if filtered.length == 0
-                  text "No results." testId=(id + "-empty") role="status" padding=12 font-size="0.8125rem" color="ui.muted-foreground"
+                  text "No results." testId=(id + "-empty") role="status" padding="ui.space-12" font-size="ui.text-caption" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

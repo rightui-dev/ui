@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 
 component CheckboxMixed
@@ -8,22 +9,24 @@ component CheckboxMixed
     labelVisible: bool
     disabled: bool
     change: action
+  inject
+    uiFont: string
   action toggle
     if not disabled
       change(checked != "true")
   view
     button id=id testId=id appearance="none" role=(checked == "mixed" ? "button" : "checkbox") aria-checked=(checked == "true") aria-label=(checked == "mixed" ? label + ", partially selected" : label) aria-description=(checked == "mixed" ? "Some items are selected. Activate to select all items." : "") disabled=disabled press=toggle
-      display="flex" align-items="center" justify-content=(labelVisible ? "flex-start" : "center") gap=8 min-height=32 padding=0 border="0" background-color="transparent" color="ui.foreground" cursor="pointer"
+      display="flex" align-items="center" justify-content=(labelVisible ? "flex-start" : "center") gap="ui.space-8" min-height="ui.space-32" padding="0px" border="0" background-color="transparent" color="ui.foreground" cursor="pointer"
       :disabled
-        opacity=0.5
+        opacity="ui.opacity-disabled"
       :focus-visible
-        box-shadow="0 0 0 3px ui.ring"
-      view width=16 height=16 flex-shrink=0 box-sizing="border-box" border-radius="ui.radius-checkbox" border=(checked == "false" ? "1px solid ui.input" : "1px solid ui.primary") background-color=(checked == "false" ? "ui.surface" : "ui.primary") display="flex" align-items="center" justify-content="center" aria-hidden=true
+        box-shadow="ui.shadow-focus"
+      view width="ui.space-16" height="ui.space-16" flex-shrink=0 box-sizing="border-box" border-radius="ui.radius-checkbox" border-width="ui.border-width" border-style="solid" border-color=(checked == "false" ? "ui.input" : "ui.primary") background-color=(checked == "false" ? "ui.surface" : "ui.primary") display="flex" align-items="center" justify-content="center" aria-hidden=true
         if checked != "false"
-          svg width=12 height=12 viewBox="0 0 24 24" fill="none" stroke="ui.primary-foreground" stroke-width=2 stroke-linecap="round"
+          svg width="ui.space-12" height="ui.space-12" viewBox="0 0 24 24" fill="none" stroke="ui.primary-foreground" stroke-width="ui.stroke-standard" stroke-linecap="round"
             path d=(checked == "mixed" ? "M5 12h14" : "M5 12l4 4L19 6")
       if labelVisible
-        text label font-family="Geist" font-size="0.875rem" text-align="left" min-width=0
+        text label font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-sm" text-align="left" min-width="0px"
 
 fn rangeClean(value: number): number = match parseNumber(value.toFixed(10)) { case some(result) => result, case none => value }
 fn rangeValue(value: number, minimum: number, maximum: number, step: number): number = max(minimum, min(maximum, rangeClean(minimum + round((value - minimum) / max(0.000001, step)) * max(0.000001, step))))
@@ -41,6 +44,8 @@ component RangeSlider
     vertical: bool
     disabled: bool
     change: action
+  inject
+    uiFont: string
   state active = 0
   state dragging = false
   state pointer = -1
@@ -62,14 +67,14 @@ component RangeSlider
         change(low, max(next, min(maximum, low + gap)))
   action begin(forced: number, e: PointerEvent)
     if not disabled and e.button == 0 and pointer == -1 and maximum > minimum
-      let bounds = frame(id + "-track")
-      let length = max(1, vertical ? bounds.height - 16 : bounds.width - 16)
-      let offset = max(0, min(length, vertical ? bounds.y + bounds.height - e.clientY - 8 : e.clientX - bounds.x - 8))
+      let bounds = frame(id + "-rail")
+      let length = max(1, vertical ? bounds.height : bounds.width)
+      let offset = max(0, min(length, vertical ? bounds.y + bounds.height - e.clientY : e.clientX - bounds.x))
       let value = minimum + offset / length * span
       let which = forced >= 0 ? forced : max(value - low, low - value) <= max(value - high, high - value) ? 0 : 1
       stopPropagation()
       extent = length
-      origin = vertical ? bounds.y + bounds.height - 8 : bounds.x + 8
+      origin = vertical ? bounds.y + bounds.height : bounds.x
       active = which
       dragging = true
       pointer = e.pointerId
@@ -97,20 +102,20 @@ component RangeSlider
       let next = key == "Home" ? minimum : key == "End" ? maximum : value + (key == "ArrowRight" or key == "ArrowUp" ? step : key == "PageUp" ? step * 10 : key == "PageDown" ? -step * 10 : -step)
       update(which, next)
   view
-    column id=id testId=id gap=8 min-width=0 color="ui.foreground"
-      row gap=8 align-items="center" justify-content="space-between" flex-wrap="wrap"
-        text label font-size="0.875rem" font-weight=500
-        text (low.toString() + " — " + high.toString()) testId=(id + "-value") font-size="0.875rem" font-variant-numeric="tabular-nums" color="ui.muted-foreground"
-      view id=(id + "-track") testId=(id + "-track") role="group" aria-label=label position="relative" width=(vertical ? "44px" : "100%") height=(vertical ? 192 : 44) touch-action="none" pointerdown=begin(-1) pointerup=finish pointermove=move opacity=(disabled ? 0.5 : 1) cursor=(disabled ? "default" : "pointer")
-        view position="absolute" left=(vertical ? "20px" : "8px") top=(vertical ? "8px" : "20px") right=(vertical ? "auto" : "8px") bottom=(vertical ? "8px" : "auto") width=(vertical ? "4px" : "auto") height=(vertical ? "auto" : "4px") background-color="ui.muted" border-radius="ui.radius-full"
+    column id=id testId=id gap="ui.space-8" min-width="0px" color="ui.foreground"
+      row gap="ui.space-8" align-items="center" justify-content="space-between" flex-wrap="wrap"
+        text label font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text (low.toString() + " — " + high.toString()) testId=(id + "-value") font-size="ui.text-sm" font-variant-numeric="tabular-nums" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      view id=(id + "-track") testId=(id + "-track") role="group" aria-label=label position="relative" width=(vertical ? "ui.touch-target" : "100%") height=(vertical ? 192 : "ui.touch-target") touch-action="none" pointerdown=begin(-1) pointerup=finish pointermove=move opacity=(disabled ? "ui.opacity-disabled" : 1) cursor=(disabled ? "default" : "pointer")
+        view id=(id + "-rail") position="absolute" left=(vertical ? "50%" : "ui.space-8") top=(vertical ? "ui.space-8" : "50%") translate=(vertical ? "-50% 0px" : "0px -50%") right=(vertical ? "auto" : "ui.space-8") bottom=(vertical ? "ui.space-8" : "auto") width=(vertical ? "ui.space-4" : "auto") height=(vertical ? "auto" : "ui.space-4") background-color="ui.muted" border-radius="ui.radius-full"
           view position="absolute" left=(vertical ? "0px" : (lowRatio * 100).toString() + "%") bottom=(vertical ? (lowRatio * 100).toString() + "%" : "0px") width=(vertical ? "100%" : ((highRatio - lowRatio) * 100).toString() + "%") height=(vertical ? ((highRatio - lowRatio) * 100).toString() + "%" : "100%") background-color="ui.primary" border-radius="ui.radius-full" pointer-events="none"
           for which in [0, 1] key=which
             view id=(id + "-thumb-" + which.toString()) testId=(id + "-thumb-" + which.toString()) role="slider" tabindex=(disabled ? -1 : 0) key=keys(which) pointerdown=begin(which) pointerup=finish pointermove=move touch-action="none" aria-label=(label + (which == 0 ? " minimum" : " maximum")) aria-orientation=(vertical ? "vertical" : "horizontal") aria-disabled=disabled aria-valuemin=(which == 0 ? minimum : low + gap) aria-valuemax=(which == 0 ? high - gap : maximum) aria-valuenow=(which == 0 ? low : high)
-              position="absolute" z-index=(which + 1) left=(vertical ? "-6px" : ((which == 0 ? lowRatio : highRatio) * 100).toString() + "%") bottom=(vertical ? ((which == 0 ? lowRatio : highRatio) * 100).toString() + "%" : "auto") top=(vertical ? "auto" : "-6px") translate=(vertical ? "0px 8px" : "-8px 0px") width=16 height=16 border="2px solid ui.primary" border-radius="ui.radius-full" box-sizing="border-box" background-color="ui.background" box-shadow="0 1px 2px 0 ui.shadow"
+              position="absolute" z-index=(which + 1) left=(vertical ? "50%" : ((which == 0 ? lowRatio : highRatio) * 100).toString() + "%") bottom=(vertical ? ((which == 0 ? lowRatio : highRatio) * 100).toString() + "%" : "auto") top=(vertical ? "auto" : "50%") translate=(vertical ? "-50% 50%" : "-50% -50%") width="ui.space-16" height="ui.space-16" border-width="ui.border-strong-width" border-style="solid" border-color="ui.primary" border-radius="ui.radius-full" box-sizing="border-box" background-color="ui.background" box-shadow="ui.shadow-control"
               :hover
-                box-shadow="0 0 0 4px ui.ring"
+                box-shadow="ui.shadow-focus-strong"
               :focus-visible
-                box-shadow="0 0 0 4px ui.ring"
+                box-shadow="ui.shadow-focus-strong"
 
 component AccordionMultiple
   props
@@ -120,6 +125,8 @@ component AccordionMultiple
     expanded: number[]
     reduced: bool
     change: action
+  inject
+    uiFont: string
   state hovered = -1
   action hoverItem(index: number, inside: bool)
     hovered = inside ? index : -1
@@ -131,18 +138,18 @@ component AccordionMultiple
       let next = key == "Home" ? 0 : key == "End" ? titles.length - 1 : (index + (key == "ArrowDown" ? 1 : titles.length - 1)) % max(1, titles.length)
       focus(id + "-trigger-" + next.toString())
   view
-    column id=id testId=id min-width=0
+    column id=id testId=id min-width="0px"
       for title, i in titles key=title
-        column border-bottom=(i == titles.length - 1 ? "none" : "1px solid ui.border")
+        column border-bottom-width=(i == titles.length - 1 ? "0px" : "ui.border-width") border-bottom-style=(i == titles.length - 1 ? "solid" : "solid") border-bottom-color=(i == titles.length - 1 ? "transparent" : "ui.border")
           button id=(id + "-trigger-" + i.toString()) testId=(id + "-trigger-" + i.toString()) class=Control aria-expanded=expanded.includes(i) aria-controls=(id + "-panel-" + i.toString()) press=toggle(i) key=keys(i) hover=hoverItem(i)
-            display="flex" align-items="flex-start" gap=16 padding=16 border="0" background-color="transparent" color="ui.foreground"
-            text title flex=1 min-width=0 text-align="left" text-decoration=(hovered == i ? "underline" : "none")
-            svg width=16 height=16 flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=2 rotate=(expanded.includes(i) ? "180deg" : "0deg") transition=(reduced ? "none" : "rotate 200ms ease-out") aria-hidden=true
+            display="flex" align-items="flex-start" gap="ui.space-16" padding="ui.space-16" border="0" background-color="transparent" color="ui.foreground"
+            text title flex=1 min-width="0px" text-align="left" text-decoration=(hovered == i ? "underline" : "none") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            svg width="ui.space-16" height="ui.space-16" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" rotate=(expanded.includes(i) ? "180deg" : "0deg") transition=(reduced ? "none" : "rotate ui.duration-normal ui.easing") aria-hidden=true
               path d="m6 9 6 6 6-6"
-          column id=(id + "-panel-" + i.toString()) testId=(expanded.includes(i) ? id + "-panel-" + i.toString() : "") role="region" aria-labelledby=(id + "-trigger-" + i.toString()) aria-hidden=(not expanded.includes(i)) inert=(not expanded.includes(i)) height=(expanded.includes(i) ? "auto" : "0px") overflow="hidden" -exact-layout-transition=(reduced ? "none" : "200ms ease-out")
-            column padding="0px 16px 16px" min-width=0
+          column id=(id + "-panel-" + i.toString()) testId=(expanded.includes(i) ? id + "-panel-" + i.toString() : "") role="region" aria-labelledby=(id + "-trigger-" + i.toString()) aria-hidden=(not expanded.includes(i)) inert=(not expanded.includes(i)) height=(expanded.includes(i) ? "auto" : "0px") overflow="hidden" -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing")
+            column padding="0px ui.space-16 ui.space-16" min-width="0px"
               match descriptions.at(i)
                 case some(description)
-                  text description font-size="0.875rem" line-height=1.5
+                  text description font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 case none
-                  text ""
+                  text "" font-family=uiFontFamily(uiFont) data-rightui-font="body"

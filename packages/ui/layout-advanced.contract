@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 
 shape CarouselSlideData
@@ -20,9 +21,9 @@ component CarouselItemAdvanced
   view
     column id=id testId=(index == value ? id : "") role="group" aria-description="Slide" aria-label=(label + ", " + (index + 1).toString() + " of " + count.toString())
       aria-hidden=(index != value) inert=(index != value) pointer-events=(index == value ? "auto" : "none")
-      grid-column="1" grid-row="1" width="100%" min-width=0 height=height min-height=0 box-sizing="border-box"
-      translate=(orientation == "vertical" ? "0px " + ((index - value) * 100).toString() + "%" : ((index - value) * 100).toString() + "% 0px")
-      transition=(reduced ? "none" : "translate 220ms cubic-bezier(0.22, 1, 0.36, 1)")
+      grid-column="1" grid-row="1" width="100%" min-width="0px" height=height min-height="0px" box-sizing="border-box"
+      translate=(orientation == "vertical" ? "0px" + ((index - value) * 100).toString() + "%" : ((index - value) * 100).toString() + "% 0px")
+      transition=(reduced ? "none" : "translate ui.duration-normal ui.easing")
       children
 
 component CarouselFrameAdvanced
@@ -36,6 +37,8 @@ component CarouselFrameAdvanced
     loop: bool
     reduced: bool
     change: action
+  inject
+    uiFont: string
   slot
   state extent = 1
   state distance = 0
@@ -78,34 +81,34 @@ component CarouselFrameAdvanced
     crossDistance = 0
     dragging = false
   view
-    column id=id testId=id role="region" aria-label=label aria-description="Carousel" tabindex=0 key=keys min-width=0 gap=12
+    column id=id testId=id role="region" aria-label=label aria-description="Carousel" tabindex=0 key=keys min-width="0px" gap="ui.space-12"
       :focus-visible
-        box-shadow="0 0 0 3px ui.ring"
-      column position="relative" min-width=0 padding=(vertical ? "48px 0px" : "0px 48px") box-sizing="border-box"
-        view id=(id + "-viewport") testId=(id + "-viewport") height=height min-height=0 min-width=0 overflow="hidden" touch-action=(vertical ? "pan-x" : "pan-y") pointerdown=begin pan=dragPan panrelease=releasePan
+        box-shadow="ui.shadow-focus"
+      column position="relative" min-width="0px" padding=(vertical ? "ui.space-48 0px" : "0px ui.space-48") box-sizing="border-box"
+        view id=(id + "-viewport") testId=(id + "-viewport") height=height min-height="0px" min-width="0px" overflow="hidden" touch-action=(vertical ? "pan-x" : "pan-y") pointerdown=begin pan=dragPan panrelease=releasePan
           if count == 0
-            text "No slides." role="status" padding=24 color="ui.muted-foreground" font-size="0.875rem"
-          view id=(id + "-track") display="grid" grid-template-columns="minmax(0, 1fr)" width="100%" height=height min-width=0 min-height=0
-            translate=(vertical ? "0px " + distance.toString() + "px" : distance.toString() + "px 0px")
-            transition=(reduced or dragging ? "none" : "translate 220ms cubic-bezier(0.22, 1, 0.36, 1)")
+            text "No slides." role="status" padding="ui.space-24" color="ui.muted-foreground" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          view id=(id + "-track") display="grid" grid-template-columns="minmax(0, 1fr)" width="100%" height=height min-width="0px" min-height="0px"
+            translate=(vertical ? "0px" + distance.toString() + "px" : distance.toString() + "px 0px")
+            transition=(reduced or dragging ? "none" : "translate ui.duration-normal ui.easing")
             children
         button id=(id + "-previous") testId=(id + "-previous") class=Control press=move(-1) disabled=(count == 0 or (not loop and current == 0)) aria-label="Previous slide"
           position="absolute" left=(vertical ? "50%" : "0px") top=(vertical ? "0px" : "50%") translate=(vertical ? "-50% 0px" : "0px -50%")
-          width=32 height=32 min-height=32 padding=0 border="1px solid ui.input" border-radius="ui.radius-full" background-color="ui.outline" color="ui.foreground" display="flex" align-items="center" justify-content="center"
-          box-shadow="0 1px 2px 0 ui.shadow"
+          width="ui.space-32" height="ui.space-32" min-height="ui.space-32" padding="0px" border-width="ui.border-width" border-style="solid" border-color="ui.input" border-radius="ui.radius-full" background-color="ui.outline" color="ui.foreground" display="flex" align-items="center" justify-content="center"
+          box-shadow="ui.shadow-control"
           :hover
             background-color="ui.outline-hover"
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 rotate=(vertical ? "90deg" : "0deg") aria-hidden=true
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" rotate=(vertical ? "90deg" : "0deg") aria-hidden=true
             path d="M19 12H5m7-7-7 7 7 7"
         button id=(id + "-next") testId=(id + "-next") class=Control press=move(1) disabled=(count == 0 or (not loop and current >= count - 1)) aria-label="Next slide"
           position="absolute" right=(vertical ? "auto" : "0px") bottom=(vertical ? "0px" : "auto") left=(vertical ? "50%" : "auto") top=(vertical ? "auto" : "50%") translate=(vertical ? "-50% 0px" : "0px -50%")
-          width=32 height=32 min-height=32 padding=0 border="1px solid ui.input" border-radius="ui.radius-full" background-color="ui.outline" color="ui.foreground" display="flex" align-items="center" justify-content="center"
-          box-shadow="0 1px 2px 0 ui.shadow"
+          width="ui.space-32" height="ui.space-32" min-height="ui.space-32" padding="0px" border-width="ui.border-width" border-style="solid" border-color="ui.input" border-radius="ui.radius-full" background-color="ui.outline" color="ui.foreground" display="flex" align-items="center" justify-content="center"
+          box-shadow="ui.shadow-control"
           :hover
             background-color="ui.outline-hover"
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=2 rotate=(vertical ? "90deg" : "0deg") aria-hidden=true
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" rotate=(vertical ? "90deg" : "0deg") aria-hidden=true
             path d="M5 12h14m-7-7 7 7-7 7"
-      text (count == 0 ? "0 slides" : "Slide " + (current + 1).toString() + " of " + count.toString()) testId=(id + "-position") aria-live="polite" font-size="0.875rem" color="ui.muted-foreground" text-align="center"
+      text (count == 0 ? "0 slides" : "Slide " + (current + 1).toString() + " of " + count.toString()) testId=(id + "-position") aria-live="polite" font-size="ui.text-sm" color="ui.muted-foreground" text-align="center" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component CarouselImageAdvanced
   props
@@ -113,15 +116,17 @@ component CarouselImageAdvanced
     src: string
     alt: string
     ratio: number
+  inject
+    uiFont: string
   state failedSource = ""
   action imageFailed(source: string, message: string)
     failedSource = source
   view
-    view id=id testId=id aspect-ratio=max(0.1, ratio) width="100%" min-width=0 position="relative" overflow="hidden" border-radius="ui.radius-control" background-color="ui.muted"
+    view id=id testId=id aspect-ratio=max(0.1, ratio) width="100%" min-width="0px" position="relative" overflow="hidden" border-radius="ui.radius-control" background-color="ui.muted"
       if src != "" and failedSource != src
         image src alt=alt width="100%" height="100%" position="absolute" inset=0 object-fit="cover" pointer-events="none" user-select="none" error=imageFailed(src)
       else
-        text alt padding=16 font-size="0.875rem" color="ui.muted-foreground"
+        text alt padding="ui.space-16" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component CarouselAdvanced
   props
@@ -135,16 +140,18 @@ component CarouselAdvanced
     loop: bool
     reduced: bool
     change: action
+  inject
+    uiFont: string
   derive current = max(0, min(slides.length - 1, value))
   view
     CarouselFrameAdvanced(id=id, label=label, value=current, count=slides.length, orientation=orientation, height=height, loop=loop, reduced=reduced, change=change)
       for slide, i in slides key=slide.id
         CarouselItemAdvanced(id=id + "-slide-" + slide.id, label=slide.title, index=i, value=current, count=slides.length, orientation=orientation, height=height, reduced=reduced)
-          column height="100%" box-sizing="border-box" min-width=0 min-height=0 padding=16 gap=12 border="1px solid ui.border" border-radius="ui.radius-panel" background-color="ui.surface" justify-content=(slide.src == "" ? "center" : "flex-start")
+          column height="100%" box-sizing="border-box" min-width="0px" min-height="0px" padding="ui.space-16" gap="ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-panel" background-color="ui.surface" justify-content=(slide.src == "" ? "center" : "flex-start")
             if slide.src != ""
               CarouselImageAdvanced(id=id + "-image-" + slide.id, src=slide.src, alt=slide.title, ratio=imageRatio)
-            text slide.title role="heading" aria-level=3 font-size="1.125rem" font-weight=600 color="ui.foreground"
-            text slide.description font-size="0.875rem" line-height=1.5 color="ui.muted-foreground"
+            text slide.title role="heading" aria-level=3 font-size="ui.text-lg" font-weight="ui.weight-semibold" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text slide.description font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component ScrollAreaAdvanced
   props
@@ -163,6 +170,8 @@ component ScrollAreaAdvanced
   state portHeight = height
   state contentHeight = height
   state measuredWidth = 0
+  state verticalSize = 10
+  state horizontalSize = 10
   state hovered = false
   state focused = false
   state pointer = -1
@@ -173,8 +182,8 @@ component ScrollAreaAdvanced
   derive maxX = max(0, measuredWidth - portWidth)
   derive vertical = direction != "horizontal" and (maxY > 1 or type == "always")
   derive horizontal = direction != "vertical" and (maxX > 1 or type == "always")
-  derive trackHeight = max(1, portHeight - (horizontal ? 10 : 0))
-  derive trackWidth = max(1, portWidth - (vertical ? 10 : 0))
+  derive trackHeight = max(1, portHeight - (horizontal ? horizontalSize : 0))
+  derive trackWidth = max(1, portWidth - (vertical ? verticalSize : 0))
   derive thumbHeight = max(18, min(trackHeight, trackHeight * portHeight / max(1, contentHeight)))
   derive thumbWidth = max(18, min(trackWidth, trackWidth * portWidth / max(1, measuredWidth)))
   derive thumbY = maxY > 0 ? max(0, min(maxY, y)) / maxY * max(0, trackHeight - thumbHeight) : 0
@@ -184,8 +193,12 @@ component ScrollAreaAdvanced
     portWidth = w
     portHeight = h
   action contentResized(w: number, h: number)
-    measuredWidth = w + 32
-    contentHeight = h + 32
+    measuredWidth = w
+    contentHeight = h
+  action measureVertical(w: number, h: number)
+    verticalSize = w
+  action measureHorizontal(w: number, h: number)
+    horizontalSize = h
   action scrolled(left: number, top: number, e: ScrollEvent)
     x = left
     y = top
@@ -243,34 +256,35 @@ component ScrollAreaAdvanced
       else
         x = k == "Home" ? 0 : k == "End" ? maxX : max(0, min(maxX, x + (low ? -1 : 1) * (k == "PageUp" or k == "PageDown" ? portWidth : 40)))
   view
-    view id=id testId=id role="group" aria-label=label position="relative" height=height min-height=0 min-width=0
+    view id=id testId=id role="group" aria-label=label position="relative" height=height min-height="0px" min-width="0px"
       hover=hoverChanged focusin=gainedFocus focusout=lostFocus
-      scroll id=(id + "-viewport") testId=(id + "-viewport") aria-label=label tabindex=0 width="100%" height="100%" box-sizing="border-box" min-width=0
+      scroll id=(id + "-viewport") testId=(id + "-viewport") aria-label=label tabindex=0 width="100%" height="100%" box-sizing="border-box" min-width="0px"
         overflow-x=(direction == "vertical" ? "hidden" : "auto") overflow-y=(direction == "horizontal" ? "hidden" : "auto") scrollbar-width="none"
         scrollLeft=x scrollTop=y scroll=scrolled resize=viewportResized border-radius="ui.radius-control"
         :focus-visible
-          box-shadow="inset 0 0 0 3px ui.ring"
-        column id=(id + "-content") resize=contentResized width=(contentWidth > 0 ? contentWidth.toString() + "px" : "auto") min-width=0 padding=16 gap=12 box-sizing="border-box"
-          children
+          box-shadow="ui.shadow-focus-inset"
+        column id=(id + "-content") resize=contentResized width=(contentWidth > 0 ? contentWidth.toString() + "px" : "auto") min-width="0px" box-sizing="border-box"
+          column padding="ui.space-16" gap="ui.space-12" box-sizing="border-box" min-width="0px"
+            children
       if vertical
-        view id=(id + "-v-track") testId=(shown ? id + "-v-track" : "") position="absolute" right=0 top=0 width=10 height=trackHeight
+        view id=(id + "-v-track") testId=(shown ? id + "-v-track" : "") position="absolute" right="0px" top="0px" width="ui.space-10" height=trackHeight resize=measureVertical
           touch-action="none" user-select="none" opacity=(shown ? 1 : 0) pointer-events=(shown ? "auto" : "none") aria-hidden=(not shown)
-          transition=(reduced ? "none" : "opacity 150ms ease-out") pointerdown=track("vertical")
+          transition=(reduced ? "none" : "opacity ui.duration-fast ui.easing") pointerdown=track("vertical")
           button id=(id + "-v-thumb") testId=(shown ? id + "-v-thumb" : "") role="scrollbar" aria-label=(label + " vertical scrollbar") aria-orientation="vertical" aria-controls=(id + "-viewport")
             aria-valuemin=0 aria-valuemax=maxY aria-valuenow=y disabled=(maxY == 0) tabindex=(shown ? 0 : -1)
-            position="absolute" left=1 top=thumbY width=8 height=thumbHeight min-height=0 appearance="none" padding=0 border="0" border-radius="ui.radius-full" background-color="ui.border" touch-action="none" user-select="none"
+            position="absolute" left="ui.space-1" top=thumbY width="ui.space-8" height=thumbHeight min-height="0px" appearance="none" padding="0px" border="0" border-radius="ui.radius-full" background-color="ui.border" touch-action="none" user-select="none"
             pointerdown=begin("vertical") pointermove=dragged pointerup=ended key=keys("vertical")
             :focus-visible
-              box-shadow="0 0 0 2px ui.ring"
+              box-shadow="ui.shadow-focus"
       if horizontal
-        view id=(id + "-h-track") testId=(shown ? id + "-h-track" : "") position="absolute" left=0 bottom=0 height=10 width=trackWidth
+        view id=(id + "-h-track") testId=(shown ? id + "-h-track" : "") position="absolute" left="0px" bottom="0px" height="ui.space-10" width=trackWidth resize=measureHorizontal
           touch-action="none" user-select="none" opacity=(shown ? 1 : 0) pointer-events=(shown ? "auto" : "none") aria-hidden=(not shown)
-          transition=(reduced ? "none" : "opacity 150ms ease-out") pointerdown=track("horizontal")
+          transition=(reduced ? "none" : "opacity ui.duration-fast ui.easing") pointerdown=track("horizontal")
           button id=(id + "-h-thumb") testId=(shown ? id + "-h-thumb" : "") role="scrollbar" aria-label=(label + " horizontal scrollbar") aria-orientation="horizontal" aria-controls=(id + "-viewport")
             aria-valuemin=0 aria-valuemax=maxX aria-valuenow=x disabled=(maxX == 0) tabindex=(shown ? 0 : -1)
-            position="absolute" top=1 left=thumbX height=8 width=thumbWidth min-height=0 appearance="none" padding=0 border="0" border-radius="ui.radius-full" background-color="ui.border" touch-action="none" user-select="none"
+            position="absolute" top="ui.space-1" left=thumbX height="ui.space-8" width=thumbWidth min-height="0px" appearance="none" padding="0px" border="0" border-radius="ui.radius-full" background-color="ui.border" touch-action="none" user-select="none"
             pointerdown=begin("horizontal") pointermove=dragged pointerup=ended key=keys("horizontal")
             :focus-visible
-              box-shadow="0 0 0 2px ui.ring"
+              box-shadow="ui.shadow-focus"
       if vertical and horizontal
-        view position="absolute" right=0 bottom=0 width=10 height=10 background-color="transparent"
+        view position="absolute" right="0px" bottom="0px" width="ui.space-10" height="ui.space-10" background-color="transparent"

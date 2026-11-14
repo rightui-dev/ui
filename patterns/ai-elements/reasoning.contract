@@ -1,12 +1,13 @@
-use ButtonAI as ButtonContent from "@rightui/ui"
-use MessageFrame, MessageContent, BubbleFrame from "../../packages/ui/conversation-parts.contract"
-use TraceFrame, TraceDisclosure from "../../packages/ui/trace-parts.contract"
+use uiFontFamily, ButtonAI as ButtonContent from "@rightui/ui"
+use MessageFrame, MessageContent, BubbleFrame from "@rightui/ui"
+use TraceFrame, TraceDisclosure from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
   inject
+    uiFont: string
     rightuiDemoTime: number
     rightuiRunDemo: action
   state started = -10000
@@ -24,20 +25,20 @@ component Demo
   action toggle
     chosenOpen = some(not open)
   view
-    column gap=16 min-width=0 width="100%" max-width="24rem" min-height=288 padding="24px 0px" font-size="0.875rem"
+    column gap="ui.space-16" min-width=0 width="100%" max-width="24rem" min-height=288 padding="ui.space-24 ui.space-0" font-size="ui.text-sm"
       MessageFrame(id="ai-reasoning-user", align="end")
         MessageContent(id="ai-reasoning-question", align="end")
           BubbleFrame(id="ai-reasoning-bubble", align="end", variant="muted")
-            text "Why is the checkout deploy so slow?"
+            text "Why is the checkout deploy so slow?" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       MessageFrame(id="ai-reasoning-assistant", align="start")
         MessageContent(id="ai-reasoning-content", align="start")
-          column gap=16
+          column gap="ui.space-16"
             TraceFrame()
               TraceDisclosure(id="ai-reasoning-0", title=(running ? "Thinking" : "Thought for 5s"), icon="none", status=(running ? "running" : ""), open=open, reduced=reduced, toggle=toggle)
-                text (running ? reasoning.slice(0, floor(elapsed / 5000 * reasoning.length)) : reasoning) testId="ai-reasoning-text" white-space="pre-wrap" line-height=1.625
+                text (running ? reasoning.slice(0, floor(elapsed / 5000 * reasoning.length)) : reasoning) testId="ai-reasoning-text" white-space="pre-wrap" line-height="ui.leading-relaxed" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             if elapsed >= 5400
-              text (busy ? answer.slice(0, floor((elapsed - 5400) / 2600 * answer.length)) : answer) testId="ai-reasoning-answer" line-height=1.625
+              text (busy ? answer.slice(0, floor((elapsed - 5400) / 2600 * answer.length)) : answer) testId="ai-reasoning-answer" line-height="ui.leading-relaxed" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if not busy
         row margin-top="auto"
           ButtonContent(id="ai-reasoning-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
-            text "Replay"
+            text "Replay" font-family=uiFontFamily(uiFont) data-rightui-font="body"

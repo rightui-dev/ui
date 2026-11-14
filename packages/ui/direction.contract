@@ -4,5 +4,5 @@ component Direction
     direction: string
   slot
   view
-    column id=id testId=id direction=(direction == "rtl" ? "rtl" : "ltr") gap=12 min-width=0
+    column id=id testId=id direction=(direction == "rtl" ? "rtl" : "ltr") gap="ui.space-12" min-width="0px"
       children

@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 component Carousel
   props
@@ -5,6 +6,8 @@ component Carousel
     slides: string[]
     loop: bool
     reduced: bool
+  inject
+    uiFont: string
   state index = 0
   state pointer = -1
   state start = 0
@@ -42,29 +45,29 @@ component Carousel
       if not swiped and max(e.clientX - start, start - e.clientX) > 40
         move(e.clientX < start ? 1 : -1)
   view
-    column id=id testId=id role="region" aria-label="Featured slides" tabindex=0 key=keys gap=16 min-width=0
+    column id=id testId=id role="region" aria-label="Featured slides" tabindex=0 key=keys gap="ui.space-16" min-width="0px"
       :focus-visible
-        box-shadow="0 0 0 3px ui.ring"
-      view overflow="hidden" min-width=0 border="1px solid ui.border" border-radius="ui.radius-control" touch-action="pan-y" pointerdown=begin pointerup=end pan=drag user-select="none"
+        box-shadow="ui.shadow-focus"
+      view overflow="hidden" min-width="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" touch-action="pan-y" pointerdown=begin pointerup=end pan=drag user-select="none"
         if total == 0
-          text "No slides." padding=48 text-align="center" color="ui.muted-foreground"
-        view display="grid" grid-template-columns="minmax(0, 1fr)" width="100%" min-width=0
+          text "No slides." padding="ui.space-48" text-align="center" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        view display="grid" grid-template-columns="minmax(0, 1fr)" width="100%" min-width="0px"
           for slide, i in slides key=i
             column testId=(id + "-slide-" + i.toString()) role="group" aria-label=((i + 1).toString() + " of " + total.toString()) aria-hidden=(i != currentIndex)
-              grid-column="1" grid-row="1" width="100%" min-width=0 box-sizing="border-box" min-height="13.75rem" padding="2rem"
-              translate=(((i - currentIndex) * 100).toString() + "% 0px") transition=(reduced ? "none" : "translate 220ms cubic-bezier(0.22, 1, 0.36, 1)") align-items="center" justify-content="center" gap=12 background-color="transparent" color="ui.foreground"
-              text (i + 1).toString() font-size="3rem" font-weight=600
-              text slide font-size="1rem" text-align="center"
-      row justify-content="space-between" align-items="center" gap=12 flex-wrap="wrap"
-        button id=(id + "-previous") testId=(id + "-previous") class=Control press=move(-1) disabled=(total == 0 or (not loop and currentIndex == 0)) aria-label="Previous slide" width=36 height=36 min-height=36 padding=0 border="1px solid ui.border" border-radius="ui.radius-full" background-color="ui.surface" color="ui.foreground"
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 aria-hidden=true
+              grid-column="1" grid-row="1" width="100%" min-width="0px" box-sizing="border-box" min-height="13.75rem" padding="ui.space-32"
+              translate=(((i - currentIndex) * 100).toString() + "% 0px") transition=(reduced ? "none" : "translate ui.duration-normal ui.easing") align-items="center" justify-content="center" gap="ui.space-12" background-color="transparent" color="ui.foreground"
+              text (i + 1).toString() font-size="ui.text-display" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text slide font-size="ui.text-base" text-align="center" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      row justify-content="space-between" align-items="center" gap="ui.space-12" flex-wrap="wrap"
+        button id=(id + "-previous") testId=(id + "-previous") class=Control press=move(-1) disabled=(total == 0 or (not loop and currentIndex == 0)) aria-label="Previous slide" width="ui.space-36" height="ui.space-36" min-height="ui.space-36" padding="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-full" background-color="ui.surface" color="ui.foreground"
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.stroke-standard" aria-hidden=true
             path d="M19 12H5m7-7-7 7 7 7"
-        row gap=8 align-items="center" flex-wrap="wrap" flex="1 1 7rem" justify-content="center"
+        row gap="ui.space-8" align-items="center" flex-wrap="wrap" flex="1 1 7rem" justify-content="center"
           for slide, i in slides key=i
             button class=Control id=(id + "-dot-" + i.toString()) testId=(id + "-dot-" + i.toString()) press=choose(i) aria-label=("Go to slide " + (i + 1).toString()) aria-pressed=(currentIndex == i)
-              padding=0 width=24 height=24 min-height=24 border="0" background-color="transparent" display="flex" align-items="center" justify-content="center"
-              view width=8 height=8 border-radius="ui.radius-full" background-color=(currentIndex == i ? "ui.primary" : "ui.border")
-        button id=(id + "-next") testId=(id + "-next") class=Control press=move(1) disabled=(total == 0 or (not loop and currentIndex >= total - 1)) aria-label="Next slide" width=36 height=36 min-height=36 padding=0 border="1px solid ui.border" border-radius="ui.radius-full" background-color="ui.surface" color="ui.foreground"
-          svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 aria-hidden=true
+              padding="0px" width="ui.space-24" height="ui.space-24" min-height="ui.space-24" border="0" background-color="transparent" display="flex" align-items="center" justify-content="center"
+              view width="ui.space-8" height="ui.space-8" border-radius="ui.radius-full" background-color=(currentIndex == i ? "ui.primary" : "ui.border")
+        button id=(id + "-next") testId=(id + "-next") class=Control press=move(1) disabled=(total == 0 or (not loop and currentIndex >= total - 1)) aria-label="Next slide" width="ui.space-36" height="ui.space-36" min-height="ui.space-36" padding="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-full" background-color="ui.surface" color="ui.foreground"
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.stroke-standard" aria-hidden=true
             path d="M5 12h14m-7-7 7 7-7 7"
-      text (total == 0 ? "0 slides" : "Slide " + (currentIndex + 1).toString() + " of " + total.toString()) testId=(id + "-position") aria-live="polite" font-size="0.75rem" color="ui.muted-foreground" text-align="center"
+      text (total == 0 ? "0 slides" : "Slide " + (currentIndex + 1).toString() + " of " + total.toString()) testId=(id + "-position") aria-live="polite" font-size="ui.text-xs" color="ui.muted-foreground" text-align="center" font-family=uiFontFamily(uiFont) data-rightui-font="body"

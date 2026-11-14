@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 component Tabs
   props
     id: string
@@ -50,11 +51,18 @@ component TabStrip
     compact: bool
     disabledIndices: number[]
     direction: string
+  inject
+    uiFont: string
   state markerX = 0
   state markerY = 0
   state markerWidth = 0
   state markerHeight = 0
   state ready = false
+  state hairline = 1
+  state lineThickness = 2
+  action measureStroke(w: number, h: number)
+    hairline = w
+    lineThickness = h
   derive valid = selected >= 0 and selected < labels.length
   derive enabled = range(labels.length).filter(i => not disabledIndices.includes(i))
   derive measurementKey = selected.toString() + "|" + labels.map(v => v.length.toString() + ":" + v).join("") + "|" + counts.map(v => v.length.toString() + ":" + v).join("") + "|" + variant + "|" + vertical.toString() + "|" + compact.toString() + "|" + direction
@@ -89,38 +97,39 @@ component TabStrip
         case none
           ready = false
   view
-    scroll id=(id + "-viewport") testId=(id + "-viewport") max-width="calc(100% + 8px)" min-width=0 align-self="flex-start" overflow-x="auto" overflow-y="hidden" padding=4 margin=-4 box-sizing="border-box" -webkit-font-smoothing="antialiased"
-      view id=id testId=id resize=measure position="relative" display="flex" flex-direction=(vertical ? "column" : "row") flex-wrap="nowrap" role="tablist" aria-label=label aria-orientation=(vertical ? "vertical" : "horizontal") direction=direction appearance="none" padding=3 gap=(variant == "line" ? 4 : 0)
-        background-color=(variant == "line" ? "transparent" : "ui.muted") border="0" border-radius=(variant == "line" ? "0px" : "ui.radius-control") width="auto" min-width=0 align-items=(vertical ? "stretch" : "center") height=(vertical ? "auto" : compact ? "2rem" : "2.25rem") box-sizing="border-box"
+    scroll id=(id + "-viewport") testId=(id + "-viewport") max-width="calc(100% + ui.space-8)" min-width="0px" align-self="flex-start" overflow-x="auto" overflow-y="hidden" padding="ui.space-4" margin="ui.space-negative-4" box-sizing="border-box" -webkit-font-smoothing="antialiased"
+      view id=id testId=id resize=measure position="relative" display="flex" flex-direction=(vertical ? "column" : "row") flex-wrap="nowrap" role="tablist" aria-label=label aria-orientation=(vertical ? "vertical" : "horizontal") direction=direction appearance="none" padding="ui.space-3" gap=(variant == "line" ? "ui.space-4" : "0px")
+        background-color=(variant == "line" ? "transparent" : "ui.muted") border="0" border-radius=(variant == "line" ? "0px" : "ui.radius-control") width="auto" min-width="0px" align-items=(vertical ? "stretch" : "center") height=(vertical ? "auto" : compact ? "ui.space-32" : "ui.space-36") box-sizing="border-box"
+        view position="absolute" width="ui.border-width" height="ui.border-strong-width" opacity=0 aria-hidden=true pointer-events="none" resize=measureStroke
         if ready and valid
           view id=(id + "-indicator") testId=(id + "-indicator") aria-hidden=true pointer-events="none"
-            position="absolute" left=(variant == "line" ? vertical ? markerX + markerWidth + 1 : markerX + 1 : markerX) top=(variant == "line" ? vertical ? markerY + 1 : markerY + markerHeight + 2 : markerY)
-            width=(variant == "line" ? vertical ? 2 : max(0, markerWidth - 2) : markerWidth) height=(variant == "line" ? vertical ? max(0, markerHeight - 2) : 2 : markerHeight)
-            border-radius=(variant == "line" ? "0px" : "ui.radius-item") background-color=(variant == "line" ? "ui.foreground" : "ui.tab-active") border=(variant == "line" ? "0" : "1px solid ui.tab-active-border") box-sizing="border-box"
-            box-shadow=(variant == "line" ? "none" : "0 1px 3px 0 ui.shadow-sm, 0 1px 2px -1px ui.shadow-sm")
-            -exact-layout-transition=(reduced ? "none" : "220ms cubic-bezier(0.2, 0.8, 0.2, 1)")
+            position="absolute" left=(variant == "line" ? vertical ? markerX + markerWidth + hairline : markerX + hairline : markerX) top=(variant == "line" ? vertical ? markerY + hairline : markerY + markerHeight + lineThickness : markerY)
+            width=(variant == "line" ? vertical ? "ui.border-strong-width" : max(0, markerWidth - 2 * hairline) : markerWidth) height=(variant == "line" ? vertical ? max(0, markerHeight - 2 * hairline) : "ui.border-strong-width" : markerHeight)
+            border-radius=(variant == "line" ? "0px" : "ui.radius-item") background-color=(variant == "line" ? "ui.foreground" : "ui.tab-active") border-width=(variant == "line" ? "0px" : "ui.border-width") border-style="solid" border-color="ui.tab-active-border" box-sizing="border-box"
+            box-shadow=(variant == "line" ? "none" : "ui.shadow-control")
+            -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing")
         for caption, i in labels key=caption
           button id=(id + "-" + i.toString()) testId=(id + "-" + i.toString()) appearance="none" disabled=disabledIndices.includes(i)
             role="tab" aria-selected=(selected == i) aria-controls=(id + "-panel")
             tabindex=(not disabledIndices.includes(i) and (selected == i or not valid and enabled.indexOf(i) == 0) ? 0 : -1) key=keys press=pick(i)
-            position="relative" flex="0 0 auto" box-sizing="border-box" display="flex" align-items="center" justify-content=(vertical ? "flex-start" : "center") gap="0.375rem"
-            min-width="auto" width="auto" height=(vertical ? compact ? "calc(1.5rem + 2px)" : "calc(1.75rem + 2px)" : compact ? "calc(2rem - 7px)" : "calc(2.25rem - 7px)") min-height=0
-            border="1px solid transparent" border-radius="ui.radius-item" padding=(compact ? "0.125rem 0.375rem" : "0.25rem 0.5rem") white-space="nowrap"
+            position="relative" flex="0 0 auto" box-sizing="border-box" display="flex" align-items="center" justify-content=(vertical ? "flex-start" : "center") gap="ui.space-6"
+            min-width="auto" width="auto" height=(vertical ? compact ? "ui.tabs-height-vertical-compact" : "ui.tabs-height-vertical-default" : compact ? "ui.tabs-height-horizontal-compact" : "ui.tabs-height-horizontal-default") min-height="0px"
+            border-width="ui.border-width" border-style="solid" border-color="transparent" border-radius="ui.radius-item" padding=(compact ? "ui.space-2 ui.space-6" : "ui.space-4 ui.space-8") white-space="nowrap"
             background-color=(not ready and selected == i and variant != "line" ? "ui.tab-active" : "transparent") cursor="pointer" pointer-events=(disabledIndices.includes(i) ? "none" : "auto")
-            color=(selected == i ? "ui.foreground" : "ui.tab-inactive") font-size="0.875rem" line-height="1.25rem" font-weight=500
-            transition=(reduced ? "none" : "color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out")
+            color=(selected == i ? "ui.foreground" : "ui.tab-inactive") font-size="ui.text-sm" line-height="ui.leading-control" font-weight="ui.weight-medium"
+            transition=(reduced ? "none" : "color ui.duration-fast ui.easing, border-color ui.duration-fast ui.easing, box-shadow ui.duration-fast ui.easing")
             :focus-visible
               border-color="ui.focus"
-              box-shadow="0 0 0 1px ui.focus, 0 0 0 3px ui.ring"
+              box-shadow="ui.shadow-focus"
             :hover
               color="ui.foreground"
             :disabled
-              opacity=0.5
-            text caption white-space="nowrap"
+              opacity="ui.opacity-disabled"
+            text caption white-space="nowrap" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             match counts.at(i)
               case some(count)
                 if count != ""
-                  text count display="flex" align-items="center" justify-content="center" width="1.25rem" min-width="1.25rem" height="1.25rem" box-sizing="border-box" padding="0 4px" border="1px solid transparent" border-radius="ui.radius-full" background-color="ui.tab-count" color="ui.foreground" font-size="0.75rem" line-height=1.333333 font-weight=500
+                  text count display="flex" align-items="center" justify-content="center" width="ui.space-20" min-width="ui.space-20" height="ui.space-20" box-sizing="border-box" padding="0px ui.space-4" border-width="ui.border-width" border-style="solid" border-color="transparent" border-radius="ui.radius-full" background-color="ui.tab-count" color="ui.foreground" font-size="ui.text-xs" line-height="ui.leading-heading" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               case none
                 view display="none"
         for revision in [measurementKey] key=revision

@@ -1,8 +1,8 @@
-# rightui Demo
+# RightUI
 
 A native Exact showcase using the actual rightui Contract components. It includes 66 component examples, 21 AI patterns, 27 blocks and 10 charts.
 
-The native targets are **macOS and iOS**; rightui also targets the web through the sibling documentation site. Windows, Android and Linux are outside the current support scope. macOS has been built and tested locally. iOS validation is incomplete; no native iOS validation is claimed yet.
+The native targets are **macOS and iOS**; rightui also targets the web through the sibling documentation site. Windows, Android and Linux are outside the current support scope. macOS has been built and tested locally. iOS archive packaging has been checked; device launch and interaction validation remain incomplete.
 
 From the components repository root:
 

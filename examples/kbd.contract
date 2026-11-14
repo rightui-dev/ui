@@ -1,23 +1,25 @@
-use Kbd, ButtonContent from "@rightui/ui"
+use uiFontFamily, Kbd, ButtonContent from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state commandStatus = ""
   action command
     commandStatus = "Command selected"
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Kbd(label="⌘")
-      text "Shortcut group" font-size="0.875rem" font-weight=600
-      row gap=4
+      text "Shortcut group" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      row gap="ui.space-4"
         Kbd(label="⌘")
         Kbd(label="Shift")
         Kbd(label="P")
-      text "Button shortcut" font-size="0.875rem" font-weight=600
+      text "Button shortcut" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       ButtonContent(id="variation-kbd-button", label="Open command", variant="outline", size="default", disabled=false, press=command)
-        text "Command"
+        text "Command" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         Kbd(label="⌘K")
-      text commandStatus role="status"
+      text commandStatus role="status" font-family=uiFontFamily(uiFont) data-rightui-font="body"

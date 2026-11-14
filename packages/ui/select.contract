@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use uiPopupIn, uiPopupOut from "./popup-motion.contract"
 use Field, Pressable from "./styles.contract"
 component Select
@@ -9,6 +10,8 @@ component Select
     disabled: bool
     reduced: bool
     change: action
+  inject
+    uiFont: string
   state expanded = false
   state openEpoch = 0
   state active = 0
@@ -73,34 +76,34 @@ component Select
           case none
             active = active
   view
-    column gap=8 min-width=0
-      text label id=(id + "-label") font-size="0.875rem" font-weight=500 color="ui.foreground"
+    column gap="ui.space-8" min-width="0px"
+      text label id=(id + "-label") font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       button id=id testId=id class=Field disabled=disabled press=open key=keys
         role="combobox" aria-expanded=expanded aria-controls=(id + "-list") aria-haspopup="listbox" aria-labelledby=(id + "-label")
-        display="flex" justify-content="space-between" align-items="center" gap=8
-        text value flex=1 min-width=0 text-align="left"
-        svg width=16 height=16 flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=2 aria-hidden=true
+        display="flex" justify-content="space-between" align-items="center" gap="ui.space-8"
+        text value flex=1 min-width="0px" text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        svg width="ui.space-16" height="ui.space-16" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" aria-hidden=true
           path d="m6 9 6 6 6-6"
       if expanded
         for epoch in [openEpoch] key=epoch
           scroll id=(id + "-list") testId=(id + "-list") role="listbox" aria-label=label
             popover="auto" toggle=toggled(epoch) tabindex=-1 key=keys
             position-area="bottom" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
-            width=width max-width="calc(100vw - 32px)" max-height="min(24rem, 60vh)" box-sizing="border-box" margin=4 padding=4
-            border="1px solid ui.border" border-radius="ui.radius-menu" background-color="ui.surface" box-shadow="0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a"
-            animation=(reduced ? "none" : "uiPopupIn 150ms ease-out both")
-            -exact-exit-animation=(reduced ? "none" : "uiPopupOut 100ms ease-in both")
-            column gap=0
+            width=width max-width="calc(100vw - ui.space-32)" max-height="min(24rem, 60vh)" box-sizing="border-box" margin="ui.space-4" padding="ui.space-4"
+            border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" box-shadow="ui.shadow-menu"
+            animation=(reduced ? "none" : "uiPopupIn ui.duration-fast ui.easing both")
+            -exact-exit-animation=(reduced ? "none" : "uiPopupOut ui.duration-fast ui.easing both")
+            column gap="0px"
               for option, i in options key=option
                 button id=(id + "-option-" + i.toString()) testId=(id + "-option-" + i.toString())
                   appearance="none" role="option" aria-selected=(value == option) tabindex=(active == i ? 0 : -1)
                   press=pick(i) class=Pressable
                   background-color=(active == i ? "ui.muted" : "ui.surface")
-                  color="ui.foreground" border="0" border-radius="ui.radius-item" min-height=32 padding="6px 8px" font-weight=400
+                  color="ui.foreground" border="0" border-radius="ui.radius-item" min-height="ui.space-32" padding="ui.space-6 ui.space-8" font-weight="ui.weight-regular"
                   :focus-visible
-                    box-shadow="0 0 0 2px ui.ring"
-                  row gap=8 align-items="center"
-                    text option flex=1 min-width=0 font-size="0.875rem" text-align="left"
+                    box-shadow="ui.shadow-focus"
+                  row gap="ui.space-8" align-items="center"
+                    text option flex=1 min-width="0px" font-size="ui.text-sm" text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                     if value == option
-                      svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 aria-hidden=true
+                      svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.stroke-standard" aria-hidden=true
                         path d="m5 12 4 4L19 6"

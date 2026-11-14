@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use uiPopupIn, uiPopupOut from "./popup-motion.contract"
 use uiReveal, uiPopover from "./motion.contract"
 use Control from "./styles.contract"
@@ -10,6 +11,8 @@ component Accordion
     expanded: number
     reduced: bool
     change: action
+  inject
+    uiFont: string
   state hovered = -1
   action setHover(i: number, inside: bool)
     hovered = inside ? i : -1
@@ -26,21 +29,21 @@ component Accordion
   view
     column id=id testId=id
       for title, i in titles key=title
-        column border-bottom=(i == titles.length - 1 ? "none" : "1px solid ui.border") min-width=0
+        column border-bottom-width=(i == titles.length - 1 ? "0px" : "ui.border-width") border-bottom-style=(i == titles.length - 1 ? "solid" : "solid") border-bottom-color=(i == titles.length - 1 ? "transparent" : "ui.border") min-width="0px"
           button id=(id + "-trigger-" + i.toString()) testId=(id + "-trigger-" + i.toString()) class=Control
             aria-expanded=(expanded == i) aria-controls=(id + "-panel-" + i.toString()) press=toggle(i) key=keys(i) hover=setHover(i)
-            display="flex" align-items="flex-start" justify-content="space-between" gap=16 padding=16 border="0" background-color="transparent" color="ui.foreground"
-            text title flex=1 min-width=0 text-align="left" text-decoration=(hovered == i ? "underline" : "none") font-size="0.875rem" font-weight=500
-            svg width=16 height=16 margin-top=2 flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width=2 rotate=(expanded == i ? "180deg" : "0deg") transition=(reduced ? "none" : "rotate 200ms ease-out") aria-hidden=true
+            display="flex" align-items="flex-start" justify-content="space-between" gap="ui.space-16" padding="ui.space-16" border="0" background-color="transparent" color="ui.foreground"
+            text title flex=1 min-width="0px" text-align="left" text-decoration=(hovered == i ? "underline" : "none") font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            svg width="ui.space-16" height="ui.space-16" margin-top="ui.space-2" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" rotate=(expanded == i ? "180deg" : "0deg") transition=(reduced ? "none" : "rotate ui.duration-normal ui.easing") aria-hidden=true
               path d="m6 9 6 6 6-6"
-          column id=(id + "-panel-" + i.toString()) testId=(expanded == i ? id + "-panel-" + i.toString() : "") role="region" aria-labelledby=(id + "-trigger-" + i.toString()) aria-hidden=(expanded != i) inert=(expanded != i) height=(expanded == i ? "auto" : "0px") min-height=0 overflow="hidden"
-            -exact-layout-transition=(reduced ? "none" : "200ms ease-out")
-            column padding="0px 16px 16px" min-width=0
+          column id=(id + "-panel-" + i.toString()) testId=(expanded == i ? id + "-panel-" + i.toString() : "") role="region" aria-labelledby=(id + "-trigger-" + i.toString()) aria-hidden=(expanded != i) inert=(expanded != i) height=(expanded == i ? "auto" : "0px") min-height="0px" overflow="hidden"
+            -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing")
+            column padding="0px ui.space-16 ui.space-16" min-width="0px"
               match descriptions.at(i)
                 case some(description)
-                  text description font-size="0.875rem" line-height=1.5 color="ui.foreground"
+                  text description font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 case none
-                  text "" font-size="0.875rem"
+                  text "" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component Collapsible
   props
@@ -49,17 +52,46 @@ component Collapsible
     open: bool
     reduced: bool
     change: action
+  inject
+    uiFont: string
   slot
   action toggle
     change(not open)
   view
-    column gap=0 min-width=0
+    column gap="0px" min-width="0px"
       DisclosureButton(id=id, label=label, variant="outline", controls=id + "-content", expanded=open, icon=false, press=toggle)
-        text label
-      column id=(id + "-content") testId=(open ? id + "-content" : "") height=(open ? "auto" : "0px") min-height=0 overflow="hidden" aria-hidden=(not open) inert=(not open)
-        -exact-layout-transition=(reduced ? "none" : "200ms ease-out")
-        column padding-top=12 gap=8 min-width=0
+        text label font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      column id=(id + "-content") testId=(open ? id + "-content" : "") height=(open ? "auto" : "0px") min-height="0px" overflow="hidden" aria-hidden=(not open) inert=(not open)
+        -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing")
+        column padding-top="ui.space-12" gap="ui.space-8" min-width="0px"
           children
+
+component PopoverFrame
+  props
+    id: string
+    source: string
+    label: string
+    align: string
+    reduced: bool
+    dismiss: action
+  slot
+  action changed(e: ToggleEvent)
+    if e.newState == "closed"
+      dismiss()
+  action keys(k: string, e: KeyboardEvent)
+    if k == "Escape" and not e.isComposing
+      preventDefault()
+      stopPropagation()
+      dismiss()
+      focus(source)
+  view
+    column id=id testId=id role="dialog" aria-label=label tabindex=-1 popover="auto" toggle=changed keycapture=keys
+      position-area=(align == "end" ? "bottom span-left" : "bottom") position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
+      animation=(reduced ? "none" : "uiPopupIn ui.duration-fast ui.easing both")
+      -exact-exit-animation=(reduced ? "none" : "uiPopupOut ui.duration-fast ui.easing both")
+      width="18rem" max-width="calc(100vw - ui.space-32)" max-height="min(30rem, 70vh)" min-width="0px" overflow="auto"
+      box-sizing="border-box" margin="ui.space-4" padding="ui.space-16" gap="ui.space-16" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-popover" background-color="ui.surface" color="ui.foreground" box-shadow="ui.shadow-menu"
+      children
 
 component Popover
   props
@@ -67,6 +99,8 @@ component Popover
     label: string
     focusId: string
     reduced: bool
+  inject
+    uiFont: string
   slot
   state expanded = false
   state openEpoch = 0
@@ -78,26 +112,15 @@ component Popover
       expanded = true
       showPopover(id + "-content", source=id)
       focus(focusId)
-  action changed(epoch: number, e: ToggleEvent)
+  action dismissed(epoch: number)
     if epoch == openEpoch
-      expanded = e.newState == "open"
-
-  action keys(k: string)
-    if k == "Escape"
-      preventDefault()
       expanded = false
-      focus(id)
   view
     column align-items="flex-start"
-      button id=id testId=id class=Control aria-expanded=expanded aria-controls=(id + "-content") press=toggle
-        padding="8px 12px" border="1px solid ui.border" background-color="ui.surface" color="ui.foreground"
-        text label
+      button id=id testId=id class=Control aria-haspopup="dialog" aria-expanded=expanded aria-controls=(id + "-content") press=toggle
+        padding="ui.space-8 ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground"
+        text label font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if expanded
         for epoch in [openEpoch] key=epoch
-          column id=(id + "-content") testId=(id + "-content") popover="auto" toggle=changed(epoch) keycapture=keys
-            position-area="bottom" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
-            animation=(reduced ? "none" : "uiPopupIn 150ms ease-out both")
-            -exact-exit-animation=(reduced ? "none" : "uiPopupOut 100ms ease-in both")
-            width="18rem" max-width="calc(100vw - 32px)" max-height="min(30rem, 70vh)" overflow="auto"
-            box-sizing="border-box" margin=4 padding=16 gap=16 border="1px solid ui.border" border-radius="ui.radius-popover" background-color="ui.surface" color="ui.foreground" box-shadow="0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a"
+          PopoverFrame(id=id + "-content", source=id, label=label, align="center", reduced=reduced, dismiss=dismissed(epoch))
             children

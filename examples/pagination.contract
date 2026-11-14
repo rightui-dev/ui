@@ -1,9 +1,11 @@
-use Pagination from "@rightui/ui"
+use uiFontFamily, Pagination from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state page = 1
   action changePage(v: number)
@@ -12,7 +14,7 @@ component Demo
   action changeLastPage(v: number)
     lastPage = v
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       Pagination(id="catalog-pages", page=page, total=6, change=changePage)
-      text "Last page boundary" font-size="0.875rem" font-weight=600
+      text "Last page boundary" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Pagination(id="variation-pagination-last", page=lastPage, total=6, change=changeLastPage)

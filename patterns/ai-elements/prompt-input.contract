@@ -1,14 +1,16 @@
-use Composer from "../../packages/ui/ai-controls.contract"
+use uiFontFamily, Composer from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   state result = "Nothing sent"
   action sent(value: string)
     result = "Local submission: " + value
   view
-    column width="100%" max-width="32rem" padding="24px 0" gap=8
+    column width="100%" max-width="32rem" padding="ui.space-24 ui.space-0" gap="ui.space-8"
       Composer(id="ai-prompt-input", menus=true, reduced=reduced, sent=sent)
       if result != "Nothing sent"
-        text result testId="ai-prompt-input-result" role="status" font-size="0.875rem"
+        text result testId="ai-prompt-input-result" role="status" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"

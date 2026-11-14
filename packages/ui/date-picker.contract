@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 use Calendar from "./calendar.contract"
 use Control from "./styles.contract"
 component DatePicker
@@ -8,6 +9,8 @@ component DatePicker
     initialMonth: number
     disabled: bool
     change: action
+  inject
+    uiFont: string
   state opened = false
   state year = initialYear
   state month = initialMonth
@@ -42,14 +45,14 @@ component DatePicker
       hidePopover(id + "-popup")
       focus(id)
   view
-    column min-width=0
+    column min-width="0px"
       button id=id testId=id class=Control press=toggle key=triggerKeys disabled=disabled aria-expanded=opened aria-controls=(id + "-popup") aria-haspopup="dialog"
-        display="flex" align-items="center" gap=8 padding="8px 12px" width="15rem" max-width="100%" border="1px solid ui.border" background-color="ui.surface" color=(value == "" ? "ui.muted-foreground" : "ui.foreground")
-        svg width=16 height=16 viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width=2 aria-hidden=true
+        display="flex" align-items="center" gap="ui.space-8" padding="ui.space-8 ui.space-12" width="15rem" max-width="100%" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color=(value == "" ? "ui.muted-foreground" : "ui.foreground")
+        svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.stroke-standard" aria-hidden=true
           rect x=3 y=5 width=18 height=16 rx=2
           path d="M16 3v4M8 3v4M3 11h18"
-        text (value == "" ? "Pick a date" : value)
+        text (value == "" ? "Pick a date" : value) font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if opened
         column id=(id + "-popup") testId=(id + "-popup") popover="auto" toggle=toggled key=keys role="dialog" aria-label="Choose a date" tabindex=-1
-          position-area="bottom" position-try-fallbacks="flip-block, flip-inline" max-width="calc(100vw - 32px)" max-height="calc(100vh - 32px)" overflow="auto" margin=4 padding=0 border="1px solid ui.border" border-radius="ui.radius-popover" background-color="ui.surface"
+          position-area="bottom" position-try-fallbacks="flip-block, flip-inline" max-width="calc(100vw - ui.space-32)" max-height="calc(100vh - ui.space-32)" overflow="auto" margin="ui.space-4" padding="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-popover" background-color="ui.surface"
           Calendar(id=id + "-calendar", year=year, month=month, changeMonth=changeMonth, value=value, end="", mode="single", disabled=disabled, change=selected)

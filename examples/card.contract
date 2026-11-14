@@ -1,9 +1,11 @@
-use Button, Checkbox, CardFrame, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter, FieldSet, FieldLegend, FieldGroup, FieldFrame, FieldContent, FieldLabel, FieldDescription, FieldError, FieldSeparator from "@rightui/ui"
+use uiFontFamily, InputStyle, Button, Checkbox, CardFrame, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter, FieldSet, FieldLegend, FieldGroup, FieldFrame, FieldContent, FieldLabel, FieldDescription, FieldError, FieldSeparator from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state name = ""
   state email = ""
@@ -28,7 +30,7 @@ component Demo
     submitted = false
     saved = false
   view
-    column gap=16 min-width=0 max-width="100%"
+    column gap="ui.space-16" min-width=0 max-width="100%"
       CardFrame(id="composition-card")
         CardHeader(id="composition-card-header")
           CardTitle(id="composition-title", title="Profile overview", level=2)
@@ -42,7 +44,7 @@ component Demo
             FieldGroup(id="composition-group", nested=false)
               FieldFrame(id="composition-name-field", labelId="composition-name-label", descriptionId="composition-name-help", invalid=(submitted and name.trim() == ""), orientation="vertical")
                 FieldLabel(id="composition-name-label", label="Name", controlId="composition-name", disabled=disabled)
-                input id="composition-name" testId="composition-name" padding=10 border="1px solid ui.border" border-radius=6 background-color="ui.background" color="ui.foreground" value=name input=editName submit=validate disabled=disabled aria-labelledby="composition-name-label" aria-describedby="composition-name-help" aria-required=true aria-invalid=(submitted and name.trim() == "")
+                input id="composition-name" testId="composition-name" class=InputStyle value=name input=editName submit=validate disabled=disabled aria-labelledby="composition-name-label" aria-describedby="composition-name-help" aria-required=true aria-invalid=(submitted and name.trim() == "") font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 FieldDescription(id="composition-name-help", description="The name displayed on your profile.")
                 FieldError(id="composition-name-error", messages=(submitted and name.trim() == "" ? ["Enter your name."] : []))
               FieldSeparator(id="composition-separator", label="Contact")
@@ -50,14 +52,14 @@ component Demo
                 FieldContent(id="composition-email-content")
                   FieldLabel(id="composition-email-label", label="E-mail", controlId="composition-email", disabled=disabled)
                   FieldDescription(id="composition-email-help", description="Use an address containing @.")
-                input id="composition-email" testId="composition-email" padding=10 border="1px solid ui.border" border-radius=6 background-color="ui.background" color="ui.foreground" type="email" value=email input=editEmail submit=validate disabled=disabled aria-labelledby="composition-email-label" aria-describedby="composition-email-help composition-email-error" aria-required=true aria-invalid=(errors.length > 0)
+                input id="composition-email" testId="composition-email" class=InputStyle type="email" value=email input=editEmail submit=validate disabled=disabled aria-labelledby="composition-email-label" aria-describedby="composition-email-help composition-email-error" aria-required=true aria-invalid=(errors.length > 0) font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 FieldError(id="composition-email-error", messages=errors)
         CardFooter(id="composition-footer", divided=true)
-          column gap=12 min-width=0
+          column gap="ui.space-12" min-width=0
             Checkbox(id="composition-disable", label="Disable fields", checked=disabled, disabled=false, change=disable)
             Button(id="composition-save", label="Valider localement", variant="primary", disabled=disabled, press=validate)
-            text (saved ? "Profile validated locally." : "No information sent.") testId="composition-result" role="status" font-size="0.875rem" color="ui.muted-foreground"
-      text "Image content" font-weight=600
+            text (saved ? "Profile validated locally." : "No information sent.") testId="composition-result" role="status" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Image content" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       CardFrame(id="card-image")
         CardContent(id="card-image-content")
           image "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27640%27 height=%27360%27 viewBox=%270 0 640 360%27%3E%3Crect width=%27640%27 height=%27360%27 fill=%27%23e5e5e5%27/%3E%3Cpath d=%27M0 360 200 130 330 280 450 100 640 360%27 fill=%27%23a3a3a3%27/%3E%3Ccircle cx=%27460%27 cy=%2770%27 r=%2728%27 fill=%27%23fafafa%27/%3E%3C/svg%3E" alt="Workspace illustration" width="100%"

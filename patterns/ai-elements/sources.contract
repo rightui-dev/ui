@@ -1,12 +1,13 @@
-use BubbleFrame from "../../packages/ui/conversation-parts.contract"
-use ButtonAI as ButtonContent from "../../packages/ui/button.contract"
-use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "../../packages/ui/trace-parts.contract"
+use uiFontFamily, BubbleFrame from "@rightui/ui"
+use ButtonAI as ButtonContent from "@rightui/ui"
+use TraceFrame, TraceLine, TraceCollapsible, TraceDisclosure, TraceSource, CodeBlockContent from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
   inject
+    uiFont: string
     rightuiDemoTime: number
     rightuiRunDemo: action
   state started = -1
@@ -16,10 +17,10 @@ component Demo
     started = rightuiDemoTime
     rightuiRunDemo(6600)
   view
-    column gap=16 min-width=0 min-height=288 max-width="24rem" width="100%" padding="24px 0px"
+    column gap="ui.space-16" min-width=0 min-height=288 max-width="24rem" width="100%" padding="ui.space-24 ui.space-0"
       BubbleFrame(id="ai-sources-question", align="end", variant="muted")
-        text "How do I start an Astro project with pnpm?"
-      text "Run pnpm create astro@latest and follow the prompts. It scaffolds the project and installs the dependencies.".slice(0, started < 0 or reduced ? 119 : floor(elapsed / 20)) font-size="0.875rem" line-height=1.625
+        text "How do I start an Astro project with pnpm?" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Run pnpm create astro@latest and follow the prompts. It scaffolds the project and installs the dependencies.".slice(0, started < 0 or reduced ? 119 : floor(elapsed / 20)) font-size="ui.text-sm" line-height="ui.leading-relaxed" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if elapsed >= 2400
         TraceCollapsible(id="ai-sources-0", title="Used 3 sources", icon="globe", status="", initiallyOpen=true, reduced=reduced)
           TraceSource(title="Install Astro | docs.astro.build", href="https://docs.astro.build/en/install-and-setup/", reduced=reduced)
@@ -28,4 +29,4 @@ component Demo
       if not busy
         row margin-top="auto" align-items="flex-start"
           ButtonContent(id="ai-sources-replay", label="Replay", variant="outline", size="sm", disabled=false, press=replay)
-            text "Replay"
+            text "Replay" font-family=uiFontFamily(uiFont) data-rightui-font="body"

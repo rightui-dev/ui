@@ -1,3 +1,4 @@
+use uiFontFamily from "./typography-context.contract"
 component InputOTP
   props
     id: string
@@ -6,19 +7,29 @@ component InputOTP
     length: number
     disabled: bool
     change: action
+  inject
+    uiFont: string
+  state cellWidth = 36
+  state glyphWidth = 9
+  action measureCell(w: number, h: number)
+    cellWidth = w
+  action measureGlyph(w: number, h: number)
+    glyphWidth = w
   derive size = max(1, min(8, length))
   derive digits = value.split("").filter(c => "0123456789".includes(c)).join("").slice(0, size)
   action edit(v: string)
     change(v.split("").filter(c => "0123456789".includes(c)).join("").slice(0, size))
   view
-    column gap=8 min-width=0
-      text label id=(id + "-label") font-size="0.875rem" font-weight=500 color="ui.foreground"
-      view position="relative" align-self="flex-start" min-width=0 max-width="100%"
-        row aria-hidden=true gap=0 pointer-events="none" border-radius="ui.radius-control" overflow="hidden"
+    column gap="ui.space-8" min-width="0px"
+      text label id=(id + "-label") font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      view position="relative" align-self="flex-start" min-width="0px" max-width="100%"
+        row aria-hidden=true gap="0px" pointer-events="none" border-radius="ui.radius-control" overflow="hidden"
           for i in [0, 1, 2, 3, 4, 5, 6, 7].slice(0, size) key=i
-            view width="2.25rem" height="2.25rem" display="flex" align-items="center" justify-content="center" border="1px solid ui.border" background-color="ui.surface" color="ui.foreground" font-size="0.875rem"
-              text digits.slice(i, i + 1)
-        input id=id testId=id value=digits input=edit disabled=disabled inputmode="numeric" autocomplete="one-time-code" aria-labelledby=(id + "-label")
-          position="absolute" inset=0 width="100%" height="100%" box-sizing="border-box" appearance="none" border="0" border-radius="ui.radius-control" background-color="transparent" color="transparent" caret-color="ui.foreground" font-size="0.875rem" letter-spacing="1.6875rem" padding="0px 0.75rem"
+            view width="ui.space-36" height="ui.space-36" position="relative" resize=measureCell
+              view position="absolute" inset=0 display="flex" align-items="center" justify-content="center" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground" font-size="ui.text-sm"
+                text digits.slice(i, i + 1) font-family=uiFontFamily(uiFont) data-rightui-font="body" font-variant-numeric="tabular-nums"
+        text "0" position="absolute" left=0 top=0 opacity=0 aria-hidden=true pointer-events="none" font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-sm" font-variant-numeric="tabular-nums" resize=measureGlyph
+        input id=id testId=id value=digits input=edit disabled=disabled inputmode="numeric" autocomplete="one-time-code" aria-labelledby=(id + "-label") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          position="absolute" inset=0 width="100%" height="100%" box-sizing="border-box" appearance="none" border="0" border-radius="ui.radius-control" background-color="transparent" color="transparent" caret-color="ui.foreground" font-size="ui.text-sm" letter-spacing=max(0, cellWidth - glyphWidth) padding-top=0 padding-bottom=0 padding-left=max(0, (cellWidth - glyphWidth) / 2) padding-right=max(0, (cellWidth - glyphWidth) / 2) font-variant-numeric="tabular-nums"
           :focus-visible
-            box-shadow="0 0 0 3px ui.ring"
+            box-shadow="ui.shadow-focus"
