@@ -206,6 +206,11 @@
       "url": "https://github.com/rightui-dev/ui/blob/main/tools/fixtures/avatar/app.test.contract"
     },
     {
+      "id": "avatar-first-pointer-web",
+      "description": "Beta.5 follow-up: with idle activation held, real first-pointer clicks at 1440px and 390px activated the built app, opened the Avatar menu and focused Profile. This targeted web check does not establish native behavior.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/tools/check-avatar-first-click.browser.py"
+    },
+    {
       "id": "avatar-native-pending",
       "description": "The updated Avatar compositions have not received targeted native validation.",
       "url": "https://github.com/rightui-dev/ui/blob/main/docs/AVATAR.md"
@@ -488,7 +493,8 @@
       "platform": "web",
       "status": "checked",
       "evidence": [
-        "avatar-web"
+        "avatar-web",
+        "avatar-first-pointer-web"
       ]
     },
     {
