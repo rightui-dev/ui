@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0-beta.1",
+  "version": "0.2.0-beta.3",
   "asOf": "2026-11-14",
   "exactRevision": "53426cf02bf986a5e781abc4f953d79989c6dc05",
   "platforms": [
@@ -26,19 +26,19 @@
   ],
   "statuses": {
     "checked": {
-      "label": "✅ Partial checks",
+      "label": "\u2705 Partial checks",
       "description": "Targeted checks completed. Coverage varies by component."
     },
     "built": {
-      "label": "✅ Built only",
+      "label": "\u2705 Built only",
       "description": "Compiled successfully. Interactions have not been verified."
     },
     "blocked": {
-      "label": "⚠️ Partial checks",
+      "label": "\u26a0\ufe0f Partial checks",
       "description": "Validation incomplete for the current release."
     },
     "unsupported": {
-      "label": "❌ Not supported",
+      "label": "\u274c Not supported",
       "description": "Outside rightui support. The project targets web, iOS and macOS."
     }
   },
@@ -189,6 +189,16 @@
       "id": "mac-site-0-2",
       "description": "The same Contract website was compiled for macOS and manually checked through Home, Blocks and Dashboard, repeated Back/Forward navigation, disabled history endpoints, page titles, immersive blocks and the globe opening the equivalent website URL. The delivered Mac archive was signature-checked and its downloaded SHA-256 matched the approved artifact. This does not certify every native component.",
       "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    },
+    {
+      "id": "sheet-modal-web",
+      "description": "SheetContent passed six browser interaction tests and targeted desktop/mobile viewport, focus, background interaction and scroll-position checks. Four edges and optional close controls were covered. This is targeted web validation, not full platform certification.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md"
+    },
+    {
+      "id": "sheet-modal-native-pending",
+      "description": "The new SheetContent dialog composition has not been built or exercised on native targets.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md"
     }
   ],
   "overrides": [
@@ -433,6 +443,33 @@
       "status": "checked",
       "evidence": [
         "mac-site-0-2"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "sheet",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "sheet-modal-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "sheet",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "sheet-modal-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "sheet",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "sheet-modal-native-pending"
       ]
     }
   ]

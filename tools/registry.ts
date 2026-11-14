@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 const root = resolve(import.meta.dir, '..');
 const read = (path:string) => readFileSync(resolve(root,path),'utf8');
 export function buildRegistry() {
+  const uiExports = JSON.parse(read('packages/ui/package.json')).exports;
   const components = JSON.parse(read('metadata/components.json'));
   const aiElements = JSON.parse(read('metadata/ai-elements.json'));
   const charts = JSON.parse(read('metadata/charts.json'));
@@ -17,7 +18,7 @@ export function buildRegistry() {
       else if(path.startsWith('packages/ui/assets/') && /\.(ttf|otf|woff2?)$/.test(item.name)) {
         const bytes=readFileSync(resolve(root,path));files[path]={path,content:bytes.toString('base64'),encoding:'base64',sha256:createHash('sha256').update(bytes).digest('hex')};
       }
-      else if(item.name === 'LICENSE' || /^OFL(?:-[A-Za-z0-9]+)?\.txt$/.test(item.name) || /\.(contract|tamber|ts|rs|toml|json|md)$/.test(item.name)) {
+      else if(item.name === 'LICENSE' || /^OFL(?:-[A-Za-z0-9]+)?\.txt$/.test(item.name) || /\.(contract|tamber|ts|rs|toml|json|md|css)$/.test(item.name)) {
         const content=read(path);files[path]={path,content,sha256:createHash('sha256').update(content).digest('hex')};
       }
     }
@@ -29,9 +30,15 @@ export function buildRegistry() {
       if(found.has(path))return;
       if(!files[path])throw new Error(`Missing registry dependency: ${path}`);
       found.add(path);
+      if(path==='packages/ui/sheet.contract') { add('packages/ui/assets/sheet.css'); add('packages/ui/docs/SHEET.md'); }
       for(const m of files[path].content.matchAll(/^use .+ from "([^"]+)"/gm)) {
         if(m[1].startsWith('.'))add(relative(root,resolve(root,dirname(path),m[1])));
         else if(m[1]==='@rightui/ui')add('packages/ui/index.contract');
+        else if(m[1].startsWith('@rightui/ui/')) {
+          const target=uiExports['./'+m[1].slice('@rightui/ui/'.length)];
+          if(typeof target!=='string')throw new Error(`Unknown public UI entry: ${m[1]}`);
+          add(relative(root,resolve(root,'packages/ui',target)));
+        }
         else if(m[1].startsWith('@rightui/registry/'))add(m[1].replace('@rightui/registry/','')+'.contract');
       }
     };

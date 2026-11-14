@@ -1687,6 +1687,30 @@
       "category": "geometry"
     },
     {
+      "file": "packages/ui/sheet.contract",
+      "property": "border-style",
+      "value": "solid",
+      "category": "pattern"
+    },
+    {
+      "file": "packages/ui/sheet.contract",
+      "property": "max-height",
+      "value": "50%",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/sheet.contract",
+      "property": "max-width",
+      "value": "24rem",
+      "category": "geometry"
+    },
+    {
+      "file": "packages/ui/sheet.contract",
+      "property": "width",
+      "value": "75%",
+      "category": "geometry"
+    },
+    {
       "file": "packages/ui/sidebar.contract",
       "property": "border-style",
       "value": "solid",

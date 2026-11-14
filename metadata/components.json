@@ -682,13 +682,16 @@
   {
     "slug": "sheet",
     "title": "Sheet",
-    "description": "Sheet with accessible presentation and local state.",
-    "usage": "Import Sheet from @rightui/ui. Store its value in state and update it through the provided action callback.",
-    "keyboard": "",
-    "source": "packages/ui/overlays.contract",
+    "description": "A modal panel that opens from any edge of the window.",
+    "usage": "Import SheetContent, SheetBody and SheetFooter from @rightui/ui/sheet. Open with showModal(id) and close with close(id). For web, load assets/sheet.css from the package and declare rightui-sheet in app.json data. Keep form values in the parent state.",
+    "keyboard": "Tab and Shift+Tab stay inside the modal. Escape, the close button and the backdrop dismiss it. Focus returns to the opening control.",
+    "source": "packages/ui/sheet.contract",
+    "importFrom": "@rightui/ui/sheet",
     "example": "examples/sheet.contract",
     "exports": [
-      "Sheet"
+      "SheetContent",
+      "SheetBody",
+      "SheetFooter"
     ]
   },
   {

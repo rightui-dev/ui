@@ -4,6 +4,14 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.2.0-beta.3] - 2026-11-14
+
+- Add SheetContent, SheetBody and SheetFooter with native modal focus, four viewport-edge layouts and a scoped web stylesheet for positioning and scroll locking. Preserve the existing controlled Sheet API.
+- Export the new modal composition from the optional `@rightui/ui/sheet` entry, so existing root imports do not require additional app configuration.
+- Rebuild the Sheet demo with editable profile fields, four sides and an optional corner close control.
+- Prevent focus-driven dialog scrolling from interrupting right and bottom Sheet entrance animations, including the no-close-button example.
+- The beta.2 candidate was local only; this release includes its additions and the final animation correction.
+
 ## [0.2.0-beta.1] - 2026-11-14
 
 - Breaking: typography now requires a root `provide uiFont` binding. Use `"theme"` to retain the body family selected by the exported Tamber configuration, or choose `"sans"`, `"serif"` or `"mono"` dynamically. See `docs/MIGRATION-0.2.md`.

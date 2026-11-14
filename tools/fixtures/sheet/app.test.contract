@@ -1,0 +1,80 @@
+test "profile values persist through save and reopen"
+  size 1280x800
+  clock data
+  tap "sheet-open"
+  clock settle
+  expect tree has "sheet-name"
+  type "sheet-name" "Fabio"
+  tap "sheet-save"
+  clock settle
+  tap "outside"
+  expect text "outside-counter" == "1"
+  tap "sheet-open"
+  clock settle
+  expect text "sheet-name" == "Fabio"
+  type "sheet-name" key "Escape"
+  clock settle
+  tap "outside"
+  expect text "outside-counter" == "2"
+  expect no failures
+
+test "optional close button leaves footer dismissal available"
+  size 390x844
+  clock data
+  tap "sheet-open-no-close"
+  clock settle
+  expect tree missing "sheet-profile-close"
+  expect tree has "sheet-dismiss"
+  tap "sheet-dismiss"
+  clock settle
+  tap "outside"
+  expect text "outside-counter" == "1"
+  expect no failures
+
+test "top sheet opens and closes on mobile"
+  size 390x844
+  clock data
+  tap "sheet-open-top"
+  clock settle
+  expect tree has "sheet-top-cancel"
+  tap "sheet-top-cancel"
+  clock settle
+  tap "outside"
+  expect text "outside-counter" == "1"
+  expect no failures
+
+test "right sheet opens and closes on mobile"
+  size 390x844
+  clock data
+  tap "sheet-open-right"
+  clock settle
+  expect tree has "sheet-right-cancel"
+  tap "sheet-right-cancel"
+  clock settle
+  tap "outside"
+  expect text "outside-counter" == "1"
+  expect no failures
+
+test "bottom sheet opens and closes on mobile"
+  size 390x844
+  clock data
+  tap "sheet-open-bottom"
+  clock settle
+  expect tree has "sheet-bottom-cancel"
+  tap "sheet-bottom-cancel"
+  clock settle
+  tap "outside"
+  expect text "outside-counter" == "1"
+  expect no failures
+
+test "left sheet opens and closes on mobile"
+  size 390x844
+  clock data
+  tap "sheet-open-left"
+  clock settle
+  expect tree has "sheet-left-cancel"
+  tap "sheet-left-cancel"
+  clock settle
+  tap "outside"
+  expect text "outside-counter" == "1"
+  expect no failures

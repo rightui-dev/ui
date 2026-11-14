@@ -1,0 +1,24 @@
+{
+  "name": "RightUI Sheet Check",
+  "id": "dev.rightui.sheetcheck",
+  "host": {
+    "web": {
+      "head": [
+        {
+          "link": {
+            "rel": "stylesheet",
+            "href": "/assets/sheet.css"
+          }
+        }
+      ]
+    }
+  },
+  "data": [
+    "rightui-font",
+    "rightui-sheet"
+  ],
+  "app": {
+    "id": "dev.rightui.sheetcheck",
+    "name": "RightUI Sheet Check"
+  }
+}
