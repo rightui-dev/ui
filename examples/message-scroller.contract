@@ -1,23 +1,125 @@
-use ContentMessage, MessageScroller from "@rightui/ui"
+use uiFontFamily, ContentMessage, MessageScrollerViewport, MessageScrollerTranscriptStart, CardFrameOptions, CardHeaderOptions, CardTitle, CardDescription, CardAction, Button, ButtonControl, MessageIcon, InputGroupFrame, InputGroupAddon, Spinner from "@rightui/ui"
+
+fn nextPrompt(step: number): string = step == 0 ? "How do I keep a streamed reply in view?" : step == 1 ? "What if I scroll up to read an earlier reply?" : step == 2 ? "Can I stop the reply without losing my place?" : "How do I load older messages?"
+fn replyFor(step: number): string = step == 0 ? "Give the conversation its own bounded viewport. While you are at the bottom, new text stays in view as it arrives.\n\nIn Exact, scrollFollowEnd follows changes to the content size. The composer stays outside the scrolling area, so it never disappears while you read.\n\nTry scrolling upward while this reply is still arriving. The conversation should leave your reading position alone." : step == 1 ? "Scrolling upward means you want to read, so automatic following pauses. New text can continue arriving below without moving the part you are reading.\n\nThe arrow near the bottom lets you return to the latest reply. Once you are back at the end, following resumes.\n\nThis also works when a reply wraps onto another line or grows taller. The scroll container observes its content; it does not need a forced scroll on every character." : step == 2 ? "Yes. Stop keeps the partial response exactly where it is. Resume continues from the same character. Neither action resets the transcript or changes its scroll position.\n\nThe scroll container does not own the model or network transport. Your app supplies the messages, loading state and actions. This example uses a local timed response so you can test the behavior without a server.\n\nReset starts a fresh conversation when you choose to do so." : "Keep a stable ID for every message and prepend the older rows. Exact uses those keys to preserve the visible row when history is inserted above it.\n\nUse the history example below to test this: scroll to the middle, load earlier messages, and check that the message you were reading stays in place.\n\nFor direct navigation, scrollIntoView targets a message ID. It only changes the conversation viewport, not the surrounding documentation page."
 
 component Demo
   props
     width: number
     reduced: bool
-  derive narrow = width < 600
-  state historyLoaded = false
-  state messages: ContentMessage[] = [ContentMessage(id=0, body="Hello, the first preview is ready.", mine=false), ContentMessage(id=1, body="Thank you! Can you add the terrace?", mine=true), ContentMessage(id=2, body="Yes, here is the updated version.", mine=false)]
-  derive thread = historyLoaded ? [ContentMessage(id=-2, body="Brief received: photograph the common areas.", mine=false), ContentMessage(id=-1, body="Morning light will work.", mine=false)].concat(messages) : messages
-  action loadHistory
-    historyLoaded = true
-  action post(v: string)
-    messages = messages.concat([ContentMessage(id=messages.length, body=v, mine=true)])
+  inject
+    uiFont: string
+    rightuiDemoTime: number
+    rightuiRunDemo: action
+  state completed: ContentMessage[] = []
+  state question = ""
+  state draft = "How do I keep a streamed reply in view?"
+  state step = 0
+  state activeId = 0
+  state started = -1
+  state carried = 0
+  state more = false
+  derive answer = replyFor(step)
+  derive count = started < 0 ? carried : min(answer.length, carried + max(0, floor((rightuiDemoTime - started) / 16)))
+  derive busy = question != "" and started >= 0 and count < answer.length
+  derive paused = question != "" and started < 0 and count < answer.length
+  derive thread = question == "" ? completed : completed.concat([ContentMessage(id=activeId, body=question, mine=true), ContentMessage(id=activeId + 1, body=answer.slice(0, count), mine=false)])
+  action edit(value: string)
+    draft = value
+  action send
+    if draft.trim() != "" and not busy and not paused
+      let nextStep = question == "" ? 0 : min(3, step + 1)
+      let nextId = question == "" ? 0 : activeId + 2
+      completed = thread
+      step = nextStep
+      activeId = nextId
+      question = draft.trim()
+      draft = nextPrompt(min(3, nextStep + 1))
+      carried = 0
+      started = rightuiDemoTime
+      rightuiRunDemo(replyFor(nextStep).length * 16 + 64)
+      scrollIntoView("content-scroller", nextId + 1, block="end")
+  action stop
+    carried = count
+    started = -1
+  action resume
+    started = rightuiDemoTime
+    rightuiRunDemo((answer.length - carried) * 16 + 64)
+  action reset
+    completed = []
+    question = ""
+    step = 0
+    activeId = 0
+    carried = 0
+    started = -1
+    draft = nextPrompt(0)
   action latest
-    match thread.at(-1)
-      case some(message)
-        scrollIntoView("content-scroller", message.id, block="end")
-      case none
-        preventDefault()
+    if question != ""
+      if reduced
+        scrollIntoView("content-scroller", activeId + 1, block="end", behavior="instant")
+      else
+        scrollIntoView("content-scroller", activeId + 1, block="end", behavior="smooth")
+  action keys(k: string, e: KeyboardEvent)
+    if k == "Enter" and not e.shiftKey and not e.isComposing
+      preventDefault()
+      send()
+  action toggleMore
+    more = not more
   view
-    column gap="ui.space-16" min-width=0 max-width="100%"
-      MessageScroller(id="content-scroller", messages=thread, historyLoaded=historyLoaded, loadHistory=loadHistory, send=post, latest=latest)
+    column width="100%" max-width="24rem" align-self="center" min-width=0 gap="ui.space-16"
+      CardFrameOptions(id="scroller-chat", size="default", spacing="0px", imageTop=false, direction="inherit")
+        view padding-top="ui.space-24"
+          CardHeaderOptions(id="scroller-header", spacing="ui.space-24", divided=true)
+            CardTitle(id="scroller-title", title="New chat", level=3)
+            CardDescription(id="scroller-description", description="How can I help you today?")
+            CardAction(id="scroller-reset-action")
+              ButtonControl(id="content-scroller-reset", label="Reset conversation", variant="outline", size="icon-sm", disabled=false, pressed=none, describedBy="", press=reset)
+                MessageIcon(name="arrow.clockwise", filled=false)
+        if thread.length == 0
+          column testId="scroller-empty" height="21rem" box-sizing="border-box" padding="ui.space-24" gap="ui.space-12" align-items="center" justify-content="center" text-align="center"
+            view display="flex" align-items="center" justify-content="center" width="ui.space-40" height="ui.space-40" background-color="ui.muted" border-radius="ui.radius-control"
+              MessageIcon(name="message", filled=false)
+            text "What are we building?" font-size="ui.text-base" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text "Press send to start a conversation, then scroll while the reply arrives." font-size="ui.text-sm" line-height="ui.leading-relaxed" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        else
+          MessageScrollerViewport(id="content-scroller", messages=thread, height="21rem", busy=busy, reduced=reduced, latest=latest)
+        column padding="ui.space-16 ui.space-24 ui.space-24" gap="ui.space-8" min-width=0
+          InputGroupFrame(id="scroller-composer")
+            textarea id="content-scroller-draft" testId="content-scroller-draft" value=draft input=edit key=keys aria-label="Your message" disabled=(busy or paused) rows=2 appearance="none" border="0" outline="none" resize="none" background-color="transparent" color="ui.foreground" padding="ui.space-12" min-width=0 box-sizing="border-box" font-size="ui.text-sm" line-height="ui.leading-snug" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            InputGroupAddon(id="scroller-composer-actions")
+              row width="100%" align-items="center" justify-content="space-between" gap="ui.space-8"
+                text (busy ? "Replying…" : paused ? "Reply paused" : "Local demo") testId="scroller-status" role="status" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                if busy
+                  ButtonControl(id="content-scroller-stop", label="Stop reply", variant="primary", size="icon-sm", disabled=false, pressed=none, describedBy="", press=stop)
+                    svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="currentColor" aria-hidden=true
+                      rect x=5 y=5 width=14 height=14 rx=2
+                else if paused
+                  ButtonControl(id="content-scroller-resume", label="Resume reply", variant="primary", size="icon-sm", disabled=false, pressed=none, describedBy="", press=resume)
+                    svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="currentColor" aria-hidden=true
+                      path d="m8 5 11 7-11 7z"
+                else
+                  ButtonControl(id="content-scroller-send", label="Send message", variant="primary", size="icon-sm", disabled=(draft.trim() == ""), pressed=none, describedBy="", press=send)
+                    MessageIcon(name="arrow.up", filled=false)
+      Button(id="scroller-more", label=(more ? "Hide history example" : "History and message navigation"), variant="ghost", disabled=false, press=toggleMore)
+      if more
+        HistoryExample(reduced=reduced)
+
+component HistoryExample
+  props
+    reduced: bool
+  state loaded = false
+  state messages: ContentMessage[] = [ContentMessage(id=101, body="The component source is ready. Keep each message ID stable when its content changes.", mine=false), ContentMessage(id=102, body="Let's check the small-screen layout and keyboard navigation first.", mine=true), ContentMessage(id=103, body="The viewport is bounded. Only the conversation scrolls; the controls stay outside it.", mine=false), ContentMessage(id=104, body="I am reading the earlier notes. New messages should not pull me away.", mine=true), ContentMessage(id=105, body="Load the previous history while reading this message. Its position should be preserved.", mine=false), ContentMessage(id=106, body="Then use Latest to return to the bottom of the conversation.", mine=true)]
+  derive thread = loaded ? [ContentMessage(id=99, body="Earlier: we agreed to use the same public Message and Bubble components throughout the app.", mine=false), ContentMessage(id=100, body="Earlier: the data and network transport remain owned by the app.", mine=true)].concat(messages) : messages
+  action history
+    loaded = true
+  action first
+    scrollIntoView("history-scroller", 101, block="start")
+  action latest
+    scrollIntoView("history-scroller", 106, block="end")
+  view
+    column gap="ui.space-12" min-width=0
+      row gap="ui.space-8" flex-wrap="wrap"
+        Button(id="content-scroller-history", label=(loaded ? "History loaded" : "Load earlier"), variant="outline", disabled=loaded, press=history)
+        Button(id="controls-first", label="First message", variant="ghost", disabled=false, press=first)
+        Button(id="controls-end", label="Latest", variant="ghost", disabled=false, press=latest)
+      MessageScrollerTranscriptStart(id="history-scroller", messages=thread, height="18rem", latest=latest)

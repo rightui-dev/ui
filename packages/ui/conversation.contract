@@ -3,6 +3,7 @@ use Control from "./styles.contract"
 use AttachmentFrame, AttachmentMedia, AttachmentContent, AttachmentTitle, AttachmentDescription, AttachmentActions, AttachmentAction, AttachmentTrigger, AttachmentPreview from "./attachment-parts.contract"
 use BubbleFrame from "./conversation-parts.contract"
 use BubbleReactions from "./bubble-parts.contract"
+use Avatar from "./display.contract"
 
 component Attachment
   props
@@ -125,15 +126,90 @@ component Message
     initials: string
     time: string
     align: string
+  slot
+  view
+    MessageRow(id=id, align=align)
+      MessageAvatar()
+        Avatar(id=id + "-avatar", src="", name=author, fallback=initials)
+      MessageBody(align=align)
+        if author != ""
+          MessageHeader(label=author)
+        children
+        if time != ""
+          MessageMeta(label=time, align=align)
+
+component MessageGroup
+  props
+    id: string
+  slot
+  view
+    column id=id testId=id gap="ui.space-8" width="100%" min-width="0px" max-width="100%"
+      children
+
+component MessageRow
+  props
+    id: string
+    align: string
+  slot
+  view
+    row id=id testId=id gap="ui.space-8" width="100%" min-width="0px" flex-direction=(align == "end" ? "row-reverse" : "row")
+      children
+
+component MessageAvatar
+  slot
+  view
+    view flex-shrink=0 align-self="flex-end" width="ui.avatar-size" min-width="ui.avatar-size" display="flex" align-items="center" justify-content="center"
+      children
+
+component MessageBody
+  props
+    align: string
+  slot
+  view
+    column gap="ui.space-10" flex=1 min-width="0px" align-items=(align == "end" ? "flex-end" : "flex-start") overflow-wrap="break-word"
+      children
+
+component MessageHeader
+  props
+    label: string
   inject
     uiFont: string
   slot
   view
-    row id=id testId=id gap="ui.space-8" min-width="0px" flex-direction=(align == "end" ? "row-reverse" : "row")
-      view width="ui.space-32" height="ui.space-32" flex-shrink=0 align-self="flex-end" border-radius="ui.radius-full" background-color="ui.muted" display="flex" align-items="center" justify-content="center"
-        text initials font-size="ui.text-xs" color="ui.foreground" aria-label=author font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      column gap="ui.space-10" flex=1 min-width="0px" align-items=(align == "end" ? "flex-end" : "flex-start")
-        text author padding="0px ui.space-12" font-size="ui.text-xs" font-weight="ui.weight-medium" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        children
-        if time != ""
-          text time padding="0px ui.space-12" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    row gap="ui.space-8" align-items="center" max-width="100%" min-width="0px" padding="0px ui.space-12"
+      if label != ""
+        text label font-size="ui.text-xs" font-weight="ui.weight-medium" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      children
+
+component MessageMeta
+  props
+    label: string
+    align: string
+  inject
+    uiFont: string
+  slot
+  view
+    row gap="ui.space-8" align-items="center" justify-content=(align == "end" ? "flex-end" : "flex-start") align-self=(align == "end" ? "flex-end" : "flex-start") flex-wrap="wrap" max-width="100%" min-width="0px" padding="0px ui.space-12"
+      if label != ""
+        text label font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      children
+
+keyframes uiTypingWave
+  from translate="0px 0px"
+  25% translate="0px -4px"
+  50% translate="0px 0px"
+  to translate="0px 0px"
+
+component MessageTyping
+  props
+    id: string
+    label: string
+    reduced: bool
+  inject
+    uiFont: string
+  view
+    row id=id testId=id role="status" aria-label=label align-items="center" gap="ui.space-8" color="ui.muted-foreground"
+      row aria-hidden=true gap="ui.space-4" align-items="center" height="ui.space-16"
+        for dot in [0, 1, 2] key=dot
+          view testId=(id + "-dot-" + dot.toString()) width="ui.space-4" height="ui.space-4" border-radius="ui.radius-full" background-color="currentColor" animation=(reduced ? "none" : ("uiTypingWave 1s ease-in-out " + (dot * 0.15).toString() + "s infinite"))
+      text label font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"

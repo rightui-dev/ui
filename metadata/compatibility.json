@@ -1,6 +1,6 @@
 {
-  "version": "0.3.0-beta.6",
-  "asOf": "2026-11-15",
+  "version": "0.3.0-beta.8",
+  "asOf": "2026-11-16",
   "exactRevision": "53426cf02bf986a5e781abc4f953d79989c6dc05",
   "platforms": [
     {
@@ -254,6 +254,11 @@
       "id": "beta5-web",
       "description": "The local beta.5 candidate passed 59 browser tests: 45 historical scenarios, three component-pager checks and eleven targeted tests for the nine updated families. Coverage includes disabled/keyboard Accordion, mixed/group Checkbox, Card validation and cover rendering, Attachment previews/retry/removal, Bubble actions/collapse, Breadcrumb links/menus/mobile Drawer, Badge languages/links, and Chart values, visible-series totals, formats and RTL. Card and AspectRatio test screenshots were inspected. This is partial web coverage; no new native validation is claimed.",
       "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    },
+    {
+      "id": "beta8-message-navigation",
+      "description": "Three targeted web regression scenarios passed for Message actions, MessageScroller streaming/stop/resume and history navigation, and NavigationMenu keyboard dismissal and links. Desktop and mobile browser checks also verified typing-dot motion, preserved reading position and trigger-aligned panels. iOS and macOS compiled successfully; native interactions have not been verified for these additions.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
     }
   ],
   "overrides": [
@@ -1120,6 +1125,87 @@
       "status": "blocked",
       "evidence": [
         "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "message",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "beta8-message-navigation"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "message",
+      "platform": "ios",
+      "status": "built",
+      "evidence": [
+        "beta8-message-navigation"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "message",
+      "platform": "macos",
+      "status": "built",
+      "evidence": [
+        "beta8-message-navigation"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "message-scroller",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "beta8-message-navigation"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "message-scroller",
+      "platform": "ios",
+      "status": "built",
+      "evidence": [
+        "beta8-message-navigation"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "message-scroller",
+      "platform": "macos",
+      "status": "built",
+      "evidence": [
+        "beta8-message-navigation"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "navigation-menu",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "beta8-message-navigation"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "navigation-menu",
+      "platform": "ios",
+      "status": "built",
+      "evidence": [
+        "beta8-message-navigation"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "navigation-menu",
+      "platform": "macos",
+      "status": "built",
+      "evidence": [
+        "beta8-message-navigation"
       ]
     }
   ]

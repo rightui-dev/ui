@@ -1,7 +1,10 @@
+use uiPopupIn from "./popup-motion.contract"
 use uiFontFamily from "./typography-context.contract"
-use Button from "./button.contract"
+use Button, ButtonControl from "./button.contract"
+use MessageFrame, MessageContent, BubbleFrame from "./conversation-parts.contract"
 use Message from "./conversation.contract"
 use Field from "./styles.contract"
+
 shape ContentMessage
   id: number
   body: string
@@ -25,17 +28,112 @@ component MessageScroller
       send(draft.trim())
       draft = ""
   view
-    column id=(id + "-root") testId=id gap="ui.space-12" min-width="0px"
-      row justify-content="center"
+    column id=(id + "-root") testId=id gap="ui.space-12" width="100%" max-width="100%" min-width="0px" box-sizing="border-box"
+      row justify-content="center" min-width="0px"
         Button(id=id + "-history", label=(historyLoaded ? "Start of conversation" : "Load earlier messages"), variant="outline", disabled=historyLoaded, press=loadHistory)
-      list id=id testId=(id + "-viewport") appearance="none" virtualized=true scroll-start="end" scrollFollowEnd=true height="17.5rem" min-height="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.background"
-        for message in messages key=message.id
-          view padding="ui.space-8 ui.space-12"
-            Message(id=id + "-message-" + message.id.toString(), author=(message.mine ? "You" : "Assistant"), initials=(message.mine ? "YO" : "AI"), time="", align=(message.mine ? "end" : "start"))
-              text message.body testId=(id + "-message-" + message.id.toString() + "-body") max-width="90%" min-width="0px" padding="ui.space-8 ui.space-12" border-radius="ui.radius-panel" font-size="ui.text-sm" line-height="ui.leading-code" white-space="pre-wrap" overflow-wrap="break-word" background-color=(message.mine ? "ui.muted" : "transparent") color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-
-      row gap="ui.space-8" align-items="center" flex-wrap="wrap"
-        input id=(id + "-draft") testId=(id + "-draft") class=Field value=draft input=edit submit=post placeholder="Your message…" aria-label="Your message" flex="1 1 10rem" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      MessageScrollerTranscript(id=id, messages=messages, height="17.5rem", latest=latest)
+      row gap="ui.space-8" align-items="center" min-width="0px" max-width="100%"
+        input id=(id + "-draft") testId=(id + "-draft") class=Field value=draft input=edit submit=post placeholder="Your message…" aria-label="Your message" flex="1 1 10rem" min-width="0px" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         Button(id=id + "-send", label="Send", variant="primary", disabled=(draft.trim() == ""), press=post)
-      row justify-content="center"
-        Button(id=id + "-latest", label="Latest message", variant="outline", disabled=false, press=latest)
+
+component MessageScrollerTranscript
+  props
+    id: string
+    messages: ContentMessage[]
+    height: string
+    latest: action
+  inject
+    uiFont: string
+  state atLatest = true
+  action scrolled(left: number, top: number, e: ScrollEvent)
+    atLatest = top + e.clientHeight >= e.scrollHeight - 8
+  action joinLatest
+    latest()
+    atLatest = true
+  view
+    column gap="ui.space-8" width="100%" max-width="100%" min-width="0px"
+      list id=id testId=(id + "-viewport") aria-label="Conversation messages" tabindex=0 appearance="none" virtualized=true scroll-start="end" scrollFollowEnd=true scroll=scrolled height=height min-height="0px" min-width="0px" max-width="100%" box-sizing="border-box" overflow-x="hidden" overscroll-behavior="contain" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.background"
+        for message in messages key=message.id
+          view id=(id + "-row-" + message.id.toString()) testId=(id + "-row-" + message.id.toString()) padding="ui.space-8 ui.space-12" min-width="0px" max-width="100%" box-sizing="border-box"
+            Message(id=id + "-message-" + message.id.toString(), author="", initials=(message.mine ? "YO" : "AI"), time="", align=(message.mine ? "end" : "start"))
+              text message.body testId=(id + "-message-" + message.id.toString() + "-body") max-width="90%" min-width="0px" padding="ui.space-8 ui.space-12" border-radius="ui.radius-panel" font-size="ui.text-sm" line-height="ui.leading-code" white-space="pre-wrap" overflow-wrap="anywhere" background-color=(message.mine ? "ui.muted" : "transparent") color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text (atLatest ? "Following latest messages" : "Reading earlier messages; new content stays below") testId=(id + "-follow-state") font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      if not atLatest and messages.length > 0
+        row justify-content="center"
+          Button(id=id + "-latest", label="Jump to latest", variant="outline", disabled=false, press=joinLatest)
+
+component MessageScrollerTranscriptStart
+  props
+    id: string
+    messages: ContentMessage[]
+    height: string
+    latest: action
+  inject
+    uiFont: string
+  state atLatest = false
+  action scrolled(left: number, top: number, e: ScrollEvent)
+    atLatest = top + e.clientHeight >= e.scrollHeight - 8
+  action joinLatest
+    latest()
+    atLatest = true
+  view
+    column gap="ui.space-8" width="100%" max-width="100%" min-width="0px"
+      list id=id testId=(id + "-viewport") aria-label="Conversation messages" tabindex=0 appearance="none" virtualized=true scroll-start="start" scrollFollowEnd=true scroll=scrolled height=height min-height="0px" min-width="0px" max-width="100%" box-sizing="border-box" overflow-x="hidden" overscroll-behavior="contain" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.background"
+        for message in messages key=message.id
+          view id=(id + "-row-" + message.id.toString()) testId=(id + "-row-" + message.id.toString()) padding="ui.space-8 ui.space-12" min-width="0px" max-width="100%" box-sizing="border-box"
+            Message(id=id + "-message-" + message.id.toString(), author="", initials=(message.mine ? "YO" : "AI"), time="", align=(message.mine ? "end" : "start"))
+              text message.body testId=(id + "-message-" + message.id.toString() + "-body") max-width="90%" min-width="0px" padding="ui.space-8 ui.space-12" border-radius="ui.radius-panel" font-size="ui.text-sm" line-height="ui.leading-code" white-space="pre-wrap" overflow-wrap="anywhere" background-color=(message.mine ? "ui.muted" : "transparent") color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text (atLatest ? "Following latest messages" : "Reading earlier messages; new content stays below") testId=(id + "-follow-state") font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      if not atLatest and messages.length > 0
+        row justify-content="center"
+          Button(id=id + "-latest", label="Jump to latest", variant="outline", disabled=false, press=joinLatest)
+
+// A caller-owned transcript for rich Message, Bubble, Marker, and attachment rows.
+// Use a bounded height; this slot is intentionally not virtualized.
+component MessageScrollerRichViewport
+  props
+    id: string
+    height: string
+  slot
+  view
+    list id=id testId=(id + "-viewport") aria-label="Conversation messages" tabindex=0 appearance="none" height=height min-height="0px" min-width="0px" max-width="100%" box-sizing="border-box" overflow-x="hidden" overscroll-behavior="contain" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.background"
+      children
+
+// The application owns content and transport; the viewport only owns scroll intent.
+component MessageScrollerViewport
+  props
+    id: string
+    messages: ContentMessage[]
+    height: string
+    busy: bool
+    reduced: bool
+    latest: action
+  inject
+    uiFont: string
+  state atLatest = true
+  action scrolled(left: number, top: number, e: ScrollEvent)
+    atLatest = top + e.clientHeight >= e.scrollHeight - 8
+  action joinLatest
+    latest()
+    atLatest = true
+  view
+    column position="relative" height=height min-height=0 min-width=0 max-width="100%" role="log" aria-label="Conversation" aria-live="polite" aria-busy=busy
+      list id=id testId=(id + "-viewport") aria-label="Conversation messages" tabindex=0 appearance="none" virtualized=true scroll-start="end" scrollFollowEnd=true scroll=scrolled flex=1 min-height=0 min-width=0 overflow-x="hidden" overscroll-behavior="contain" box-sizing="border-box"
+        for message in messages key=message.id
+          view id=(id + "-row-" + message.id.toString()) testId=(id + "-row-" + message.id.toString()) padding="ui.space-12 ui.space-24" min-width=0 box-sizing="border-box"
+            MessageFrame(id=id + "-message-" + message.id.toString(), align=(message.mine ? "end" : "start"))
+              MessageContent(id=id + "-content-" + message.id.toString(), align=(message.mine ? "end" : "start"))
+                BubbleFrame(id=id + "-bubble-" + message.id.toString(), align=(message.mine ? "end" : "start"), variant=(message.mine ? "muted" : "ghost"))
+                  text (message.body == "" ? "Thinking…" : message.body) testId=(id + "-message-" + message.id.toString() + "-body") white-space="pre-wrap" overflow-wrap="anywhere" font-size="ui.text-sm" line-height="ui.leading-relaxed" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      if not atLatest and messages.length > 0
+        view position="absolute" bottom="ui.space-12" left="50%" translate="-50% 0px" animation=(reduced ? "none" : "uiPopupIn ui.duration-fast ui.easing both")
+          MessageScrollerButton(id=id + "-latest", press=joinLatest)
+
+component MessageScrollerButton
+  props
+    id: string
+    press: action
+  view
+    ButtonControl(id=id, label="Jump to latest", variant="outline", size="icon-sm", disabled=false, pressed=none, describedBy="", press=press)
+      svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
+        path d="M12 5v14m-7-7 7 7 7-7"

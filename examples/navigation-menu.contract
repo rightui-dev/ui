@@ -1,4 +1,4 @@
-use uiFontFamily, NavigationMenuEntry, NavigationMenu from "@rightui/ui"
+use uiFontFamily, NavigationMenuEntry, NavigationMenu, NavigationMenuSection, NavigationMenuSections from "@rightui/ui"
 
 component Demo
   props
@@ -9,8 +9,13 @@ component Demo
   derive narrow = width < 600
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
-      NavigationMenu(id="controls-navigation", reduced=reduced, label="Documentation", entries=[NavigationMenuEntry(id="intro", title="Introduction", description="Accessible components you can compose.", href="#introduction"), NavigationMenuEntry(id="forms", title="Forms", description="Fields, groups and verification code.", href="#forms")])
-      text "Introduction" id="introduction" font-size="ui.text-base" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "Compose accessible controls with local state." font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "Forms" id="forms" font-size="ui.text-base" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "Connect field values to actions." font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      view min-height="16rem"
+        SectionsDemo(reduced=reduced)
+      NavigationMenu(id="controls-navigation", reduced=reduced, label="Documentation", entries=[NavigationMenuEntry(id="intro", title="Introduction", description="Accessible components you can compose.", href="/docs/how-exact-works"), NavigationMenuEntry(id="forms", title="Forms", description="Fields, groups and verification code.", href="/docs/components/field")])
+
+component SectionsDemo
+  props
+    reduced: bool
+  view
+    column gap="ui.space-16" min-width="0px" max-width="100%"
+      NavigationMenuSections(id="site-navigation", label="Product navigation", reduced=reduced, sections=[NavigationMenuSection(id="start", label="Get started", href="", layout="list", entries=[NavigationMenuEntry(id="overview", title="Overview", description="A short introduction to the component library.", href="/docs/how-exact-works"), NavigationMenuEntry(id="install", title="Installation", description="Add the package to your app.", href="/docs/installation"), NavigationMenuEntry(id="type", title="Typography", description="Set a readable visual hierarchy.", href="/docs/components/typography")]), NavigationMenuSection(id="components", label="Components", href="", layout="grid", entries=[NavigationMenuEntry(id="buttons", title="Buttons", description="Actions and interactive states.", href="/docs/components/button"), NavigationMenuEntry(id="forms", title="Forms", description="Inputs and validation.", href="/docs/components/input"), NavigationMenuEntry(id="feedback", title="Feedback", description="Status and notifications.", href="/docs/components/toast"), NavigationMenuEntry(id="overlays", title="Overlays", description="Dialogs and floating surfaces.", href="/docs/components/dialog")]), NavigationMenuSection(id="resources", label="Resources", href="", layout="list", entries=[NavigationMenuEntry(id="guide", title="Guide", description="Patterns for common page flows.", href="/docs/theming"), NavigationMenuEntry(id="examples", title="Examples", description="Working compositions to explore.", href="/blocks")]), NavigationMenuSection(id="docs", label="Docs", href="/docs/how-exact-works", layout="list", entries=[])])

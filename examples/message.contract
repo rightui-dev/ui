@@ -1,4 +1,4 @@
-use uiFontFamily, Button, Attachment, Bubble, Message from "@rightui/ui"
+use uiFontFamily, Button, ButtonControl, Attachment, BubbleOptions, BubbleFrame, BubbleReactions, MessageIcon, Message, MessageGroup, MessageRow, MessageAvatar, MessageBody, MessageHeader, MessageMeta, Avatar, MessageTyping from "@rightui/ui"
 
 component Demo
   props
@@ -6,26 +6,88 @@ component Demo
     reduced: bool
   inject
     uiFont: string
-  derive narrow = width < 600
+  state liked = false
+  state more = false
+  action react
+    liked = not liked
+  action toggleExamples
+    more = not more
+  view
+    column width="100%" max-width="24rem" min-width=0 align-self="center" gap="ui.space-32" padding="ui.space-24 0px"
+      column id="message-conversation" testId="message-conversation" gap="ui.space-24" min-width=0
+        Message(id="message-deploy", author="", initials="ME", time="", align="end")
+          BubbleOptions(id="message-deploy-bubble", body="Deploying the preview real quick.", align="end", variant="default", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
+        Message(id="message-friday", author="", initials="OL", time="", align="start")
+          BubbleOptions(id="message-friday-bubble", body="It's 4:55 PM. On a Friday.", align="start", variant="muted", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
+        column gap="ui.space-8"
+          Message(id="message-change", author="", initials="ME", time="", align="end")
+            BubbleOptions(id="message-change-bubble", body="It's a one-line change.", align="end", variant="default", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
+          row justify-content="flex-end" padding-right="calc(ui.avatar-size + ui.space-8)"
+            MessageMeta(label="Delivered", align="end")
+        MessageRow(id="message-review", align="start")
+          view align-self="flex-end" margin-bottom="ui.space-16"
+            MessageAvatar()
+              Avatar(id="message-review-avatar", src="", name="Oliver", fallback="OL")
+          MessageBody(align="start")
+            MessageGroup(id="message-review-group")
+              BubbleOptions(id="message-review-first", body="It's always a one-line change.", align="start", variant="muted", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
+              view padding-bottom="ui.space-16"
+                BubbleFrame(id="message-review-last", align="start", variant="muted")
+                  text "Alright, let me take a look." font-size="ui.text-sm" line-height="ui.leading-relaxed" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                  BubbleReactions(id="message-reactions", label="Message reactions", side="bottom", align="end", interactive=true)
+                    ButtonControl(id="message-like", label="Like this message", variant="ghost", size="icon-xs", disabled=false, pressed=some(liked), describedBy="", press=react)
+                      MessageIcon(name="hand.thumbsup", filled=liked)
+        row padding-left="calc(ui.avatar-size + ui.space-8)"
+          MessageTyping(id="message-typing", label="Oliver is typing…", reduced=reduced)
+      Button(id="message-more", label=(more ? "Hide examples" : "More examples"), variant="ghost", disabled=false, press=toggleExamples)
+      if more
+        MessageExamples(reduced=reduced)
+
+component MessageExamples
+  props
+    reduced: bool
+  inject
+    uiFont: string
   state attached = true
+  state sent = false
+  state acknowledgment = ""
   action remove
     attached = false
   action restore
     attached = true
-  state acknowledgment = ""
   action acknowledge
     acknowledgment = "Acknowledged"
+  action copyMessage
+    copyText("The preview is ready for review.")
+    acknowledgment = "Message copied"
+  action retryMessage
+    sent = true
   view
-    column gap="ui.space-16" min-width=0 max-width="100%"
-      Message(id="content-message-in", author="Camille", initials="CA", time="10:24 · Delivered", align="start")
-        Bubble(id="content-bubble-in", body="Here is the session brief.\nPlease check the spaces and lighting before our appointment.", align="start", variant="muted", collapsible=true)
-        if attached
-          Attachment(id="content-attachment", name="brief.txt", metadata="Text · Session brief · Ready", content="Photo session\nBedroom, restaurant and terrace.\nNatural morning light.\nDelivery: selected photos and a short video.", status="done", remove=remove)
-        else
-          Button(id="content-attachment-restore", label="Attach the brief again", variant="outline", disabled=false, press=restore)
-      text "Outgoing grouped messages and action" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      Message(id="variation-message-out", author="You", initials="YO", time="10:25 · Sent", align="end")
-        Bubble(id="variation-message-out-first", body="The brief looks good.", align="end", variant="muted", collapsible=false)
-        Bubble(id="variation-message-out-second", body="Ready for the session.", align="end", variant="muted", collapsible=false)
-        Button(id="variation-message-action", label="Acknowledge", variant="outline", disabled=false, press=acknowledge)
-      text acknowledgment role="status" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    column gap="ui.space-24" min-width=0
+      text "Header, footer and actions" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      Message(id="variation-message-out", author="You", initials="ME", time="", align="end")
+        BubbleOptions(id="variation-message-out-bubble", body="The preview is ready for review.", align="end", variant="default", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
+        MessageMeta(label="Delivered", align="end")
+          ButtonControl(id="variation-message-copy", label="Copy message", variant="ghost", size="icon-xs", disabled=false, pressed=none, describedBy="", press=copyMessage)
+            MessageIcon(name="copy", filled=false)
+          ButtonControl(id="variation-message-action", label="Acknowledge message", variant="ghost", size="icon-xs", disabled=false, pressed=some(acknowledgment == "Acknowledged"), describedBy="", press=acknowledge)
+            MessageIcon(name="check", filled=false)
+      text "Grouped messages and attachment" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      MessageGroup(id="variation-message-group")
+        MessageRow(id="variation-message-first", align="start")
+          MessageAvatar()
+          MessageBody(align="start")
+            BubbleOptions(id="variation-message-first-bubble", body="I checked the build output.", align="start", variant="muted", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
+        Message(id="content-message-in", author="Oliver", initials="OL", time="", align="start")
+          BubbleOptions(id="content-bubble-in", body="Here's the short review brief.", align="start", variant="muted", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
+          if attached
+            Attachment(id="content-attachment", name="review-notes.txt", metadata="Text · 1 KB", content="Check the mobile layout, keyboard focus and light/dark appearance.", status="done", remove=remove)
+          else
+            Button(id="content-attachment-restore", label="Restore attachment", variant="outline", disabled=false, press=restore)
+      Message(id="variation-message-failed", author="", initials="ME", time="", align="end")
+        BubbleOptions(id="variation-message-failed-bubble", body="Sending the final notes now.", align="end", variant="default", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
+        MessageMeta(label=(sent ? "Delivered" : "Failed to send"), align="end")
+          if not sent
+            ButtonControl(id="variation-message-retry", label="Retry message", variant="ghost", size="icon-xs", disabled=false, pressed=none, describedBy="", press=retryMessage)
+              MessageIcon(name="arrow.clockwise", filled=false)
+      text acknowledgment testId="message-action-status" role="status" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

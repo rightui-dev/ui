@@ -1,6 +1,6 @@
 # rightui — @rightui/ui
 
-This checkout prepares the local **0.3.0-beta.6** candidate. Install its archive for local review; npm commands for this version apply only after a separately authorized publication.
+This checkout prepares the local **0.3.0-beta.8** candidate. Install its archive for local review; npm commands for this version apply only after a separately authorized publication.
 
 
 Composable Exact Contract components with a shared Tamber design system, inspired by shadcn/ui. Targets web, iOS and macOS.
@@ -9,10 +9,10 @@ This package contains Contract sources, theme tokens and the Geist and Newsreade
 
 ## Install
 
-Version: **0.3.0-beta.6**. This is a preview release. Use **Bun exactly 1.4.2** for Exact compilation. From an existing Exact app:
+Version: **0.3.0-beta.8**. This is a preview release. Use **Bun exactly 1.4.2** for Exact compilation. From an existing Exact app:
 
 ```sh
-bun add --exact @rightui/ui@0.3.0-beta.6
+bun add --exact @rightui/ui@0.3.0-beta.8
 mkdir -p assets/fonts
 cp node_modules/@rightui/ui/assets/fonts/Geist.ttf assets/fonts/
 cp node_modules/@rightui/ui/assets/fonts/Geist-Italic.ttf assets/fonts/
@@ -25,7 +25,7 @@ cp node_modules/@rightui/ui/assets/fonts/OFL-Newsreader.txt assets/fonts/
 
 npm, pnpm and Yarn can also install this package from the npm registry. See the [complete installation guide](https://rightui.dev/docs/installation) for creating an app with the pinned Exact SDK. GitHub access is not required to install the public package.
 
-For an offline install, use the immutable `rightui-ui-0.3.0-beta.6.tgz` archive with `bun add ./rightui-ui-0.3.0-beta.6.tgz`. Source contributors can produce it with `bun run package:ui` from the UI repository.
+For an offline install, use the immutable `rightui-ui-0.3.0-beta.8.tgz` archive with `bun add ./rightui-ui-0.3.0-beta.8.tgz`. Source contributors can produce it with `bun run package:ui` from the UI repository.
 
 In your application's `app.json`, add `rightui-font` to the top-level `data`
 array, keeping existing names and all other configuration:

@@ -4,6 +4,19 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.3.0-beta.8] - 2026-11-15
+
+- Add MessageTyping with a one-second staggered three-dot wave and reduced-motion support.
+- Correct Message composition: compact conversations, intentional reactions, aligned headers and working retry actions.
+- Add a composable MessageScroller viewport and jump control, plus a timed chat demo with stop/resume and preserved reading position.
+- Separate navigation panels from their triggers and align their edges within the viewport.
+
+## [0.3.0-beta.7] - 2026-11-15
+
+- Add composable Message groups, metadata and actions; preserve the existing Message API.
+- Add bounded MessageScroller transcript variants, rich viewport and manual progressive reply example while preserving the legacy scroller.
+- Add grouped NavigationMenu sections with direct links, keyboard navigation and panel motion while preserving the single-trigger menu.
+
 ## [0.3.0-beta.6] - 2026-11-15
 
 - Keep FieldLabel and Checkbox hover and pressed backgrounds transparent while preserving activation, mixed state and keyboard focus.

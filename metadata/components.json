@@ -582,26 +582,39 @@
   {
     "slug": "message",
     "title": "Message",
-    "description": "Message with accessible presentation and local state.",
-    "usage": "Import Message, MessageScroller from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "description": "Conversation rows with avatars, grouped bubbles, optional metadata and message actions.",
+    "usage": "Use Message for a complete conversation row, or compose MessageGroup, MessageRow, MessageAvatar, MessageBody, MessageHeader and MessageMeta. Reuse Avatar, Bubble, Attachment and Button for the content and actions.",
     "keyboard": "",
     "source": "packages/ui/conversation.contract",
     "example": "examples/message.contract",
     "exports": [
       "Message",
-      "MessageScroller"
+      "MessageScroller",
+      "MessageGroup",
+      "MessageRow",
+      "MessageAvatar",
+      "MessageBody",
+      "MessageHeader",
+      "MessageMeta",
+      "MessageTyping"
     ]
   },
   {
     "slug": "message-scroller",
     "title": "Message Scroller",
-    "description": "Message Scroller with accessible presentation and local state.",
-    "usage": "Import MessageScroller from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "description": "A bounded conversation viewport that follows streamed replies while preserving the reader’s position.",
+    "usage": "Use MessageScroller for its legacy composer, MessageScrollerTranscript or MessageScrollerTranscriptStart for a virtualized transcript with an external composer, or MessageScrollerRichViewport for caller-owned rich rows. Provide a bounded height and handle send and history in the caller.",
     "keyboard": "",
     "source": "packages/ui/message-scroller.contract",
     "example": "examples/message-scroller.contract",
     "exports": [
-      "MessageScroller"
+      "ContentMessage",
+      "MessageScroller",
+      "MessageScrollerTranscript",
+      "MessageScrollerTranscriptStart",
+      "MessageScrollerRichViewport",
+      "MessageScrollerViewport",
+      "MessageScrollerButton"
     ]
   },
   {
@@ -619,14 +632,16 @@
   {
     "slug": "navigation-menu",
     "title": "Navigation Menu",
-    "description": "Navigation Menu with accessible presentation and local state.",
-    "usage": "Import NavigationMenuEntry, NavigationMenu from @rightui/ui. Supply content and required properties as shown in the example.",
-    "keyboard": "",
+    "description": "Grouped navigation with shared animated panels, descriptive links and keyboard controls.",
+    "usage": "Use NavigationMenu for one trigger, or NavigationMenuSections with NavigationMenuSection for grouped links. Choose list or grid layout, use empty entries for direct links, and pass the reduced-motion preference.",
+    "keyboard": "Arrow keys move between triggers and links. Enter or Arrow Down opens a section. Escape closes the panel and returns focus to its trigger.",
     "source": "packages/ui/navigation-menu.contract",
     "example": "examples/navigation-menu.contract",
     "exports": [
       "NavigationMenuEntry",
-      "NavigationMenu"
+      "NavigationMenu",
+      "NavigationMenuSection",
+      "NavigationMenuSections"
     ]
   },
   {
