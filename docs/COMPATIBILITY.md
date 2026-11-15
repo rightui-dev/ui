@@ -1,6 +1,6 @@
 # Compatibility
 
-125 catalog entries. Evidence recorded on 2026-11-15 against rightui 0.3.0-beta.3 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
+125 catalog entries. Evidence recorded on 2026-11-15 against rightui 0.3.0-beta.4 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
 
 This records validation evidence, not full compatibility certification. Partial checks cover specific examples or interactions, not every variant. Built only means compilation succeeded, without a targeted interaction result.
 
@@ -46,7 +46,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 | Dropdown Menu | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Empty | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Field | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Hover Card | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Hover Card | ✅ Built only | ✅ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Input | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Input Group | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Input OTP | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
@@ -78,10 +78,10 @@ iOS validation is incomplete. Windows and Android are not supported.
 | Table | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Tabs | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Textarea | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Toast | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
+| Toast | ✅ Built only | ✅ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Toggle | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Toggle Group | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Tooltip | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Tooltip | ✅ Built only | ✅ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Trace | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Typography | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 
@@ -198,5 +198,6 @@ iOS validation is incomplete. Windows and Android are not supported.
 - **window-overlays-web:** Ten isolated browser checks cover full-window geometry from a transformed clipped container, repeated opening, focus and Escape, initial visibility, non-modal Toast, Drawer dragging and keyboard snap points, point normalization and zero web SafeArea insets. Pointer checks also verified backdrop dismissal and Alert Dialog background blocking. Six Sheet checks cover form persistence and four edges. [Source](https://github.com/rightui-dev/ui/blob/main/tools/fixtures/overlays/app.test.contract)
 - **drawer-options-web:** Thirteen isolated browser checks passed, including detached insets, controls and focus without a handle, controlled snap points across resize, and scroll-to-full-height with fixed content and footer. Native and motion checks are recorded separately. [Source](https://github.com/rightui-dev/ui/blob/main/tools/fixtures/overlays/app.test.contract)
 - **popover-invoker-web:** Targeted desktop and mobile browser checks cover repeated trigger toggling, outside dismissal, internal theme changes and Escape. A public Popover check verifies edited input persists after outside dismissal and reopening. [Source](https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract)
+- **feedback-beta4:** Targeted archive tests cover toast stacking, actions, loading persistence and completion, Hover Card and four Tooltip sides. Browser geometry and pointer motion were checked. Mac interactions were checked for Toast, Tooltip and Hover Card. iOS compilation and archive validation completed; device interactions were not rechecked for this release. [Source](https://github.com/rightui-dev/ui/blob/main/docs/FEEDBACK-VALIDATION.md)
 
 The machine-readable row-to-evidence mapping is in [metadata/compatibility.json](https://github.com/rightui-dev/ui/blob/main/metadata/compatibility.json). A successful build does not certify every interaction.

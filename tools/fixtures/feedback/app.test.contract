@@ -1,0 +1,91 @@
+test "toast stack preserves older messages and leaves the page interactive"
+  size 1280x800
+  clock data
+  tap "toast-show-stack"
+  clock settle
+  expect tree has "controls-toast-1"
+  expect tree has "controls-toast-2"
+  expect tree has "controls-toast-3"
+  tap "controls-toast-1-close"
+  clock settle
+  expect tree missing "controls-toast-1"
+  expect tree has "controls-toast-2"
+  tap "outside"
+  expect text "outside-counter" == "1"
+  expect no failures
+
+test "toast action runs before the notification closes"
+  size 1280x800
+  clock data
+  tap "toast-show"
+  clock settle
+  tap "controls-toast-1-action"
+  clock settle
+  expect text "toast-result" == "Event creation undone."
+  expect tree missing "controls-toast-1"
+  expect no failures
+
+test "loading remains until dismissed and uses the shared spinner"
+  size 390x844
+  clock data
+  tap "toast-type-loading"
+  clock settle
+  expect tree has "controls-toast-1-spinner"
+  clock +10000
+  expect tree has "controls-toast-1-spinner"
+  tap "controls-toast-1-close"
+  clock settle
+  expect tree missing "controls-toast-1"
+  expect no failures
+
+test "async toast updates in place then automatically dismisses"
+  size 1280x800
+  clock data
+  tap "toast-promise"
+  clock settle
+  expect tree has "controls-toast-1-spinner"
+  clock +2200
+  expect tree missing "controls-toast-1-spinner"
+  expect text "controls-toast-1-title" == "Event created"
+  clock +6000
+  clock settle
+  expect tree missing "controls-toast-1"
+  expect no failures
+
+test "hover card uses the public circular avatar and dismisses with Escape"
+  at "/hover-card"
+  size 1280x800
+  clock data
+  tap "controls-hover"
+  clock settle
+  expect tree has "controls-hover-avatar"
+  expect text "controls-hover" == "@ccheever"
+  type "controls-hover" key "Escape"
+  clock settle
+  tap "outside"
+  expect text "outside-counter" == "1"
+  expect no failures
+
+test "all tooltip orientations show their content and close on Escape"
+  at "/tooltip"
+  size 1280x800
+  clock data
+  tap "tooltip-top"
+  clock settle
+  expect text "tooltip-top-tip" == "Add to library"
+  type "tooltip-top" key "Escape"
+  tap "tooltip-left"
+  clock settle
+  expect text "tooltip-left-tip" == "Add to library"
+  type "tooltip-left" key "Escape"
+  tap "tooltip-bottom"
+  clock settle
+  expect text "tooltip-bottom-tip" == "Add to library"
+  type "tooltip-bottom" key "Escape"
+  tap "tooltip-right"
+  clock settle
+  expect text "tooltip-right-tip" == "Add to library"
+  type "tooltip-right" key "Escape"
+  tap "outside"
+  expect text "outside-counter" == "1"
+  expect no failures

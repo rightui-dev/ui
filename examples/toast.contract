@@ -1,4 +1,4 @@
-use uiFontFamily, Toast, Button from "@rightui/ui"
+use uiFontFamily, ToastViewport, ToastMessage, Button from "@rightui/ui"
 
 component Demo
   props
@@ -6,29 +6,64 @@ component Demo
     reduced: bool
   inject
     uiFont: string
-  derive narrow = width < 600
-  action undo
-    dismissToast()
-    chosen = "Action undone"
-  state chosen = "No action selected"
-  state activated = false
-  action dismissToast
-    activated = false
-  action show
-    dangerVisible = false
-    activated = true
-  state dangerVisible = false
-  action showDanger
-    activated = false
-    dangerVisible = true
-  action hideDanger
-    dangerVisible = false
+    rightuiDemoTime: number
+    rightuiRunDemo: action
+  state items: ToastMessage[] = []
+  state promises: string[] = []
+  state serial = 0
+  state position = "bottom-right"
+  state result = ""
+  derive visibleItems = items.map(item => promises.includes(item.id) and rightuiDemoTime - item.createdAt >= 2000 ? ToastMessage(id=item.id, title="Event created", description="Your event is ready to share.", variant="success", actionLabel="Undo", createdAt=item.createdAt + 2000, duration=5000) : item)
+  action show(kind: string)
+    let next = serial + 1
+    let key = "controls-toast-" + next.toString()
+    let title = kind == "success" ? "Event created" : kind == "info" ? "A little reminder" : kind == "warning" ? "Check the event time" : kind == "error" ? "Could not create event" : kind == "loading" ? "Creating event…" : "Event created"
+    let description = kind == "success" ? "Your event is ready to share." : kind == "info" ? "Arrive 10 minutes before the event." : kind == "warning" ? "The event cannot start before 8:00 AM." : kind == "error" ? "Please try again in a moment." : kind == "loading" ? "Waiting for your event to finish." : "Sunday, December 3 at 9:00 AM"
+    items = [ToastMessage(id=key, title=title, description=description, variant=kind, actionLabel=(kind == "default" ? "Undo" : ""), createdAt=rightuiDemoTime, duration=(kind == "loading" ? 0 : 5000))].concat(items).slice(0, 8)
+    serial = next
+    rightuiRunDemo(6500)
+  action showPromise
+    let next = serial + 1
+    let key = "controls-toast-" + next.toString()
+    items = [ToastMessage(id=key, title="Creating event…", description="Saving your event details.", variant="loading", actionLabel="", createdAt=rightuiDemoTime, duration=0)].concat(items).slice(0, 8)
+    promises = promises.concat([key])
+    serial = next
+    rightuiRunDemo(8500)
+  action showStack
+    let next = serial + 1
+    items = [ToastMessage(id="controls-toast-" + next.toString(), title="Event created", description="Sunday, December 3 at 9:00 AM", variant="default", actionLabel="Undo", createdAt=rightuiDemoTime, duration=5000), ToastMessage(id="controls-toast-" + (next + 1).toString(), title="Changes saved", description="Your latest edits are ready.", variant="success", actionLabel="", createdAt=rightuiDemoTime, duration=6500), ToastMessage(id="controls-toast-" + (next + 2).toString(), title="Team notified", description="Your collaborators are up to date.", variant="info", actionLabel="", createdAt=rightuiDemoTime, duration=8000)].concat(items).slice(0, 8)
+    serial = next + 2
+    rightuiRunDemo(9500)
+  action remove(key: string)
+    items = items.filter(item => item.id != key)
+    promises = promises.filter(value => value != key)
+  action undo(key: string)
+    result = "Event creation undone."
+  action choose(value: string)
+    position = value
   view
-    column gap="ui.space-16" min-width=0 max-width="100%"
-      Button(id="toast-show", label="Save project", variant="outline", disabled=false, press=show)
-      if activated
-        Toast(id="controls-toast", title="Project saved", description="Your change is saved. Dismiss the notification or undo the action.", actionLabel="Cancel", destructive=false, dismiss=dismissToast, act=undo)
-      text "Destructive notification" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      Button(id="variation-toast-danger-show", label="Show failed save", variant="outline", disabled=false, press=showDanger)
-      if dangerVisible
-        Toast(id="variation-toast-danger", title="Save failed", description="Try saving again.", actionLabel="Retry", destructive=true, dismiss=hideDanger, act=hideDanger)
+    column gap="ui.space-24" min-width="0px" max-width="100%"
+      column gap="ui.space-8"
+        text "Stacked notifications" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text "Click again to add another toast. Hover over the stack to expand it and pause dismissal." font-size="ui.text-sm" color="ui.muted-foreground" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        row flex-wrap="wrap" gap="ui.space-8"
+          Button(id="toast-show", label="Show toast", variant="outline", disabled=false, press=show("default"))
+          Button(id="toast-show-stack", label="Show stack", variant="outline", disabled=false, press=showStack)
+      column gap="ui.space-8"
+        text "Types" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        row flex-wrap="wrap" gap="ui.space-8"
+          for kind in ["default", "success", "info", "warning", "error", "loading"] key=kind
+            Button(id="toast-type-" + kind, label=(kind == "default" ? "Default" : kind == "success" ? "Success" : kind == "info" ? "Info" : kind == "warning" ? "Warning" : kind == "error" ? "Error" : "Loading"), variant="outline", disabled=false, press=show(kind))
+      column gap="ui.space-8"
+        text "Position" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        row flex-wrap="wrap" gap="ui.space-8"
+          for edge in ["top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"] key=edge
+            Button(id="toast-position-" + edge, label=(edge == "top-left" ? "Top left" : edge == "top-center" ? "Top center" : edge == "top-right" ? "Top right" : edge == "bottom-left" ? "Bottom left" : edge == "bottom-center" ? "Bottom center" : "Bottom right"), variant=(position == edge ? "secondary" : "outline"), disabled=false, press=choose(edge))
+      column gap="ui.space-8"
+        text "Async operation" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text "The same notification changes from loading to success when the operation completes." font-size="ui.text-sm" color="ui.muted-foreground" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        row
+          Button(id="toast-promise", label="Create event", variant="outline", disabled=false, press=showPromise)
+      if result != ""
+        text result testId="toast-result" role="status" aria-live="polite" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      ToastViewport(id="controls-toasts", items=visibleItems, position=position, clock=rightuiDemoTime, reduced=reduced, maxVisible=3, expandOnHover=true, requestClock=rightuiRunDemo, dismiss=remove, act=undo)

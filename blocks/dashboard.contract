@@ -379,7 +379,7 @@ component DashboardBlockWithScroll
             SidebarTrigger(id="dashboard-sidebar", expanded=sidebar, controls="dashboard-sidebar-panel", press=toggleSidebar)
           view width="ui.border-width" height="ui.space-16" background-color="ui.border"
           text "Documents" font-size="ui.text-base" font-weight="ui.weight-medium" flex=1 font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          link href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard" color="ui.foreground" font-size="ui.text-sm" text-decoration="none" padding="ui.space-6 ui.space-12"
+          link href="https://github.com/rightui-dev/ui/blob/main/blocks/dashboard.contract" color="ui.foreground" font-size="ui.text-sm" text-decoration="none" padding="ui.space-6 ui.space-12"
             text "GitHub" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         column id="dashboard-content" resize=measureContent padding=(narrow ? "ui.space-16" : "ui.space-24") gap="ui.space-24" min-width=0
           view display="grid" grid-template-columns=(contentWidth >= 1024 ? "repeat(4, minmax(0, 1fr))" : contentWidth >= 576 ? "repeat(2, minmax(0, 1fr))" : "minmax(0, 1fr)") gap="ui.space-16"

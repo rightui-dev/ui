@@ -1,6 +1,186 @@
 use OverlayLayer from "./overlay-layer.contract"
 use uiFontFamily from "./typography-context.contract"
-use Control from "./styles.contract"
+use ButtonContent, IconButton from "./button.contract"
+use Spinner from "./spinner.contract"
+
+shape ToastMessage
+  id: string
+  title: string
+  description: string
+  variant: string
+  actionLabel: string
+  createdAt: number
+  duration: number
+
+shape ToastMeasurement
+  id: string
+  height: number
+
+fn toastHeight(heights: ToastMeasurement[], id: string): number = match first(heights.filter(item => item.id == id)) { case some(item) => item.height, case none => 88 }
+fn toastOffset(items: ToastMessage[], heights: ToastMeasurement[], index: number): number = sum(items.slice(0, index).map(item => toastHeight(heights, item.id)))
+fn toastWakeTime(items: ToastMessage[]): number = match first(items.filter(item => items.filter(other => other.duration > item.duration).length == 0)) { case some(item) => max(1000, item.duration + 1000), case none => 1000 }
+
+// Keep this viewport mounted and remove a message when dismiss(id) fires.
+// The viewport owns exit retention; clock and requestClock come from a gated root task.
+component ToastViewport
+  props
+    id: string
+    items: ToastMessage[]
+    position: string
+    clock: number
+    reduced: bool
+    maxVisible: number
+    expandOnHover: bool
+    requestClock: action
+    dismiss: action
+    act: action
+  params
+    peek: length = "ui.toast-peek" control="token" group="Stack"
+  state heights: ToastMeasurement[] = []
+  state peekSize = 0
+  state borderSize = 0
+  state hovered = false
+  state focused = false
+  state pauseStarted = 0
+  state pauseElapsed = 0
+  derive paused = hovered or focused
+  derive expanded = expandOnHover and paused
+  derive topEdge = position.startsWith("top")
+  derive limit = max(1, maxVisible)
+  derive frontHeight = (match first(items) { case some(item) => toastHeight(heights, item.id), case none => 88 }) + borderSize * 2
+  derive shownCount = min(items.length, limit)
+  derive totalHeight = sum(items.slice(0, limit).map(item => toastHeight(heights, item.id))) + shownCount * borderSize * 2
+  derive viewportHeight = (expanded ? totalHeight : frontHeight) + max(0, shownCount - 1) * peekSize
+  derive pauseOffset = pauseElapsed + (paused ? clock - pauseStarted : 0)
+  action measurePeek(width: number, height: number)
+    peekSize = height
+  action measureBorder(width: number, height: number)
+    borderSize = height
+  action measured(key: string, height: number)
+    if height > 0 and toastHeight(heights, key) != height
+      heights = heights.filter(item => item.id != key).concat([ToastMeasurement(id=key, height=height)])
+  action hoverChanged(inside: bool)
+    if inside and not paused
+      pauseStarted = clock
+    else if not inside and hovered and not focused
+      pauseElapsed = pauseElapsed + clock - pauseStarted
+      requestClock(toastWakeTime(items))
+    hovered = inside
+  action focusEntered
+    if not paused
+      pauseStarted = clock
+    focused = true
+  action focusLeft(e: FocusEvent)
+    match e.relatedTarget
+      case some(target)
+        if not items.map(item => item.id + "-action").concat(items.map(item => item.id + "-close")).includes(target)
+          if not hovered
+            pauseElapsed = pauseElapsed + clock - pauseStarted
+            requestClock(toastWakeTime(items))
+          focused = false
+      case none
+        if focused and not hovered
+          pauseElapsed = pauseElapsed + clock - pauseStarted
+          requestClock(toastWakeTime(items))
+        focused = false
+  view
+    if items.length > 0
+      OverlayLayer(id=id, modal=false, initialFocus="", reduced=reduced)
+        view position="absolute" width="1px" height="param.peek" opacity=0 pointer-events="none" aria-hidden=true resize=measurePeek
+        view position="absolute" width="1px" height="ui.border-width" opacity=0 pointer-events="none" aria-hidden=true resize=measureBorder
+        column position="absolute" inset="0px" justify-content=(topEdge ? "flex-start" : "flex-end") align-items=(position.endsWith("left") ? "flex-start" : position.endsWith("center") ? "center" : "flex-end") padding="max(ui.space-16, env(safe-area-inset-top, 0px)) max(ui.space-16, env(safe-area-inset-right, 0px)) max(ui.space-16, env(safe-area-inset-bottom, 0px)) max(ui.space-16, env(safe-area-inset-left, 0px))" pointer-events="none" box-sizing="border-box"
+          column id=(id + "-viewport") testId=(id + "-viewport") role="region" aria-label="Notifications" position="relative" width="100%" max-width="ui.toast-width" height=(viewportHeight.toString() + "px") min-height="0px" pointer-events="none" hover=hoverChanged focusin=focusEntered focusout=focusLeft
+            for item, index in items key=item.id
+              ToastCard(message=item, index=index, topEdge=topEdge, frontHeight=frontHeight, expanded=expanded, offset=toastOffset(items, heights, index) + index * borderSize * 2, peekSize=peekSize, limited=(index >= limit), clock=clock, pauseOffset=pauseOffset, reduced=reduced, measure=measured, requestClock=requestClock, dismiss=dismiss, act=act)
+
+component ToastCard
+  props
+    message: ToastMessage
+    index: number
+    topEdge: bool
+    frontHeight: number
+    expanded: bool
+    offset: number
+    peekSize: number
+    limited: bool
+    clock: number
+    pauseOffset: number
+    reduced: bool
+    measure: action
+    requestClock: action
+    dismiss: action
+    act: action
+  inject
+    uiFont: string
+  state mounted = false
+  state closing = false
+  state notified = false
+  state pauseBaseline = pauseOffset
+  derive elapsed = max(0, clock - message.createdAt - max(0, pauseOffset - pauseBaseline))
+  derive expired = message.variant != "loading" and message.duration > 0 and elapsed >= message.duration
+  derive visible = mounted and not closing and not expired
+  derive contentVisible = expanded or index == 0
+  derive shrink = min(index, 3) * 0.1
+  derive resting = expanded ? offset + index * peekSize : index * peekSize + shrink * frontHeight
+  derive translation = visible ? "0px " + (topEdge ? resting : 0 - resting).toString() + "px" : (topEdge ? "0px -150%" : "0px 150%")
+  action reveal(width: number, height: number)
+    if not mounted
+      mounted = true
+      if message.variant != "loading" and message.duration > 0
+        requestClock(message.duration + 1000)
+  action measured(width: number, height: number, rect: DOMRectReadOnly)
+    measure(message.id, height + rect.y * 2)
+  action motion(width: number, height: number)
+    if mounted and (closing or expired) and height <= 0.01 and not notified
+      notified = true
+      dismiss(message.id)
+  action dismissCard
+    closing = true
+  action invoke
+    closing = true
+    act(message.id)
+  action keys(k: string)
+    if k == "Escape"
+      preventDefault()
+      dismissCard()
+  view
+    view position="absolute" width="1px" height="1px" opacity=0 pointer-events="none" aria-hidden=true resize=reveal
+    view position="absolute" width="1px" height=(visible ? "100px" : "0px") min-height="0px" opacity=0 pointer-events="none" aria-hidden=true resize=motion
+      transition=(reduced ? "none" : "height ui.duration-toast ui.easing-toast")
+    column id=message.id testId=message.id position="absolute" top=(topEdge ? "0px" : "auto") bottom=(topEdge ? "auto" : "0px") left="0px" right="0px" z-index=(1000 - index) width="100%" height=(contentVisible ? "auto" : frontHeight.toString() + "px") min-height="0px" box-sizing="border-box" overflow="hidden" pointer-events=(limited or closing or expired ? "none" : "auto") inert=(limited or not contentVisible or closing or expired) aria-hidden=(limited or not contentVisible)
+      border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-2xl" background-color="ui.surface" color="ui.foreground" box-shadow="ui.shadow-menu"
+      translate=translation scale=(expanded ? 1 : 1 - shrink) transform-origin=(topEdge ? "center top" : "center bottom") opacity=(limited or not visible ? 0 : 1)
+      transition=(reduced ? "none" : "translate ui.duration-toast ui.easing-toast, scale ui.duration-toast ui.easing-toast, opacity ui.duration-toast ui.easing-toast, height ui.duration-fast ui.easing-toast")
+      row id=(message.id + "-content") testId=(message.id + "-content") role=(message.variant == "error" ? "alert" : "status") aria-live=(message.variant == "error" ? "assertive" : "polite") aria-atomic=true key=keys resize=measured align-items="center" gap="ui.space-12" padding="ui.space-16" min-height="ui.space-80" flex-shrink=0 box-sizing="border-box" opacity=(contentVisible ? 1 : 0)
+        transition=(reduced ? "none" : "opacity ui.duration-normal ui.easing-toast")
+        if message.variant == "loading"
+          view flex-shrink=0 aria-hidden=true
+            Spinner(id=message.id + "-spinner", label="", reduced=reduced)
+        else if message.variant != "default" and message.variant != ""
+          svg width="ui.space-16" height="ui.space-16" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke=(message.variant == "error" ? "ui.danger" : "currentColor") stroke-width="ui.stroke-standard" stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
+            if message.variant == "success"
+              circle cx=12 cy=12 r=9
+              path d="m8 12 3 3 5-6"
+            else if message.variant == "warning"
+              path d="m10.3 3.8-8 14a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14a2 2 0 0 0-3.4 0M12 9v4M12 17h.01"
+            else if message.variant == "error"
+              path d="m8 3-5 5v8l5 5h8l5-5V8l-5-5ZM9 9l6 6M15 9l-6 6"
+            else
+              circle cx=12 cy=12 r=9
+              path d="M12 11v6M12 7h.01"
+        column flex=1 min-width="0px" gap="ui.space-4"
+          if message.title != ""
+            text message.title testId=(message.id + "-title") font-size="ui.text-sm" font-weight="ui.weight-medium" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          if message.description != ""
+            text message.description testId=(message.id + "-description") font-size="ui.text-sm" color="ui.muted-foreground" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        if message.actionLabel != ""
+          ButtonContent(id=message.id + "-action", label=message.actionLabel, variant="outline", size="sm", disabled=false, press=invoke)
+            text message.actionLabel font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        IconButton(id=message.id + "-close", label="Close notification", variant="ghost", disabled=false, press=dismissCard)
+          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" stroke-linecap="round" aria-hidden=true
+            path d="m6 6 12 12M6 18 18 6"
+
+// Existing single-message API remains available. Use ToastViewport for retained exits and a stack.
 component Toast
   props
     id: string
@@ -10,23 +190,12 @@ component Toast
     destructive: bool
     dismiss: action
     act: action
-  inject
-    uiFont: string
-  action keys(k: string)
-    if k == "Escape"
-      preventDefault()
-      dismiss()
+  state ignoredClock = 0
+  action ignoreClock(duration: number)
+    ignoredClock = ignoredClock
+  action dismissOne(key: string)
+    dismiss()
+  action actOne(key: string)
+    act()
   view
-    OverlayLayer(id=id, modal=false, initialFocus="", reduced=true)
-      column position="absolute" left="0px" right="0px" bottom="0px" padding="ui.space-16 ui.space-16 max(ui.space-16, env(safe-area-inset-bottom, 0px))" align-items="flex-end" box-sizing="border-box" pointer-events="none"
-        row id=id testId=id role="status" aria-live="polite" pointer-events="auto" key=keys gap="ui.space-16" align-items="center" padding="ui.space-16"
-          width="100%" max-width="26rem" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-2xl" background-color="ui.surface" color=(destructive ? "ui.danger" : "ui.foreground") box-shadow="ui.shadow-menu"
-          column flex=1 min-width="0px" gap="ui.space-4"
-            text title font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-            text description font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          if actionLabel != ""
-            button id=(id + "-action") testId=(id + "-action") class=Control press=act padding="ui.space-4 ui.space-10" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground"
-              text actionLabel font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          button id=(id + "-close") testId=(id + "-close") class=Control press=dismiss aria-label="Close notification" padding="ui.space-4" border="0" background-color="transparent" color="ui.muted-foreground"
-            svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
-              path d="m6 6 12 12M6 18 18 6"
+    ToastViewport(id=id, items=[ToastMessage(id=id, title=title, description=description, variant=(destructive ? "error" : "default"), actionLabel=actionLabel, createdAt=0, duration=0)], position="bottom-right", clock=0, reduced=false, maxVisible=3, expandOnHover=true, requestClock=ignoreClock, dismiss=dismissOne, act=actOne)

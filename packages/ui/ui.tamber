@@ -236,6 +236,10 @@ theme
   ui.duration-fast: duration = 150ms
   ui.duration-normal: duration = 200ms
   ui.duration-slow: duration = 300ms
+  ui.duration-toast: duration = 500ms
+  ui.easing-toast: easing = cubic-bezier(0.22, 1, 0.36, 1)
+  ui.toast-width: length = 24rem
+  ui.toast-peek: length = ui.space-12
   ui.easing: easing = ease
   ui.easing-drawer: easing = -exact-spring(300, 30, 1)
   ui.easing-drawer-bounce: easing = -exact-spring(300, 22, 1)

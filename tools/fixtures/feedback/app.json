@@ -1,0 +1,7 @@
+{
+  "name": "RightUI Feedback Check",
+  "id": "dev.rightui.feedbackcheck",
+  "app": { "id": "dev.rightui.feedbackcheck", "name": "RightUI Feedback Check" },
+  "data": ["rightui-font", "rightui-sheet"],
+  "host": { "web": { "head": [{ "link": { "rel": "stylesheet", "href": "/assets/sheet.css" } }] } }
+}

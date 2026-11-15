@@ -417,9 +417,9 @@
   {
     "slug": "hover-card",
     "title": "Hover Card",
-    "description": "Hover Card with accessible presentation and local state.",
-    "usage": "Import HoverCard from @rightui/ui. Supply content and required properties as shown in the example.",
-    "keyboard": "",
+    "description": "Preview related content on hover or keyboard focus.",
+    "usage": "Compose HoverCard with shared components such as AvatarFrame. Keep essential information available outside the hover preview.",
+    "keyboard": "Tab focuses the trigger. Enter or Space toggles the preview; Escape closes it.",
     "source": "packages/ui/hover-card.contract",
     "example": "examples/hover-card.contract",
     "exports": [
@@ -824,13 +824,15 @@
   {
     "slug": "toast",
     "title": "Toast",
-    "description": "Toast with accessible presentation and local state.",
-    "usage": "Import Toast from @rightui/ui. Store its value in state and update it through the provided action callback.",
-    "keyboard": "",
+    "description": "Stacked notifications with smooth directional motion, actions and loading states.",
+    "usage": "Keep ToastViewport mounted and pass ToastMessage records newest first. Choose top-left, top-center, top-right, bottom-left, bottom-center or bottom-right. Supply a gated root clock for automatic dismissal and asynchronous updates; remove a message in dismiss(id) after its exit completes. Loading messages remain until updated or dismissed. Toast keeps its original single-notification API.",
+    "keyboard": "Tab reaches the front notification actions. Focus or hover expands the stack and pauses automatic dismissal. Escape closes the focused notification.",
     "source": "packages/ui/toast.contract",
     "example": "examples/toast.contract",
     "exports": [
-      "Toast"
+      "Toast",
+      "ToastViewport",
+      "ToastMessage"
     ]
   },
   {
@@ -861,13 +863,14 @@
   {
     "slug": "tooltip",
     "title": "Tooltip",
-    "description": "Tooltip with accessible presentation and local state.",
-    "usage": "Import Tooltip from @rightui/ui. Supply content and required properties as shown in the example.",
-    "keyboard": "",
+    "description": "Centered contextual hints on the top, right, bottom or left.",
+    "usage": "Use Tooltip for a top hint, or TooltipAdvanced with side and reduced to select placement and respect reduced motion.",
+    "keyboard": "Hover, tap or focus the trigger to show the hint. Escape dismisses it; moving focus away closes it.",
     "source": "packages/ui/tooltip.contract",
     "example": "examples/tooltip.contract",
     "exports": [
-      "Tooltip"
+      "Tooltip",
+      "TooltipAdvanced"
     ]
   },
   {

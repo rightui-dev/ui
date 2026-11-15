@@ -1,10 +1,19 @@
-use Tooltip from "@rightui/ui"
+use uiFontFamily, TooltipAdvanced from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
-  derive narrow = width < 600
+  inject
+    uiFont: string
   view
-    column gap="ui.space-16" min-width=0 max-width="100%"
-      Tooltip(id="catalog-tooltip", label="Aide", description="Hover, focus or tap this button. Escape closes the tooltip.")
+    column gap="ui.space-24" min-width=0 max-width="100%" align-items="center"
+      TooltipAdvanced(id="catalog-tooltip", label="Hover", description="Add to library", side="top", reduced=reduced)
+      text "Placement" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      column gap="ui.space-12" align-items="center" padding="ui.space-24 0px"
+        TooltipAdvanced(id="tooltip-top", label="Top", description="Add to library", side="top", reduced=reduced)
+        row flex-direction=(width < 600 ? "column" : "row") gap="ui.space-24" align-items="center" justify-content="center"
+          TooltipAdvanced(id="tooltip-left", label="Left", description="Add to library", side="left", reduced=reduced)
+          TooltipAdvanced(id="tooltip-right", label="Right", description="Add to library", side="right", reduced=reduced)
+        TooltipAdvanced(id="tooltip-bottom", label="Bottom", description="Add to library", side="bottom", reduced=reduced)
+      text "Hover, focus or tap a button. Press Escape to close." font-size="ui.text-sm" text-align="center" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

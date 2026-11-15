@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0-beta.3",
+  "version": "0.3.0-beta.4",
   "asOf": "2026-11-15",
   "exactRevision": "53426cf02bf986a5e781abc4f953d79989c6dc05",
   "platforms": [
@@ -26,19 +26,19 @@
   ],
   "statuses": {
     "checked": {
-      "label": "\u2705 Partial checks",
+      "label": "✅ Partial checks",
       "description": "Targeted checks completed. Coverage varies by component."
     },
     "built": {
-      "label": "\u2705 Built only",
+      "label": "✅ Built only",
       "description": "Compiled successfully. Interactions have not been verified."
     },
     "blocked": {
-      "label": "\u26a0\ufe0f Partial checks",
+      "label": "⚠️ Partial checks",
       "description": "Validation incomplete for the current release."
     },
     "unsupported": {
-      "label": "\u274c Not supported",
+      "label": "❌ Not supported",
       "description": "Outside rightui support. The project targets web, iOS and macOS."
     }
   },
@@ -239,6 +239,11 @@
       "id": "popover-invoker-web",
       "description": "Targeted desktop and mobile browser checks cover repeated trigger toggling, outside dismissal, internal theme changes and Escape. A public Popover check verifies edited input persists after outside dismissal and reopening.",
       "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "feedback-beta4",
+      "description": "Targeted archive tests cover toast stacking, actions, loading persistence and completion, Hover Card and four Tooltip sides. Browser geometry and pointer motion were checked. Mac interactions were checked for Toast, Tooltip and Hover Card. iOS compilation and archive validation completed; device interactions were not rechecked for this release.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/docs/FEEDBACK-VALIDATION.md"
     }
   ],
   "overrides": [
@@ -615,20 +620,92 @@
     },
     {
       "kind": "component",
-      "slug": "toast",
-      "platform": "web",
-      "status": "checked",
-      "evidence": [
-        "window-overlays-web"
-      ]
-    },
-    {
-      "kind": "component",
       "slug": "popover",
       "platform": "web",
       "status": "checked",
       "evidence": [
         "popover-invoker-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "toast",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "feedback-beta4"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "toast",
+      "platform": "macos",
+      "status": "checked",
+      "evidence": [
+        "feedback-beta4"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "toast",
+      "platform": "ios",
+      "status": "built",
+      "evidence": [
+        "feedback-beta4"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "tooltip",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "feedback-beta4"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "tooltip",
+      "platform": "macos",
+      "status": "checked",
+      "evidence": [
+        "feedback-beta4"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "tooltip",
+      "platform": "ios",
+      "status": "built",
+      "evidence": [
+        "feedback-beta4"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "hover-card",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "feedback-beta4"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "hover-card",
+      "platform": "macos",
+      "status": "checked",
+      "evidence": [
+        "feedback-beta4"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "hover-card",
+      "platform": "ios",
+      "status": "built",
+      "evidence": [
+        "feedback-beta4"
       ]
     }
   ]

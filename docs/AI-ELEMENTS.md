@@ -1,8 +1,8 @@
 # AI Elements
 
 The 21 patterns compose shared rightui controls in Exact Contract. Their local
-transcripts reproduce the official shadcn examples. They do not connect an AI
-provider, upload files or execute the commands displayed in a transcript.
+transcripts demonstrate the components and their interactions. They do not connect
+an AI provider, upload files or execute the commands displayed in a transcript.
 
 Copy the pattern and its supporting files from the documentation source viewer
 into the same relative layout. Install `@rightui/ui` for its shared controls.

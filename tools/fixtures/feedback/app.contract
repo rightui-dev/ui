@@ -1,0 +1,42 @@
+font "Geist"
+  100 900 = "assets/fonts/Geist.ttf"
+use Demo as ToastDemo from "./toast-demo.contract"
+use Demo as TooltipDemo from "./tooltip-demo.contract"
+use Demo as HoverDemo from "./hover-card-demo.contract"
+shape Viewport
+  width: number
+  height: number
+  prefersReducedMotion: bool
+routes nav
+  toast "/"
+  tooltip "/tooltip"
+  hovercard "/hover-card"
+component App
+  resource viewport = exactViewport() as shape Viewport
+  state presses = 0
+  state demoTime = 0
+  state demoUntil = 0
+  action backgroundPress
+    presses = presses + 1
+  action runDemo(duration: number)
+    demoUntil = max(demoUntil, demoTime + duration)
+  action tickDemo
+    demoTime = min(demoUntil, demoTime + 32)
+  task demoClock when demoTime < demoUntil
+    every(32, tickDemo)
+  provide
+    uiFont = "sans"
+    rightuiDemoTime = demoTime
+    rightuiRunDemo = runDemo
+  view
+    column min-height="100vh" padding=32 gap=24 background-color="ui.background" color="ui.foreground"
+      button id="outside" testId="outside" press=backgroundPress
+        text "Background control"
+      text presses.toString() testId="outside-counter"
+      column position="relative" overflow="hidden" translate="0px 0px" width="100%" max-width=600 min-height=400 padding=24 box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border"
+        if top(nav).name == "toast"
+          ToastDemo(width=viewport.width, reduced=viewport.prefersReducedMotion)
+        else if top(nav).name == "tooltip"
+          TooltipDemo(width=viewport.width, reduced=viewport.prefersReducedMotion)
+        else
+          HoverDemo(width=viewport.width, reduced=viewport.prefersReducedMotion)

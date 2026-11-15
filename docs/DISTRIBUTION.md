@@ -4,8 +4,6 @@ rightui ships one source package, `@rightui/ui`. It contains Contract components
 
 ## Why one package
 
-[shadcn's CLI](https://ui.shadcn.com/docs/cli) selects and copies component source into an application, together with the required dependencies. Its registry distinguishes [npm dependencies from other registry items](https://ui.shadcn.com/docs/registry/registry-item-json). This is not a separate npm package for every styled component; shared helper and primitive packages can coexist with source distribution.
-
 rightui currently keeps components in one versioned package. Shared primitives and tokens update together, and consumers import the public Contract names they use. Splitting every component into its own release would add dependency/version coordination without demonstrated runtime savings.
 
 At the pinned Exact revision, the source resolver traverses imported files, including a barrel's reexports. Expansion starts at the selected root view, so loading a source file does not imply rendering all its components. This does **not** establish complete tree shaking of styles, resource declarations, fonts or assets. Separate entry points such as `@rightui/ui/button` could reduce the compiler's import graph in the future without creating separate packages; they are not available today.

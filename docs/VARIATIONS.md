@@ -1,6 +1,6 @@
 # Component variations
 
-The 66 component families have live demos. This inventory compares their actual Contract APIs and examples with the pinned shadcn sources. It is not a certification that every shadcn option or behavior is implemented.
+The component families have live demos. This inventory records their Contract APIs, examples and remaining variants; it does not imply that every possible composition or behavior has been validated.
 
 `metadata/variations.json` links each demo to upstream source files, lists named variations, records the exact demo hash, and separates remaining APIs from React-specific integrations.
 

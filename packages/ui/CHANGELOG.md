@@ -4,6 +4,12 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.3.0-beta.4] - 2026-11-15
+
+- Add a viewport-level toast stack with directional entrance and exit motion, status icons, loading feedback and configurable top or bottom placement. Preserve the original Toast call signature.
+- Add configurable Tooltip sides with centered content and arrows, preserving the original Tooltip call signature.
+- Use the public Avatar in Hover Card and remove unrelated upstream branding from example content. Keep inspiration and license attribution.
+
 ## [0.3.0-beta.3] - 2026-11-15
 
 - Keep SheetContent a simple edge panel on all four sides. The bottom variant no longer uses Drawer dragging, snap points, spring bounce or a handle; Drawer keeps those interactions.

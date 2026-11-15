@@ -1,34 +1,63 @@
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
-keyframes uiTooltipDelay
-  from opacity=0
-  to opacity=1
+use buttonFill, buttonInk from "./button.contract"
+
+keyframes uiTooltipTop
+  from opacity=0 translate="0px 4px"
+  to opacity=1 translate="0px 0px"
+keyframes uiTooltipBottom
+  from opacity=0 translate="0px -4px"
+  to opacity=1 translate="0px 0px"
+keyframes uiTooltipLeft
+  from opacity=0 translate="4px 0px"
+  to opacity=1 translate="0px 0px"
+keyframes uiTooltipRight
+  from opacity=0 translate="-4px 0px"
+  to opacity=1 translate="0px 0px"
 
 component Tooltip
   props
     id: string
     label: string
     description: string
+  view
+    TooltipAdvanced(id=id, label=label, description=description, side="top", reduced=false)
+
+component TooltipAdvanced
+  props
+    id: string
+    label: string
+    description: string
+    side: string
+    reduced: bool
   inject
     uiFont: string
+  derive placement = side == "bottom" or side == "left" or side == "right" ? side : "top"
+  derive vertical = placement == "top" or placement == "bottom"
   state focused = false
-  state delayed = false
+  state hovered = false
   state expanded = false
   action show
-    delayed = false
     expanded = true
     showPopover(id + "-tip", source=id)
   action enter
     focused = true
     show()
-  action leave
-    focused = false
-    hidePopover(id + "-tip")
+  action leave(e: FocusEvent)
+    match e.relatedTarget
+      case some(target)
+        if not target.startsWith(id + "-")
+          focused = false
+          if not hovered
+            hidePopover(id + "-tip")
+      case none
+        focused = false
+        if not hovered
+          hidePopover(id + "-tip")
   action hover(inside: bool)
+    hovered = inside
     if inside
-      expanded = true
-      delayed = true
-      showPopover(id + "-tip", source=id)
+      show()
     else if not focused
       hidePopover(id + "-tip")
   action changed(e: ToggleEvent)
@@ -38,14 +67,18 @@ component Tooltip
       preventDefault()
       hidePopover(id + "-tip")
   view
-    column align-items="flex-start" hover=hover
-      button id=id testId=id class=Control aria-describedby=(id + "-tip") focus=enter blur=leave press=show key=keys
-        padding="ui.space-8 ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground"
+    row align-items="center" hover=hover focusin=enter focusout=leave key=keys
+      button id=id testId=id class=Control aria-describedby=(id + "-tip") press=show popovertarget=(id + "-tip") popovertargetaction="show"
+        display="flex" flex-shrink=0 align-items="center" justify-content="center" height="ui.control" min-height="ui.control" padding="ui.space-6 ui.space-16" gap="ui.control-gap"
+        border-width="ui.border-width" border-style="solid" border-color="ui.input" border-radius="ui.radius-control" background-color=buttonFill("outline", hovered) color=buttonInk("outline") box-shadow="ui.shadow-control"
         text label font-family=uiFontFamily(uiFont) data-rightui-font="body"
       view id=(id + "-tip") testId=(id + "-tip") role="tooltip" popover="auto" toggle=changed hover=hover
-        position-area="top" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
-        width="auto" max-width="calc(100vw - ui.space-32)" box-sizing="border-box" margin="ui.space-4" padding="ui.space-6 ui.space-12"
-        background-color="ui.foreground" color="ui.background" border="0" border-radius="ui.radius-item" overflow="visible"
-        animation=(delayed ? "uiTooltipDelay ui.duration-instant ui.easing-linear ui.duration-tooltip-delay both" : "none")
+        position-area=placement position-try-fallbacks="none"
+        width="auto" max-width="min(20rem, calc(100vw - ui.space-32))" box-sizing="border-box" margin="ui.space-6" padding="ui.space-6 ui.space-12"
+        background-color="ui.foreground" color="ui.background" border="0" border-radius="ui.radius-item" overflow="visible" box-shadow="none"
+        animation=(reduced or not expanded ? "none" : placement == "left" ? "uiTooltipLeft ui.duration-fast ui.easing both" : placement == "right" ? "uiTooltipRight ui.duration-fast ui.easing both" : placement == "bottom" ? "uiTooltipBottom ui.duration-fast ui.easing both" : "uiTooltipTop ui.duration-fast ui.easing both")
         text description font-size="ui.text-xs" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        view position="absolute" left="50%" bottom="ui.space-negative-5" width="ui.space-10" height="ui.space-10" rotate="45deg" border-radius="ui.radius-detail" background-color="ui.foreground" aria-hidden=true
+        view aria-hidden=true pointer-events="none" position="absolute" width="ui.space-10" height="ui.space-10" rotate="45deg" border-radius="ui.radius-detail" background-color="ui.foreground"
+          left=(vertical ? "50%" : placement == "right" ? "ui.space-negative-5" : "auto") right=(placement == "left" ? "ui.space-negative-5" : "auto")
+          top=(vertical ? placement == "bottom" ? "ui.space-negative-5" : "auto" : "50%") bottom=(placement == "top" ? "ui.space-negative-5" : "auto")
+          translate=(vertical ? "-50% 0px" : "0px -50%")

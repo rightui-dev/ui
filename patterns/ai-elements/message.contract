@@ -23,7 +23,7 @@ component Demo
   action copyUser
     copyText(prompt)
   action copy
-    copyText("Install Dialog, then open it from the gear button in `site-header.tsx`.\n\n```bash\nnpx shadcn@latest add dialog\n```\n\nWrap the button in a `DialogTrigger` and put the settings form in `DialogContent`. Focus moves into the dialog when it opens, and **Esc** closes it.")
+    copyText("Import Dialog, then open it from your header button.\n\n```contract\nuse Button, Dialog from \"@rightui/ui\"\n```\n\nKeep a boolean open state in the parent. Pass it to `Dialog`, update it from the button action, and clear it in `dismiss`. Put the settings form in the Dialog slot.")
     copiedUntil = rightuiDemoTime + 2000
     rightuiRunDemo(2000)
   action like
@@ -47,7 +47,7 @@ component Demo
             MessageAction(id="ai-message-edit", label="Edit", icon="pencil", pressed=editing, press=toggleEdit)
       MessageFrame(id="ai-message-assistant", align="start")
         MessageContent(id="ai-message-answer", align="start")
-          Markdown(id="ai-message-markdown", content="Install Dialog, then open it from the gear button in `site-header.tsx`.\n\n```bash\nnpx shadcn@latest add dialog\n```\n\nWrap the button in a `DialogTrigger` and put the settings form in `DialogContent`. Focus moves into the dialog when it opens, and **Esc** closes it.")
+          Markdown(id="ai-message-markdown", content="Import Dialog, then open it from your header button.\n\n```contract\nuse Button, Dialog from \"@rightui/ui\"\n```\n\nKeep a boolean open state in the parent. Pass it to `Dialog`, update it from the button action, and clear it in `dismiss`. Put the settings form in the Dialog slot.")
           MessageFooter(id="ai-message-footer", align="start")
             MessageAction(id="ai-message-copy", label=(copied ? "Copied" : "Copy"), icon=(copied ? "check" : "copy"), pressed=false, press=copy)
             MessageAction(id="ai-message-helpful", label="Good response", icon="hand.thumbsup", pressed=(feedback == "like"), press=like)
