@@ -1,0 +1,33 @@
+use SafeArea, Switch, uiFontFamily from "@rightui/ui"
+
+component Demo
+  props
+    width: number
+    reduced: bool
+  inject
+    uiFont: string
+  state top = true
+  state bottom = true
+  state left = true
+  state right = true
+  action setTop(value: bool)
+    top = value
+  action setBottom(value: bool)
+    bottom = value
+  action setLeft(value: bool)
+    left = value
+  action setRight(value: bool)
+    right = value
+  view
+    column gap="ui.space-16" min-width="0px" max-width="100%"
+      column gap="ui.space-12"
+        Switch(id="safe-area-top", label="Top inset", checked=top, disabled=false, reduced=reduced, change=setTop)
+        Switch(id="safe-area-bottom", label="Bottom inset", checked=bottom, disabled=false, reduced=reduced, change=setBottom)
+        Switch(id="safe-area-left", label="Left inset", checked=left, disabled=false, reduced=reduced, change=setLeft)
+        Switch(id="safe-area-right", label="Right inset", checked=right, disabled=false, reduced=reduced, change=setRight)
+      column testId="safe-area-preview" background-color="ui.muted" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-panel" overflow="clip"
+        SafeArea(top=top, bottom=bottom, left=left, right=right)
+          column testId="safe-area-content" gap="ui.space-8" padding="ui.space-16" background-color="ui.surface"
+            text "Content inside SafeArea" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) color="ui.foreground" data-rightui-font="body"
+            text "The muted space uses this window's actual safe-area insets. Toggle an edge to include or remove its padding." font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) color="ui.muted-foreground" data-rightui-font="body"
+      text "Insets can be zero, especially in desktop browsers. This example does not simulate a notch or add a minimum inset." font-size="ui.text-xs" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) color="ui.muted-foreground" data-rightui-font="body"

@@ -1,0 +1,21 @@
+// Mount this component only while visible. The first layout opens the same
+// subtree in Exact's painted top layer, outside clips and transformed parents.
+// A nonzero, invisible probe receives the documented initial resize event.
+component OverlayLayer
+  props
+    id: string
+    modal: bool
+    initialFocus: string
+    reduced: bool
+  slot
+  state presented = false
+  action present(width: number, height: number)
+    if not presented
+      presented = true
+      showPopover((modal ? "rightui-modal-" : "rightui-toast-") + id + "-layer")
+      if initialFocus != ""
+        focus(initialFocus)
+  view
+    view position="absolute" width="1px" height="1px" opacity=0 pointer-events="none" aria-hidden=true resize=present
+    column id=((modal ? "rightui-modal-" : "rightui-toast-") + id + "-layer") testId=(id + "-layer") popover="manual" position="absolute" position-try-fallbacks="none" top="0px" left="0px" right="auto" bottom="auto" margin="0px" padding="0px" width="100vw" height="100vh" max-width="none" max-height="none" border="none" background-color="transparent" overflow="clip" box-sizing="border-box" pointer-events="none" aria-modal=modal
+      children

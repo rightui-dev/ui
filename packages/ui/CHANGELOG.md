@@ -4,6 +4,24 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.3.0-beta.2] - 2026-11-15
+
+- First published 0.3 beta; includes the window overlays and SafeArea from the local beta.1 candidate below. Breaking: migrate SheetContent to controlled `open`, ordered `focusIds` and a `dismiss` callback, and load assets/sheet.css on web. See docs/SHEET.md.
+- Add controlled DrawerContent with configurable detached presentation, handle and close controls, backdrop opacity/dismissal, spring bounce and scroll behavior. Preserve Drawer and DrawerAdvanced call signatures.
+- Add DrawerInset, fixed DrawerFooter and independently scrollable DrawerBody compositions. Attached panels keep regular content margins; detached panels can use compact margins. A scroll-to-expand mode animates to the full available height with the same controls and progressively restored corners; it does not claim continuous scroll/resize gesture handoff.
+- Increase the resize handle's touch target and native hit slop while keeping a compact visual grip. Keep the full surface and backdrop synchronized through drag, bounce and dismissal.
+- Keep bottom safe-area spacing inside automatic scrolling content, so it does not cover the visible body with a fixed blank strip.
+- Add PopoverTrigger with a declared native invoker relationship. Fix repeat-trigger dismissal in Popover and controlled popovers without changing existing DisclosureButton or Popover signatures.
+
+## [0.3.0-beta.1] - 2026-11-15
+
+- Add SafeArea with independently configurable edges backed by Exact's real safe-area values.
+- Add continuous Drawer and bottom Sheet dragging with 30% / 90% default stops, momentum-aware snapping, keyboard resizing and pull-down dismissal. DrawerAdvanced exposes custom snapPoints and initialSnap; the spring is a shared theme token.
+
+- Render Dialog, AlertDialog, Drawer, Sheet and Toast in the window-level painted RightUI layer, outside clipped or transformed demo containers. Keep the authored surfaces on iOS and macOS instead of presenting an operating-system sheet.
+- Preserve controlled visibility, modal keyboard handling, editable content and focus restoration. Toast remains non-modal and appears at the viewport edge.
+- Breaking: SheetContent now takes `open`, `focusIds` and `dismiss`. Replace `showModal`/`close` calls with state changes and restore focus in the dismiss callback. See docs/SHEET.md. Load assets/sheet.css for web overlay positioning and scroll locking.
+
 ## [0.2.0-beta.5] - 2026-11-14
 
 - Keep decorative Avatar images out of pointer hit testing so the first click reaches an enclosing button and activates the server-rendered app. Preserve image loading, error recovery and interactive badge slots.

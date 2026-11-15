@@ -1,11 +1,16 @@
+use DrawerSession from "./drawer.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
+use OverlayLayer from "./overlay-layer.contract"
 use uiModalFadeIn, uiPanelLeftIn, uiPanelRightIn, uiPanelTopIn, uiPanelBottomIn from "./overlays.contract"
 
-// Open with showModal(id), close with close(id). The host owns modal focus and inertness.
+// The parent controls visibility; OverlayLayer transports this authored surface to the window.
 component SheetContent
   props
     id: string
+    open: bool
+    focusIds: string[]
+    dismiss: action
     title: string
     description: string
     side: string
@@ -15,41 +20,64 @@ component SheetContent
     uiFont: string
   slot
   derive horizontal = side == "left" or side == "right"
-  action dismiss
-    close(id)
+  state focused = ""
+  action rememberFocus(e: FocusEvent)
+    focused = e.target
+  action keys(k: string, e: KeyboardEvent)
+    if not e.isComposing
+      if k == "Escape"
+        preventDefault()
+        stopPropagation()
+        dismiss()
+      else if k == "Tab"
+        preventDefault()
+        stopPropagation()
+        let targets = showCloseButton ? focusIds.concat([id + "-close"]) : focusIds
+        let index = targets.indexOf(focused)
+        let next = index < 0 ? (e.shiftKey ? targets.length - 1 : 0) : (index + (e.shiftKey ? targets.length - 1 : 1)) % max(1, targets.length)
+        match targets.at(next)
+          case some(target)
+            focus(target)
+          case none
+            focus(id + "-panel")
   action blockScroll(e: WheelEvent)
     if not e.ctrlKey
       preventDefault()
   view
-    dialog id=id testId=id aria-labelledby=(id + "-title") aria-describedby=(id + "-description") closedby="any" data-rightui-sheet=(reduced ? "reduced" : side)
-      inset="0px" margin="0px" padding="0px" width="100%" max-width="100%" height="100%" max-height="100%" border="none" background-color="transparent" overflow="clip" box-sizing="border-box"
-      view id=(id + "-backdrop") testId=(id + "-backdrop") position="absolute" inset="0px" background-color="ui.overlay" aria-hidden=true tabindex=-1 press=dismiss wheel=blockScroll touch-action="none"
-        animation=(reduced ? "none" : "uiModalFadeIn ui.duration-normal ui.easing both")
-      column id=(id + "-panel") testId=(id + "-panel") tabindex=-1 autofocus=true outline="none" position="absolute" top=(side == "bottom" ? "auto" : "0px") bottom=(side == "top" ? "auto" : "0px") left=(side == "right" ? "auto" : "0px") right=(side == "left" ? "auto" : "0px")
-        width=(horizontal ? "75%" : "100%") max-width=(horizontal ? "24rem" : "100%") height=(horizontal ? "100%" : "auto") max-height=(horizontal ? "100%" : "50%") min-height="0px" box-sizing="border-box" overflow="auto" overscroll-behavior="contain"
-        gap="ui.space-16" background-color="ui.surface" color="ui.foreground" box-shadow="ui.shadow-panel" border-color="ui.border" border-style="solid" border-width="0px"
-        border-left-width=(side == "right" ? "ui.border-width" : "0px") border-right-width=(side == "left" ? "ui.border-width" : "0px") border-top-width=(side == "bottom" ? "ui.border-width" : "0px") border-bottom-width=(side == "top" ? "ui.border-width" : "0px")
-        animation=(reduced ? "none" : side == "left" ? "uiPanelLeftIn ui.duration-enter ui.easing both" : side == "right" ? "uiPanelRightIn ui.duration-enter ui.easing both" : side == "top" ? "uiPanelTopIn ui.duration-enter ui.easing both" : "uiPanelBottomIn ui.duration-enter ui.easing both")
-        column gap="ui.space-4" padding="ui.space-16" padding-right="ui.space-48" flex-shrink=0
-          text title id=(id + "-title") role="heading" aria-level=2 font-size="ui.text-base" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) color="ui.foreground" data-rightui-font="body"
-          text description id=(id + "-description") font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) color="ui.muted-foreground" data-rightui-font="body"
+    if open and side == "bottom"
+      DrawerSession(id=id, panelId=id + "-panel", showCloseButton=showCloseButton, safeBottom=false, scrollable=false, title=title, description=description, reduced=reduced, focusIds=focusIds, dismiss=dismiss, snapPoints=[0.3, 0.9], initialSnap=0.3)
         children
-        if showCloseButton
-          button id=(id + "-close") testId=(id + "-close") class=Control press=dismiss aria-label="Close" position="absolute" top="ui.space-12" right="ui.space-12" width="ui.space-32" height="ui.space-32" min-height="ui.space-32" padding="ui.space-8" border="none" background-color="transparent" color="ui.foreground"
-            :hover
-              background-color="ui.muted"
-            svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
-              path d="m6 6 12 12M6 18 18 6"
+    else if open
+      OverlayLayer(id=id, modal=true, initialFocus=id + "-panel", reduced=reduced)
+        column id=id testId=id role="dialog" aria-modal=true aria-labelledby=(id + "-title") aria-describedby=(id + "-description") keycapture=keys focusin=rememberFocus data-rightui-sheet=(reduced ? "reduced" : side) position="absolute"
+          inset="0px" margin="0px" padding="0px" width="100%" max-width="100%" height="100%" max-height="100%" border="none" background-color="transparent" overflow="clip" box-sizing="border-box"
+          view id=(id + "-backdrop") testId=(id + "-backdrop") position="absolute" inset="0px" background-color="ui.overlay" aria-hidden=true tabindex=-1 pointer-events="auto" press=dismiss wheel=blockScroll touch-action="none"
+            animation=(reduced ? "none" : "uiModalFadeIn ui.duration-normal ui.easing both")
+          column id=(id + "-panel") testId=(id + "-panel") tabindex=-1 autofocus=true outline="none" pointer-events="auto" position="absolute" top=(side == "bottom" ? "auto" : "0px") bottom=(side == "top" ? "auto" : "0px") left=(side == "right" ? "auto" : "0px") right=(side == "left" ? "auto" : "0px")
+            width=(horizontal ? "75%" : "100%") max-width=(horizontal ? "24rem" : "100%") height=(horizontal ? "100%" : "auto") max-height=(horizontal ? "100%" : "50%") min-height="0px" box-sizing="border-box" overflow="auto" overscroll-behavior="contain"
+            gap="ui.space-16" background-color="ui.surface" color="ui.foreground" box-shadow="ui.shadow-panel" border-color="ui.border" border-style="solid" border-width="0px"
+            border-left-width=(side == "right" ? "ui.border-width" : "0px") border-right-width=(side == "left" ? "ui.border-width" : "0px") border-top-width=(side == "bottom" ? "ui.border-width" : "0px") border-bottom-width=(side == "top" ? "ui.border-width" : "0px")
+            animation=(reduced ? "none" : side == "left" ? "uiPanelLeftIn ui.duration-enter ui.easing both" : side == "right" ? "uiPanelRightIn ui.duration-enter ui.easing both" : side == "top" ? "uiPanelTopIn ui.duration-enter ui.easing both" : "uiPanelBottomIn ui.duration-enter ui.easing both")
+            column gap="ui.space-4" padding="ui.space-16" padding-top=(side == "bottom" ? "ui.space-16" : "calc(ui.space-16 + env(safe-area-inset-top))") padding-left="max(ui.space-16, env(safe-area-inset-left))" padding-right="calc(ui.space-48 + env(safe-area-inset-right))" flex-shrink=0
+              text title id=(id + "-title") role="heading" aria-level=2 font-size="ui.text-base" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) color="ui.foreground" data-rightui-font="body"
+              text description id=(id + "-description") font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) color="ui.muted-foreground" data-rightui-font="body"
+            children
+            if showCloseButton
+              button id=(id + "-close") testId=(id + "-close") class=Control press=dismiss aria-label="Close" position="absolute" top=(side == "bottom" ? "ui.space-12" : "calc(ui.space-12 + env(safe-area-inset-top))") right="calc(ui.space-12 + env(safe-area-inset-right))" width="ui.space-32" height="ui.space-32" min-height="ui.space-32" padding="ui.space-8" border="none" background-color="transparent" color="ui.foreground"
+                :hover
+                  background-color="ui.muted"
+                svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
+                  path d="m6 6 12 12M6 18 18 6"
 
 component SheetBody
   slot
   view
-    scroll flex="1 1 auto" min-height="0px" overscroll-behavior="contain" padding="0px ui.space-16"
+    scroll flex="1 1 auto" min-height="0px" overscroll-behavior="contain" padding="0px ui.space-16" padding-left="max(ui.space-16, env(safe-area-inset-left))" padding-right="max(ui.space-16, env(safe-area-inset-right))"
       column gap="ui.space-24" min-width="0px"
         children
 
 component SheetFooter
   slot
   view
-    column gap="ui.space-8" padding="ui.space-16" margin-top="auto" flex-shrink=0
+    column gap="ui.space-8" padding="ui.space-16" padding-bottom="calc(ui.space-16 + env(safe-area-inset-bottom))" padding-left="max(ui.space-16, env(safe-area-inset-left))" padding-right="max(ui.space-16, env(safe-area-inset-right))" margin-top="auto" flex-shrink=0
       children

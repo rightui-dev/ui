@@ -15,9 +15,11 @@ component Demo
   action dismissToast
     activated = false
   action show
+    dangerVisible = false
     activated = true
   state dangerVisible = false
   action showDanger
+    activated = false
     dangerVisible = true
   action hideDanger
     dangerVisible = false

@@ -1,6 +1,6 @@
 # Compatibility
 
-124 catalog entries. Evidence recorded on 2026-11-14 against rightui 0.2.0-beta.4 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
+125 catalog entries. Evidence recorded on 2026-11-15 against rightui 0.3.0-beta.2 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
 
 This records validation evidence, not full compatibility certification. Partial checks cover specific examples or interactions, not every variant. Built only means compilation succeeded, without a targeted interaction result.
 
@@ -19,7 +19,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 | --- | --- | --- | --- | --- | --- |
 | Accordion | ⚠️ Partial checks | ✅ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Alert | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Alert Dialog | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Alert Dialog | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Aspect Ratio | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Attachment | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Avatar | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
@@ -40,9 +40,9 @@ iOS validation is incomplete. Windows and Android are not supported.
 | Context Menu | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Data Table | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Date Picker | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Dialog | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Dialog | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Direction | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Drawer | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Drawer | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Dropdown Menu | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Empty | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Field | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
@@ -60,11 +60,12 @@ iOS validation is incomplete. Windows and Android are not supported.
 | Native Select | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Navigation Menu | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Pagination | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Popover | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Popover | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Progress | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Questionnaire | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Radio Group | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Resizable | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
+| Safe Area | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Scroll Area | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Select | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Separator | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
@@ -77,7 +78,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 | Table | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Tabs | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Textarea | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Toast | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Toast | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Toggle | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Toggle Group | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Tooltip | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
@@ -114,8 +115,8 @@ iOS validation is incomplete. Windows and Android are not supported.
 
 | Component | iOS | macOS | Web | Windows | Android |
 | --- | --- | --- | --- | --- | --- |
-| dashboard-01 — A dashboard with sidebar, charts and data table | ⚠️ Partial checks | ✅ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
-| sidebar-01 — Sidebar layout 1 | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| dashboard-01 — A dashboard with sidebar, charts and data table | ✅ Partial checks | ✅ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
+| sidebar-01 — Sidebar layout 1 | ✅ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | sidebar-02 — Sidebar layout 2 | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | sidebar-03 — A sidebar with submenus | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | sidebar-04 — Sidebar layout 4 | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
@@ -159,6 +160,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 
 ## Evidence
 
+- **safe-area-pending:** SafeArea uses document safe-area insets. Browser zero-inset layout is checked; native edge and rotation validation remains incomplete. [Source](https://github.com/rightui-dev/ui/blob/main/docs/SAFE-AREA.md)
 - **web-run:** VALIDATION.md records 24 successful browser tests and 0 Contract findings on 2026-11-13. The broader visual/accessibility audit still reports 130 findings; this is limited functional coverage, not full compatibility certification. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 - **web-tabs:** Test "tabs use keyboard navigation and retain selection after resize" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect text "tabs-demo-title" == "Analytics"; expect text "tabs-demo-title" == "Settings"; expect text "tabs-demo-title" == "Settings"; expect disabled "tabs-disabled-1"; expect text "tabs-line-panel" == "Reports"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects. [Source](https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract)
 - **web-calendar:** Test "calendar icon controls change month and respect disabled state" is included in the 24 successful browser tests recorded in docs/VALIDATION.md. Explicit assertions: expect text "dates-single-month" == "April 2026"; expect text "dates-single-month" == "March 2026"; expect disabled "dates-disabled-next"; expect no failures. Only these assertions are established; taps without outcome assertions do not establish their effects. [Source](https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract)
@@ -188,9 +190,13 @@ iOS validation is incomplete. Windows and Android are not supported.
 - **web-switch-0-2:** At 390px, pointer activation changed Switch from on to off, Space changed it back to on, and a pointer press on the disabled Switch left the shared state unchanged. The documentation article retained 24px side insets without document overflow. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 - **mac-site-0-2:** The same Contract website was compiled for macOS and manually checked through Home, Blocks and Dashboard, repeated Back/Forward navigation, disabled history endpoints, page titles, immersive blocks and the globe opening the equivalent website URL. The delivered Mac archive was signature-checked and its downloaded SHA-256 matched the approved artifact. This does not certify every native component. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 - **sheet-modal-web:** SheetContent passed six browser interaction tests and targeted desktop/mobile viewport, focus, background interaction and scroll-position checks. Four edges and optional close controls were covered. This is targeted web validation, not full platform certification. [Source](https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md)
-- **sheet-modal-native-pending:** The new SheetContent dialog composition has not been built or exercised on native targets. [Source](https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md)
+- **sheet-modal-native-pending:** The authored window-level Sheet composition has targeted simulator coverage; full native accessibility and device validation remain incomplete. [Source](https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md)
 - **avatar-web:** Five isolated web checks cover failed-image recovery after source changes, legacy fallback, clamped counts, account-menu selection and Escape, keyboard navigation and existing text dropdown behavior. [Source](https://github.com/rightui-dev/ui/blob/main/tools/fixtures/avatar/app.test.contract)
 - **avatar-first-pointer-web:** Beta.5 follow-up: with idle activation held, real first-pointer clicks at 1440px and 390px activated the built app, opened the Avatar menu and focused Profile. This targeted web check does not establish native behavior. [Source](https://github.com/rightui-dev/ui/blob/main/tools/check-avatar-first-click.browser.py)
 - **avatar-native-pending:** The updated Avatar compositions have not received targeted native validation. [Source](https://github.com/rightui-dev/ui/blob/main/docs/AVATAR.md)
+- **ios-block-scroll-local:** Unreleased local iOS simulator checks covered the Dashboard and Sidebar 01 previews: the shared Back bar hides on downward content scrolling and reappears on upward scrolling. Dashboard table scrolling and return to the catalog were also exercised. This is limited preview-navigation evidence, not full block, device or accessibility validation. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
+- **window-overlays-web:** Ten isolated browser checks cover full-window geometry from a transformed clipped container, repeated opening, focus and Escape, initial visibility, non-modal Toast, Drawer dragging and keyboard snap points, point normalization and zero web SafeArea insets. Pointer checks also verified backdrop dismissal and Alert Dialog background blocking. Six Sheet checks cover form persistence and four edges. [Source](https://github.com/rightui-dev/ui/blob/main/tools/fixtures/overlays/app.test.contract)
+- **drawer-options-web:** Thirteen isolated browser checks passed, including detached insets, controls and focus without a handle, controlled snap points across resize, and scroll-to-full-height with fixed content and footer. Native and motion checks are recorded separately. [Source](https://github.com/rightui-dev/ui/blob/main/tools/fixtures/overlays/app.test.contract)
+- **popover-invoker-web:** Targeted desktop and mobile browser checks cover repeated trigger toggling, outside dismissal, internal theme changes and Escape. A public Popover check verifies edited input persists after outside dismissal and reopening. [Source](https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract)
 
 The machine-readable row-to-evidence mapping is in [metadata/compatibility.json](https://github.com/rightui-dev/ui/blob/main/metadata/compatibility.json). A successful build does not certify every interaction.

@@ -1,4 +1,4 @@
-use uiFontFamily, Dialog, Button, Drawer from "@rightui/ui"
+use uiFontFamily, Dialog, Button, Drawer, DrawerAdvanced, DrawerContent, DrawerOptions, DrawerBody, DrawerInset, DrawerFooter from "@rightui/ui"
 
 component Demo
   props
@@ -9,6 +9,44 @@ component Demo
   derive narrow = width < 600
   state drawerShown = false
   state responsiveShown = false
+  state floatingShown = false
+  state floatingSnap = 0.45
+  state floatingBackdrop = 0.35
+  state handlelessShown = false
+  state handlelessSnap = 0.45
+  state pageShown = false
+  state pageSnap = 0.45
+  derive floatingOptions = DrawerOptions(detached=true, showHandle=true, showCloseButton=true, backdropOpacity=floatingBackdrop, dismissOnBackdrop=true, bounce=true, scrollable=true, expandOnScroll=false)
+  derive handlelessOptions = DrawerOptions(detached=false, showHandle=false, showCloseButton=true, backdropOpacity=0.6, dismissOnBackdrop=true, bounce=false, scrollable=true, expandOnScroll=false)
+  derive pageOptions = DrawerOptions(detached=false, showHandle=true, showCloseButton=true, backdropOpacity=0.5, dismissOnBackdrop=true, bounce=true, scrollable=false, expandOnScroll=false)
+  action openFloating
+    floatingSnap = 0.45
+    floatingShown = true
+  action closeFloating
+    floatingShown = false
+    focus("drawer-floating-open")
+  action changeFloatingSnap(value: number)
+    floatingSnap = value
+  action changeFloatingBackdrop(value: number)
+    floatingBackdrop = value
+  action openHandleless
+    handlelessSnap = 0.45
+    handlelessShown = true
+  action closeHandleless
+    handlelessShown = false
+    focus("drawer-handleless-open")
+  action changeHandlelessSnap(value: number)
+    handlelessSnap = value
+  action openPage
+    pageSnap = 0.45
+    pageShown = true
+  action closePage
+    pageShown = false
+    focus("drawer-page-open")
+  action changePageSnap(value: number)
+    pageSnap = value
+  action expandPage
+    pageSnap = 1
   action openResponsive
     responsiveShown = true
   action closeResponsive
@@ -26,8 +64,8 @@ component Demo
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       Button(id="drawer-open", label="Open drawer", variant="outline", disabled=false, press=openExample)
-      Drawer(id="controls-drawer", open=drawerShown, title="Move Goal", description="Set your daily activity goal.", reduced=reduce, focusIds=["controls-goal-less", "controls-goal-more", "controls-drawer-submit"], dismiss=hideDrawer)
-        column gap="ui.space-16" align-items="center" padding="ui.space-16"
+      DrawerAdvanced(snapPoints=[0.3, 0.9], initialSnap=0.3, id="controls-drawer", open=drawerShown, title="Move Goal", description="Drag the handle to 30% or 90%. Pull down to close.", reduced=reduce, focusIds=["controls-goal-less", "controls-goal-more", "controls-drawer-submit"], dismiss=hideDrawer)
+        column gap="ui.space-16" align-items="center"
           row gap="ui.space-24" align-items="center" justify-content="center"
             Button(id="controls-goal-less", label="−", variant="outline", disabled=(activityGoal == 200), press=adjustGoal(-10))
             column align-items="center"
@@ -41,6 +79,34 @@ component Demo
         column id="drawer-long-content" max-height=180 overflow="auto" gap="ui.space-12"
           for section in ["Overview", "Preferences", "Permissions", "Storage", "Notifications", "Accessibility", "Review"] key=section
             text (section + ": review the project settings before continuing.") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Floating drawer" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      Button(id="drawer-floating-open", label="Open floating drawer", variant="outline", disabled=false, press=openFloating)
+      DrawerContent(id="drawer-floating", open=floatingShown, title="A little breathing room", description="Detached edges, rounded corners and a backdrop you can adjust.", reduced=reduced, focusIds=["drawer-backdrop-light", "drawer-backdrop-medium", "drawer-backdrop-strong", "drawer-floating-done"], dismiss=closeFloating, snapPoints=[0.45, 0.9], snapPoint=floatingSnap, changeSnap=changeFloatingSnap, options=floatingOptions)
+        text "Backdrop intensity" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        row gap="ui.space-8" flex-wrap="wrap"
+          Button(id="drawer-backdrop-light", label="Light", variant=(floatingBackdrop == 0.2 ? "primary" : "outline"), disabled=false, press=changeFloatingBackdrop(0.2))
+          Button(id="drawer-backdrop-medium", label="Medium", variant=(floatingBackdrop == 0.35 ? "primary" : "outline"), disabled=false, press=changeFloatingBackdrop(0.35))
+          Button(id="drawer-backdrop-strong", label="Strong", variant=(floatingBackdrop == 0.7 ? "primary" : "outline"), disabled=false, press=changeFloatingBackdrop(0.7))
+        text "Drag the handle and release to feel the spring settle." font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        Button(id="drawer-floating-done", label="Done", variant="primary", disabled=false, press=closeFloating)
+      text "No handle" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      Button(id="drawer-handleless-open", label="Open without a handle", variant="outline", disabled=false, press=openHandleless)
+      DrawerContent(id="drawer-handleless", open=handlelessShown, title="A focused panel", description="The handle is optional. Close controls remain available.", reduced=reduced, focusIds=["drawer-handleless-done"], dismiss=closeHandleless, snapPoints=[0.45, 0.9], snapPoint=handlelessSnap, changeSnap=changeHandlelessSnap, options=handlelessOptions)
+        text "Use this variation when the content should stay at one comfortable height. This example also disables the settling bounce." font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        Button(id="drawer-handleless-done", label="Done", variant="primary", disabled=false, press=closeHandleless)
+      text "Scroll to full screen" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      Button(id="drawer-page-open", label="Open expandable page", variant="outline", disabled=false, press=openPage)
+      DrawerContent(id="drawer-page", open=pageShown, title="Project overview", description="Scroll the details to expand. The summary and footer stay in place.", reduced=reduced, focusIds=["drawer-page-done"], dismiss=closePage, snapPoints=[0.45, 0.9, 1], snapPoint=pageSnap, changeSnap=changePageSnap, options=pageOptions)
+        column id="drawer-page-summary" testId="drawer-page-summary" flex-shrink=0 border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border"
+          DrawerInset(compact=false)
+            text "RIGHTUI / PROJECT DETAILS" font-size="ui.text-xs" font-weight="ui.weight-medium" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        DrawerBody(compact=false, id="drawer-page-body", expanded=(pageSnap >= 1), expandOnScroll=true, expand=expandPage)
+          for section in ["Overview", "Workspace", "Appearance", "Typography", "Components", "Interactions", "Accessibility", "Notifications", "Storage", "Privacy", "Export", "Review"] key=section
+            column gap="ui.space-6" padding="ui.space-12 0px" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border"
+              text section font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text "Review these settings without leaving the current page. Only this central area scrolls; the summary above and the action below stay visible." font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        DrawerFooter(compact=false)
+          Button(id="drawer-page-done", label="Done", variant="primary", disabled=false, press=closePage)
       text "Responsive dialog" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Button(id="drawer-responsive-open", label="Open responsive dialog", variant="outline", disabled=false, press=openResponsive)
       if narrow

@@ -1,3 +1,4 @@
+use OverlayLayer from "./overlay-layer.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 component Toast
@@ -16,14 +17,16 @@ component Toast
       preventDefault()
       dismiss()
   view
-    row id=id testId=id role="status" aria-live="polite" key=keys gap="ui.space-16" align-items="center" padding="ui.space-16"
-      width="100%" max-width="26rem" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-2xl" background-color="ui.surface" color=(destructive ? "ui.danger" : "ui.foreground") box-shadow="ui.shadow-menu"
-      column flex=1 min-width="0px" gap="ui.space-4"
-        text title font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        text description font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      if actionLabel != ""
-        button id=(id + "-action") testId=(id + "-action") class=Control press=act padding="ui.space-4 ui.space-10" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground"
-          text actionLabel font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      button id=(id + "-close") testId=(id + "-close") class=Control press=dismiss aria-label="Close notification" padding="ui.space-4" border="0" background-color="transparent" color="ui.muted-foreground"
-        svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
-          path d="m6 6 12 12M6 18 18 6"
+    OverlayLayer(id=id, modal=false, initialFocus="", reduced=true)
+      column position="absolute" left="0px" right="0px" bottom="0px" padding="ui.space-16 ui.space-16 max(ui.space-16, env(safe-area-inset-bottom, 0px))" align-items="flex-end" box-sizing="border-box" pointer-events="none"
+        row id=id testId=id role="status" aria-live="polite" pointer-events="auto" key=keys gap="ui.space-16" align-items="center" padding="ui.space-16"
+          width="100%" max-width="26rem" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-2xl" background-color="ui.surface" color=(destructive ? "ui.danger" : "ui.foreground") box-shadow="ui.shadow-menu"
+          column flex=1 min-width="0px" gap="ui.space-4"
+            text title font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text description font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          if actionLabel != ""
+            button id=(id + "-action") testId=(id + "-action") class=Control press=act padding="ui.space-4 ui.space-10" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground"
+              text actionLabel font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          button id=(id + "-close") testId=(id + "-close") class=Control press=dismiss aria-label="Close notification" padding="ui.space-4" border="0" background-color="transparent" color="ui.muted-foreground"
+            svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
+              path d="m6 6 12 12M6 18 18 6"

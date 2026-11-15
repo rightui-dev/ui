@@ -1,0 +1,21 @@
+{
+  "name": "RightUI Overlay Check",
+  "id": "dev.rightui.overlaycheck",
+  "host": {
+    "web": {
+      "head": [
+        {
+          "link": {
+            "rel": "stylesheet",
+            "href": "/assets/sheet.css"
+          }
+        }
+      ]
+    }
+  },
+  "data": ["rightui-font"],
+  "app": {
+    "id": "dev.rightui.overlaycheck",
+    "name": "RightUI Overlay Check"
+  }
+}

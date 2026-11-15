@@ -180,6 +180,16 @@ component DashboardBlock
   props
     narrow: bool
     reduced: bool
+  action ignoreScroll(x: number, y: number)
+    let ignored = x + y
+  view
+    DashboardBlockWithScroll(narrow=narrow, reduced=reduced, scrolled=ignoreScroll)
+
+component DashboardBlockWithScroll
+  props
+    narrow: bool
+    reduced: bool
+    scrolled: action
   inject
     uiFont: string
   state desktopSidebar = true
@@ -413,7 +423,7 @@ component DashboardBlock
           else
             column id="dashboard-document-tabs-panel" role="tabpanel" aria-labelledby="dashboard-document-tabs-0" gap="ui.space-16" min-width=0
               input id="dashboard-search" testId="dashboard-search" class=Field value=query input=search placeholder="Filter documents..." aria-label="Filter documents" max-width="20rem" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-              scroll max-height=580 overflow="auto" min-width=0 border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-md"
+              scroll max-height=580 overflow="auto" min-width=0 border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-md" scroll=scrolled
                 table width="100%" min-width=760 border-spacing=0 font-size="ui.text-caption"
                   thead background-color="ui.muted"
                     tr

@@ -10,21 +10,28 @@ component Demo
   state name = "Pedro Duarte"
   state username = "@peduarte"
   state side = "right"
+  state profileOpen = false
+  state activeSide = ""
+  state profileTrigger = "sheet-open"
   state closeButton = true
   action openProfile
     side = "right"
     closeButton = true
-    showModal("sheet-profile")
+    profileTrigger = "sheet-open"
+    profileOpen = true
   action openSide(value: string)
-    showModal("sheet-" + value)
+    activeSide = value
   action openWithoutClose
     side = "right"
     closeButton = false
-    showModal("sheet-profile")
+    profileTrigger = "sheet-open-no-close"
+    profileOpen = true
   action dismiss
-    close("sheet-profile")
+    profileOpen = false
+    focus(profileTrigger)
   action dismissSide(value: string)
-    close("sheet-" + value)
+    activeSide = ""
+    focus("sheet-open-" + value)
   action editName(value: string)
     name = value
   action editUsername(value: string)
@@ -33,7 +40,7 @@ component Demo
     column gap="ui.space-24" min-width=0 max-width="100%"
       row justify-content="center"
         Button(id="sheet-open", label="Open", variant="outline", disabled=false, press=openProfile)
-      SheetContent(id="sheet-profile", title="Edit profile", description="Make changes to your profile here. Click save when you're done.", side=side, reduced=reduced, showCloseButton=closeButton)
+      SheetContent(id="sheet-profile", open=profileOpen, focusIds=["sheet-name", "sheet-username", "sheet-save", "sheet-dismiss"], dismiss=dismiss, title="Edit profile", description="Make changes to your profile here. Click save when you're done.", side=side, reduced=reduced, showCloseButton=closeButton)
         SheetBody()
           Input(id="sheet-name", label="Name", value=name, placeholder="Name", error="", disabled=false, edit=editName)
           Input(id="sheet-username", label="Username", value=username, placeholder="Username", error="", disabled=false, edit=editUsername)
@@ -44,7 +51,7 @@ component Demo
       row gap="ui.space-8" flex-wrap="wrap"
         for edge in ["top", "right", "bottom", "left"] key=edge
           Button(id="sheet-open-" + edge, label=edge, variant="outline", disabled=false, press=openSide(edge))
-          SheetContent(id="sheet-" + edge, title="Edit profile", description="Make changes to your profile here. Click save when you're done.", side=edge, reduced=reduced, showCloseButton=true)
+          SheetContent(id="sheet-" + edge, open=activeSide == edge, focusIds=["sheet-" + edge + "-save", "sheet-" + edge + "-cancel"], dismiss=dismissSide(edge), title="Edit profile", description="Make changes to your profile here. Click save when you're done.", side=edge, reduced=reduced, showCloseButton=true)
             SheetBody()
               for paragraph in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] key=paragraph
                 text "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." font-size="ui.text-sm" line-height="ui.leading-relaxed" font-family=uiFontFamily(uiFont) data-rightui-font="body"

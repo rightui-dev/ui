@@ -1,6 +1,31 @@
+use OverlayLayer from "./overlay-layer.contract"
 use uiFontFamily from "./typography-context.contract"
-use Control from "./styles.contract"
-use uiModalFadeIn, uiModalFadeOut, uiPanelBottomIn, uiPanelBottomOut from "./overlays.contract"
+
+style DrawerDetached
+  padding-top="env(safe-area-inset-top, 0px)"
+  padding-bottom="env(safe-area-inset-bottom, 0px)"
+  padding-left="env(safe-area-inset-left, 0px)"
+  padding-right="env(safe-area-inset-right, 0px)"
+
+style DrawerFloatingGap
+  padding="ui.drawer-floating-gap"
+
+style DrawerAttached
+  padding="0px"
+
+shape DrawerOptions
+  detached: bool
+  showHandle: bool
+  showCloseButton: bool
+  backdropOpacity: number
+  dismissOnBackdrop: bool
+  bounce: bool
+  scrollable: bool
+  expandOnScroll: bool
+
+fn drawerStops(points: number[]): number[] = points.filter(p => p > 0 and p <= 1).length == 0 ? [0.3, 0.9] : sortBy(points.filter((p, i) => p > 0 and p <= 1 and points.indexOf(p) == i), p => p)
+fn drawerClosest(points: number[], value: number): number = match sortBy(points, p => max(p - value, value - p)).at(0) { case some(p) => p, case none => 0.3 }
+
 component Drawer
   props
     id: string
@@ -10,69 +35,274 @@ component Drawer
     reduced: bool
     focusIds: string[]
     dismiss: action
+  slot
+  view
+    DrawerAdvanced(id=id, open=open, title=title, description=description, reduced=reduced, focusIds=focusIds, dismiss=dismiss, snapPoints=[0.3, 0.9], initialSnap=0.3)
+      children
+
+component DrawerAdvanced
+  props
+    id: string
+    open: bool
+    title: string
+    description: string
+    reduced: bool
+    focusIds: string[]
+    dismiss: action
+    snapPoints: number[]
+    initialSnap: number
+  slot
+  view
+    if open
+      DrawerSession(id=id, title=title, description=description, reduced=reduced, focusIds=focusIds, dismiss=dismiss, snapPoints=drawerStops(snapPoints), initialSnap=initialSnap, panelId=id, showCloseButton=true, safeBottom=true, scrollable=true)
+        children
+
+// Compatibility wrapper: each mount starts at the requested initial stop.
+component DrawerSession
+  props
+    id: string
+    panelId: string
+    showCloseButton: bool
+    safeBottom: bool
+    scrollable: bool
+    title: string
+    description: string
+    reduced: bool
+    focusIds: string[]
+    dismiss: action
+    snapPoints: number[]
+    initialSnap: number
+  slot
+  state selected = drawerClosest(snapPoints, initialSnap)
+  action choose(value: number)
+    selected = value
+  view
+    DrawerSurface(id=id, panelId=panelId, safeBottom=safeBottom, title=title, description=description, reduced=reduced, focusIds=focusIds, dismiss=dismiss, snapPoints=snapPoints, snapPoint=selected, changeSnap=choose, options=DrawerOptions(detached=false, showHandle=true, showCloseButton=showCloseButton, backdropOpacity=0.5, dismissOnBackdrop=true, bounce=true, scrollable=scrollable, expandOnScroll=false))
+      children
+
+// A controlled, composable surface; slot actions deliberately stay with their caller.
+component DrawerContent
+  props
+    id: string
+    open: bool
+    title: string
+    description: string
+    reduced: bool
+    focusIds: string[]
+    dismiss: action
+    snapPoints: number[]
+    snapPoint: number
+    changeSnap: action
+    options: DrawerOptions
+  slot
+  view
+    if open
+      DrawerSurface(id=id, panelId=id, safeBottom=true, title=title, description=description, reduced=reduced, focusIds=focusIds, dismiss=dismiss, snapPoints=drawerStops(options.expandOnScroll ? snapPoints.concat([1]) : snapPoints), snapPoint=snapPoint, changeSnap=changeSnap, options=options)
+        children
+
+component DrawerSurface
+  props
+    id: string
+    panelId: string
+    safeBottom: bool
+    title: string
+    description: string
+    reduced: bool
+    focusIds: string[]
+    dismiss: action
+    snapPoints: number[]
+    snapPoint: number
+    changeSnap: action
+    options: DrawerOptions
   inject
     uiFont: string
   slot
-  state pointer = -1
-  state start = 0
-  state distance = 0
+  state fullHeight = 0
+  state displayedHeight = 0
+  state panelTop = 0
+  state safeTop = 0
+  state panelRadius = 0
+  state closing = false
   state focused = ""
-  action remember(e: FocusEvent)
-    focused = e.target
-  action begin(e: PointerEvent)
-    if e.button == 0
-      pointer = e.pointerId
-      start = e.clientY
-      distance = 0
-      preventDefault()
-  action move(e: PointerEvent)
-    if e.pointerId == pointer
-      distance = max(0, e.clientY - start)
-  action end(e: PointerEvent)
-    if e.pointerId == pointer
-      let releasedDistance = max(distance, e.clientY - start)
-      pointer = -1
-      distance = 0
-      if releasedDistance > 60
-        dismiss()
+  derive selected = drawerClosest(snapPoints, snapPoint)
+  derive heightPx = closing ? 0 : fullHeight * selected
+  derive maximum = match snapPoints.at(snapPoints.length - 1) { case some(p) => p, case none => 0.9 }
+  derive minimum = match snapPoints.at(0) { case some(p) => p, case none => 0.3 }
+  derive expanded = selected >= 0.999
+  derive targets = (options.showHandle ? [id + "-handle"] : []).concat(options.showCloseButton ? [id + "-close"] : []).concat(focusIds)
+  derive headerInset = options.detached ? 0 : max(0, safeTop - max(0, panelTop))
+  derive corner = panelRadius * min(1, max(0, (fullHeight - displayedHeight) / max(1, safeTop + panelRadius * 2)))
+  derive initialTarget = options.showHandle ? id + "-handle" : options.showCloseButton ? id + "-close" : panelId
+  action measureMetrics(width: number, height: number)
+    panelRadius = width
+    safeTop = height
+  action measureViewport(width: number, height: number)
+    if height > 0
+      fullHeight = height
+  action measurePanel(width: number, height: number)
+    let bounds = frame(panelId)
+    let next = bounds.unavailable ? height : bounds.height
+    if not bounds.unavailable
+      panelTop = bounds.y
+    if next != displayedHeight
+      displayedHeight = next
+    if closing and height <= 0.5
+      dismiss()
+  action choose(value: number)
+    closing = false
+    changeSnap(value)
+  action snap(height: number, velocity: number)
+    if fullHeight > 0
+      let next = drawerClosest([0].concat(snapPoints), (height + velocity * 0.15) / fullHeight)
+      if next == 0
+        requestClose()
+      else
+        choose(next)
+  action requestClose
+    if reduced or displayedHeight <= 2.5
+      dismiss()
+    else
+      closing = true
+  action backdropPress
+    if options.dismissOnBackdrop
+      requestClose()
+  action expandPage
+    if options.expandOnScroll and not expanded
+      choose(1)
+  action cycle
+    match snapPoints.filter(p => p > selected).at(0)
+      case some(next)
+        choose(next)
+      case none
+        choose(minimum)
   action handleKeys(k: string)
-    if k == "ArrowDown" or k == "Escape" or k == "Enter" or k == " "
+    if k == "ArrowUp" or k == "ArrowDown" or k == "Home" or k == "End" or k == "Enter" or k == " "
       preventDefault()
       stopPropagation()
-      dismiss()
+      if k == "Home"
+        choose(minimum)
+      else if k == "End"
+        choose(maximum)
+      else if k == "ArrowUp"
+        match snapPoints.filter(p => p > selected).at(0)
+          case some(next)
+            choose(next)
+          case none
+            choose(maximum)
+      else if k == "ArrowDown"
+        match sortBy(snapPoints.filter(p => p < selected), p => p, "desc").at(0)
+          case some(next)
+            choose(next)
+          case none
+            choose(minimum)
+      else
+        cycle()
+  action remember(e: FocusEvent)
+    focused = e.target
   action keys(k: string, e: KeyboardEvent)
     if not e.isComposing
       if k == "Escape"
         preventDefault()
         stopPropagation()
-        dismiss()
+        requestClose()
       else if k == "Tab"
         preventDefault()
-        let targets = [id + "-handle"].concat(focusIds)
+        stopPropagation()
         let index = targets.indexOf(focused)
-        let next = (index < 0 ? (e.shiftKey ? targets.length - 1 : 0) : (index + (e.shiftKey ? targets.length - 1 : 1)) % max(1, targets.length))
+        let next = index < 0 ? (e.shiftKey ? targets.length - 1 : 0) : (index + (e.shiftKey ? targets.length - 1 : 1)) % max(1, targets.length)
         match targets.at(next)
           case some(target)
             focus(target)
           case none
-            focus(id)
+            focus(panelId)
+  action blockScroll(e: WheelEvent)
+    if not e.ctrlKey
+      preventDefault()
   view
-    column position="absolute" inset=0 z-index=110 pointer-events="none" justify-content="flex-end"
-      if open
-        view id=(id + "-backdrop") testId=(id + "-backdrop") position="absolute" inset=0 background-color="ui.overlay" pointer-events="auto" aria-hidden=true press=dismiss
-          animation=(reduced ? "none" : "uiModalFadeIn ui.duration-normal ui.easing both")
-          -exact-exit-animation=(reduced ? "none" : "uiModalFadeOut ui.duration-normal ui.easing both")
-      if open
-        column id=id testId=id role="dialog" aria-modal=true aria-labelledby=(id + "-title") aria-describedby=(id + "-description") keycapture=keys focusin=remember
-          position="relative" pointer-events="auto" width="100%" max-height="80%" min-height="0px" box-sizing="border-box" background-color="ui.surface" border-top-width="ui.border-width" border-top-style="solid" border-top-color="ui.border" border-top-left-radius="ui.radius-panel" border-top-right-radius="ui.radius-panel"
-          animation=(reduced ? "none" : "uiPanelBottomIn ui.duration-enter ui.easing both")
-          -exact-exit-animation=(reduced ? "none" : "uiPanelBottomOut ui.duration-slow ui.easing both")
-          column min-height="0px" translate=("0px" + distance.toString() + "px")
-            button id=(id + "-handle") testId=(id + "-handle") class=Control autofocus=true aria-label="Drag down or press to close" press=dismiss key=handleKeys align-self="center" width="6.25rem" min-height="ui.space-24" height="ui.space-24" padding="ui.space-8 0px" margin-top="ui.space-8" border="0" background-color="transparent" touch-action="none" pointerdown=begin pointermove=move pointerup=end
-              view width="6.25rem" height="ui.space-8" border-radius="ui.radius-full" background-color="ui.muted"
-            scroll min-height="0px" flex="1 1 auto"
-              column max-width="24rem" width="100%" align-self="center" box-sizing="border-box" min-width="0px"
-                column gap="ui.space-6" padding="ui.space-16" text-align="center"
-                  text title id=(id + "-title") role="heading" aria-level=2 font-size="ui.text-lg" font-weight="ui.weight-semibold" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-                  text description id=(id + "-description") font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    OverlayLayer(id=id, modal=true, initialFocus=initialTarget, reduced=reduced)
+      column class=(options.detached ? DrawerDetached : DrawerAttached) position="absolute" inset=0 pointer-events="none" justify-content="flex-end" box-sizing="border-box"
+        view position="absolute" width="ui.radius-panel" height="env(safe-area-inset-top, 0px)" opacity=0 pointer-events="none" aria-hidden=true resize=measureMetrics
+        view id=(id + "-backdrop") testId=(id + "-backdrop") position="absolute" inset=0 background-color="ui.drawer-backdrop" opacity=(min(1, max(0, options.backdropOpacity)) * min(1, max(0, displayedHeight / max(1, fullHeight * maximum)))) pointer-events="auto" aria-hidden=true press=backdropPress wheel=blockScroll touch-action="none"
+        column class=(options.detached ? DrawerFloatingGap : DrawerAttached) width="100%" height="100%" min-height="0px" box-sizing="border-box" pointer-events="none" justify-content="flex-end" resize=measureViewport
+          column id=panelId testId=id resize=measurePanel role="dialog" tabindex=-1 aria-modal=true aria-labelledby=(id + "-title") aria-describedby=(id + "-description") keycapture=keys focusin=remember
+            position="relative" pointer-events="auto" width="100%" height=heightPx max-height=fullHeight min-height="0px" flex-shrink=0 box-sizing="border-box" overflow="clip" background-color="ui.surface" color="ui.foreground" outline="none" border-width=(options.detached ? "ui.border-width" : "0px") border-style="solid" border-color="ui.border" border-top-width="ui.border-width" border-top-left-radius=corner border-top-right-radius=corner border-bottom-left-radius=(options.detached ? corner : 0) border-bottom-right-radius=(options.detached ? corner : 0) box-shadow=(options.detached ? "ui.shadow-preview" : "ui.shadow-panel")
+            transition=(reduced ? "none" : options.bounce ? "height ui.easing-drawer-bounce" : "height ui.easing-drawer")
+            column padding-top=headerInset position="relative" flex-shrink=0 min-width="0px" heightDragFor=panelId heightrelease=snap touch-action="none"
+              if options.showHandle
+                view id=(id + "-handle") testId=(id + "-handle") tabindex=0 role="slider" aria-label="Resize drawer" aria-orientation="vertical" aria-valuemin=0 aria-valuemax=(maximum * 100) aria-valuenow=(selected * 100) aria-valuetext=(selected * 100).toFixed(0) + "% of available height" heightDragFor=panelId heightrelease=snap press=cycle key=handleKeys align-self="center" width="ui.drawer-handle-target-width" height="ui.drawer-handle-target-height" min-height="ui.drawer-handle-target-height" flex-shrink=0 display="flex" justify-content="center" align-items="center" touch-action="none" cursor="ns-resize"
+                  -exact-hit-slop="ui.space-12 ui.space-16"
+                  :focus-visible
+                    box-shadow="ui.shadow-focus"
+                  view width="ui.drawer-handle-width" height="ui.drawer-handle-height" border-radius="ui.radius-full" background-color="ui.muted-foreground" opacity=0.4 pointer-events="none"
+              else
+                view height="ui.space-12" flex-shrink=0
+              column gap="ui.space-6" padding="ui.space-8 ui.space-48 ui.space-12" text-align="center"
+                text title id=(id + "-title") role="heading" aria-level=2 font-size="ui.text-lg" font-weight="ui.weight-semibold" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                text description id=(id + "-description") font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              if options.showCloseButton
+                button id=(id + "-close") testId=(id + "-close") top=headerInset margin-top="ui.space-4" appearance="none" press=requestClose aria-label="Close drawer" position="absolute" right="ui.space-8" width="ui.space-44" height="ui.space-44" display="flex" justify-content="center" align-items="center" border="none" border-radius="ui.radius-control" background-color="transparent" color="ui.foreground"
+                  svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
+                    path d="m6 6 12 12M6 18 18 6"
+            column min-width="0px" min-height="0px" flex="1 1 auto" padding-bottom=(safeBottom and not options.detached and not options.scrollable ? "env(safe-area-inset-bottom, 0px)" : "0px")
+              if options.scrollable
+                DrawerBodySurface(id=id + "-body", compact=options.detached, safeBottom=(safeBottom and not options.detached), expanded=expanded, expandOnScroll=options.expandOnScroll, expand=expandPage)
+                  children
+              else
                 children
+
+component DrawerBody
+  props
+    compact: bool
+    id: string
+    expanded: bool
+    expandOnScroll: bool
+    expand: action
+  slot
+  view
+    DrawerBodySurface(id=id, compact=compact, safeBottom=false, expanded=expanded, expandOnScroll=expandOnScroll, expand=expand)
+      children
+
+component DrawerBodySurface
+  props
+    safeBottom: bool
+    compact: bool
+    id: string
+    expanded: bool
+    expandOnScroll: bool
+    expand: action
+  slot
+  state dragging = false
+  state previousTop = 0
+  action beginScroll
+    dragging = true
+  action endScroll(e: ScrollDragEvent)
+    dragging = false
+  action moved(x: number, y: number)
+    let upward = y > previousTop + 1
+    previousTop = y
+    if dragging and upward and expandOnScroll and not expanded and y > 8
+      expand()
+  action wheeled(e: WheelEvent)
+    if not e.ctrlKey and expandOnScroll and not expanded and e.deltaY > 0
+      expand()
+  view
+    scroll id=id testId=id flex="1 1 auto" min-height="0px" min-width="0px" overscroll-behavior="contain" scroll=moved scrolldragstart=beginScroll scrolldragend=endScroll wheel=wheeled
+      column min-width="0px" width="100%" box-sizing="border-box" padding-bottom=(safeBottom ? "env(safe-area-inset-bottom, 0px)" : "0px")
+        DrawerInset(compact=compact)
+          children
+
+component DrawerInset
+  props
+    compact: bool
+  slot
+  view
+    column min-width="0px" width="100%" box-sizing="border-box" padding=(compact ? "ui.drawer-floating-content-inset" : "ui.drawer-content-inset") gap="ui.space-12"
+      children
+
+component DrawerFooter
+  props
+    compact: bool
+  slot
+  view
+    column min-width="0px" flex-shrink=0 box-sizing="border-box" padding=(compact ? "ui.drawer-floating-content-inset" : "ui.drawer-content-inset") gap="ui.space-8"
+      children

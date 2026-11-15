@@ -1,0 +1,200 @@
+font "Geist"
+  100 900 = "assets/fonts/Geist.ttf"
+
+use Button, Input, Dialog, Drawer, DrawerAdvanced, DrawerContent, DrawerOptions, DrawerBody, DrawerInset, DrawerFooter, AlertDialog, Sheet, Toast, SafeArea from "@rightui/ui"
+
+shape Viewport
+  width: number
+  height: number
+  prefersReducedMotion: bool
+
+routes nav
+  main "/"
+  initial "/initial"
+  fallback "/fallback"
+
+component App
+  resource viewport = exactViewport() as shape Viewport
+  state active = top(nav).name == "initial" ? "dialog" : ""
+  state toastShown = false
+  state draft = "Untitled"
+  state outsidePresses = 0
+  state inspections = 0
+  state fillsViewport = false
+  state geometryReady = false
+  state focused = ""
+  state drawerGeometryReady = false
+  state drawerPercent = ""
+  state drawerBottomAnchored = false
+  state floatingSnap = 0.45
+  state pageSnap = 0.45
+  state backdropOpacity = 0.35
+  state floatingInset = false
+  state floatingSymmetric = false
+  state floatingContentInset = false
+  state pageGeometryReady = false
+  state pageChromeFixed = false
+  state pageBodyScrolled = false
+  state pageBodyContained = false
+  state pageHasContentInset = false
+  state pageHeaderY = 0
+  state pageFooterY = 0
+  state pageFirstY = 0
+  state safeReady = false
+  state safeEnabledMatches = false
+  state safeDisabledMatches = false
+  state safeWithinBounds = false
+  action rememberFocus(e: FocusEvent)
+    focused = e.target
+  action open(kind: string)
+    if kind == "floating"
+      floatingSnap = 0.45
+      backdropOpacity = 0.35
+    else if kind == "page"
+      pageSnap = 0.45
+    active = kind
+  action setFloatingSnap(value: number)
+    floatingSnap = value
+  action setPageSnap(value: number)
+    pageSnap = value
+  action expandPage
+    pageSnap = 1
+  action growFloating
+    floatingSnap = 0.75
+  action darkenBackdrop
+    backdropOpacity = 0.7
+  action inspectFloating
+    inspect("floating", true)
+    let panel = frame("floating")
+    let layer = frame("rightui-modal-floating-layer")
+    let left = panel.x - layer.x
+    let right = layer.x + layer.width - panel.x - panel.width
+    floatingInset = not panel.unavailable and not panel.provisional and not layer.unavailable and not layer.provisional and left >= 8 and right >= 8 and panel.y >= layer.y + 8 and panel.y + panel.height <= layer.y + layer.height - 8
+    floatingSymmetric = left >= right - 1 and left <= right + 1
+    let content = frame("floating-inspect")
+    floatingContentInset = not content.unavailable and content.x - panel.x >= 11 and content.x - panel.x <= 15
+  action inspectPage(save: bool)
+    inspectDrawer("page")
+    let panel = frame("page")
+    let header = frame("page-static")
+    let body = frame("page-body")
+    let first = frame("page-first")
+    let footer = frame("page-footer")
+    let ready = not panel.unavailable and not panel.provisional and not header.unavailable and not header.provisional and not body.unavailable and not body.provisional and not first.unavailable and not first.provisional and not footer.unavailable and not footer.provisional
+    pageGeometryReady = ready
+    pageBodyContained = ready and body.y >= header.y + header.height - 1 and body.y + body.height <= footer.y + 1 and footer.y + footer.height <= panel.y + panel.height + 1
+    pageHasContentInset = ready and first.x - body.x >= 22 and first.x - body.x <= 28
+    if save
+      pageHeaderY = header.y
+      pageFooterY = footer.y
+      pageFirstY = first.y
+    else
+      pageChromeFixed = ready and header.y >= pageHeaderY - 1 and header.y <= pageHeaderY + 1 and footer.y >= pageFooterY - 1 and footer.y <= pageFooterY + 1
+      pageBodyScrolled = ready and first.y < pageFirstY - 10
+  action dismiss
+    let source = active + "-open"
+    active = ""
+    focus(source)
+  action editDraft(value: string)
+    draft = value
+  action outside
+    outsidePresses = outsidePresses + 1
+  action inspect(kind: string, modal: bool)
+    let bounds = frame((modal ? "rightui-modal-" : "rightui-toast-") + kind + "-layer")
+    let ready = not bounds.unavailable and not bounds.provisional
+    geometryReady = ready
+    fillsViewport = ready and bounds.x >= -1 and bounds.x <= 1 and bounds.y >= -1 and bounds.y <= 1 and bounds.width >= viewport.width - 1 and bounds.width <= viewport.width + 1 and bounds.height >= viewport.height - 1 and bounds.height <= viewport.height + 1
+    inspections = inspections + 1
+  action inspectDrawer(id: string)
+    let bounds = frame(id)
+    let layer = frame("rightui-modal-" + id + "-layer")
+    let ready = not bounds.unavailable and not bounds.provisional and not layer.unavailable and not layer.provisional and layer.height > 0
+    let percent = bounds.height / max(1, layer.height) * 100
+    let bottom = bounds.y + bounds.height
+    let layerBottom = layer.y + layer.height
+    drawerGeometryReady = ready
+    drawerPercent = percent.toFixed(0)
+    drawerBottomAnchored = ready and bottom >= layerBottom - 1 and bottom <= layerBottom + 1 and bounds.x >= layer.x - 1 and bounds.x <= layer.x + 1 and bounds.width >= layer.width - 1 and bounds.width <= layer.width + 1
+  action inspectDrawerAndLayer
+    inspect("drawer", true)
+    inspectDrawer("drawer")
+  action inspectSafeArea
+    let enabled = frame("safe-enabled")
+    let enabledChild = frame("safe-enabled-child")
+    let disabled = frame("safe-disabled")
+    let disabledChild = frame("safe-disabled-child")
+    let ready = not enabled.unavailable and not enabled.provisional and not enabledChild.unavailable and not enabledChild.provisional and not disabled.unavailable and not disabled.provisional and not disabledChild.unavailable and not disabledChild.provisional
+    safeReady = ready
+    safeEnabledMatches = ready and enabledChild.x >= enabled.x - 1 and enabledChild.x <= enabled.x + 1 and enabledChild.y >= enabled.y - 1 and enabledChild.y <= enabled.y + 1 and enabledChild.width >= enabled.width - 1 and enabledChild.width <= enabled.width + 1 and enabledChild.height >= enabled.height - 1 and enabledChild.height <= enabled.height + 1
+    safeDisabledMatches = ready and disabledChild.x >= disabled.x - 1 and disabledChild.x <= disabled.x + 1 and disabledChild.y >= disabled.y - 1 and disabledChild.y <= disabled.y + 1 and disabledChild.width >= disabled.width - 1 and disabledChild.width <= disabled.width + 1 and disabledChild.height >= disabled.height - 1 and disabledChild.height <= disabled.height + 1
+    safeWithinBounds = ready and enabledChild.x >= enabled.x - 1 and enabledChild.y >= enabled.y - 1 and enabledChild.x + enabledChild.width <= enabled.x + enabled.width + 1 and enabledChild.y + enabledChild.height <= enabled.y + enabled.height + 1 and disabledChild.x >= disabled.x - 1 and disabledChild.y >= disabled.y - 1 and disabledChild.x + disabledChild.width <= disabled.x + disabled.width + 1 and disabledChild.y + disabledChild.height <= disabled.y + disabled.height + 1 and enabled.x + enabled.width <= viewport.width + 1 and disabled.x + disabled.width <= viewport.width + 1
+  action confirmAlert
+    inspect("alert", true)
+    dismiss()
+  action showToast
+    toastShown = true
+  action dismissToast
+    toastShown = false
+  provide
+    uiFont = "sans"
+  view
+    column id="fixture-root" testId="fixture-root" focusin=rememberFocus width="100%" min-height="100%" box-sizing="border-box" padding=24 gap=24 background-color="ui.background" color="ui.foreground"
+      text "Window-wide overlay regression"
+      Button(id="outside", label="Background control", variant="outline", disabled=false, press=outside)
+      text outsidePresses.toString() testId="outside-counter"
+      // Every overlay is declared inside this intentionally small, transformed clip.
+      column id="clipped-demo" testId="clipped-demo" position="relative" width=220 height=180 overflow="clip" translate="24px 12px" scale=0.9 border-width="ui.border-width" border-style="solid" border-color="ui.border" padding=12 gap=8 box-sizing="border-box"
+        row flex-wrap="wrap" gap=8
+          Button(id="dialog-open", label="Dialog", variant="outline", disabled=false, press=open("dialog"))
+          Button(id="drawer-open", label="Drawer", variant="outline", disabled=false, press=open("drawer"))
+          Button(id="alert-open", label="Alert", variant="outline", disabled=false, press=open("alert"))
+          Button(id="sheet-open", label="Sheet", variant="outline", disabled=false, press=open("sheet"))
+          Button(id="toast-open", label="Toast", variant="outline", disabled=false, press=showToast)
+          Button(id="advanced-open", label="Advanced", variant="outline", disabled=false, press=open("advanced"))
+        Dialog(id="dialog", open=(active == "dialog"), reduced=viewport.prefersReducedMotion, title="Project settings", description="This surface must escape the small preview.", confirmLabel="Save", focusIds=["draft", "dialog-inspect", "dialog-cancel", "dialog-confirm"], dismiss=dismiss, confirm=dismiss)
+          Input(id="draft", label="Name", value=draft, placeholder="Project name", error="", disabled=false, edit=editDraft)
+          Button(id="dialog-inspect", label="Inspect viewport", variant="outline", disabled=false, press=inspect("dialog", true))
+        Drawer(id="drawer", open=(active == "drawer"), title="Move goal", description="The drawer uses the window's bottom edge.", reduced=viewport.prefersReducedMotion, focusIds=["drawer-inspect", "drawer-done"], dismiss=dismiss)
+          column gap=16 padding=16
+            Button(id="drawer-inspect", label="Inspect viewport", variant="outline", disabled=false, press=inspectDrawerAndLayer)
+            Button(id="drawer-done", label="Done", variant="primary", disabled=false, press=dismiss)
+        DrawerAdvanced(id="advanced", open=(active == "advanced"), title="Custom snap points", description="Only valid, unique stops should be reachable.", reduced=viewport.prefersReducedMotion, focusIds=["advanced-inspect"], dismiss=dismiss, snapPoints=(top(nav).name == "fallback" ? [-1, 0, 1.2] : [0.85, 0.45, 0.85, -0.2, 0, 1.2]), initialSnap=0.4)
+          column padding=16
+            Button(id="advanced-inspect", label="Inspect height", variant="outline", disabled=false, press=inspectDrawer("advanced"))
+        AlertDialog(id="alert", open=(active == "alert"), title="Confirm change?", description="Backdrop clicks must not confirm or dismiss this alert.", confirmLabel="Confirm", reduced=viewport.prefersReducedMotion, dismiss=dismiss, confirm=confirmAlert)
+        Sheet(id="sheet", open=(active == "sheet"), title="Legacy controlled Sheet", description="Existing controlled consumers also escape their preview.", side="right", reduced=viewport.prefersReducedMotion, focusIds=["sheet-inspect", "sheet-done"], dismiss=dismiss)
+          Button(id="sheet-inspect", label="Inspect viewport", variant="outline", disabled=false, press=inspect("sheet", true))
+          Button(id="sheet-done", label="Done", variant="primary", disabled=false, press=dismiss)
+        if toastShown
+          Toast(id="toast", title="Saved", description="The background stays interactive.", actionLabel="Inspect", destructive=false, dismiss=dismissToast, act=inspect("toast", false))
+      row gap=8 flex-wrap="wrap"
+        Button(id="floating-open", label="Floating", variant="outline", disabled=false, press=open("floating"))
+        Button(id="page-open", label="Scroll to page", variant="outline", disabled=false, press=open("page"))
+      DrawerContent(id="floating", open=(active == "floating"), title="Floating settings", description="The entire surface stays inset, without a handle.", reduced=viewport.prefersReducedMotion, focusIds=["floating-inspect", "floating-grow", "floating-opacity", "floating-last"], dismiss=dismiss, snapPoints=[0.45, 0.75], snapPoint=floatingSnap, changeSnap=setFloatingSnap, options=DrawerOptions(detached=true, showHandle=false, showCloseButton=true, backdropOpacity=backdropOpacity, dismissOnBackdrop=false, bounce=true, scrollable=true, expandOnScroll=false))
+        Button(id="floating-inspect", label="Inspect bounds", variant="outline", disabled=false, press=inspectFloating)
+        Button(id="floating-grow", label="Expand", variant="outline", disabled=false, press=growFloating)
+        Button(id="floating-opacity", label="Darker backdrop", variant="outline", disabled=false, press=darkenBackdrop)
+        Button(id="floating-last", label="Done", variant="primary", disabled=false, press=dismiss)
+      DrawerContent(id="page", open=(active == "page"), title="Scrollable page", description="The center scrolls; the summary and actions stay fixed.", reduced=viewport.prefersReducedMotion, focusIds=["page-capture", "page-inspect", "page-done"], dismiss=dismiss, snapPoints=[0.45, 1], snapPoint=pageSnap, changeSnap=setPageSnap, options=DrawerOptions(detached=false, showHandle=true, showCloseButton=true, backdropOpacity=0.5, dismissOnBackdrop=true, bounce=true, scrollable=false, expandOnScroll=true))
+        column id="page-static" flex-shrink=0
+          DrawerInset(compact=false)
+            text "Fixed summary" font-family="Geist"
+        DrawerBody(compact=false, id="page-body", expanded=(pageSnap == 1), expandOnScroll=true, expand=expandPage)
+          text "First scrollable item" id="page-first" font-family="Geist"
+          for item in ["Account", "Appearance", "Notifications", "Privacy", "Security", "Storage", "Sync", "Accessibility", "Keyboard", "Audio", "History", "Exports", "Sharing", "Billing", "Support", "About"] key=item
+            column min-height=72 gap=8
+              text item font-family="Geist"
+              text "Settings in the scrollable section." font-family="Geist"
+        column id="page-footer" flex-shrink=0
+          DrawerFooter(compact=false)
+            row gap=8
+              Button(id="page-capture", label="Capture", variant="outline", disabled=false, press=inspectPage(true))
+              Button(id="page-inspect", label="Inspect", variant="outline", disabled=false, press=inspectPage(false))
+              Button(id="page-done", label="Done", variant="primary", disabled=false, press=dismiss)
+      column id="safe-enabled" width=220 min-width=0
+        SafeArea(top=true, bottom=true, left=true, right=true)
+          view id="safe-enabled-child" width="100%" height=40 min-width=0 background-color="ui.muted"
+      column id="safe-disabled" width=220 min-width=0
+        SafeArea(top=false, bottom=false, left=false, right=false)
+          view id="safe-disabled-child" width="100%" height=40 min-width=0 background-color="ui.muted"
+      Button(id="safe-inspect", label="Inspect safe area", variant="outline", disabled=false, press=inspectSafeArea)

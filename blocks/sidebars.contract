@@ -67,6 +67,18 @@ component SidebarBlock
     narrow: bool
     reduced: bool
     openSettings: action
+  action ignoreScroll(x: number, y: number)
+    let ignored = x + y
+  view
+    SidebarBlockWithScroll(variant=variant, narrow=narrow, reduced=reduced, openSettings=openSettings, scrolled=ignoreScroll)
+
+component SidebarBlockWithScroll
+  props
+    variant: number
+    narrow: bool
+    reduced: bool
+    openSettings: action
+    scrolled: action
   inject
     uiFont: string
   state expanded = true
@@ -185,7 +197,7 @@ component SidebarBlock
                   button id=(id + "-star") testId=(id + "-star") class=Control press=toggleStar aria-label="Favorite page" aria-pressed=starred min-height="ui.space-28" padding="ui.space-4" border="0" background-color=(starred ? "ui.muted" : "transparent") color="ui.foreground"
                     SidebarIcon(name="Star")
                   DropdownMenu(id=id + "-actions", label="Actions", reduced=reduced, choose=choose, entries=[MenuEntry(id="Customize Page", label="Customize Page", shortcut="", disabled=false, destructive=false), MenuEntry(id="Turn into wiki", label="Turn into wiki", shortcut="", disabled=false, destructive=false), MenuEntry(id="Copy Link", label="Copy Link", shortcut="", disabled=false, destructive=false), MenuEntry(id="Duplicate", label="Duplicate", shortcut="", disabled=false, destructive=false), MenuEntry(id="Move to", label="Move to", shortcut="", disabled=false, destructive=false), MenuEntry(id="Move to Trash", label="Move to Trash", shortcut="", disabled=false, destructive=true), MenuEntry(id="Undo", label="Undo", shortcut="", disabled=false, destructive=false), MenuEntry(id="View analytics", label="View analytics", shortcut="", disabled=false, destructive=false), MenuEntry(id="Version History", label="Version History", shortcut="", disabled=false, destructive=false), MenuEntry(id="Notifications", label="Notifications", shortcut="", disabled=false, destructive=false), MenuEntry(id="Import", label="Import", shortcut="", disabled=false, destructive=false), MenuEntry(id="Export", label="Export", shortcut="", disabled=false, destructive=false)])
-            scroll flex=1 min-height=0 padding=(variant == 10 ? "ui.space-40 ui.space-16" : variant == 4 or variant == 7 or variant == 8 ? "ui.space-0 ui.space-16 ui.space-16" : "ui.space-16")
+            scroll flex=1 min-height=0 padding=(variant == 10 ? "ui.space-40 ui.space-16" : variant == 4 or variant == 7 or variant == 8 ? "ui.space-0 ui.space-16 ui.space-16" : "ui.space-16") scroll=scrolled
               column gap="ui.space-16" min-width=0
                 if query != ""
                   text ("Search: " + query) role="status" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

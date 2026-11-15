@@ -31,6 +31,7 @@ export function buildRegistry() {
       if(!files[path])throw new Error(`Missing registry dependency: ${path}`);
       found.add(path);
       for (const match of files[path].content.matchAll(/"(assets\/avatars\/[^"]+)"/g)) add(`packages/ui/${match[1]}`);
+      if(path==='packages/ui/overlay-layer.contract') { add('packages/ui/assets/sheet.css'); add('packages/ui/docs/OVERLAYS.md'); }
       if(path==='packages/ui/sheet.contract') { add('packages/ui/assets/sheet.css'); add('packages/ui/docs/SHEET.md'); }
       for(const m of files[path].content.matchAll(/^use .+ from "([^"]+)"/gm)) {
         if(m[1].startsWith('.'))add(relative(root,resolve(root,dirname(path),m[1])));

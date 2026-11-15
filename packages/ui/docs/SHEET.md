@@ -1,10 +1,51 @@
 # Sheet
 
-`SheetContent` is a native Exact modal dialog. It opens above the page, including when its trigger is inside a clipped or transformed demo. Its header stays above the scrollable `SheetBody`; `SheetFooter` keeps actions below it. Left/right panels use 75% of the window, capped at 24rem. Top/bottom panels use the full width, capped at half the window height.
+`SheetContent` renders an authored RightUI surface above the whole application window. Its content is transported out of the surrounding layout, including clipped or transformed demo containers. It does not request an iOS system sheet or a macOS sheet. Left/right panels use 75% of the window, capped at 24rem. The top panel uses the full width and is capped at half the window height. The bottom panel shares `DrawerSurface` with Drawer: it opens at 30% of the window height and can be dragged between 30% and 90%. It is not capped at 50%. The backdrop covers the window in every orientation.
 
-Open with `showModal(id)` and close with `close(id)`. Keep field state in the parent. The host traps focus, makes the background inert, handles Escape and returns focus to the opening control. `showCloseButton=false` hides the corner control; keep a visible footer close action. `reduced=true` disables the entrance animation.
+The parent controls visibility with `open` and `dismiss`. Keep form state in that parent so values survive closing and reopening. `SheetBody` scrolls between the header and `SheetFooter`; the controls account for safe-area insets. `showCloseButton=false` hides the corner control, so keep a visible footer close action. `reduced=true` disables entrance and snap motion.
 
-Import these components from `@rightui/ui/sheet`. This optional entry keeps the extra Sheet data declaration out of applications using only the existing `@rightui/ui` entry.
+Import these components from `@rightui/ui/sheet`.
+
+## Bottom sheet
+
+Set `side="bottom"` to use the shared RightUI drawer surface, retaining the same `open`, `focusIds` and `dismiss` API. Drag its handle to resize, release to settle at 30% or 90%, or pull down to dismiss. Each opening starts at 30%. The handle remains available when `showCloseButton=false`.
+
+ArrowUp/ArrowDown move to the next/previous stop; Home/End select the smallest/largest stop. Enter, Space or pressing the handle cycles through the stops. Escape, the backdrop and a visible close action dismiss. The snap motion uses the `ui.easing-drawer` spring token, unless reduced motion is enabled. This is an authored RightUI panel, not a system sheet card.
+
+Use [DrawerAdvanced](DRAWER.md) when you need custom snap points. SheetContent keeps the standard 30%/90% behavior for its bottom side.
+
+## Migration from the dialog lifecycle
+
+This is a breaking change to `SheetContent`. Replace `showModal(id)` and `close(id)` with a boolean state and a dismissal action. Add these required props:
+
+- `open`: whether this sheet is visible.
+- `dismiss`: closes the state and restores focus to the trigger.
+- `focusIds`: the enabled, focusable content controls in their intended keyboard order. Do not include the optional corner close button or the bottom drag handle; SheetContent adds those automatically. Update the list when controls become disabled or are removed.
+
+SheetContent handles Escape, backdrop presses and Tab/Shift+Tab containment. It initially focuses its panel without scrolling it; a bottom sheet initially focuses its resize handle. The parent remains responsible for choosing the trigger that receives focus on dismissal, especially when several controls open the same sheet. Do not make a logical ancestor of the sheet inert: its transported content retains that ancestry.
+
+```contract
+use Button from "@rightui/ui"
+use SheetContent, SheetBody, SheetFooter from "@rightui/ui/sheet"
+
+component Example
+  state shown = false
+  action reveal
+    shown = true
+  action dismiss
+    shown = false
+    focus("profile-open")
+  view
+    column
+      Button(id="profile-open", label="Open", variant="outline", disabled=false, press=reveal)
+      SheetContent(id="profile", open=shown, focusIds=["profile-done"], dismiss=dismiss, title="Edit profile", description="Make changes to your profile here.", side="right", reduced=false, showCloseButton=true)
+        SheetBody()
+          text "Your content"
+        SheetFooter()
+          Button(id="profile-done", label="Close", variant="outline", disabled=false, press=dismiss)
+```
+
+The root must provide `uiFont`, as with other rightui components. Use unique IDs for every mounted sheet. An iframe has its own window: a sheet inside it covers that frame, not the embedding application.
 
 ## Web setup
 
@@ -21,29 +62,10 @@ Copy `node_modules/@rightui/ui/assets/sheet.css` to `assets/sheet.css` in your a
 }
 ```
 
-The small stylesheet supplies viewport positioning and document scroll locking, which the pinned Contract compiler cannot express. It is scoped to SheetContent dialogs; it contains no JavaScript. Native hosts ignore this web stylesheet. Keep it loaded before opening a sheet.
+The scoped stylesheet supplies web viewport and scrolling support. Load it before opening an overlay. Native hosts use the Contract layer and ignore this stylesheet.
 
-```contract
-use Button from "@rightui/ui"
-use SheetContent, SheetBody, SheetFooter from "@rightui/ui/sheet"
+## Compatibility and validation
 
-component Example
-  action open
-    showModal("profile")
-  action dismiss
-    close("profile")
-  view
-    column
-      Button(id="profile-open", label="Open", variant="outline", disabled=false, press=open)
-      SheetContent(id="profile", title="Edit profile", description="Make changes to your profile here.", side="right", reduced=false, showCloseButton=true)
-        SheetBody()
-          text "Your content"
-        SheetFooter()
-          Button(id="profile-done", label="Close", variant="outline", disabled=false, press=dismiss)
-```
+The older controlled `Sheet(open=..., focusIds=..., dismiss=...)` remains available. `SheetContent` adds a separate body/footer composition and optional corner close control.
 
-The root must provide `uiFont`, as with other rightui components.
-
-## Compatibility
-
-The earlier controlled `Sheet(open=..., focusIds=..., dismiss=...)` remains available for compatibility. Use `SheetContent` for modal window-wide presentation; its visibility belongs to Exact's dialog lifecycle, not an `open` prop. iOS and macOS use their host dialog presentation; this change has been checked on web only. On browsers supporting discrete display and overlay transitions, closing fades and slides the panel out. Older browsers close immediately. Both the reduced prop and the system reduced-motion preference disable these transitions.
+The new shared overlay composition is pending integration validation on web, iOS and macOS. Earlier native-dialog checks do not validate this presentation. The package fixture exercises a clipped, transformed parent, reopening with persistent field values, Escape, optional close control and the four orientations. Browser geometry, real-pointer animation and native interaction checks must be reported separately from compilation.

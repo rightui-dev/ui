@@ -1,0 +1,346 @@
+test "dialog escapes transformed clip and preserves input on reopen"
+  size 1280x800
+  clock data
+  tap "dialog-open"
+  clock settle
+  expect tree has "dialog-layer"
+  tap "dialog-inspect"
+  expect state geometryReady == true
+  expect state fillsViewport == true
+  type "draft" "My project"
+  type "draft" key "Escape"
+  clock settle
+  expect tree missing "dialog-layer"
+  expect state focused == "dialog-open"
+  tap "dialog-open"
+  clock settle
+  expect text "draft" == "My project"
+  tap "dialog-inspect"
+  expect state inspections == 2
+  expect state fillsViewport == true
+  resize 390x844
+  clock settle
+  tap "dialog-inspect"
+  expect state geometryReady == true
+  expect state fillsViewport == true
+  type "dialog-confirm" key "Tab"
+  clock settle
+  expect state focused == "dialog-close"
+  tap "dialog-confirm"
+  clock settle
+  expect tree missing "dialog-layer"
+  expect state focused == "dialog-open"
+  expect no failures
+
+test "drawer is window wide on mobile and reopens after dismissal"
+  size 390x844
+  clock data
+  tap "drawer-open"
+  clock settle
+  tap "drawer-inspect"
+  expect state geometryReady == true
+  expect state fillsViewport == true
+  tap "drawer-close"
+  clock settle
+  expect tree missing "drawer-layer"
+  expect state focused == "drawer-open"
+  tap "drawer-open"
+  clock settle
+  tap "drawer-inspect"
+  expect state inspections == 2
+  expect state fillsViewport == true
+  type "drawer-handle" key "Escape"
+  clock settle
+  expect tree missing "drawer-layer"
+  expect state focused == "drawer-open"
+  expect no failures
+
+test "legacy controlled sheet escapes its preview and restores focus"
+  size 390x844
+  clock data
+  tap "sheet-open"
+  clock settle
+  tap "sheet-inspect"
+  expect state geometryReady == true
+  expect state fillsViewport == true
+  tap "sheet-done"
+  clock settle
+  expect tree missing "sheet-layer"
+  expect state focused == "sheet-open"
+  tap "sheet-open"
+  clock settle
+  tap "sheet-inspect"
+  expect state inspections == 2
+  expect state fillsViewport == true
+  type "sheet-done" key "Escape"
+  clock settle
+  expect tree missing "sheet-layer"
+  expect state focused == "sheet-open"
+  expect no failures
+
+test "toast uses the viewport without blocking background controls or taking focus"
+  size 390x844
+  clock data
+  tap "toast-open"
+  clock settle
+  expect tree has "toast-layer"
+  expect state focused == "toast-open"
+  tap "outside"
+  expect state outsidePresses == 1
+  expect tree has "toast-layer"
+  tap "toast-action"
+  expect state geometryReady == true
+  expect state fillsViewport == true
+  tap "toast-close"
+  clock settle
+  expect tree missing "toast-layer"
+  tap "toast-open"
+  clock settle
+  tap "toast-action"
+  expect state inspections == 2
+  expect state fillsViewport == true
+  tap "toast-close"
+  clock settle
+  expect no failures
+
+test "an initially open controlled dialog is presented after its first layout"
+  at "/initial"
+  size 390x844
+  clock data
+  clock settle
+  expect tree has "dialog-layer"
+  tap "dialog-inspect"
+  expect state geometryReady == true
+  expect state fillsViewport == true
+  type "draft" key "Escape"
+  clock settle
+  expect tree missing "dialog-layer"
+  expect state focused == "dialog-open"
+  expect no failures
+
+test "drawer pointer drag snaps up down and dismisses below the first stop"
+  size 390x844
+  clock data
+  tap "drawer-open"
+  clock settle
+  tap "drawer-inspect"
+  expect state drawerGeometryReady == true
+  expect state drawerPercent == "30"
+  expect state drawerBottomAnchored == true
+  tap "drawer-handle" drag 0 -500 over 650 hold 400
+  clock settle
+  tap "drawer-inspect"
+  expect state drawerGeometryReady == true
+  expect state drawerPercent == "90"
+  expect state drawerBottomAnchored == true
+  tap "drawer-handle" drag 0 500 over 650 hold 400
+  clock settle
+  tap "drawer-inspect"
+  expect state drawerPercent == "30"
+  expect state drawerBottomAnchored == true
+  tap "drawer-handle" drag 0 210 over 500 hold 400
+  clock settle
+  expect tree missing "drawer-layer"
+  expect state focused == "drawer-open"
+  tap "drawer-open"
+  clock settle
+  tap "drawer-inspect"
+  expect state drawerPercent == "30"
+  expect state drawerBottomAnchored == true
+  tap "drawer-close"
+  clock settle
+  expect no failures
+
+test "drawer keyboard changes stops and reopening resets the initial height"
+  size 390x844
+  clock data
+  tap "drawer-open"
+  clock settle
+  type "drawer-handle" key "End"
+  clock settle
+  tap "drawer-inspect"
+  expect state drawerPercent == "90"
+  expect state drawerBottomAnchored == true
+  type "drawer-handle" key "Home"
+  clock settle
+  tap "drawer-inspect"
+  expect state drawerPercent == "30"
+  type "drawer-handle" key "ArrowUp"
+  clock settle
+  tap "drawer-inspect"
+  expect state drawerPercent == "90"
+  type "drawer-handle" key "ArrowDown"
+  clock settle
+  tap "drawer-inspect"
+  expect state drawerPercent == "30"
+  type "drawer-handle" key "End"
+  clock settle
+  tap "drawer-close"
+  clock settle
+  tap "drawer-open"
+  clock settle
+  tap "drawer-inspect"
+  expect state drawerGeometryReady == true
+  expect state drawerPercent == "30"
+  expect state drawerBottomAnchored == true
+  tap "drawer-close"
+  clock settle
+  expect no failures
+
+test "advanced drawer normalizes unsorted duplicate and invalid snap points"
+  size 390x844
+  clock data
+  tap "advanced-open"
+  clock settle
+  tap "advanced-inspect"
+  expect state drawerGeometryReady == true
+  expect state drawerPercent == "45"
+  expect state drawerBottomAnchored == true
+  type "advanced-handle" key "End"
+  clock settle
+  tap "advanced-inspect"
+  expect state drawerPercent == "85"
+  type "advanced-handle" key "Enter"
+  clock settle
+  tap "advanced-inspect"
+  expect state drawerPercent == "45"
+  type "advanced-handle" key "ArrowUp"
+  clock settle
+  tap "advanced-inspect"
+  expect state drawerPercent == "85"
+  type "advanced-handle" key "ArrowDown"
+  clock settle
+  tap "advanced-inspect"
+  expect state drawerPercent == "45"
+  type "advanced-handle" key "End"
+  clock settle
+  type "advanced-handle" key "Home"
+  clock settle
+  tap "advanced-inspect"
+  expect state drawerPercent == "45"
+  expect state drawerBottomAnchored == true
+  tap "advanced-close"
+  clock settle
+  expect state focused == "advanced-open"
+  expect no failures
+
+test "advanced drawer falls back when every supplied snap point is invalid"
+  at "/fallback"
+  size 390x844
+  clock data
+  tap "advanced-open"
+  clock settle
+  tap "advanced-inspect"
+  expect state drawerGeometryReady == true
+  expect state drawerPercent == "30"
+  type "advanced-handle" key "End"
+  clock settle
+  tap "advanced-inspect"
+  expect state drawerPercent == "90"
+  type "advanced-handle" key "Home"
+  clock settle
+  tap "advanced-inspect"
+  expect state drawerPercent == "30"
+  expect state drawerBottomAnchored == true
+  tap "advanced-close"
+  clock settle
+  expect no failures
+
+test "safe area has zero web inset and keeps block children inside their wrapper" on web
+  size 390x844
+  clock data
+  tap "safe-inspect"
+  expect state safeReady == true
+  expect state safeEnabledMatches == true
+  expect state safeDisabledMatches == true
+  expect state safeWithinBounds == true
+  expect no failures
+
+
+test "floating drawer keeps its compact gap and traps focus without a handle"
+  size 390x844
+  clock data
+  tap "floating-open"
+  clock settle
+  expect tree has "floating-layer"
+  expect tree missing "floating-handle"
+  expect state focused == "floating-close"
+  tap "floating-inspect"
+  expect state geometryReady == true
+  expect state fillsViewport == true
+  expect state floatingInset == true
+  expect state floatingSymmetric == true
+  expect state floatingContentInset == true
+  type "floating-last" key "Tab"
+  expect state focused == "floating-close"
+  type "floating-close" key "Tab"
+  expect state focused == "floating-inspect"
+  type "floating-inspect" key "Escape"
+  clock settle
+  expect tree missing "floating-layer"
+  expect state focused == "floating-open"
+  expect no failures
+
+test "controlled floating drawer updates its stop and preserves gaps on resize"
+  size 390x844
+  clock data
+  tap "floating-open"
+  clock settle
+  tap "floating-grow"
+  clock settle
+  expect state floatingSnap == 0.75
+  tap "floating-inspect"
+  expect state floatingInset == true
+  expect state floatingSymmetric == true
+  expect state floatingContentInset == true
+  resize 1280x800
+  clock settle
+  tap "floating-inspect"
+  expect state geometryReady == true
+  expect state fillsViewport == true
+  expect state floatingInset == true
+  expect state floatingSymmetric == true
+  expect state floatingContentInset == true
+  tap "floating-close"
+  clock settle
+  tap "floating-open"
+  clock settle
+  expect state floatingSnap == 0.45
+  expect tree missing "floating-handle"
+  tap "floating-close"
+  clock settle
+  expect no failures
+
+test "body scroll expands to a page while header and footer stay fixed" on web
+  size 390x844
+  clock data
+  tap "page-open"
+  clock settle
+  tap "page-capture"
+  expect state pageGeometryReady == true
+  expect state drawerPercent == "45"
+  expect state pageBodyContained == true
+  expect state pageHasContentInset == true
+  tap "page-body" wheel 0 180
+  clock settle
+  expect state pageSnap == 1
+  expect tree missing "page-back"
+  tap "page-capture"
+  expect state pageGeometryReady == true
+  expect state drawerPercent == "100"
+  expect state pageBodyContained == true
+  tap "page-body" wheel 0 320
+  clock settle
+  tap "page-inspect"
+  expect state pageChromeFixed == true
+  expect state pageBodyScrolled == true
+  expect state pageBodyContained == true
+  type "page-handle" key "Home"
+  clock settle
+  expect state pageSnap == 0.45
+  expect tree missing "page-back"
+  tap "page-close"
+  clock settle
+  expect tree missing "page-layer"
+  expect state focused == "page-open"
+  expect no failures

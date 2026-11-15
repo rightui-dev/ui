@@ -1,6 +1,6 @@
 {
-  "version": "0.2.0-beta.4",
-  "asOf": "2026-11-14",
+  "version": "0.3.0-beta.2",
+  "asOf": "2026-11-15",
   "exactRevision": "53426cf02bf986a5e781abc4f953d79989c6dc05",
   "platforms": [
     {
@@ -50,6 +50,11 @@
     "android": "unsupported"
   },
   "evidence": [
+    {
+      "id": "safe-area-pending",
+      "description": "SafeArea uses document safe-area insets. Browser zero-inset layout is checked; native edge and rotation validation remains incomplete.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/docs/SAFE-AREA.md"
+    },
     {
       "id": "web-run",
       "description": "VALIDATION.md records 24 successful browser tests and 0 Contract findings on 2026-11-13. The broader visual/accessibility audit still reports 130 findings; this is limited functional coverage, not full compatibility certification.",
@@ -197,7 +202,7 @@
     },
     {
       "id": "sheet-modal-native-pending",
-      "description": "The new SheetContent dialog composition has not been built or exercised on native targets.",
+      "description": "The authored window-level Sheet composition has targeted simulator coverage; full native accessibility and device validation remain incomplete.",
       "url": "https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md"
     },
     {
@@ -214,9 +219,56 @@
       "id": "avatar-native-pending",
       "description": "The updated Avatar compositions have not received targeted native validation.",
       "url": "https://github.com/rightui-dev/ui/blob/main/docs/AVATAR.md"
+    },
+    {
+      "id": "ios-block-scroll-local",
+      "description": "Unreleased local iOS simulator checks covered the Dashboard and Sidebar 01 previews: the shared Back bar hides on downward content scrolling and reappears on upward scrolling. Dashboard table scrolling and return to the catalog were also exercised. This is limited preview-navigation evidence, not full block, device or accessibility validation.",
+      "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    },
+    {
+      "id": "window-overlays-web",
+      "description": "Ten isolated browser checks cover full-window geometry from a transformed clipped container, repeated opening, focus and Escape, initial visibility, non-modal Toast, Drawer dragging and keyboard snap points, point normalization and zero web SafeArea insets. Pointer checks also verified backdrop dismissal and Alert Dialog background blocking. Six Sheet checks cover form persistence and four edges.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/tools/fixtures/overlays/app.test.contract"
+    },
+    {
+      "id": "drawer-options-web",
+      "description": "Thirteen isolated browser checks passed, including detached insets, controls and focus without a handle, controlled snap points across resize, and scroll-to-full-height with fixed content and footer. Native and motion checks are recorded separately.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/tools/fixtures/overlays/app.test.contract"
+    },
+    {
+      "id": "popover-invoker-web",
+      "description": "Targeted desktop and mobile browser checks cover repeated trigger toggling, outside dismissal, internal theme changes and Escape. A public Popover check verifies edited input persists after outside dismissal and reopening.",
+      "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
     }
   ],
   "overrides": [
+    {
+      "kind": "component",
+      "slug": "safe-area",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "window-overlays-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "safe-area",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "safe-area-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "safe-area",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "safe-area-pending"
+      ]
+    },
     {
       "kind": "component",
       "slug": "tabs",
@@ -466,7 +518,7 @@
       "platform": "web",
       "status": "checked",
       "evidence": [
-        "sheet-modal-web"
+        "window-overlays-web"
       ]
     },
     {
@@ -513,6 +565,70 @@
       "status": "blocked",
       "evidence": [
         "avatar-native-pending"
+      ]
+    },
+    {
+      "kind": "block",
+      "slug": "dashboard-01",
+      "platform": "ios",
+      "status": "checked",
+      "evidence": [
+        "ios-block-scroll-local"
+      ]
+    },
+    {
+      "kind": "block",
+      "slug": "sidebar-01",
+      "platform": "ios",
+      "status": "checked",
+      "evidence": [
+        "ios-block-scroll-local"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "dialog",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "window-overlays-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "alert-dialog",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "window-overlays-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "drawer",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "window-overlays-web",
+        "drawer-options-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "toast",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "window-overlays-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "popover",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "popover-invoker-web"
       ]
     }
   ]

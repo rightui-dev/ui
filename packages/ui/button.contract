@@ -103,11 +103,42 @@ component DisclosureButton
     icon: bool
     press: action
   slot
+  view
+    DisclosureButtonFrame(id=id, label=label, variant=variant, controls=controls, expanded=expanded, icon=icon, popoverTarget="", press=press)
+      children
+
+// A controlled popover still declares its invoker so pointer-down light dismiss
+// does not close it before the same pointer-up can toggle it.
+component PopoverTrigger
+  props
+    id: string
+    label: string
+    variant: string
+    controls: string
+    expanded: bool
+    icon: bool
+    press: action
+  slot
+  view
+    DisclosureButtonFrame(id=id, label=label, variant=variant, controls=controls, expanded=expanded, icon=icon, popoverTarget=(expanded ? controls : ""), press=press)
+      children
+
+component DisclosureButtonFrame
+  props
+    id: string
+    label: string
+    variant: string
+    controls: string
+    expanded: bool
+    icon: bool
+    popoverTarget: string
+    press: action
+  slot
   state hovered = false
   action hoverChanged(inside: bool)
     hovered = inside
   view
-    button id=id testId=id class=Control press=press hover=hoverChanged aria-label=label aria-expanded=expanded aria-controls=controls
+    button id=id testId=id class=Control press=press hover=hoverChanged aria-label=label aria-expanded=expanded aria-controls=controls popovertarget=popoverTarget popovertargetaction="show"
       display="flex" align-items="center" justify-content=(icon ? "center" : "flex-start") text-align="left" gap="ui.control-gap"
       width=(icon ? "ui.control-sm" : "100%") min-height=(icon ? "ui.control-sm" : "ui.control") height=(icon ? "ui.control-sm" : "auto") flex-shrink=0 padding=(icon ? "0px" : "ui.space-8 ui.space-12")
       background-color=buttonFill(variant, hovered) color=buttonInk(variant) border-width=(variant == "outline" ? "ui.border-width" : "0px") border-style="solid" border-color="ui.input"

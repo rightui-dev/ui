@@ -14,9 +14,10 @@
       const horizontal = side === 'left' || side === 'right';
       const sign = side === 'left' || side === 'top' ? 1 : -1;
       const record = () => {
-        const dialog = document.getElementById(dialogId);
+        const layer = document.getElementById(`rightui-modal-${dialogId}-layer`);
+        const dialog = document.getElementById(dialogId) ?? document.getElementById(`${dialogId}-panel`);
         const panel = document.getElementById(`${dialogId}-panel`);
-        if (!dialog?.open || !panel) {
+        if (!layer?.matches(':popover-open') || !dialog || !panel) {
           if (performance.now() - start < 800) requestAnimationFrame(record);
           else check.result = { triggerId, passed: false, error: 'Sheet did not open' };
           return;
@@ -26,7 +27,7 @@
           t: performance.now() - start,
           position: horizontal ? rect.x : rect.y,
           extent: horizontal ? rect.width : rect.height,
-          scroll: Math.abs(dialog.scrollLeft) + Math.abs(dialog.scrollTop),
+          scroll: Math.abs(layer.scrollLeft) + Math.abs(layer.scrollTop) + Math.abs(dialog.scrollLeft) + Math.abs(dialog.scrollTop),
         });
         if (performance.now() - start < 800) {
           requestAnimationFrame(record);

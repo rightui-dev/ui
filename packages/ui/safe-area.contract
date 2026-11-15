@@ -1,0 +1,15 @@
+// Apply document safe-area insets only on the edges this layout owns.
+component SafeArea
+  props
+    top: bool
+    bottom: bool
+    left: bool
+    right: bool
+  slot
+  view
+    column min-width="0px" box-sizing="border-box"
+      padding-top=(top ? "env(safe-area-inset-top)" : "0px")
+      padding-bottom=(bottom ? "env(safe-area-inset-bottom)" : "0px")
+      padding-left=(left ? "env(safe-area-inset-left)" : "0px")
+      padding-right=(right ? "env(safe-area-inset-right)" : "0px")
+      children

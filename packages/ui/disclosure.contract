@@ -117,7 +117,7 @@ component Popover
       expanded = false
   view
     column align-items="flex-start"
-      button id=id testId=id class=Control aria-haspopup="dialog" aria-expanded=expanded aria-controls=(id + "-content") press=toggle
+      button id=id testId=id class=Control aria-haspopup="dialog" aria-expanded=expanded aria-controls=(id + "-content") popovertarget=(expanded ? id + "-content" : "") popovertargetaction="show" press=toggle
         padding="ui.space-8 ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground"
         text label font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if expanded

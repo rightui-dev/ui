@@ -352,13 +352,19 @@
   {
     "slug": "drawer",
     "title": "Drawer",
-    "description": "Drawer with accessible presentation and local state.",
-    "usage": "Import Drawer from @rightui/ui. Store its value in state and update it through the provided action callback.",
-    "keyboard": "",
+    "description": "A draggable bottom panel with compact content, floating surfaces and scroll-to-expand pages.",
+    "usage": "Use Drawer or DrawerAdvanced for an internally managed bottom panel. DrawerContent adds a controlled snapPoint/changeSnap pair and DrawerOptions for detached surfaces, optional controls, backdrop opacity, bounce and scroll behavior. Compose fixed content with DrawerInset and DrawerFooter around a DrawerBody. Each scroll body has its own compact inset; avoid duplicating it. Scroll-to-expand animates to full available height while preserving the same controls. See docs/DRAWER.md for all required props and the scroll/resize boundary.",
+    "keyboard": "On the resize handle: ArrowUp/ArrowDown select the next/previous stop, Home/End select the smallest/largest stop, and Enter/Space cycle stops. Escape dismisses. Tab/Shift+Tab remain within the handle, close button and supplied focusIds.",
     "source": "packages/ui/drawer.contract",
     "example": "examples/drawer.contract",
     "exports": [
-      "Drawer"
+      "Drawer",
+      "DrawerAdvanced",
+      "DrawerContent",
+      "DrawerOptions",
+      "DrawerBody",
+      "DrawerInset",
+      "DrawerFooter"
     ]
   },
   {
@@ -587,12 +593,14 @@
     "slug": "popover",
     "title": "Popover",
     "description": "Popover with accessible presentation and local state.",
-    "usage": "Import Popover from @rightui/ui. Store its value in state and update it through the provided action callback.",
-    "keyboard": "",
+    "usage": "Use Popover for a self-contained panel. For controlled panels, pair PopoverTrigger with PopoverFrame: controls names the panel id, expanded mirrors its state, and press opens or closes it through your action. The trigger shares DisclosureButton variants and sizes while declaring the popover relationship for outside-click handling.",
+    "keyboard": "Enter or Space activates the trigger. Escape closes the panel and returns focus to its trigger. Clicking outside closes the panel; interacting inside keeps it open.",
     "source": "packages/ui/disclosure.contract",
     "example": "examples/popover.contract",
     "exports": [
-      "Popover"
+      "Popover",
+      "PopoverFrame",
+      "PopoverTrigger"
     ]
   },
   {
@@ -648,6 +656,18 @@
     ]
   },
   {
+    "slug": "safe-area",
+    "title": "Safe Area",
+    "description": "Real document safe-area padding with explicit control over all four edges.",
+    "usage": "Import SafeArea from @rightui/ui. Select top, bottom, left and right edges explicitly. Draw the background outside SafeArea and controls inside it. Use viewport-fit=cover for native edge-to-edge layouts, and avoid padding an edge that the parent already handles.",
+    "keyboard": "",
+    "source": "packages/ui/safe-area.contract",
+    "example": "examples/safe-area.contract",
+    "exports": [
+      "SafeArea"
+    ]
+  },
+  {
     "slug": "scroll-area",
     "title": "Scroll Area",
     "description": "Scroll Area with accessible presentation and local state.",
@@ -688,7 +708,7 @@
     "slug": "sheet",
     "title": "Sheet",
     "description": "A modal panel that opens from any edge of the window.",
-    "usage": "Import SheetContent, SheetBody and SheetFooter from @rightui/ui/sheet. Open with showModal(id) and close with close(id). For web, load assets/sheet.css from the package and declare rightui-sheet in app.json data. Keep form values in the parent state.",
+    "usage": "Import SheetContent, SheetBody and SheetFooter from @rightui/ui/sheet. Control open with local state, pass the ordered focusIds and restore focus in dismiss. For web, load assets/sheet.css from the package and declare rightui-sheet in app.json data. Keep form values in the parent state.",
     "keyboard": "Tab and Shift+Tab stay inside the modal. Escape, the close button and the backdrop dismiss it. Focus returns to the opening control.",
     "source": "packages/ui/sheet.contract",
     "importFrom": "@rightui/ui/sheet",

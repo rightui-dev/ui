@@ -180,6 +180,12 @@ token('foundation-icon-stroke','length','1.75px');token('icon-stroke','length','
 token('opacity-disabled','number','0.5');
 for (const [name,value] of Object.entries({fast:'150ms',normal:'200ms',slow:'300ms'})) token(`duration-${name}`,'duration',value);
 token('easing','easing','ease');
+token('easing-drawer','easing','-exact-spring(300, 30, 1)');
+token('easing-drawer-bounce','easing','-exact-spring(300, 22, 1)');
+token('drawer-content-inset','length','ui.card-inset');token('drawer-floating-content-inset','length','ui.space-12');token('drawer-floating-gap','length','ui.space-12');
+token('drawer-handle-target-width','length','10rem');token('drawer-handle-target-height','length','ui.space-48');
+token('drawer-handle-width','length','ui.space-48');token('drawer-handle-height','length','ui.space-4');
+token('drawer-backdrop','color','#000000 scheme=fixed');
 token('shadow-control','box-shadow','0 1px 2px 0 ui.shadow');token('shadow-panel','box-shadow','0 1px 3px 0 ui.shadow');token('shadow-menu','box-shadow','0 4px 12px 0 ui.shadow');token('shadow-focus','box-shadow','0 0 0 ui.focus-width ui.ring');
 token('card-inset','length','ui.space-24');token('card-gap','length','ui.space-24');token('control-gap','length','ui.space-8');
 token('hero-title-small','length',themeLayout.heroTitle.small);token('hero-title-medium','length',themeLayout.heroTitle.medium);token('hero-title-large','length',themeLayout.heroTitle.large);
