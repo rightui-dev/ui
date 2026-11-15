@@ -1,4 +1,4 @@
-use uiFontFamily, CheckboxMixed from "@rightui/ui"
+use uiFontFamily, Checkbox, CheckboxMixed, FieldFrame, FieldContent, FieldDescription, FieldError from "@rightui/ui"
 
 component Demo
   props
@@ -10,9 +10,35 @@ component Demo
   state checked = "mixed"
   action setChecked(value: bool)
     checked = value ? "true" : "false"
+  state terms = false
+  action setTerms(value: bool)
+    terms = value
+  state item0 = false
+  action setItem0(value: bool)
+    item0 = value
+  state item1 = false
+  action setItem1(value: bool)
+    item1 = value
+  state item2 = false
+  action setItem2(value: bool)
+    item2 = value
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       CheckboxMixed(id="advanced-mixed", label="Select all items", labelVisible=true, checked=checked, disabled=false, change=setChecked)
+      text ("Selection: " + checked) testId="checkbox-selection" role="status" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       text "Controlled and disabled" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       CheckboxMixed(id="checkbox-controlled", label="Controlled selection", labelVisible=true, checked=checked, disabled=false, change=setChecked)
       CheckboxMixed(id="checkbox-disabled", label="Disabled selection", labelVisible=true, checked="true", disabled=true, change=setChecked)
+      FieldFrame(id="checkbox-description-field", labelId="", descriptionId="checkbox-description", invalid=false, orientation="horizontal")
+        FieldContent(id="checkbox-description-content")
+          Checkbox(id="checkbox-basic", label="Accept terms and conditions", checked=terms, disabled=false, change=setTerms)
+          FieldDescription(id="checkbox-description", description="By selecting this checkbox, you agree to the terms and conditions.")
+      FieldFrame(id="checkbox-invalid-field", labelId="", descriptionId="checkbox-error", invalid=not terms, orientation="vertical")
+        Checkbox(id="checkbox-invalid", label="Accept required terms", checked=terms, disabled=false, change=setTerms)
+        if not terms
+          FieldError(id="checkbox-error", messages=["Accept the terms to continue."])
+      text "Desktop items" font-family=uiFontFamily(uiFont) data-rightui-font="body" font-weight="ui.weight-semibold"
+      Checkbox(id="checkbox-list-0", label="Hard disks", checked=item0, disabled=false, change=setItem0)
+      Checkbox(id="checkbox-list-1", label="External disks", checked=item1, disabled=false, change=setItem1)
+      Checkbox(id="checkbox-list-2", label="Connected servers", checked=item2, disabled=false, change=setItem2)
+      text ((item0 ? 1 : 0) + (item1 ? 1 : 0) + (item2 ? 1 : 0)).toString() testId="checkbox-group-count" role="status" aria-label="Selected desktop items" font-family=uiFontFamily(uiFont) data-rightui-font="body"

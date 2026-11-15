@@ -18,12 +18,16 @@ component CheckboxFrame
       role="checkbox" aria-checked=checked aria-label=label
       display="flex" align-items="center" justify-content="flex-start" gap="ui.space-8"
       min-height="ui.touch-target" width=(showLabel ? "auto" : "ui.touch-target") padding="0px" border="0" background-color="transparent" color="ui.foreground"
+      :hover
+        background-color="transparent"
+      :active
+        background-color="transparent"
       :focus-visible
         box-shadow="ui.shadow-focus"
       :disabled
         opacity="ui.opacity-disabled"
       view flex-shrink=0 width="ui.space-16" height="ui.space-16" border-radius="ui.radius-checkbox" box-sizing="border-box"
-        border-width=(checked ? "ui.border-width" : "ui.border-width") border-style=(checked ? "solid" : "solid") border-color=(checked ? "ui.primary" : "ui.border")
+        border-width=(checked ? "ui.border-width" : "ui.border-width") border-style=(checked ? "solid" : "solid") border-color=(checked ? "ui.primary" : "ui.input")
         background-color=(checked ? "ui.primary" : "ui.surface")
         display="flex" align-items="center" justify-content="center" aria-hidden=true
         if checked

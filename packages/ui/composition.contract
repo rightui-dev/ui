@@ -1,10 +1,26 @@
 use uiFontFamily from "./typography-context.contract"
+// Pass the resolved inset to each part: caller-owned slots retain their caller's providers.
+fn cardSpacing(size: string, spacing: string): string = spacing != "" ? spacing : size == "sm" ? "ui.space-12" : "ui.space-24"
+
 component CardFrame
   props
     id: string
   slot
   view
-    column id=id testId=id gap="ui.space-24" padding="ui.space-24 0px" min-width="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.panel-radius" background-color="ui.surface" color="ui.foreground" box-shadow="ui.shadow-control"
+    CardFrameOptions(id=id, size="default", spacing="", imageTop=false, direction="inherit")
+      children
+
+component CardFrameOptions
+  props
+    id: string
+    size: string
+    spacing: string
+    imageTop: bool
+    direction: string
+  derive inset = cardSpacing(size, spacing)
+  slot
+  view
+    column appearance="none" id=id testId=id direction=direction gap=inset padding-top=(imageTop ? "0px" : inset) padding-bottom=inset min-width="0px" max-width="100%" box-sizing="border-box" overflow=(imageTop ? "hidden" : "visible") border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.panel-radius" background-color="ui.surface" color="ui.foreground" box-shadow="ui.shadow-control"
       children
 
 component CardHeader
@@ -12,7 +28,18 @@ component CardHeader
     id: string
   slot
   view
-    view id=id testId=id display="grid" grid-template-columns="minmax(0, 1fr) auto" grid-template-rows="auto auto" align-items="start" gap="ui.space-8" padding="0px ui.space-24" min-width="0px"
+    CardHeaderOptions(id=id, spacing="", divided=false)
+      children
+
+component CardHeaderOptions
+  props
+    id: string
+    spacing: string
+    divided: bool
+  derive inset = cardSpacing("default", spacing)
+  slot
+  view
+    view appearance="none" id=id testId=id display="grid" grid-template-columns="minmax(0, 1fr) auto" grid-template-rows="auto auto" align-items="start" column-gap="ui.space-8" row-gap="ui.space-8" padding-left=inset padding-right=inset padding-bottom=(divided ? inset : "0px") border-bottom-width=(divided ? "ui.border-width" : "0px") border-bottom-style="solid" border-bottom-color="ui.border" min-width="0px"
       children
 
 component CardTitle
@@ -23,7 +50,7 @@ component CardTitle
   inject
     uiFont: string
   view
-    text title id=id testId=id grid-column="1" grid-row="1" min-width="0px" font-size="ui.text-base" line-height="ui.leading-solid" font-weight="ui.weight-semibold" role="heading" aria-level=level overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    text title appearance="none" id=id testId=id grid-column="1" grid-row="1" min-width="0px" font-size="ui.text-base" line-height="ui.leading-solid" font-weight="ui.weight-semibold" role="heading" aria-level=level overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component CardDescription
   props
@@ -32,14 +59,14 @@ component CardDescription
   inject
     uiFont: string
   view
-    text description id=id testId=id grid-column="1" grid-row="2" min-width="0px" font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    text description appearance="none" id=id testId=id grid-column="1" grid-row="2" min-width="0px" font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component CardAction
   props
     id: string
   slot
   view
-    view id=id testId=id grid-column="2" grid-row="1 / span 2" align-self="start" min-width="0px"
+    view appearance="none" id=id testId=id grid-column="2" grid-row="1 / span 2" align-self="start" min-width="0px"
       children
 
 component CardContent
@@ -47,7 +74,20 @@ component CardContent
     id: string
   slot
   view
-    column id=id testId=id padding="0px ui.space-24" min-width="0px"
+    CardContentOptions(id=id, spacing="", edgeToEdge=false, connectedFooter=false)
+      children
+
+component CardContentOptions
+  props
+    id: string
+    spacing: string
+    edgeToEdge: bool
+    connectedFooter: bool
+  derive inset = cardSpacing("default", spacing)
+  derive bottom = connectedFooter ? ("calc(" + inset + " * -1)") : "0px"
+  slot
+  view
+    column appearance="none" id=id testId=id padding-left=(edgeToEdge ? "0px" : inset) padding-right=(edgeToEdge ? "0px" : inset) margin-bottom=bottom min-width="0px"
       children
 
 component CardFooter
@@ -56,7 +96,18 @@ component CardFooter
     divided: bool
   slot
   view
-    row id=id testId=id align-items="center" flex-wrap="wrap" padding=(divided ? "ui.space-24 ui.space-24 0px" : "0px ui.space-24") border-top-width=(divided ? "ui.border-width" : "0px") border-top-style=(divided ? "solid" : "solid") border-top-color=(divided ? "ui.border" : "transparent") min-width="0px"
+    CardFooterOptions(id=id, spacing="", divided=divided)
+      children
+
+component CardFooterOptions
+  props
+    id: string
+    spacing: string
+    divided: bool
+  derive inset = cardSpacing("default", spacing)
+  slot
+  view
+    row appearance="none" id=id testId=id align-items="center" flex-wrap="wrap" gap="ui.space-8" padding-top=(divided ? inset : "0px") padding-left=inset padding-right=inset border-top-width=(divided ? "ui.border-width" : "0px") border-top-style="solid" border-top-color=(divided ? "ui.border" : "transparent") min-width="0px"
       children
 
 fn avatarSize(size: string): string = size == "sm" ? "ui.avatar-sm" : size == "lg" ? "ui.avatar-lg" : "ui.avatar-size"
@@ -248,7 +299,11 @@ component FieldLabel
     if not disabled
       focus(controlId)
   view
-    text label id=id testId=id press=activate font-size="ui.text-sm" font-weight="ui.weight-medium" line-height="ui.leading-compact" color="ui.foreground" opacity=(disabled ? "ui.opacity-disabled" : 1) font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    text label id=id testId=id press=activate appearance="none" background-color="transparent" font-size="ui.text-sm" font-weight="ui.weight-medium" line-height="ui.leading-compact" color="ui.foreground" opacity=(disabled ? "ui.opacity-disabled" : 1) font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      :hover
+        background-color="transparent"
+      :active
+        background-color="transparent"
 
 component FieldTitle
   props

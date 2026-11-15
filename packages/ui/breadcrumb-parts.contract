@@ -1,0 +1,71 @@
+use uiFontFamily from "./typography-context.contract"
+use QuietLink from "./styles.contract"
+
+component BreadcrumbRoot
+  props
+    id: string
+    label: string
+    direction: string
+  slot
+  view
+    nav id=id testId=id aria-label=label direction=direction min-width="0px" max-width="100%"
+      children
+
+// Exact's portable vocabulary has no ol/li tags. Keep list/listitem semantics.
+component BreadcrumbList
+  slot
+  view
+    row role="list" gap="ui.space-6" align-items="center" flex-wrap="wrap" min-width="0px" max-width="100%" color="ui.muted-foreground"
+      children
+
+component BreadcrumbItem
+  slot
+  view
+    row role="listitem" gap="ui.space-4" align-items="center" min-width="0px" max-width="100%"
+      children
+
+component BreadcrumbLink
+  props
+    href: string
+    label: string
+    id: string
+  inject
+    uiFont: string
+  slot
+  view
+    link id=id testId=id href=href class=QuietLink min-width="0px" max-width="100%" border-radius="ui.radius-sm"
+      if label != ""
+        text label font-size="ui.text-sm" overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      children
+
+component BreadcrumbPage
+  props
+    label: string
+  inject
+    uiFont: string
+  view
+    text label role="link" aria-disabled=true aria-current="page" font-size="ui.text-sm" color="ui.foreground" min-width="0px" overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+
+component BreadcrumbSeparator
+  props
+    kind: string
+    direction: string
+  slot
+  view
+    row role="presentation" aria-hidden=true flex-shrink=0 align-items="center" justify-content="center"
+      if kind == "custom"
+        children
+      else
+        svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-medium" stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
+          if kind == "dot"
+            circle cx=12 cy=12 r=1 fill="currentColor"
+          else
+            path d=(kind == "slash" ? "m15 4-6 16" : direction == "rtl" ? "m15 5-7 7 7 7" : "m9 5 7 7-7 7")
+
+component BreadcrumbEllipsis
+  view
+    row role="presentation" aria-hidden=true align-items="center" justify-content="center" width="ui.space-20" height="ui.space-20"
+      svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="currentColor" aria-hidden=true
+        circle cx=5 cy=12 r=1
+        circle cx=12 cy=12 r=1
+        circle cx=19 cy=12 r=1

@@ -1,0 +1,166 @@
+use uiFontFamily from "./typography-context.contract"
+use ButtonControl from "./button.contract"
+use Control from "./styles.contract"
+use DialogFrame from "./dialog.contract"
+use TraceTitle, TraceIcon from "./trace-parts.contract"
+
+component AttachmentFrame
+  props
+    id: string
+    status: string
+    size: string
+    orientation: string
+    cardWidth: string
+  slot
+  view
+    row id=id testId=id aria-busy=(status == "uploading" or status == "processing") position="relative" flex-shrink=0 scroll-snap-align="start" min-width="0px" max-width="100%" width=(cardWidth != "" ? cardWidth : orientation == "vertical" ? "7.5rem" : "100%") box-sizing="border-box" flex-direction=(orientation == "vertical" ? "column" : "row") gap=(size == "xs" ? "ui.space-6" : "ui.space-8") padding=(size == "xs" ? "ui.space-4 ui.space-6" : size == "sm" ? "ui.space-6 ui.space-8" : "ui.space-8 ui.space-10") align-items=(orientation == "vertical" ? "stretch" : "center") border-width="ui.border-width" border-style=(status == "idle" ? "dashed" : "solid") border-color=(status == "error" ? "color-mix(in srgb, ui.danger 30%, ui.border)" : "ui.border") border-radius=(size == "xs" ? "ui.radius-control" : "ui.radius-panel") background-color="ui.surface" color="ui.foreground"
+      children
+
+component AttachmentMedia
+  props
+    name: string
+    source: string
+    status: string
+    size: string
+    orientation: string
+    reduced: bool
+  derive extent = size == "xs" ? "ui.space-28" : size == "sm" ? "ui.space-32" : "ui.space-40"
+  view
+    view width=(orientation == "vertical" ? "100%" : extent) height=(orientation == "vertical" ? "auto" : extent) aspect-ratio="1" flex-shrink=0 overflow="hidden" border-radius="ui.radius-lg" background-color=(status == "error" ? "color-mix(in srgb, ui.danger 10%, ui.surface)" : "ui.muted") color=(status == "error" ? "ui.danger" : "ui.foreground") display="flex" align-items="center" justify-content="center"
+      if source != ""
+        image source alt=name width="100%" height="100%" object-fit="cover" opacity=(status == "done" or status == "idle" ? 1 : "ui.opacity-soft")
+      else if status == "uploading"
+        TraceIcon(icon="loader", status="running", reduced=reduced)
+      else
+        svg width=(orientation == "vertical" ? "ui.space-24" : "ui.space-16") height=(orientation == "vertical" ? "ui.space-24" : "ui.space-16") viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
+          if status == "idle"
+            circle cx=12 cy=12 r=9
+            path d="M12 7v5l3 2"
+          else if status == "error"
+            path d="M12 3 2 21h20ZM12 9v5M12 18h.01"
+          else
+            path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8ZM14 2v6h6M8 13h8M8 17h6"
+
+component AttachmentContent
+  slot
+  view
+    column flex=1 min-width="0px" max-width="100%" gap="ui.space-2"
+      children
+
+component AttachmentTitle
+  props
+    name: string
+    status: string
+    size: string
+    reduced: bool
+  inject
+    uiFont: string
+  view
+    if status == "uploading" or status == "processing"
+      TraceTitle(title=name, running=true, reduced=reduced)
+    else
+      text name font-size=(size == "default" ? "ui.text-sm" : "ui.text-xs") font-weight="ui.weight-medium" white-space="nowrap" overflow="hidden" text-overflow="ellipsis" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+
+component AttachmentDescription
+  props
+    text: string
+    status: string
+  inject
+    uiFont: string
+  view
+    text text font-size="ui.text-xs" color=(status == "error" ? "ui.danger" : "ui.muted-foreground") overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+
+component AttachmentActions
+  props
+    orientation: string
+  slot
+  view
+    row position=(orientation == "vertical" ? "absolute" : "relative") top=(orientation == "vertical" ? "ui.space-12" : "auto") right=(orientation == "vertical" ? "ui.space-12" : "auto") z-index=2 gap="ui.space-4" flex-shrink=0 align-items="center" border-radius="ui.radius-full" background-color="ui.surface"
+      children
+
+component AttachmentAction
+  props
+    id: string
+    label: string
+    icon: string
+    press: action
+  inject
+    uiFont: string
+  view
+    row
+      ButtonControl(id=id, label=label, variant="ghost", size="icon-xs", disabled=false, pressed=none, describedBy=id + "-tip", press=press)
+        svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
+          if icon == "retry"
+            path d="M3 11a9 9 0 0 1 15.4-6.4L21 7M21 3v4h-4M21 13a9 9 0 0 1-15.4 6.4L3 17m4 0H3v4"
+          else if icon == "copy"
+            rect x=9 y=9 width=13 height=13 rx=2
+            path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+          else
+            path d="m6 6 12 12M6 18 18 6"
+      view id=(id + "-tip") role="tooltip" popover="auto" position-area="top" position-try-fallbacks="flip-block, flip-inline" margin="ui.space-4" padding="ui.space-6 ui.space-12" border="0" border-radius="ui.radius-item" background-color="ui.foreground" color="ui.background"
+        text label font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+
+component AttachmentTrigger
+  props
+    id: string
+    label: string
+    disabled: bool
+    expanded: bool
+    controls: string
+    href: string
+    press: action
+  view
+    if href != ""
+      link id=id testId=id href=href target="_blank" rel="noopener noreferrer" class=Control aria-label=label position="absolute" inset="0px" z-index=1 border-radius="ui.radius-panel"
+    else
+      button id=id testId=id class=Control press=press disabled=disabled aria-label=label aria-haspopup="dialog" aria-expanded=expanded aria-controls=controls position="absolute" inset="0px" z-index=1 padding="0px" border="none" border-radius="ui.radius-panel" background-color="transparent"
+        :hover
+          background-color="color-mix(in srgb, ui.muted 20%, transparent)"
+
+component AttachmentGroup
+  props
+    id: string
+    label: string
+    compact: bool
+  slot
+  state left = 0
+  state portWidth = 0
+  state contentWidth = 0
+  action viewport(w: number, h: number)
+    portWidth = w
+  action content(w: number, h: number)
+    contentWidth = w
+  action scrolled(x: number, y: number, e: ScrollEvent)
+    left = x
+    portWidth = e.clientWidth
+    contentWidth = e.scrollWidth
+  derive fadeLeft = left > 1
+  derive fadeRight = contentWidth > portWidth + left + 1
+  view
+    scroll id=id testId=id role="group" aria-label=label tabindex=0 width="100%" min-width="0px" max-width="100%" overflow-x="auto" overflow-y="hidden" scrollbar-width="none" overscroll-behavior-x="contain" scroll-snap-type="x mandatory" scroll-padding="ui.space-4" resize=viewport scroll=scrolled display="flex" flex-direction="column" align-items="flex-start"
+      mask-image=(fadeLeft and fadeRight ? "linear-gradient(to right, transparent, #000000 5%, #000000 95%, transparent)" : fadeLeft ? "linear-gradient(to right, transparent, #000000 5%)" : fadeRight ? "linear-gradient(to right, #000000 95%, transparent)" : "none")
+      row width="auto" min-width="100%" align-self="flex-start" flex-shrink=0 box-sizing="border-box" gap=(compact ? "ui.space-8" : "ui.space-12") padding="ui.space-4" align-items="stretch" resize=content
+        children
+
+component AttachmentPreview
+  props
+    id: string
+    open: bool
+    name: string
+    metadata: string
+    content: string
+    contentId: string
+    imageSource: string
+    reduced: bool
+    dismiss: action
+  inject
+    uiFont: string
+  view
+    DialogFrame(id=id, open=open, reduced=reduced, title=name, description=metadata, focusIds=[id + "-body"], dismiss=dismiss)
+      scroll id=(id + "-body") testId=(id + "-body") tabindex=0 min-height="0px" flex="1 1 auto" overscroll-behavior="contain"
+        :focus-visible
+          box-shadow="ui.shadow-focus"
+        if imageSource != ""
+          image imageSource alt=name width="100%" max-height="60vh" object-fit="contain"
+        else
+          text content id=(contentId == "" ? id + "-content" : contentId) testId=(contentId == "" ? id + "-content" : contentId) font-size="ui.text-sm" line-height="ui.leading-code" white-space="pre-wrap" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"

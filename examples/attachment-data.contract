@@ -1,0 +1,9 @@
+shape AttachmentDemoFile
+  id: string
+  name: string
+  metadata: string
+  content: string
+  source: string
+
+fn attachmentDemoFiles(): AttachmentDemoFile[] = [AttachmentDemoFile(id="brief", name="project-brief.txt", metadata="Text · Project overview", content="RightUI component review\nCheck keyboard navigation, responsive layouts and shared themes.\nDeliver a reusable Exact interface.", source=""), AttachmentDemoFile(id="tokens", name="color-tokens.json", metadata="JSON · Theme colors", content="{\n  \"background\": \"#ffffff\",\n  \"foreground\": \"#171717\"\n}", source=""), AttachmentDemoFile(id="components", name="components.csv", metadata="CSV · Component inventory", content="component,status\nButton,ready\nCard,ready", source=""), AttachmentDemoFile(id="welcome", name="welcome.contract", metadata="Exact Contract · Component source", content="component Welcome\n  view\n    text \"Welcome to RightUI\"", source="")]
+fn attachmentDemoDocuments(): AttachmentDemoFile[] = [AttachmentDemoFile(id="notes", name="release-notes.md", metadata="Markdown · Release notes", content="# Interface update\n\n- Shared themes\n- Keyboard navigation\n- Responsive layouts", source=""), AttachmentDemoFile(id="plan", name="interface-plan.txt", metadata="Text · Interface outline", content="1. Add the shared theme.\n2. Compose the page with RightUI.\n3. Check desktop and mobile layouts.", source=""), AttachmentDemoFile(id="theme", name="theme-tokens.json", metadata="JSON · Theme settings", content="{\n  \"preset\": \"neutral\",\n  \"density\": \"comfortable\"\n}", source="")]

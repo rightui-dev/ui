@@ -1,0 +1,109 @@
+use uiFontFamily from "./typography-context.contract"
+use Control from "./styles.contract"
+use uiPopupIn, uiPopupOut from "./popup-motion.contract"
+
+shape MenuLinkEntry
+  id: string
+  label: string
+  href: string
+
+// Link counterpart to DropdownMenu: no press handler may swallow native hrefs.
+component DropdownMenuLinks
+  props
+    id: string
+    label: string
+    entries: MenuLinkEntry[]
+    reduced: bool
+    customTrigger: bool
+    direction: string
+  inject
+    uiFont: string
+  slot
+  state expanded = false
+  state openEpoch = 0
+  derive links = entries.filter(entry => entry.href != "")
+  action open(last: bool)
+    openEpoch = openEpoch + 1
+    expanded = true
+    showPopover(id + "-menu", source=id)
+    match links.at(last ? links.length - 1 : 0)
+      case some(entry)
+        focus(id + "-item-" + entry.id)
+      case none
+        focus(id + "-menu")
+  action dismiss(restore: bool)
+    expanded = false
+    if restore
+      focus(id)
+  action toggle
+    if expanded
+      dismiss(true)
+    else
+      open(false)
+  action changed(epoch: number, e: ToggleEvent)
+    if epoch == openEpoch
+      expanded = e.newState == "open"
+  action triggerKeys(k: string, e: KeyboardEvent)
+    if not e.isComposing and (k == "ArrowDown" or k == "ArrowUp")
+      preventDefault()
+      open(k == "ArrowUp")
+  action menuKeys(k: string, e: KeyboardEvent)
+    if not e.isComposing
+      if k == "Escape"
+        preventDefault()
+        stopPropagation()
+        dismiss(true)
+      else if k == "Tab"
+        // Return to the invoker before the browser's normal Tab traversal.
+        dismiss(true)
+  action linkKeys(index: number, k: string, e: KeyboardEvent)
+    if not e.isComposing
+      if k == "ArrowDown" or k == "ArrowUp" or k == "Home" or k == "End"
+        preventDefault()
+        let next = k == "Home" ? 0 : k == "End" ? links.length - 1 : (index + (k == "ArrowDown" ? 1 : links.length - 1)) % max(1, links.length)
+        match links.at(next)
+          case some(entry)
+            focus(id + "-item-" + entry.id)
+          case none
+            focus(id + "-menu")
+      else if k.length == 1 and k != " " and not e.metaKey and not e.ctrlKey and not e.altKey
+        let matches = links.filter(entry => entry.label.toLowerCase().startsWith(k.toLowerCase()))
+        let after = matches.filter(entry => links.map(link => link.id).indexOf(entry.id) > index)
+        match first(after.length > 0 ? after : matches)
+          case some(entry)
+            preventDefault()
+            focus(id + "-item-" + entry.id)
+          case none
+            stopPropagation()
+  view
+    column min-width="0px" max-width="100%" align-items="flex-start" direction=direction
+      button id=id testId=id class=Control press=toggle key=triggerKeys
+        aria-label=label aria-haspopup="menu" aria-expanded=expanded aria-controls=(id + "-menu")
+        popovertarget=(expanded ? id + "-menu" : "") popovertargetaction="show"
+        display="flex" align-items="center" justify-content="center" gap="ui.space-4" min-height="ui.space-28" padding="ui.space-2 ui.space-4" border="0" border-radius="ui.radius-sm" background-color="transparent" color="ui.muted-foreground"
+        :hover
+          color="ui.foreground"
+          background-color="ui.muted"
+        if customTrigger
+          children
+        else
+          text label font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
+            path d="m6 9 6 6 6-6"
+      if expanded
+        for epoch in [openEpoch] key=epoch
+          column id=(id + "-menu") testId=(id + "-menu") role="menu" aria-label=label direction=direction tabindex=-1 popover="auto" toggle=changed(epoch) keycapture=menuKeys
+            position-area=(direction == "rtl" ? "bottom span-left" : "bottom span-right") position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
+            left="auto" top="auto" margin="ui.space-4" padding="ui.space-4" width="calc(ui.space-64 * 3.5)" max-width="calc(100vw - ui.space-32)" max-height="min(calc(ui.space-64 * 7), 70vh)" min-width="0px" overflow="auto" box-sizing="border-box" gap="0px"
+            border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" color="ui.foreground" box-shadow="ui.shadow-menu"
+            animation=(reduced ? "none" : "uiPopupIn ui.duration-fast ui.easing both")
+            -exact-exit-animation=(reduced ? "none" : "uiPopupOut ui.duration-fast ui.easing both")
+            for entry, i in links key=entry.id
+              link id=(id + "-item-" + entry.id) testId=(id + "-item-" + entry.id) href=entry.href role="menuitem" tabindex=-1 key=linkKeys(i)
+                display="flex" align-items="center" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border-radius="ui.radius-item" color="ui.foreground" text-decoration="none" outline="none"
+                :hover
+                  background-color="ui.muted"
+                :focus-visible
+                  background-color="ui.muted"
+                  box-shadow="ui.shadow-focus"
+                text entry.label font-size="ui.text-sm" overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"

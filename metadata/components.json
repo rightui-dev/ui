@@ -3,13 +3,15 @@
     "slug": "accordion",
     "title": "Accordion",
     "description": "Accordion with accessible presentation and local state.",
-    "usage": "Import Accordion, AccordionMultiple from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "usage": "Import Accordion or AccordionMultiple from @rightui/ui and control expanded through change. Use AccordionOptions or AccordionMultipleOptions for disabledItems and collapsible. Pass every prop explicitly and forward the reduced-motion preference.",
     "keyboard": "",
     "source": "packages/ui/disclosure.contract",
     "example": "examples/accordion.contract",
     "exports": [
       "Accordion",
-      "AccordionMultiple"
+      "AccordionOptions",
+      "AccordionMultiple",
+      "AccordionMultipleOptions"
     ]
   },
   {
@@ -41,24 +43,36 @@
     "slug": "aspect-ratio",
     "title": "Aspect Ratio",
     "description": "Aspect Ratio with accessible presentation and local state.",
-    "usage": "Import AspectRatio from @rightui/ui. Supply content and required properties as shown in the example.",
+    "usage": "Import AspectRatio from @rightui/ui and supply ratio plus slotted content. Use AspectRatioFrame(ratio, radius) for an explicit corner radius. Ratios must be positive; nonpositive values fall back to a square. Copy the packaged assets/card directory into your app assets when using the example cover.",
     "keyboard": "",
     "source": "packages/ui/display.contract",
     "example": "examples/aspect-ratio.contract",
     "exports": [
-      "AspectRatio"
+      "AspectRatio",
+      "AspectRatioFrame"
     ]
   },
   {
     "slug": "attachment",
     "title": "Attachment",
     "description": "Attachment with accessible presentation and local state.",
-    "usage": "Import Attachment from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "usage": "Import Attachment(id, name, metadata, content, status, remove) for the legacy wrapper. Use AttachmentOptions for explicit size, orientation, imageSource, cardWidth, previewHref, reduced, copyable and copyValue, alongside the legacy props. Compose groups and previews with the public Attachment parts. Empty previewHref opens the built-in content preview; a nonempty value is a real link. Retry is a caller-owned AttachmentAction that updates status and content. Pass every prop explicitly; image examples use external image URLs.",
     "keyboard": "",
     "source": "packages/ui/conversation.contract",
     "example": "examples/attachment.contract",
     "exports": [
-      "Attachment"
+      "Attachment",
+      "AttachmentOptions",
+      "AttachmentFrame",
+      "AttachmentMedia",
+      "AttachmentContent",
+      "AttachmentTitle",
+      "AttachmentDescription",
+      "AttachmentActions",
+      "AttachmentAction",
+      "AttachmentTrigger",
+      "AttachmentGroup",
+      "AttachmentPreview"
     ]
   },
   {
@@ -87,36 +101,61 @@
     "slug": "badge",
     "title": "Badge",
     "description": "Badge with accessible presentation and local state.",
-    "usage": "Import Badge from @rightui/ui. Supply content and required properties as shown in the example.",
+    "usage": "Import Badge(label, variant) for the legacy wrapper, or BadgeWithOptions(label, variant, options) with BadgeOptions(icon, trailingIcon, href, fill, ink, direction, invalid). Supply every options field explicitly; empty strings select no icon/link or default colors. Use BadgeContent for slotted content, BadgeIcon for named SVG icons and BadgeSpinner(reduced, label) for status. BadgeContent requires variant, href, fill, ink, direction, invalid and iconPosition. Variants are default, secondary, destructive, outline, ghost and link; primary and success remain accepted.",
     "keyboard": "",
     "source": "packages/ui/badge.contract",
     "example": "examples/badge.contract",
     "exports": [
-      "Badge"
+      "Badge",
+      "BadgeWithOptions",
+      "BadgeOptions",
+      "BadgeContent",
+      "BadgeIcon",
+      "BadgeSpinner"
     ]
   },
   {
     "slug": "breadcrumb",
     "title": "Breadcrumb",
     "description": "Breadcrumb with accessible presentation and local state.",
-    "usage": "Import Breadcrumb from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "usage": "Import Breadcrumb(id, labels, choose) for legacy callbacks. BreadcrumbOptions also requires hrefs, separator, label and direction; ancestor entries without hrefs keep choose. Compose real links and a noninteractive current page with the public Breadcrumb parts. BreadcrumbResponsive(id, entries, width, reduced, label, direction) uses MenuLinkEntry(id, label, href), unique IDs and an empty final href; it shows hidden ancestors in a dropdown at width >= 768 or a Drawer below 768. DropdownMenuLinks requires id, label, entries, reduced, customTrigger and direction. Pass every prop explicitly; native hosts must declare the example link destinations.",
     "keyboard": "",
     "source": "packages/ui/navigation.contract",
     "example": "examples/breadcrumb.contract",
     "exports": [
-      "Breadcrumb"
+      "Breadcrumb",
+      "BreadcrumbOptions",
+      "BreadcrumbRoot",
+      "BreadcrumbList",
+      "BreadcrumbItem",
+      "BreadcrumbLink",
+      "BreadcrumbPage",
+      "BreadcrumbSeparator",
+      "BreadcrumbEllipsis",
+      "BreadcrumbResponsive",
+      "DropdownMenuLinks",
+      "MenuLinkEntry"
     ]
   },
   {
     "slug": "bubble",
     "title": "Bubble",
     "description": "Bubble with accessible presentation and local state.",
-    "usage": "Import Bubble from @rightui/ui. Supply content and required properties as shown in the example.",
+    "usage": "Import Bubble(id, body, align, variant, collapsible) for the legacy wrapper. Use BubbleOptions to also supply reactions, reduced, initialCollapsed and previewLength explicitly. Compose grouped content, links, buttons, reactions and popovers with the public Bubble parts; pass every required prop. Variants are default, secondary, muted, tinted, outline, destructive and ghost; primary remains a legacy alias. Use MarkdownDocument and parseMarkdown inside BubbleContent for Markdown.",
     "keyboard": "",
     "source": "packages/ui/conversation.contract",
     "example": "examples/bubble.contract",
     "exports": [
-      "Bubble"
+      "Bubble",
+      "BubbleOptions",
+      "BubbleFrame",
+      "BubbleGroup",
+      "BubbleContent",
+      "BubbleButton",
+      "BubbleLink",
+      "BubbleReactions",
+      "BubbleAction",
+      "BubblePopoverAction"
     ]
   },
   {
@@ -165,19 +204,24 @@
     "slug": "card",
     "title": "Card",
     "description": "Card with accessible presentation and local state.",
-    "usage": "Import Card, CardFrame from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "usage": "Import Card for a titled container or compose the public CardFrame, CardHeader, CardTitle, CardDescription, CardAction, CardContent and CardFooter parts. The Options components add explicit size, spacing, imageTop, direction, divided, edgeToEdge and connectedFooter choices as applicable. Resolve cardSpacing(size, spacing) once and pass that spacing to each part. Copy the packaged assets/card directory into your app assets for the example cover. Pass every Options prop explicitly.",
     "keyboard": "",
     "source": "packages/ui/card.contract",
     "example": "examples/card.contract",
     "exports": [
       "Card",
       "CardFrame",
+      "CardFrameOptions",
       "CardHeader",
+      "CardHeaderOptions",
       "CardTitle",
       "CardDescription",
       "CardAction",
       "CardContent",
-      "CardFooter"
+      "CardContentOptions",
+      "CardFooter",
+      "CardFooterOptions",
+      "cardSpacing"
     ]
   },
   {
@@ -201,33 +245,41 @@
     "slug": "chart",
     "title": "Chart",
     "description": "Inspect bar, line, pie, radar and radial charts with sample data.",
-    "usage": "Import ChartPoint, Chart from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "usage": "Import ChartPoint with Chart(id, points) or AreaChart(id, points); use SeriesPoint and ChartSeries with LineChart(id, label, points, series, showLegend, reduced). PieChart and RadialChart use ChartSlice data; RadarChart uses SeriesPoint and ChartSeries. ChartOptions, AreaChartOptions and LineChartOptions expose explicit tooltip, formatting, cursor, legend and direction choices as applicable; ChartOptions also supports stacked bars. Compose SeriesValuesTooltip or SeriesValuesTooltipOptions and SeriesLegend or SeriesLegendOptions from the same series configuration. Pass every Options prop explicitly and forward reduced where required.",
     "keyboard": "",
     "source": "packages/ui/chart.contract",
     "example": "examples/chart.contract",
     "exports": [
       "Chart",
+      "ChartOptions",
       "AreaChart",
+      "AreaChartOptions",
       "ChartPoint",
       "LineChart",
+      "LineChartOptions",
       "PieChart",
       "RadarChart",
       "RadialChart",
       "SeriesPoint",
       "ChartSeries",
-      "ChartSlice"
+      "ChartSlice",
+      "SeriesValuesTooltip",
+      "SeriesValuesTooltipOptions",
+      "SeriesLegend",
+      "SeriesLegendOptions"
     ]
   },
   {
     "slug": "checkbox",
     "title": "Checkbox",
     "description": "Select all items with a controlled mixed state.",
-    "usage": "Import Checkbox, CheckboxMixed from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "usage": "Import Checkbox for a labeled boolean control, CheckboxControl for a caller-composed label, or CheckboxMixed for checked=\"true\", \"false\" or \"mixed\". Keep state in the parent and update it through change(bool). Set disabled explicitly; compose descriptions and errors with the public Field parts.",
     "keyboard": "",
     "source": "packages/ui/checkbox.contract",
     "example": "examples/checkbox.contract",
     "exports": [
       "Checkbox",
+      "CheckboxControl",
       "CheckboxMixed"
     ]
   },

@@ -1,5 +1,6 @@
 import { copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
+import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -9,10 +10,17 @@ const sdk = resolve(root, process.env.EXACT ?? '../.tooling/exact');
 const manifest = JSON.parse(readFileSync(resolve(root, 'packages/ui/package.json'), 'utf8'));
 let archive = resolve(root, `dist/rightui-ui-${manifest.version}.tgz`);
 const options = process.argv.slice(2);
+const archiveFlag = options.indexOf('--archive');
+if (archiveFlag >= 0) {
+  if (!options[archiveFlag + 1]) throw new Error('--archive requires a file path.');
+  archive = resolve(options[archiveFlag + 1]);
+  options.splice(archiveFlag, 2);
+}
 const registry = options.includes('--registry');
+if (registry && archiveFlag >= 0) throw new Error('Choose --registry or --archive.');
 const checkFonts = options.includes('--fonts');
 if (new Set(options).size !== options.length || options.some(option => !['--registry', '--fonts'].includes(option))) {
-  throw new Error('Usage: bun tools/check-package.ts [--registry] [--fonts]');
+  throw new Error('Usage: bun tools/check-package.ts [--registry | --archive file] [--fonts]');
 }
 
 function run(args: string[], cwd: string): void {
@@ -28,13 +36,13 @@ const directory = mkdtempSync(resolve(tmpdir(), 'rightui-package-'));
 if (registry) {
   run(['npm', 'pack', `${manifest.name}@${manifest.version}`, '--pack-destination', directory, '--ignore-scripts'], directory);
   archive = resolve(directory, `rightui-ui-${manifest.version}.tgz`);
-} else {
+} else if (archiveFlag < 0) {
   run([process.execPath, 'tools/package-ui.ts'], root);
 }
 const listing = Bun.spawnSync(['tar', '-tzf', archive], { stdout: 'pipe', stderr: 'inherit' });
 if (listing.exitCode !== 0) process.exit(listing.exitCode || 1);
 const files = listing.stdout.toString().trim().split('\n');
-for (const file of ['package.json', 'index.contract', 'button.contract', 'typography-context.contract', 'ui.tamber', 'theme.ts', 'assets/fonts/Geist.ttf', 'assets/fonts/Geist-Italic.ttf', 'assets/fonts/Newsreader.ttf', 'assets/fonts/Newsreader-Italic.ttf', 'assets/fonts/OFL.txt', 'assets/fonts/OFL-Italic.txt', 'assets/fonts/OFL-Newsreader.txt', 'LICENSE', 'README.md', 'CHANGELOG.md', 'THIRD_PARTY_NOTICES.md', 'docs/MIGRATION-0.2.md', 'docs/CODE-BLOCK.md', 'docs/THEMING.md', 'docs/COMPONENT-COMPOSITION.md', 'docs/MARKDOWN.md', 'sheet.contract', 'assets/sheet.css', 'docs/SHEET.md', 'avatar-menu.contract', 'docs/AVATAR.md', 'assets/avatars/user-blue.png', 'assets/avatars/user-violet.png', 'assets/avatars/user-green.png', 'assets/avatars/provenance.json']) {
+for (const file of ['package.json', 'index.contract', 'button.contract', 'typography-context.contract', 'ui.tamber', 'theme.ts', 'assets/fonts/Geist.ttf', 'assets/fonts/Geist-Italic.ttf', 'assets/fonts/Newsreader.ttf', 'assets/fonts/Newsreader-Italic.ttf', 'assets/fonts/OFL.txt', 'assets/fonts/OFL-Italic.txt', 'assets/fonts/OFL-Newsreader.txt', 'LICENSE', 'README.md', 'CHANGELOG.md', 'THIRD_PARTY_NOTICES.md', 'docs/MIGRATION-0.2.md', 'docs/CODE-BLOCK.md', 'docs/THEMING.md', 'docs/COMPONENT-COMPOSITION.md', 'docs/MARKDOWN.md', 'sheet.contract', 'assets/sheet.css', 'docs/SHEET.md', 'avatar-menu.contract', 'docs/AVATAR.md', 'assets/avatars/user-blue.png', 'assets/avatars/user-violet.png', 'assets/avatars/user-green.png', 'assets/avatars/provenance.json', 'assets/card/cover.jpg', 'assets/card/provenance.json', 'docs/COMPONENT-OPTIONS.md']) {
   if (!files.includes(`package/${file}`)) throw new Error(`Package is missing ${file}`);
 }
 if (files.some(file => !/^package\/(?:[^/]+\.contract|ui\.tamber|theme\.ts|package\.json|README\.md|CHANGELOG\.md|LICENSE|THIRD_PARTY_NOTICES\.md|assets\/.+|docs\/[^/]+\.md)$/.test(file))) {
@@ -61,6 +69,11 @@ if (installedManifest.name !== manifest.name || installedManifest.version !== ma
 }
 if (lstatSync(installed).isSymbolicLink() || !realpathSync(installed).startsWith(realpathSync(app) + '/')) {
   throw new Error('The package must be installed from the tarball, without a workspace or global Bun link.');
+}
+const cover = readFileSync(resolve(installed, 'assets/card/cover.jpg'));
+const coverProvenance = JSON.parse(readFileSync(resolve(installed, 'assets/card/provenance.json'), 'utf8')).find((entry: any) => entry.file === 'cover.jpg');
+if (cover.length !== 65427 || !coverProvenance || createHash('sha256').update(cover).digest('hex') !== coverProvenance.sha256) {
+  throw new Error('Installed Card/AspectRatio cover does not match its provenance.');
 }
 for (const file of ['app.contract', 'app.ts']) copyFileSync(resolve(root, 'integrations/typescript', file), resolve(app, file));
 mkdirSync(resolve(app, 'assets/fonts'), { recursive: true });

@@ -1,5 +1,5 @@
 use uiFontFamily, Accordion from "@rightui/ui"
-use AccordionMultiple from "@rightui/ui"
+use AccordionMultiple, AccordionOptions, CardFrame, CardHeader, CardTitle, CardDescription, CardContent from "@rightui/ui"
 
 component Demo
   props
@@ -19,3 +19,11 @@ component Demo
       AccordionMultiple(id="advanced-accordion", titles=["Is it accessible?", "Is it styled?", "Is it animated?"], descriptions=["Yes. It supports keyboard navigation and exposes each panel state.", "Yes. It follows the shared RightUI design tokens.", "Yes. It uses the same height animation and reduced-motion preference."], expanded=expanded, reduced=reduced, change=setExpanded)
       text "Single expansion" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Accordion(id="single-expansion", titles=["Overview", "Details"], descriptions=["One panel at a time.", "Select a heading to expand."], expanded=singleExpanded, reduced=reduced, change=setSingleExpanded)
+      text "Disabled item and required expansion" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      AccordionOptions(id="accordion-disabled", titles=["Account history", "Premium information", "Email preferences"], descriptions=["Review your account activity.", "This item is disabled.", "Choose which updates you receive."], expanded=singleExpanded, disabledItems=[1], collapsible=false, reduced=reduced, change=setSingleExpanded)
+      CardFrame(id="accordion-card")
+        CardHeader(id="accordion-card-header")
+          CardTitle(id="accordion-card-title", title="RightUI components", level=3)
+          CardDescription(id="accordion-card-description", description="Common questions about composition and accessibility.")
+        CardContent(id="accordion-card-content")
+          Accordion(id="accordion-card-items", titles=["Can I compose components?", "Does it follow my theme?"], descriptions=["Use public RightUI components inside your Exact views.", "Shared tokens control colours, spacing and typography."], expanded=singleExpanded, reduced=reduced, change=setSingleExpanded)

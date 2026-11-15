@@ -15,8 +15,8 @@ component Card
     fill: color = "ui.surface" control="color" group="Color"
   slot
   view
-    column testId=id class=CardStyle background-color="param.fill" border-width="param.borderWidth" border-radius="param.radius" padding="param.inset" gap="param.gap"
-      column gap="ui.space-8"
-        text title font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-base" font-weight="ui.weight-semibold" color="ui.foreground" role="heading" aria-level=2
-        text description font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-sm" color="ui.muted-foreground" line-height="ui.leading-normal"
+    column appearance="none" id=id testId=id min-width=0 max-width="100%" box-sizing="border-box" class=CardStyle background-color="param.fill" border-width="param.borderWidth" border-radius="param.radius" padding="param.inset" gap="param.gap"
+      column appearance="none" gap="ui.space-8" min-width=0
+        text title appearance="none" font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-base" font-weight="ui.weight-semibold" color="ui.foreground" role="heading" aria-level=2
+        text description appearance="none" font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-sm" color="ui.muted-foreground" line-height="ui.leading-normal"
       children

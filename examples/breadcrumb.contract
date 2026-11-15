@@ -1,13 +1,97 @@
-use Breadcrumb from "@rightui/ui"
+use Breadcrumb, BreadcrumbOptions, BreadcrumbRoot, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, BreadcrumbEllipsis, BreadcrumbResponsive, DropdownMenuLinks, MenuLinkEntry, Select, QuietLink, uiFontFamily from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
   state breadcrumb = "Components"
+  state language = "Arabic"
+  derive rtl = language != "English"
+  derive hebrew = language == "Hebrew"
+  derive destinations = [MenuLinkEntry(id="documentation", label="Documentation", href="/docs/installation"), MenuLinkEntry(id="themes", label="Themes", href="/themes"), MenuLinkEntry(id="registry", label="Registry", href="/docs/registry")]
   action chooseBreadcrumb(i: number)
     breadcrumb = (i == 0 ? "Home" : "Library")
+  action chooseLanguage(value: string)
+    language = value
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
+      BreadcrumbRoot(id="breadcrumb-demo", label="Breadcrumb", direction="ltr")
+        BreadcrumbList()
+          BreadcrumbItem()
+            BreadcrumbLink(href="/", label="Home", id="")
+          BreadcrumbSeparator(kind="chevron", direction="ltr")
+          BreadcrumbItem()
+            DropdownMenuLinks(id="breadcrumb-demo-more", label="Show more pages", entries=destinations, reduced=reduced, customTrigger=true, direction="ltr")
+              BreadcrumbEllipsis()
+          BreadcrumbSeparator(kind="chevron", direction="ltr")
+          BreadcrumbItem()
+            BreadcrumbLink(href="/docs/components", label="Components", id="")
+          BreadcrumbSeparator(kind="chevron", direction="ltr")
+          BreadcrumbItem()
+            BreadcrumbPage(label="Breadcrumb")
       Breadcrumb(id="catalog-breadcrumb", labels=["Home", "Library", "Components"], choose=chooseBreadcrumb)
+      text ("Selected: " + breadcrumb) role="status" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      BreadcrumbOptions(id="linked-breadcrumb", labels=["Home", "Components", "Breadcrumb"], hrefs=["/", "/docs/components"], choose=chooseBreadcrumb, separator="chevron", label="Breadcrumb", direction="ltr")
+      BreadcrumbOptions(id="slash-breadcrumb", labels=["Home", "Components", "Breadcrumb"], hrefs=["/", "/docs/components"], separator="slash", choose=chooseBreadcrumb, label="Breadcrumb", direction="ltr")
+      BreadcrumbRoot(id="custom-separator-breadcrumb", label="Breadcrumb", direction="ltr")
+        BreadcrumbList()
+          BreadcrumbItem()
+            BreadcrumbLink(href="/", label="Home", id="")
+          BreadcrumbSeparator(kind="custom", direction="ltr")
+            svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="currentColor" aria-hidden=true
+              circle cx=12 cy=12 r=1
+          BreadcrumbItem()
+            BreadcrumbLink(href="/docs/components", label="Components", id="")
+          BreadcrumbSeparator(kind="dot", direction="ltr")
+          BreadcrumbItem()
+            BreadcrumbPage(label="Breadcrumb")
+      BreadcrumbRoot(id="dropdown-breadcrumb", label="Breadcrumb", direction="ltr")
+        BreadcrumbList()
+          BreadcrumbItem()
+            BreadcrumbLink(href="/", label="Home", id="")
+          BreadcrumbSeparator(kind="dot", direction="ltr")
+          BreadcrumbItem()
+            DropdownMenuLinks(id="breadcrumb-components", label="Components", entries=destinations, reduced=reduced, customTrigger=false, direction="ltr")
+          BreadcrumbSeparator(kind="dot", direction="ltr")
+          BreadcrumbItem()
+            BreadcrumbPage(label="Breadcrumb")
+      BreadcrumbRoot(id="collapsed-breadcrumb", label="Breadcrumb", direction="ltr")
+        BreadcrumbList()
+          BreadcrumbItem()
+            BreadcrumbLink(href="/", label="Home", id="")
+          BreadcrumbSeparator(kind="chevron", direction="ltr")
+          BreadcrumbItem()
+            BreadcrumbEllipsis()
+          BreadcrumbSeparator(kind="chevron", direction="ltr")
+          BreadcrumbItem()
+            BreadcrumbLink(href="/docs/components", label="Components", id="")
+          BreadcrumbSeparator(kind="chevron", direction="ltr")
+          BreadcrumbItem()
+            BreadcrumbPage(label="Breadcrumb")
+      BreadcrumbRoot(id="router-breadcrumb", label="Breadcrumb", direction="ltr")
+        BreadcrumbList()
+          BreadcrumbItem()
+            link href="/" class=QuietLink
+              text "Home" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          BreadcrumbSeparator(kind="chevron", direction="ltr")
+          BreadcrumbItem()
+            BreadcrumbLink(href="/docs/components", id="", label="")
+              text "Components" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          BreadcrumbSeparator(kind="chevron", direction="ltr")
+          BreadcrumbItem()
+            BreadcrumbPage(label="Breadcrumb")
+      BreadcrumbResponsive(id="responsive-breadcrumb", width=width, reduced=reduced, entries=[MenuLinkEntry(id="home", label="Home", href="/"), MenuLinkEntry(id="documentation", label="Documentation", href="/docs/installation"), MenuLinkEntry(id="rightui", label="RightUI", href="/docs/registry"), MenuLinkEntry(id="components", label="Components", href="/docs/components"), MenuLinkEntry(id="breadcrumb", label="Breadcrumb", href="")], label="Breadcrumb", direction="ltr")
+      Select(id="breadcrumb-language", label="Language", options=["English", "Arabic", "Hebrew"], value=language, disabled=false, reduced=reduced, change=chooseLanguage)
+      BreadcrumbRoot(id="rtl-breadcrumb", direction=rtl ? "rtl" : "ltr", label="Breadcrumb")
+        BreadcrumbList()
+          BreadcrumbItem()
+            BreadcrumbLink(href="/", label=rtl ? (hebrew ? "בית" : "الرئيسية") : "Home", id="")
+          BreadcrumbSeparator(direction=rtl ? "rtl" : "ltr", kind="chevron")
+          BreadcrumbItem()
+            DropdownMenuLinks(id="breadcrumb-rtl-components", label=rtl ? (hebrew ? "רכיבים" : "المكونات") : "Components", direction=rtl ? "rtl" : "ltr", reduced=reduced, entries=[MenuLinkEntry(id="documentation", label=rtl ? (hebrew ? "תיעוד" : "التوثيق") : "Documentation", href="/docs/installation"), MenuLinkEntry(id="themes", label=rtl ? (hebrew ? "ערכות נושא" : "السمات") : "Themes", href="/themes"), MenuLinkEntry(id="registry", label=rtl ? (hebrew ? "ספרייה" : "المكتبة") : "Registry", href="/docs/registry")], customTrigger=false)
+          BreadcrumbSeparator(direction=rtl ? "rtl" : "ltr", kind="chevron")
+          BreadcrumbItem()
+            BreadcrumbPage(label=rtl ? (hebrew ? "פירורי לחם" : "مسار التنقل") : "Breadcrumb")

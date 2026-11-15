@@ -1,8 +1,42 @@
-use uiFontFamily, Chart, ChartPoint, AreaChart, Button, LineChart, PieChart, RadarChart, RadialChart, SeriesPoint, ChartSeries, ChartSlice from "@rightui/ui"
+use uiFontFamily, Card, ChartOptions, ChartPoint, AreaChartOptions, Button, ButtonControl, LineChartOptions, PieChart, RadarChart, RadialChart, SeriesPoint, ChartSeries, ChartSlice, SeriesValuesTooltipOptions from "@rightui/ui"
 fn paritySeries(): ChartSeries[] = [ChartSeries(id="desktop", label="Desktop", color="ui.chart-1"), ChartSeries(id="mobile", label="Mobile", color="ui.chart-2")]
 fn parityMonths(): SeriesPoint[] = [SeriesPoint(id="jan", label="January", values=[186, 80]), SeriesPoint(id="feb", label="February", values=[305, 200]), SeriesPoint(id="mar", label="March", values=[237, 120]), SeriesPoint(id="apr", label="April", values=[73, 190]), SeriesPoint(id="may", label="May", values=[209, 130]), SeriesPoint(id="jun", label="June", values=[214, 140])]
 fn parityRadar(): SeriesPoint[] = [SeriesPoint(id="jan", label="January", values=[186, 80]), SeriesPoint(id="feb", label="February", values=[305, 200]), SeriesPoint(id="mar", label="March", values=[237, 120]), SeriesPoint(id="apr", label="April", values=[273, 190]), SeriesPoint(id="may", label="May", values=[209, 130]), SeriesPoint(id="jun", label="June", values=[214, 140])]
 fn parityBrowsers(): ChartSlice[] = [ChartSlice(id="chrome", label="Chrome", value=275, color="ui.chart-1"), ChartSlice(id="safari", label="Safari", value=200, color="ui.chart-2"), ChartSlice(id="firefox", label="Firefox", value=187, color="ui.chart-3"), ChartSlice(id="edge", label="Edge", value=173, color="ui.chart-4"), ChartSlice(id="other", label="Other", value=90, color="ui.chart-5")]
+
+fn chartDays(): ChartPoint[] = [ChartPoint(label="2024-04-01", desktop=222, mobile=150), ChartPoint(label="2024-04-02", desktop=97, mobile=180), ChartPoint(label="2024-04-03", desktop=167, mobile=120), ChartPoint(label="2024-04-04", desktop=242, mobile=260), ChartPoint(label="2024-04-05", desktop=373, mobile=290), ChartPoint(label="2024-04-06", desktop=301, mobile=340), ChartPoint(label="2024-04-07", desktop=245, mobile=180), ChartPoint(label="2024-04-08", desktop=409, mobile=320), ChartPoint(label="2024-04-09", desktop=59, mobile=110), ChartPoint(label="2024-04-10", desktop=261, mobile=190), ChartPoint(label="2024-04-11", desktop=327, mobile=350), ChartPoint(label="2024-04-12", desktop=292, mobile=210), ChartPoint(label="2024-04-13", desktop=342, mobile=380), ChartPoint(label="2024-04-14", desktop=137, mobile=220), ChartPoint(label="2024-04-15", desktop=120, mobile=170), ChartPoint(label="2024-04-16", desktop=138, mobile=190), ChartPoint(label="2024-04-17", desktop=446, mobile=360), ChartPoint(label="2024-04-18", desktop=364, mobile=410), ChartPoint(label="2024-04-19", desktop=243, mobile=180), ChartPoint(label="2024-04-20", desktop=89, mobile=150), ChartPoint(label="2024-04-21", desktop=137, mobile=200), ChartPoint(label="2024-04-22", desktop=224, mobile=170), ChartPoint(label="2024-04-23", desktop=138, mobile=230), ChartPoint(label="2024-04-24", desktop=387, mobile=290), ChartPoint(label="2024-04-25", desktop=215, mobile=250), ChartPoint(label="2024-04-26", desktop=75, mobile=130), ChartPoint(label="2024-04-27", desktop=383, mobile=420), ChartPoint(label="2024-04-28", desktop=122, mobile=180), ChartPoint(label="2024-04-29", desktop=315, mobile=240), ChartPoint(label="2024-04-30", desktop=454, mobile=380)]
+fn chartMonths(): ChartPoint[] = parityMonths().map(p => ChartPoint(label=p.label, desktop=(match p.values.at(0) { case some(v) => v, case none => 0 }), mobile=(match p.values.at(1) { case some(v) => v, case none => 0 })))
+fn chartDates(): ChartPoint[] = [ChartPoint(label="2024-07-15", desktop=450, mobile=300), ChartPoint(label="2024-07-16", desktop=380, mobile=420), ChartPoint(label="2024-07-17", desktop=520, mobile=120), ChartPoint(label="2024-07-18", desktop=140, mobile=550), ChartPoint(label="2024-07-19", desktop=600, mobile=350), ChartPoint(label="2024-07-20", desktop=480, mobile=400)]
+fn chartLocalizedMonth(index: number, language: string): string = match (language == "ar" ? ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو"] : language == "he" ? ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני"] : ["January", "February", "March", "April", "May", "June"]).at(index) { case some(value) => value, case none => "" }
+fn chartLocalizedMonths(language: string): ChartPoint[] = chartMonths().map((p, i) => ChartPoint(p, label=chartLocalizedMonth(i, language)))
+fn chartDeviceIcons(): string[] = ["M3 4h18v13H3zM8 21h8M12 17v4", "M7 2h10v20H7zM11 18h2"]
+
+component ChartOptionButton
+  props
+    id: string
+    label: string
+    selected: bool
+    press: action
+  inject
+    uiFont: string
+  view
+    ButtonControl(id=id, label=label, variant=(selected ? "default" : "outline"), size="default", disabled=false, pressed=some(selected), describedBy="", press=press)
+      text label font-family=uiFontFamily(uiFont) data-rightui-font="body"
+
+component TooltipExamples
+  inject
+    uiFont: string
+  view
+    row gap="ui.space-12" flex-wrap="wrap" min-width=0
+      for indicator in ["dot", "line", "dashed", "none"] key=indicator
+        column gap="ui.space-8" width="14rem" max-width="100%" min-width=0
+          text (indicator == "none" ? "No indicator" : indicator) text-transform="capitalize" font-weight="ui.weight-medium" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          view position="relative" min-width=0 height=140
+            SeriesValuesTooltipOptions(id=("chart-tooltip-" + indicator), title="Page Views", series=(indicator == "line" ? [ChartSeries(id="desktop", label="Desktop", color="ui.chart-1")] : paritySeries()), values=[12486, 1000], hidden=[], indicator=indicator, hideLabel=(indicator == "dashed"), hideIndicator=false, labelFormat="auto", nameOverride="", valueFormat="decimal", valuePrefix="", valueSuffix="", formattedValues=[], icons=[], showTotal=false, totalLabel="Total", plotWidth=0, anchor=-1)
+      column gap="ui.space-8" width="14rem" max-width="100%" min-width=0
+        text "Custom value and total" font-weight="ui.weight-medium" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        view position="relative" min-width=0 height=160
+          SeriesValuesTooltipOptions(id="chart-tooltip-advanced", title="RightUI activity", series=paritySeries(), values=[450, 300], hidden=[], indicator="dot", hideLabel=false, hideIndicator=false, labelFormat="auto", nameOverride="", valueFormat="decimal", valuePrefix="", valueSuffix=" kcal", formattedValues=["450 kcal", "300 kcal"], icons=[], showTotal=true, totalLabel="Total", plotWidth=0, anchor=-1)
 
 component Demo
   props
@@ -13,18 +47,95 @@ component Demo
   state donut = false
   state empty = false
   state half = false
+  state indicator = "dot"
+  state hideLabel = false
+  state hideIndicator = false
+  state customTitle = false
+  state customName = false
+  state cursor = true
+  state format = "decimal"
+  state iconMode = "none"
+  state legendTop = false
+  state stacked = false
+  state stage = 4
+  state language = "en"
+  derive rtl = language != "en"
+  derive valueFormat = format == "kcal" ? "decimal" : format
+  derive suffix = format == "kcal" ? " kcal" : ""
+  derive factor = format == "percent" ? 0.001 : 1
+  derive linePoints = empty ? [] : parityMonths().map(p => SeriesPoint(p, values=p.values.map(v => v * factor)))
+  derive barPoints = empty ? [] : chartMonths().map(p => ChartPoint(p, desktop=p.desktop * factor, mobile=p.mobile * factor))
+  derive areaPoints = empty ? [] : chartDates().map(p => ChartPoint(p, desktop=p.desktop * factor, mobile=p.mobile * factor))
+  derive icons = iconMode == "none" ? [] : chartDeviceIcons()
   action toggleDonut
     donut = not donut
   action toggleEmpty
     empty = not empty
   action toggleSweep
     half = not half
+  action chooseIndicator(v: string)
+    indicator = v
+  action chooseFormat(v: string)
+    format = v
+  action chooseIcons(v: string)
+    iconMode = v
+  action toggleLabel
+    hideLabel = not hideLabel
+  action toggleIndicator
+    hideIndicator = not hideIndicator
+  action toggleTitle
+    customTitle = not customTitle
+  action toggleName
+    customName = not customName
+  action toggleCursor
+    cursor = not cursor
+  action toggleLegend
+    legendTop = not legendTop
+  action toggleStack
+    stacked = not stacked
+  action chooseStage(v: number)
+    stage = v
+  action toggleDirection
+    language = language == "en" ? "ar" : language == "ar" ? "he" : "en"
   view
     column gap="ui.space-24" min-width=0
-      row gap="ui.space-12" flex-wrap="wrap"
-        Button(id="parity-empty", label=(empty ? "Restore chart data" : "Show empty charts"), variant="outline", disabled=false, press=toggleEmpty)
-      LineChart(id="parity-line", label="Desktop and mobile visitors by month", points=(empty ? [] : parityMonths()), series=paritySeries(), showLegend=true, reduced=reduced)
-      text "Showing total visitors for the last 6 months" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      Card(id="chart-interactive-card", title="Bar Chart - Interactive", description="Daily visitors in April 2024. Choose Desktop, Mobile or both series.")
+        ChartOptions(id="chart-interactive", points=(empty ? [] : chartDays()), label="Desktop and mobile visitors. Use arrow keys to inspect values.", showLegend=true, stacked=false, showGrid=true, showAxis=true, showTooltip=true, showSeriesControl=true, showPointControls=false, showTotals=true, initialSeries="desktop", direction="ltr", initialIndex=1, indicator="dot", hideLabel=false, hideIndicator=false, labelFormat="date", tooltipTitle="", nameOverride="Page Views", valueFormat="decimal", valuePrefix="", valueSuffix="", showTotal=false, showCursor=true, icons=[], hideLegendIcon=false, legendAlign="bottom", desktopLabel="Desktop", mobileLabel="Mobile")
+      Card(id="chart-composition-card", title="Build a chart", description="Add a grid, axis, tooltip and legend to the same monthly data.")
+        row gap="ui.space-8" flex-wrap="wrap" role="group" aria-label="Chart composition"
+          for name, i in ["Bars", "Grid", "Axis", "Tooltip", "Legend"] key=name
+            ChartOptionButton(id=("chart-stage-" + i.toString()), label=name, selected=stage == i, press=chooseStage(i))
+        row gap="ui.space-8" flex-wrap="wrap"
+          Button(id="chart-direction", label=(language == "en" ? "Language: English (LTR)" : language == "ar" ? "Language: Arabic (RTL)" : "Language: Hebrew (RTL)"), variant="outline", disabled=false, press=toggleDirection)
+        ChartOptions(id="chart-example", points=(empty ? [] : chartLocalizedMonths(language)), label="Desktop and mobile visitors. Use arrow keys to inspect values.", showLegend=(stage >= 4), stacked=false, showGrid=(stage >= 1), showAxis=(stage >= 2), showTooltip=(stage >= 3), showSeriesControl=false, showPointControls=false, showTotals=false, initialSeries="both", direction=(rtl ? "rtl" : "ltr"), initialIndex=1, indicator="dot", hideLabel=false, hideIndicator=false, labelFormat="auto", tooltipTitle="", nameOverride="", valueFormat="decimal", valuePrefix="", valueSuffix="", showTotal=false, showCursor=(stage >= 3), icons=[], hideLegendIcon=false, legendAlign="bottom", desktopLabel=(language == "ar" ? "سطح المكتب" : language == "he" ? "מחשב" : "Desktop"), mobileLabel=(language == "ar" ? "الجوال" : language == "he" ? "נייד" : "Mobile"))
+      Card(id="chart-tooltip-card", title="Tooltip anatomy", description="Label, series name, color indicator and grouped value. A single series nests its label beside a line indicator.")
+        TooltipExamples()
+      Card(id="chart-options", title="Explore chart tooltips", description="These controls update the bar, line and area charts below. Hover, tap, or focus a chart and use the arrow keys. Escape dismisses the tooltip.")
+        row gap="ui.space-8" flex-wrap="wrap" role="group" aria-label="Tooltip indicator"
+          for item in ["dot", "line", "dashed", "none"] key=item
+            ChartOptionButton(id=("chart-indicator-" + item), label=("Indicator: " + item), selected=indicator == item, press=chooseIndicator(item))
+        row gap="ui.space-8" flex-wrap="wrap" role="group" aria-label="Value format"
+          for item in ["decimal", "currency", "percent", "compact", "kcal"] key=item
+            ChartOptionButton(id=("chart-format-" + item), label=("Values: " + item), selected=format == item, press=chooseFormat(item))
+        row gap="ui.space-8" flex-wrap="wrap"
+          Button(id="chart-hide-label", label=(hideLabel ? "Show label" : "Hide label"), variant="outline", disabled=false, press=toggleLabel)
+          Button(id="chart-hide-indicator", label=(hideIndicator ? "Show indicator" : "Hide indicator"), variant="outline", disabled=false, press=toggleIndicator)
+          Button(id="chart-title", label=(customTitle ? "Use point label" : "Use RightUI title"), variant="outline", disabled=false, press=toggleTitle)
+          Button(id="chart-name", label=(customName ? "Use series names" : "Use Sessions name"), variant="outline", disabled=false, press=toggleName)
+          Button(id="chart-cursor", label=(cursor ? "Hide cursor" : "Show cursor"), variant="outline", disabled=false, press=toggleCursor)
+        row gap="ui.space-8" flex-wrap="wrap" role="group" aria-label="Legend icons"
+          for item in ["none", "icons", "swatches"] key=item
+            ChartOptionButton(id=("chart-icons-" + item), label=("Legend: " + item), selected=iconMode == item, press=chooseIcons(item))
+          Button(id="chart-legend-top", label=(legendTop ? "Legend below" : "Legend above"), variant="outline", disabled=false, press=toggleLegend)
+          Button(id="chart-stack", label=(stacked ? "Group bars" : "Stack bars"), variant="outline", disabled=false, press=toggleStack)
+        row gap="ui.space-12" flex-wrap="wrap"
+          Button(id="parity-empty", label=(empty ? "Restore chart data" : "Show empty charts"), variant="outline", disabled=false, press=toggleEmpty)
+      Card(id="chart-bar-card", title="Bar chart", description="Desktop and mobile sample metrics. The legend and series controls update the bars and tooltip together.")
+        ChartOptions(id="data-chart", points=barPoints, label="Desktop and mobile visitors. Use arrow keys to inspect values.", showLegend=true, stacked=stacked, showGrid=true, showAxis=true, showTooltip=true, showSeriesControl=true, showPointControls=true, showTotals=false, initialSeries="both", direction="ltr", initialIndex=1, indicator=indicator, hideLabel=hideLabel, hideIndicator=hideIndicator, labelFormat="auto", tooltipTitle=(customTitle ? "RightUI activity" : ""), nameOverride=(customName ? "Sessions" : ""), valueFormat=valueFormat, valuePrefix="", valueSuffix=suffix, showTotal=true, showCursor=cursor, icons=icons, hideLegendIcon=(iconMode == "swatches"), legendAlign=(legendTop ? "top" : "bottom"), desktopLabel="Desktop", mobileLabel="Mobile")
+      Card(id="chart-line-card", title="Line chart", description="Desktop and mobile sample metrics, January to June. Active points use the same colors as the legend and tooltip.")
+        LineChartOptions(id="parity-line", label="Desktop and mobile visitors by month", points=linePoints, series=paritySeries(), showLegend=true, reduced=reduced, initialIndex=1, indicator=indicator, hideLabel=hideLabel, hideIndicator=hideIndicator, labelFormat="auto", tooltipTitle=(customTitle ? "RightUI activity" : ""), nameOverride=(customName ? "Sessions" : ""), valueFormat=valueFormat, valuePrefix="", valueSuffix=suffix, showTotal=true, showCursor=cursor, icons=icons, hideLegendIcon=(iconMode == "swatches"), legendAlign=(legendTop ? "top" : "bottom"))
+      Card(id="chart-area-card", title="Area chart", description="Stacked desktop and mobile metrics. The tooltip formats full dates and reports each series value before stacking.")
+        AreaChartOptions(id="area-chart", points=areaPoints, label="Daily desktop and mobile visitors. Use arrow keys to explore.", showLegend=true, initialIndex=1, indicator=indicator, hideLabel=hideLabel, hideIndicator=hideIndicator, labelFormat="date", tooltipTitle=(customTitle ? "RightUI activity" : ""), nameOverride=(customName ? "Sessions" : ""), valueFormat=valueFormat, valuePrefix="", valueSuffix=suffix, showTotal=true, showCursor=cursor, icons=icons, hideLegendIcon=(iconMode == "swatches"), legendAlign=(legendTop ? "top" : "bottom"))
       row gap="ui.space-12"
         Button(id="parity-donut", label=(donut ? "Show pie" : "Show donut"), variant="outline", disabled=false, press=toggleDonut)
       PieChart(id="parity-pie", label="Visitors by browser", items=(empty ? [] : parityBrowsers()), donut=donut, showLegend=true, reduced=reduced)
@@ -33,7 +144,5 @@ component Demo
       row gap="ui.space-12"
         Button(id="parity-sweep", label=(half ? "Show full circles" : "Show semicircles"), variant="outline", disabled=false, press=toggleSweep)
       RadialChart(id="parity-radial", label="Visitors by browser, concentric radial bars", items=(empty ? [] : parityBrowsers()), maximum=275, sweep=(half ? 180 : 360), showLegend=true, reduced=reduced)
-      Chart(id="data-chart", points=[ChartPoint(label="Jan", desktop=186, mobile=80), ChartPoint(label="Feb", desktop=305, mobile=200), ChartPoint(label="Mar", desktop=237, mobile=120), ChartPoint(label="Apr", desktop=73, mobile=190), ChartPoint(label="May", desktop=209, mobile=130), ChartPoint(label="Jun", desktop=214, mobile=140)])
-      AreaChart(id="area-chart", points=[ChartPoint(label="Jan", desktop=186, mobile=80), ChartPoint(label="Feb", desktop=305, mobile=200), ChartPoint(label="Mar", desktop=237, mobile=120)])
       text "Explicit maximum without legend" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       RadarChart(id="radar-fixed", label="Visitors on a fixed scale", points=parityRadar(), series=paritySeries(), maximum=400, showLegend=false, reduced=reduced)

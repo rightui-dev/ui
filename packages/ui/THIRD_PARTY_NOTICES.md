@@ -134,3 +134,9 @@ OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.
 
+
+# Documentation cover image
+
+The Card and AspectRatio examples bundle `assets/card/cover.jpg`, an Unsplash image by **mymind**. Source: https://images.unsplash.com/photo-1604076850742-4c7221f3101b?q=80&w=960&auto=format&fit=crop
+
+License: https://unsplash.com/license. The source URL, use and SHA-256 are recorded in `assets/card/provenance.json` in the package (`packages/ui/assets/card/provenance.json` in this repository).

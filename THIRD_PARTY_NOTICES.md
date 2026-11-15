@@ -143,3 +143,9 @@ THIS SOFTWARE.
 # Expo logo
 
 The demo profile mark in `blocks/brand.contract` uses Expo’s official `svg/logo-type-a.svg` geometry from `expo/logos`, commit `ab130d18ab0b75b85997986980875c152efedf2d`. Source: https://github.com/expo/logos/blob/ab130d18ab0b75b85997986980875c152efedf2d/svg/logo-type-a.svg . The Expo name and logo are trademarks of their respective owner; usage guidelines: https://expo.dev/brand .
+
+# Documentation cover image
+
+The Card and AspectRatio examples bundle `assets/card/cover.jpg`, an Unsplash image by **mymind**. Source: https://images.unsplash.com/photo-1604076850742-4c7221f3101b?q=80&w=960&auto=format&fit=crop
+
+License: https://unsplash.com/license. The source URL, use and SHA-256 are recorded in `assets/card/provenance.json` in the package (`packages/ui/assets/card/provenance.json` in this repository).

@@ -11,34 +11,50 @@ component Accordion
     expanded: number
     reduced: bool
     change: action
+  view
+    AccordionOptions(id=id, titles=titles, descriptions=descriptions, expanded=expanded, disabledItems=[], collapsible=true, reduced=reduced, change=change)
+
+component AccordionOptions
+  props
+    id: string
+    titles: string[]
+    descriptions: string[]
+    expanded: number
+    disabledItems: number[]
+    collapsible: bool
+    reduced: bool
+    change: action
   inject
     uiFont: string
   state hovered = -1
   action setHover(i: number, inside: bool)
     hovered = inside ? i : -1
   action toggle(i: number)
-    change(expanded == i ? -1 : i)
+    if not disabledItems.includes(i) and (collapsible or expanded != i)
+      change(expanded == i ? -1 : i)
   action keys(i: number, k: string)
-    if k == "Enter" or k == " "
+    if k == "ArrowDown" or k == "ArrowUp" or k == "Home" or k == "End"
       preventDefault()
-      toggle(i)
-    else if k == "ArrowDown" or k == "ArrowUp" or k == "Home" or k == "End"
-      preventDefault()
-      let next = (k == "Home" ? 0 : k == "End" ? titles.length - 1 : (i + (k == "ArrowDown" ? 1 : titles.length - 1)) % max(1, titles.length))
-      focus(id + "-trigger-" + next.toString())
+      let enabled = titles.map((title, item) => item).filter(item => not disabledItems.includes(item))
+      let before = enabled.filter(item => item < i)
+      let after = enabled.filter(item => item > i)
+      let next = k == "Home" ? enabled.at(0) : k == "End" ? enabled.at(enabled.length - 1) : k == "ArrowDown" ? (after.length > 0 ? after.at(0) : enabled.at(0)) : (before.length > 0 ? before.at(before.length - 1) : enabled.at(enabled.length - 1))
+      if enabled.length > 0
+        let target = match next { case some(item) => item, case none => i }
+        focus(id + "-trigger-" + target.toString())
   view
     column id=id testId=id
       for title, i in titles key=title
         column border-bottom-width=(i == titles.length - 1 ? "0px" : "ui.border-width") border-bottom-style=(i == titles.length - 1 ? "solid" : "solid") border-bottom-color=(i == titles.length - 1 ? "transparent" : "ui.border") min-width="0px"
-          button id=(id + "-trigger-" + i.toString()) testId=(id + "-trigger-" + i.toString()) class=Control
+          button id=(id + "-trigger-" + i.toString()) testId=(id + "-trigger-" + i.toString()) class=Control disabled=disabledItems.includes(i)
             aria-expanded=(expanded == i) aria-controls=(id + "-panel-" + i.toString()) press=toggle(i) key=keys(i) hover=setHover(i)
-            display="flex" align-items="flex-start" justify-content="space-between" gap="ui.space-16" padding="ui.space-16" border="0" background-color="transparent" color="ui.foreground"
+            display="flex" align-items="flex-start" justify-content="space-between" gap="ui.space-16" padding="ui.space-16 0px" border="0" background-color="transparent" color="ui.foreground"
             text title flex=1 min-width="0px" text-align="left" text-decoration=(hovered == i ? "underline" : "none") font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             svg width="ui.space-16" height="ui.space-16" margin-top="ui.space-2" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" rotate=(expanded == i ? "180deg" : "0deg") transition=(reduced ? "none" : "rotate ui.duration-normal ui.easing") aria-hidden=true
               path d="m6 9 6 6 6-6"
           column id=(id + "-panel-" + i.toString()) testId=(expanded == i ? id + "-panel-" + i.toString() : "") role="region" aria-labelledby=(id + "-trigger-" + i.toString()) aria-hidden=(expanded != i) inert=(expanded != i) height=(expanded == i ? "auto" : "0px") min-height="0px" overflow="hidden"
             -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing")
-            column padding="0px ui.space-16 ui.space-16" min-width="0px"
+            column padding="0px 0px ui.space-16" min-width="0px"
               match descriptions.at(i)
                 case some(description)
                   text description font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

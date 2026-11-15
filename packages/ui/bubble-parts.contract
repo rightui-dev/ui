@@ -1,0 +1,112 @@
+use uiFontFamily from "./typography-context.contract"
+use ButtonControl, PopoverTrigger from "./button.contract"
+use PopoverFrame from "./disclosure.contract"
+use MessageIcon, bubbleFill, bubbleInk from "./conversation-parts.contract"
+use Control from "./styles.contract"
+
+component BubbleGroup
+  props
+    id: string
+    label: string
+  slot
+  view
+    column id=id testId=id role="group" aria-label=label gap="ui.space-8" min-width="0px" width="100%"
+      children
+
+component BubbleContent
+  props
+    id: string
+  slot
+  view
+    column id=id testId=id min-width="0px" max-width="100%" gap="ui.space-8" overflow-wrap="break-word" font-size="ui.text-sm" line-height="ui.leading-code"
+      children
+
+component BubbleButton
+  props
+    id: string
+    label: string
+    align: string
+    variant: string
+    press: action
+  inject
+    uiFont: string
+  state hovered = false
+  action hoverChanged(inside: bool)
+    hovered = inside
+  view
+    button id=id testId=id class=Control hover=hoverChanged text-decoration=(hovered ? "underline" : "none") press=press align-self=(align == "end" ? "flex-end" : "flex-start") width="auto" max-width="80%" min-width="0px" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color=(variant == "outline" ? "ui.border" : "transparent") border-radius="ui.ai-radius-bubble" padding="ui.space-10 ui.space-12" background-color=bubbleFill(variant) color=bubbleInk(variant) text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text label font-size="ui.text-sm" line-height="ui.leading-code" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+
+component BubbleLink
+  props
+    id: string
+    label: string
+    href: string
+    align: string
+    variant: string
+  inject
+    uiFont: string
+  state hovered = false
+  action hoverChanged(inside: bool)
+    hovered = inside
+  view
+    link id=id testId=id class=Control hover=hoverChanged text-decoration=(hovered ? "underline" : "none") href=href align-self=(align == "end" ? "flex-end" : "flex-start") width="auto" max-width="80%" min-width="0px" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color=(variant == "outline" ? "ui.border" : "transparent") border-radius="ui.ai-radius-bubble" padding="ui.space-10 ui.space-12" background-color=bubbleFill(variant) color=bubbleInk(variant) font-size="ui.text-sm" line-height="ui.leading-code" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text label font-size="ui.text-sm" line-height="ui.leading-code" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+
+component BubbleReactions
+  props
+    id: string
+    label: string
+    side: string
+    align: string
+    interactive: bool
+  slot
+  view
+    row id=id testId=id role=(interactive ? "group" : "img") aria-label=label position="absolute" z-index=1 top=(side == "top" ? "0px" : "auto") bottom=(side == "top" ? "auto" : "0px") left=(align == "start" ? "ui.space-12" : "auto") right=(align == "start" ? "auto" : "ui.space-12") translate=(side == "top" ? "0px -75%" : "0px 75%") width="auto" max-width="100%" align-items="center" gap="ui.space-4" padding="ui.space-2 ui.space-6" border-radius="ui.radius-full" background-color="ui.muted" color="ui.foreground" border-width="ui.border-strong-width" border-style="solid" border-color="ui.surface" font-size="ui.text-sm"
+      children
+
+component BubbleAction
+  props
+    id: string
+    label: string
+    icon: string
+    pressed: option<bool>
+    press: action
+  inject
+    uiFont: string
+  view
+    row
+      ButtonControl(id=id, label=label, variant="ghost", size="icon-xs", disabled=false, pressed=pressed, describedBy=id + "-tip", press=press)
+        MessageIcon(name=icon, filled=(match pressed { case some(value) => value, case none => false }))
+      view id=(id + "-tip") testId=(id + "-tip") role="tooltip" popover="auto" position-area="top" position-try-fallbacks="flip-block, flip-inline" max-width="calc(100vw - ui.space-32)" margin="ui.space-4" padding="ui.space-6 ui.space-12" border="0" border-radius="ui.radius-item" background-color="ui.foreground" color="ui.background"
+        text label font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+
+component BubblePopoverAction
+  props
+    id: string
+    label: string
+    reduced: bool
+  slot
+  state expanded = false
+  state epoch = 0
+  action toggle
+    if expanded
+      expanded = false
+    else
+      epoch = epoch + 1
+      expanded = true
+      showPopover(id + "-content", source=id)
+      focus(id + "-content")
+  action dismiss(current: number)
+    if current == epoch
+      expanded = false
+  view
+    row
+      PopoverTrigger(id=id, label=label, variant="ghost", controls=id + "-content", expanded=expanded, icon=true, press=toggle)
+        svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
+          circle cx=12 cy=12 r=9
+          path d="M12 11v6M12 7h.01"
+      if expanded
+        for current in [epoch] key=current
+          PopoverFrame(id=id + "-content", source=id, label=label, align="end", reduced=reduced, dismiss=dismiss(current))
+            children

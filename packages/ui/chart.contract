@@ -1,5 +1,6 @@
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
+use ChartSeries, SeriesLegendOptions, SeriesValuesTooltipOptions, chartNiceStep, chartDisplayLabel, chartDisplayValue from "./chart-series.contract"
 shape ChartPoint
   label: string
   desktop: number
@@ -8,49 +9,138 @@ component Chart
   props
     id: string
     points: ChartPoint[]
+  view
+    ChartOptions(id=id, points=points, label="Desktop and mobile visitors. Use arrow keys to inspect values.", showLegend=true, stacked=false, showGrid=true, showAxis=true, showTooltip=true, showSeriesControl=true, showPointControls=true, showTotals=false, initialSeries="both", direction="ltr", initialIndex=-1, indicator="dot", hideLabel=false, hideIndicator=false, labelFormat="auto", tooltipTitle="", nameOverride="", valueFormat="decimal", valuePrefix="", valueSuffix="", showTotal=false, showCursor=true, icons=[], hideLegendIcon=false, legendAlign="bottom", desktopLabel="Desktop", mobileLabel="Mobile")
+
+component ChartOptions
+  props
+    id: string
+    points: ChartPoint[]
+    label: string
+    showLegend: bool
+    stacked: bool
+    showGrid: bool
+    showAxis: bool
+    showTooltip: bool
+    showSeriesControl: bool
+    showPointControls: bool
+    showTotals: bool
+    initialSeries: string
+    direction: string
+    initialIndex: number
+    indicator: string
+    hideLabel: bool
+    hideIndicator: bool
+    labelFormat: string
+    tooltipTitle: string
+    nameOverride: string
+    valueFormat: string
+    valuePrefix: string
+    valueSuffix: string
+    showTotal: bool
+    showCursor: bool
+    icons: string[]
+    hideLegendIcon: bool
+    legendAlign: string
+    desktopLabel: string
+    mobileLabel: string
   inject
     uiFont: string
-  state series = "both"
-  state active = -1
-  derive peak = match first(sortBy(points, p => max(p.desktop, p.mobile), "desc")) { case some(p) => max(1, max(p.desktop, p.mobile)), case none => 1 }
-  derive spacing = 500 / max(1, points.length)
+  state hidden: string[] = initialSeries == "desktop" ? ["mobile"] : initialSeries == "mobile" ? ["desktop"] : []
+  state active = initialIndex
+  state pinned = false
+  state width = 560
+  derive current = min(active, points.length - 1)
+  derive series = hidden.length == 0 ? "both" : hidden.includes("mobile") and not hidden.includes("desktop") ? "desktop" : hidden.includes("desktop") and not hidden.includes("mobile") ? "mobile" : "none"
+  derive config = [ChartSeries(id="desktop", label=desktopLabel, color="ui.chart-1"), ChartSeries(id="mobile", label=mobileLabel, color="ui.chart-2")]
+  derive peak = match first(sortBy(points, p => stacked ? (hidden.includes("desktop") ? 0 : max(0, p.desktop)) + (hidden.includes("mobile") ? 0 : max(0, p.mobile)) : max(hidden.includes("desktop") ? 0 : max(0, p.desktop), hidden.includes("mobile") ? 0 : max(0, p.mobile)), "desc")) { case some(p) => max(1, stacked ? (hidden.includes("desktop") ? 0 : max(0, p.desktop)) + (hidden.includes("mobile") ? 0 : max(0, p.mobile)) : max(hidden.includes("desktop") ? 0 : max(0, p.desktop), hidden.includes("mobile") ? 0 : max(0, p.mobile))), case none => 1 }
+  derive domain = ceil(peak / chartNiceStep(peak / 4)) * chartNiceStep(peak / 4)
+  derive rtl = direction == "rtl"
+  derive spacing = 520 / max(1, points.length)
   action choose(v: string)
-    series = v
+    hidden = v == "both" ? [] : v == "desktop" ? ["mobile"] : ["desktop"]
+  action toggle(v: string)
+    hidden = hidden.includes(v) ? hidden.filter(s => s != v) : hidden.concat([v])
+  action measure(w: number, h: number)
+    if w != width
+      width = max(1, w)
   action inspect(i: number)
     active = i
+    pinned = true
+  action pointer(e: PointerEvent)
+    let bounds = frame(id + "-plot")
+    active = max(0, min(points.length - 1, floor(((rtl ? 1 - (e.clientX - bounds.x) / max(1, bounds.width) : (e.clientX - bounds.x) / max(1, bounds.width)) * 560 - 20) / 520 * points.length)))
+  action press(e: PointerEvent)
+    pinned = e.pointerType != "mouse"
+    pointer(e)
+    focus(id + "-plot")
+  action hover(inside: bool)
+    if not inside and not pinned
+      active = -1
+  action leaveFocus(e: FocusEvent)
+    match e.relatedTarget
+      case some(target)
+        if not target.startsWith(id)
+          active = -1
+          pinned = false
+      case none
+        active = -1
+        pinned = false
+  action dismiss(k: string)
+    if k == "Escape"
+      keys(k)
+  action keys(k: string)
+    if k == "Escape"
+      preventDefault()
+      stopPropagation()
+      active = -1
+      pinned = false
+    else if points.length > 0 and (k == "ArrowLeft" or k == "ArrowRight" or k == "Home" or k == "End" or k == "Enter" or k == " ")
+      preventDefault()
+      pinned = true
+      active = k == "Home" ? 0 : k == "End" ? points.length - 1 : active < 0 ? ((k == "ArrowLeft" and not rtl) or (k == "ArrowRight" and rtl) ? points.length - 1 : 0) : k == "ArrowLeft" or k == "ArrowRight" ? max(0, min(points.length - 1, current + ((k == "ArrowLeft" and not rtl) or (k == "ArrowRight" and rtl) ? -1 : 1))) : current
   view
-    column id=id testId=id gap="ui.space-16" min-width="0px" color="ui.foreground"
-      row gap="ui.space-8" flex-wrap="wrap" role="group" aria-label="Chart series"
-        for name in ["both", "desktop", "mobile"] key=name
-          button class=Control id=(id + "-" + name) testId=(id + "-" + name) press=choose(name) aria-pressed=series == name padding="ui.space-6 ui.space-12" min-height="ui.space-32" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color=(series == name ? "ui.muted" : "transparent") color="ui.foreground" text-transform="capitalize"
-            text name font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      scroll overflow-x="auto" max-height="30rem" min-width="0px" aria-label="Monthly desktop and mobile visitors" tabindex=0
-        row gap="ui.space-8" min-width=((max(1, points.length) * 3 + 3).toString() + "rem") padding-top="ui.space-8"
-          column position="relative" width="ui.space-48" flex-shrink=0 height="11.25rem"
+    column id=id testId=id gap="ui.space-16" min-width="0px" color="ui.foreground" direction=direction focusout=leaveFocus key=dismiss
+      if showSeriesControl
+        row gap="ui.space-8" flex-wrap="wrap" role="group" aria-label="Chart series"
+          for name in ["both", "desktop", "mobile"] key=name
+            button class=Control id=(id + "-" + name) testId=(id + "-" + name) press=choose(name) aria-pressed=series == name padding="ui.space-6 ui.space-12" min-height="ui.space-32" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color=(series == name ? "ui.muted" : "transparent") color="ui.foreground" text-transform="capitalize"
+              text (name == "desktop" ? desktopLabel : name == "mobile" ? mobileLabel : name) font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              if showTotals and name != "both"
+                text chartDisplayValue(sum(points.map(p => name == "desktop" ? p.desktop : p.mobile)), valueFormat) font-weight="ui.weight-semibold" font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      if showLegend and legendAlign == "top"
+        SeriesLegendOptions(id=id, series=config, hidden=hidden, change=toggle, icons=icons, hideIcon=hideLegendIcon, verticalAlign="top")
+      view id=(id + "-plot") testId=(id + "-plot") position="relative" min-width="0px" height=260 role="group" aria-label=label aria-describedby=(showTooltip and current >= 0 and hidden.length < 2 ? id + "-tooltip" : "") tabindex=0 key=keys pointermove=pointer pointerdown=press hover=hover resize=measure outline="none"
+        :focus-visible
+          box-shadow="ui.shadow-focus"
+        svg viewBox="0 0 560 250" width="100%" height=250 aria-hidden=true preserveAspectRatio="none"
+          if showGrid
             for tick in range(5) key=tick
-              text (peak * (4 - tick) / 4).toFixed(0) position="absolute" top=((tick * 25).toString() + "%") right="0px" translate="0px -50%" font-size="ui.text-xs" line-height="ui.leading-heading" color="ui.muted-foreground" text-align="right" white-space="nowrap" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          column flex=1 min-width="0px" gap="ui.space-8"
-            svg viewBox="0 0 500 180" width="100%" height="11.25rem" aria-hidden=true preserveAspectRatio="none"
-              for tick in range(5) key=tick
-                line x1=0 x2=500 y1=(tick * 45) y2=(tick * 45) stroke="ui.chart-grid" stroke-width="ui.stroke-thin"
-              for point, i in points key=point.label
-                if series != "mobile"
-                  rect x=(4 + i * spacing) y=(180 - max(0, point.desktop) / peak * 180) width=(spacing * 0.35) height=(max(0, point.desktop) / peak * 180) rx=3 fill="ui.primary"
-                if series != "desktop"
-                  rect x=(4 + i * spacing + spacing * 0.38) y=(180 - max(0, point.mobile) / peak * 180) width=(spacing * 0.35) height=(max(0, point.mobile) / peak * 180) rx=3 fill="ui.muted-foreground" opacity="ui.chart-opacity-bar"
-            row align-items="flex-start"
-              for point in points key=point.label
-                text point.label flex=1 min-width="0px" font-size="ui.text-xs" line-height="ui.leading-heading" color="ui.muted-foreground" text-align="center" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      row gap="ui.space-8" flex-wrap="wrap" aria-label="Explore monthly values"
-        for point, i in points key=point.label
-          button class=Control id=(id + "-point-" + i.toString()) testId=(id + "-point-" + i.toString()) press=inspect(i) aria-pressed=active == i padding="ui.space-4 ui.space-8" min-height="ui.space-28" background-color=(active == i ? "ui.muted" : "transparent") border="0" color="ui.muted-foreground" font-size="ui.text-xs"
-            text point.label font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      if active >= 0
-        for point, i in points key=point.label
-          if i == active
-            text (point.label + " · Desktop " + point.desktop.toString() + " · Mobile " + point.mobile.toString()) testId=(id + "-tooltip") aria-live="polite" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      else
-        text "Select a month to inspect visitors." font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              line x1=20 x2=540 y1=(20 + tick * 47.5) y2=(20 + tick * 47.5) stroke="ui.chart-grid" stroke-width="ui.stroke-thin" vector-effect="non-scaling-stroke"
+          for point, i in points key=point.label
+            if i == current and showCursor
+              rect x=(20 + (rtl ? points.length - 1 - i : i) * spacing) y=20 width=spacing height=190 fill="ui.muted" opacity="ui.chart-opacity-soft"
+            if not hidden.includes("desktop")
+              rect x=(20 + (rtl ? points.length - 1 - i : i) * spacing + spacing * (stacked or series != "both" ? 0.15 : 0.12)) y=(210 - max(0, point.desktop) / domain * 190) width=(spacing * (stacked or series != "both" ? 0.7 : 0.34)) height=(max(0, point.desktop) / domain * 190) rx=3 fill="ui.chart-1" stroke=(showTooltip and i == current ? "ui.chart-1" : "transparent") stroke-width="ui.stroke-standard" vector-effect="non-scaling-stroke"
+            if not hidden.includes("mobile")
+              rect x=(20 + (rtl ? points.length - 1 - i : i) * spacing + spacing * (stacked or series != "both" ? 0.15 : 0.54)) y=(210 - (max(0, point.mobile) + (stacked and not hidden.includes("desktop") ? max(0, point.desktop) : 0)) / domain * 190) width=(spacing * (stacked or series != "both" ? 0.7 : 0.34)) height=(max(0, point.mobile) / domain * 190) rx=3 fill="ui.chart-2" stroke=(showTooltip and i == current ? "ui.chart-2" : "transparent") stroke-width="ui.stroke-standard" vector-effect="non-scaling-stroke"
+        if showAxis
+          for point, i in points key=point.label
+            if i % max(1, ceil(points.length / max(1, floor(width / 56)))) == 0
+              text chartDisplayLabel(point.label, "axis") position="absolute" top=230 left=(max(16, min(max(16, width - 16), (20 + ((rtl ? points.length - 1 - i : i) + 0.5) * spacing) / 560 * width))) max-width="100%" translate="-50% 0px" font-size="ui.text-xs" line-height="ui.leading-heading" color="ui.muted-foreground" white-space="nowrap" overflow="hidden" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        if showTooltip and current >= 0
+          for point, i in points key=point.label
+            if i == current
+              SeriesValuesTooltipOptions(id=id, title=(tooltipTitle == "" ? point.label : tooltipTitle), series=config, values=[point.desktop, point.mobile], hidden=hidden, indicator=indicator, hideLabel=hideLabel, hideIndicator=hideIndicator, labelFormat=labelFormat, nameOverride=nameOverride, valueFormat=valueFormat, valuePrefix=valuePrefix, valueSuffix=valueSuffix, formattedValues=[], icons=icons, showTotal=showTotal, totalLabel="Total", plotWidth=width, anchor=((20 + ((rtl ? points.length - 1 - i : i) + 0.5) * spacing) / 560 * width))
+        if points.length == 0 or hidden.length == 2
+          text (points.length == 0 ? "No chart data." : "All series are hidden. Use the legend to show a series.") testId=(id + "-empty") position="absolute" inset=0 display="flex" align-items="center" justify-content="center" text-align="center" padding="ui.space-12" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      if showLegend and legendAlign != "top"
+        SeriesLegendOptions(id=id, series=config, hidden=hidden, change=toggle, icons=icons, hideIcon=hideLegendIcon, verticalAlign="bottom")
+      if showPointControls
+        row gap="ui.space-8" flex-wrap="wrap" aria-label="Explore monthly values"
+          for point, i in points key=point.label
+            button class=Control id=(id + "-point-" + i.toString()) testId=(id + "-point-" + i.toString()) press=inspect(i) aria-pressed=current == i padding="ui.space-4 ui.space-8" min-height="ui.space-28" background-color=(current == i ? "ui.muted" : "transparent") border="0" color="ui.muted-foreground" font-size="ui.text-xs"
+              text chartDisplayLabel(point.label, "axis") font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 fn naturalPower(k: number): number = k > 44 ? 0 : k == 0 ? 1 : k == 1 ? 0.26794919243112281 : k == 2 ? 0.07179676972449088 : k == 3 ? 0.019237886466840617 : k == 4 ? 0.0051547761428715703 : k == 5 ? 0.0013812181046456555 : k == 6 ? 0.00037009627571104941 : k == 7 ? 9.9166998198541869e-05 : k == 8 ? 2.6571717083117901e-05 : k == 9 ? 7.119870133929712e-06 : k == 10 ? 1.9077634526009366e-06 : k == 11 ? 5.1118367647403156e-07 : k == 12 ? 1.3697125329518911e-07 : k == 13 ? 3.6701336706724693e-08 : k == 14 ? 9.8340935317096054e-09 : k == 15 ? 2.6350374201137172e-09 : k == 16 ? 7.0605614874525981e-10 : k == 17 ? 1.8918717486732108e-10 : k == 18 ? 5.0692550724024295e-11 : k == 19 ? 1.358302802877604e-11 : k == 20 ? 3.6395613910798461e-12 : k == 21 ? 9.7521753554333854e-13 : k == 22 ? 2.6130875109350738e-13 : k == 23 ? 7.0017468830690579e-14 : k == 24 ? 1.8761124229254853e-14 : k == 25 ? 5.0270280863288097e-15 : k == 26 ? 1.3469881160603771e-15 : k == 27 ? 3.6092437791269757e-16 : k == 28 ? 9.6709395590412697e-17 : k == 29 ? 2.591320444895307e-17 : k == 30 ? 6.9434222053995546e-18 : k == 31 ? 1.8604843726451361e-18 : k == 32 ? 4.9851528518098844e-19 : k == 33 ? 1.3357676807881673e-19 : k == 34 ? 3.5791787134278322e-20 : k == 35 ? 9.5903804582965288e-21 : k == 36 ? 2.5697346989077761e-21 : k == 37 ? 6.8855833733457311e-22 : k == 38 ? 1.8449865043051551e-22 : k == 39 ? 4.9436264387488662e-23 : k == 40 ? 1.3246407119439064e-23 : k == 41 ? 3.5493640902675723e-24 : k == 42 ? 9.5104924163122292e-25 : k == 43 ? 2.5483287625731797e-25 : k == 44 ? 6.8282263398048592e-26 : 0
 fn naturalValue(values: number[], i: number): number = match values.at(i) { case some(v) => v, case none => 0 }
@@ -66,9 +156,8 @@ fn naturalPath(values: number[], second: number[]): string = values.length == 0 
 
 fn naturalReturn(values: number[], second: number[]): string = range(max(0, values.length - 1)).map(i => naturalReverseSegment(values, second, values.length - 1 - i)).join("")
 
-fn chartDateLabel(iso: string): string = (iso.slice(5, 7) == "04" ? "Apr" : iso.slice(5, 7) == "05" ? "May" : iso.slice(5, 7) == "06" ? "Jun" : iso.slice(5, 7) == "01" ? "Jan" : iso.slice(5, 7) == "02" ? "Feb" : iso.slice(5, 7) == "03" ? "Mar" : iso.slice(5, 7) == "07" ? "Jul" : iso.slice(5, 7) == "08" ? "Aug" : iso.slice(5, 7) == "09" ? "Sep" : iso.slice(5, 7) == "10" ? "Oct" : iso.slice(5, 7) == "11" ? "Nov" : "Dec") + " " + (match parseNumber(iso.slice(8, 10)) { case some(n) => n.toString(), case none => iso.slice(8, 10) })
+fn chartDateLabel(label: string): string = chartDisplayLabel(label, "axis")
 
-fn chartNiceStep(raw: number): number = raw <= 1 ? 1 : raw <= 2 ? 2 : raw <= 2.5 ? 2.5 : raw <= 3 ? 3 : raw <= 5 ? 5 : raw <= 10 ? 10 : raw <= 20 ? 20 : raw <= 25 ? 25 : raw <= 30 ? 30 : raw <= 50 ? 50 : raw <= 100 ? 100 : raw <= 200 ? 200 : raw <= 250 ? 250 : raw <= 300 ? 300 : raw <= 500 ? 500 : raw <= 1000 ? 1000 : raw <= 2000 ? 2000 : raw <= 2500 ? 2500 : raw <= 3000 ? 3000 : raw <= 5000 ? 5000 : raw <= 10000 ? 10000 : raw <= 20000 ? 20000 : raw <= 25000 ? 25000 : raw <= 30000 ? 30000 : raw <= 50000 ? 50000 : ceil(raw / 100000) * 100000
 
 shape ChartDateMetric
   label: string
@@ -107,23 +196,51 @@ component AreaChart
   props
     id: string
     points: ChartPoint[]
+  view
+    AreaChartOptions(id=id, points=points, label="Daily desktop and mobile visitors. Use arrow keys to explore.", showLegend=true, initialIndex=-1, indicator="dot", hideLabel=false, hideIndicator=false, labelFormat="auto", tooltipTitle="", nameOverride="", valueFormat="decimal", valuePrefix="", valueSuffix="", showTotal=false, showCursor=true, icons=[], hideLegendIcon=false, legendAlign="bottom")
+
+component AreaChartOptions
+  props
+    id: string
+    points: ChartPoint[]
+    label: string
+    showLegend: bool
+    initialIndex: number
+    indicator: string
+    hideLabel: bool
+    hideIndicator: bool
+    labelFormat: string
+    tooltipTitle: string
+    nameOverride: string
+    valueFormat: string
+    valuePrefix: string
+    valueSuffix: string
+    showTotal: bool
+    showCursor: bool
+    icons: string[]
+    hideLegendIcon: bool
+    legendAlign: string
   inject
     uiFont: string
-  state active = -1
+  state active = initialIndex
+  state pinned = false
+  state hidden: string[] = []
   state width = 560
   state dateMetrics: ChartDateMetric[] = points.map(p => ChartDateMetric(label=p.label, width=0))
   state tickHeight = 16
+  derive config = [ChartSeries(id="desktop", label="Desktop", color="ui.chart-1"), ChartSeries(id="mobile", label="Mobile", color="ui.chart-2")]
+  derive visiblePoints = points.map(p => ChartPoint(p, desktop=(hidden.includes("desktop") ? 0 : p.desktop), mobile=(hidden.includes("mobile") ? 0 : p.mobile)))
   derive current = min(active, points.length - 1)
   derive metricsReady = points.filter((p, i) => chartMeasuredWidth(dateMetrics, i, p.label) > 0).length == points.length
   derive candidates = chartCandidates(points, dateMetrics, width)
   derive tickScan = metricsReady ? chartEndTicks(candidates, width) : ChartTickScan(candidates=[], remaining=-1, start=0, end=width, selected=[])
   derive scanComplete = chartMatchesEnd(tickScan).length == 0
   derive axisTicks = metricsReady and scanComplete ? sortBy(tickScan.selected, t => t.index) : []
-  derive peak = match first(sortBy(points, p => p.desktop + p.mobile, "desc")) { case some(p) => max(1, p.desktop + p.mobile), case none => 1 }
+  derive peak = match first(sortBy(visiblePoints, p => p.desktop + p.mobile, "desc")) { case some(p) => max(1, p.desktop + p.mobile), case none => 1 }
   derive tickStep = chartNiceStep(peak / 4)
   derive domain = ceil(peak / tickStep) * tickStep
-  derive mobileY = naturalValues(points, domain, true)
-  derive totalY = naturalValues(points, domain, false)
+  derive mobileY = naturalValues(visiblePoints, domain, true)
+  derive totalY = naturalValues(visiblePoints, domain, false)
   derive mobileSecond = naturalSeconds(mobileY)
   derive totalSecond = naturalSeconds(totalY)
   derive mobilePath = naturalPath(mobileY, mobileSecond)
@@ -143,38 +260,73 @@ component AreaChart
         active = active
     if h > 0 and h != tickHeight
       tickHeight = h
+  action toggle(v: string)
+    hidden = hidden.includes(v) ? hidden.filter(s => s != v) : hidden.concat([v])
+  action press(e: PointerEvent)
+    pinned = e.pointerType != "mouse"
+    inspect(e)
+    focus(id)
+  action leaveFocus(e: FocusEvent)
+    match e.relatedTarget
+      case some(target)
+        if not target.startsWith(id)
+          active = -1
+          pinned = false
+      case none
+        active = -1
+        pinned = false
   action hover(inside: bool)
-    if not inside
+    if not inside and not pinned
       active = -1
   action inspect(e: PointerEvent)
     let bounds = frame(id)
     let next = max(0, min(points.length - 1, round((e.clientX - bounds.x - 5) / max(1, bounds.width - 10) * (points.length - 1))))
     if next != active
       active = next
+  action dismiss(k: string)
+    if k == "Escape"
+      keys(k)
   action keys(k: string)
-    if k == "ArrowLeft" or k == "ArrowRight" or k == "Home" or k == "End"
+    if k == "Escape"
       preventDefault()
-      active = k == "Home" ? 0 : k == "End" ? points.length - 1 : max(0, min(points.length - 1, active + (k == "ArrowLeft" ? -1 : 1)))
+      stopPropagation()
+      active = -1
+      pinned = false
+    else if points.length > 0 and (k == "ArrowLeft" or k == "ArrowRight" or k == "Home" or k == "End" or k == "Enter" or k == " ")
+      preventDefault()
+      pinned = true
+      active = k == "Home" ? 0 : k == "End" ? points.length - 1 : active < 0 ? (k == "ArrowLeft" ? points.length - 1 : 0) : k == "ArrowLeft" ? max(0, current - 1) : k == "ArrowRight" ? min(points.length - 1, current + 1) : current
   view
-    column gap="0px" min-width="0px" color="ui.foreground"
-      view id=id testId=id role="group" aria-label="Daily desktop and mobile visitors. Use arrow keys to explore." tabindex=0 key=keys pointermove=inspect pointerdown=inspect hover=hover resize=measure position="relative" min-width="0px" height=(max(250, 228 + tickHeight))
+    column gap="ui.space-12" min-width="0px" color="ui.foreground" focusout=leaveFocus key=dismiss
+      if showLegend and legendAlign == "top"
+        SeriesLegendOptions(id=id, series=config, hidden=hidden, change=toggle, icons=icons, hideIcon=hideLegendIcon, verticalAlign="top")
+      view id=id testId=id role="group" aria-label=label aria-describedby=(current >= 0 and hidden.length < 2 ? id + "-tooltip" : "") tabindex=0 key=keys pointermove=inspect pointerdown=press hover=hover resize=measure position="relative" min-width="0px" height=(max(250, 228 + tickHeight))
         :focus-visible
           box-shadow="ui.shadow-focus"
         svg position="absolute" left=5 top="0px" viewBox="20 0 520 250" width="calc(100% - 10px)" height=250 preserveAspectRatio="none" aria-hidden=true
           defs
             linearGradient id=(id + "-desktop-fill") x1="0" y1="0" x2="0" y2="1"
-              stop offset="5%" stop-color="ui.chart-primary-gradient-start"
-              stop offset="95%" stop-color="ui.chart-primary-gradient-end"
+              stop offset="5%" stop-color="ui.chart-1-gradient-start"
+              stop offset="95%" stop-color="ui.chart-1-gradient-end"
             linearGradient id=(id + "-mobile-fill") x1="0" y1="0" x2="0" y2="1"
-              stop offset="5%" stop-color="ui.chart-primary-gradient-start"
-              stop offset="95%" stop-color="ui.chart-primary-gradient-end"
+              stop offset="5%" stop-color="ui.chart-2-gradient-start"
+              stop offset="95%" stop-color="ui.chart-2-gradient-end"
           for tick in range(5) key=tick
             line x1=20 x2=540 y1=(5 + tick * 52.5) y2=(5 + tick * 52.5) stroke="ui.chart-grid" stroke-width="ui.stroke-thin" vector-effect="non-scaling-stroke"
           if points.length > 0
-            path d=desktopArea fill=("url(#" + id + "-desktop-fill)")
-            path d=(mobilePath + " L " + naturalX(points.length - 1, points.length).toFixed(3) + ",215 L 20,215 Z") fill=("url(#" + id + "-mobile-fill)")
-            path d=totalPath fill="none" stroke="ui.primary" stroke-width="ui.stroke-thin" vector-effect="non-scaling-stroke"
-            path d=mobilePath fill="none" stroke="ui.primary" stroke-width="ui.stroke-thin" vector-effect="non-scaling-stroke"
+            if not hidden.includes("desktop")
+              path d=desktopArea fill=("url(#" + id + "-desktop-fill)")
+              path d=totalPath fill="none" stroke="ui.chart-1" stroke-width="ui.stroke-thin" vector-effect="non-scaling-stroke"
+            if not hidden.includes("mobile")
+              path d=(mobilePath + " L " + naturalX(points.length - 1, points.length).toFixed(3) + ",215 L 20,215 Z") fill=("url(#" + id + "-mobile-fill)")
+              path d=mobilePath fill="none" stroke="ui.chart-2" stroke-width="ui.stroke-thin" vector-effect="non-scaling-stroke"
+          if current >= 0 and hidden.length < 2
+            if showCursor
+              line x1=naturalX(current, points.length) x2=naturalX(current, points.length) y1=5 y2=215 stroke="ui.chart-grid" stroke-width="ui.stroke-standard" vector-effect="non-scaling-stroke"
+        if current >= 0
+          for item, layer in config key=item.id
+            if not hidden.includes(item.id)
+              view position="absolute" left=(5 + current * max(1, width - 10) / max(1, points.length - 1)) top=(layer == 0 ? naturalValue(totalY, current) : naturalValue(mobileY, current)) width="ui.space-8" height="ui.space-8" border-radius="ui.radius-full" border-width="ui.border-strong-width" border-style="solid" border-color="ui.surface" box-sizing="border-box" background-color=item.color translate="-50% -50%" pointer-events="none" aria-hidden=true
         for metricSet in [points.map(p => p.label).join("|")] key=metricSet
           view position="absolute" inset=0 overflow="clip" opacity=0 aria-hidden=true pointer-events="none"
             for p, i in points key=p.label
@@ -186,13 +338,8 @@ component AreaChart
         if current >= 0
           for p, i in points key=p.label
             if i == current
-              column testId=(id + "-tooltip") role="tooltip" position="absolute" top="ui.space-36" left=(max(8, min(width - 176, 5 + i * max(1, width - 10) / max(1, points.length - 1) + 12))) width="11rem" max-width="calc(100% - ui.space-16)" box-sizing="border-box" pointer-events="none" z-index=20 padding="ui.space-10" gap="ui.space-8" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.surface" box-shadow="ui.shadow-menu" font-size="ui.text-xs" line-height="ui.leading-heading"
-                text chartDateLabel(p.label) font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-                row gap="ui.space-8" align-items="center"
-                  view width="ui.space-10" height="ui.space-10" border-radius="ui.radius-detail" background-color="ui.primary"
-                  text "Mobile" color="ui.muted-foreground" flex=1 font-family=uiFontFamily(uiFont) data-rightui-font="body"
-                  text p.mobile.toString() font-family=uiFontFamily(uiFont) data-rightui-font="body" font-weight="ui.weight-medium" font-variant-numeric="tabular-nums"
-                row gap="ui.space-8" align-items="center"
-                  view width="ui.space-10" height="ui.space-10" border-radius="ui.radius-detail" background-color="ui.primary"
-                  text "Desktop" color="ui.muted-foreground" flex=1 font-family=uiFontFamily(uiFont) data-rightui-font="body"
-                  text p.desktop.toString() font-family=uiFontFamily(uiFont) data-rightui-font="body" font-weight="ui.weight-medium" font-variant-numeric="tabular-nums"
+              SeriesValuesTooltipOptions(id=id, title=(tooltipTitle == "" ? p.label : tooltipTitle), series=config, values=[p.desktop, p.mobile], hidden=hidden, indicator=indicator, hideLabel=hideLabel, hideIndicator=hideIndicator, labelFormat=labelFormat, nameOverride=nameOverride, valueFormat=valueFormat, valuePrefix=valuePrefix, valueSuffix=valueSuffix, formattedValues=[], icons=icons, showTotal=showTotal, totalLabel="Total", plotWidth=width, anchor=(5 + i * max(1, width - 10) / max(1, points.length - 1)))
+        if points.length == 0 or hidden.length == 2
+          text (points.length == 0 ? "No chart data." : "All series are hidden. Use the legend to show a series.") testId=(id + "-empty") position="absolute" inset=0 display="flex" align-items="center" justify-content="center" text-align="center" padding="ui.space-12" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      if showLegend and legendAlign != "top"
+        SeriesLegendOptions(id=id, series=config, hidden=hidden, change=toggle, icons=icons, hideIcon=hideLegendIcon, verticalAlign="bottom")

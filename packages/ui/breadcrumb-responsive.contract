@@ -1,0 +1,73 @@
+use uiFontFamily from "./typography-context.contract"
+use Control, QuietLink from "./styles.contract"
+use Button from "./button.contract"
+use Drawer, DrawerFooter from "./drawer.contract"
+use MenuLinkEntry, DropdownMenuLinks from "./dropdown-menu-links.contract"
+use BreadcrumbRoot, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, BreadcrumbEllipsis from "./breadcrumb-parts.contract"
+
+component BreadcrumbResponsive
+  props
+    id: string
+    entries: MenuLinkEntry[]
+    width: number
+    reduced: bool
+    label: string
+    direction: string
+  view
+    for mobile in [width < 768] key=mobile
+      BreadcrumbResponsiveLayout(id=id, entries=entries, mobile=mobile, reduced=reduced, label=label, direction=direction)
+
+component BreadcrumbResponsiveLayout
+  props
+    id: string
+    entries: MenuLinkEntry[]
+    mobile: bool
+    reduced: bool
+    label: string
+    direction: string
+  inject
+    uiFont: string
+  state drawerOpen = false
+  derive tailStart = entries.length > 3 ? max(1, entries.length - (mobile ? 1 : 2)) : 1
+  derive hidden = entries.slice(1, tailStart).filter(entry => entry.href != "")
+  action showHidden
+    drawerOpen = true
+  action dismissHidden
+    drawerOpen = false
+    focus(id + "-more")
+  view
+    BreadcrumbRoot(id=id, label=label, direction=direction)
+      BreadcrumbList()
+        for entry, i in entries key=entry.id
+          if i == 0 or i >= tailStart
+            if i > 0
+              BreadcrumbSeparator(kind="chevron", direction=direction)
+            BreadcrumbItem()
+              if i == entries.length - 1
+                BreadcrumbPage(label=entry.label)
+              else
+                BreadcrumbLink(id=id + "-entry-" + entry.id, href=entry.href, label=entry.label)
+          else if i == 1 and hidden.length > 0
+            BreadcrumbSeparator(kind="chevron", direction=direction)
+            BreadcrumbItem()
+              if mobile
+                button id=(id + "-more") testId=(id + "-more") class=Control press=showHidden aria-label="Show hidden pages" aria-haspopup="dialog" aria-expanded=drawerOpen aria-controls=(id + "-drawer")
+                  display="flex" align-items="center" justify-content="center" min-height="ui.space-28" padding="ui.space-2 ui.space-4" border="0" border-radius="ui.radius-sm" background-color="transparent" color="ui.muted-foreground"
+                  :hover
+                    background-color="ui.muted"
+                    color="ui.foreground"
+                  BreadcrumbEllipsis()
+              else
+                DropdownMenuLinks(id=id + "-more", label="Show hidden pages", entries=hidden, reduced=reduced, customTrigger=true, direction=direction)
+                  BreadcrumbEllipsis()
+      if mobile
+        Drawer(id=id + "-drawer", open=drawerOpen, title="Navigate to", description="Select a page to navigate to.", reduced=reduced, focusIds=hidden.map(entry => id + "-hidden-" + entry.id).concat([id + "-drawer-done"]), dismiss=dismissHidden)
+          column direction=direction gap="ui.space-4" min-width="0px"
+            for entry in hidden key=entry.id
+              link id=(id + "-hidden-" + entry.id) testId=(id + "-hidden-" + entry.id) href=entry.href class=QuietLink padding="ui.space-8" border-radius="ui.radius-item"
+                :hover
+                  color="ui.foreground"
+                  background-color="ui.muted"
+                text entry.label font-size="ui.text-sm" overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            DrawerFooter(compact=false)
+              Button(id=id + "-drawer-done", label="Close", variant="outline", disabled=false, press=dismissHidden)

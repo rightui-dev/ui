@@ -1,6 +1,6 @@
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
-use chartNiceStep from "./chart.contract"
+fn chartNiceStep(raw: number): number = raw <= 1 ? 1 : raw <= 2 ? 2 : raw <= 2.5 ? 2.5 : raw <= 3 ? 3 : raw <= 5 ? 5 : raw <= 10 ? 10 : raw <= 20 ? 20 : raw <= 25 ? 25 : raw <= 30 ? 30 : raw <= 50 ? 50 : raw <= 100 ? 100 : raw <= 200 ? 200 : raw <= 250 ? 250 : raw <= 300 ? 300 : raw <= 500 ? 500 : raw <= 1000 ? 1000 : raw <= 2000 ? 2000 : raw <= 2500 ? 2500 : raw <= 3000 ? 3000 : raw <= 5000 ? 5000 : raw <= 10000 ? 10000 : raw <= 20000 ? 20000 : raw <= 25000 ? 25000 : raw <= 30000 ? 30000 : raw <= 50000 ? 50000 : ceil(raw / 100000) * 100000
 shape SeriesPoint
   id: string
   label: string
@@ -43,12 +43,31 @@ fn seriesMonotone(values: number[]): string = seriesMonotonePath(values, values.
 fn seriesRadarPath(points: SeriesPoint[], index: number, maximum: number, radius: number): string = points.map((p, i) => (i == 0 ? "M " : " L ") + seriesPair(1.5707963267948966 - i * 6.283185307179586 / max(1, points.length), radius * max(0, min(1, seriesValue(p.values, index) / (maximum > 0 ? maximum : 1))))).join("") + (points.length > 0 ? " Z" : "")
 fn seriesRadarGrid(count: number, radius: number): string = range(count).map(i => (i == 0 ? "M " : " L ") + seriesPair(1.5707963267948966 - i * 6.283185307179586 / max(1, count), radius)).join("") + (count > 0 ? " Z" : "")
 
+fn chartDisplayLabel(label: string, style: string): string = style == "none" ? "" : label.length == 10 and label.slice(4, 5) == "-" and label.slice(7, 8) == "-" ? chartMonthName(label.slice(5, 7), style == "date") + " " + (match parseNumber(label.slice(8, 10)) { case some(day) => day.toString(), case none => label.slice(8, 10) }) + (style == "axis" ? "" : ", " + label.slice(0, 4)) : style == "axis" ? label.slice(0, 3) : label
+fn chartMonthName(month: string, full: bool): string = month == "01" ? (full ? "January" : "Jan") : month == "02" ? (full ? "February" : "Feb") : month == "03" ? (full ? "March" : "Mar") : month == "04" ? (full ? "April" : "Apr") : month == "05" ? "May" : month == "06" ? (full ? "June" : "Jun") : month == "07" ? (full ? "July" : "Jul") : month == "08" ? (full ? "August" : "Aug") : month == "09" ? (full ? "September" : "Sep") : month == "10" ? (full ? "October" : "Oct") : month == "11" ? (full ? "November" : "Nov") : (full ? "December" : "Dec")
+fn chartDisplayValue(value: number, style: string): string = style == "currency" ? formatNumber(value, "currency", "USD") : style == "eur" ? formatNumber(value, "currency", "EUR") : style == "percent" ? formatNumber(value, "percent") : style == "compact" ? formatNumber(value, "compact") : formatNumber(value, "decimal")
+fn chartIcon(icons: string[], index: number): string = match icons.at(index) { case some(icon) => icon, case none => "" }
+fn chartTooltipLeft(width: number, anchor: number, tipWidth: number): number = anchor < 0 or width <= 0 ? 8 : max(8, min(max(8, width - tipWidth - 8), anchor + 12))
+fn chartTooltipValue(values: number[], formatted: string[], index: number, style: string, prefix: string, suffix: string): string = match formatted.at(index) { case some(value) => value, case none => prefix + chartDisplayValue(seriesValue(values, index), style) + suffix }
+
 component SeriesLegend
   props
     id: string
     series: ChartSeries[]
     hidden: string[]
     change: action
+  view
+    SeriesLegendOptions(id=id, series=series, hidden=hidden, change=change, icons=[], hideIcon=false, verticalAlign="bottom")
+
+component SeriesLegendOptions
+  props
+    id: string
+    series: ChartSeries[]
+    hidden: string[]
+    change: action
+    icons: string[]
+    hideIcon: bool
+    verticalAlign: string
   inject
     uiFont: string
   action keys(itemId: string, k: string)
@@ -57,12 +76,16 @@ component SeriesLegend
       stopPropagation()
       change(itemId)
   view
-    row gap="ui.space-12" flex-wrap="wrap" justify-content="center"
-      for item in series key=item.id
+    row gap="ui.space-12" flex-wrap="wrap" justify-content="center" padding-top=(verticalAlign == "top" ? "0px" : "ui.space-4") padding-bottom=(verticalAlign == "top" ? "ui.space-4" : "0px")
+      for item, i in series key=item.id
         button id=(id + "-legend-" + item.id) testId=(id + "-legend-" + item.id) class=Control press=change(item.id) key=keys(item.id) role="checkbox" aria-checked=(not hidden.includes(item.id)) aria-label=("Show " + item.label)
-          display="flex" align-items="center" gap="ui.space-6" border="0" padding="ui.space-4 ui.space-6" min-height="ui.space-32" background-color="transparent" color="ui.foreground" font-size="ui.text-xs" font-weight="ui.weight-regular" text-decoration=(hidden.includes(item.id) ? "line-through" : "none")
-          view width="ui.space-10" height="ui.space-10" border-radius="ui.radius-detail" background-color=item.color
-          text item.label font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          display="flex" align-items="center" gap="ui.space-6" border="0" padding="ui.space-4 ui.space-6" min-height="ui.space-32" background-color="transparent" color="ui.foreground" font-size="ui.text-xs" font-weight="ui.weight-regular" text-decoration=(hidden.includes(item.id) ? "line-through" : "none") min-width="0px" max-width="100%"
+          if not hideIcon and chartIcon(icons, i) != ""
+            svg width="ui.space-12" height="ui.space-12" viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" flex-shrink=0 aria-hidden=true
+              path d=chartIcon(icons, i)
+          else
+            view width="ui.space-10" height="ui.space-10" flex-shrink=0 border-radius="ui.radius-detail" background-color=item.color aria-hidden=true
+          text item.label overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component SeriesValuesTooltip
   props
@@ -71,18 +94,63 @@ component SeriesValuesTooltip
     series: ChartSeries[]
     values: number[]
     hidden: string[]
+  view
+    SeriesValuesTooltipOptions(id=id, title=title, series=series, values=values, hidden=hidden, indicator="dot", hideLabel=false, hideIndicator=false, labelFormat="auto", nameOverride="", valueFormat="decimal", valuePrefix="", valueSuffix="", formattedValues=[], icons=[], showTotal=false, totalLabel="Total", plotWidth=0, anchor=-1)
+
+component SeriesValuesTooltipOptions
+  props
+    id: string
+    title: string
+    series: ChartSeries[]
+    values: number[]
+    hidden: string[]
+    indicator: string
+    hideLabel: bool
+    hideIndicator: bool
+    labelFormat: string
+    nameOverride: string
+    valueFormat: string
+    valuePrefix: string
+    valueSuffix: string
+    formattedValues: string[]
+    icons: string[]
+    showTotal: bool
+    totalLabel: string
+    plotWidth: number
+    anchor: number
   inject
     uiFont: string
+  state measured = 192
+  derive visible = series.filter(item => not hidden.includes(item.id))
+  derive heading = hideLabel ? "" : chartDisplayLabel(title, labelFormat)
+  derive nested = visible.length == 1 and indicator != "dot"
+  derive total = sum(series.map((item, i) => hidden.includes(item.id) ? 0 : seriesValue(values, i)))
+  action measure(w: number, h: number)
+    if w > 0 and w != measured
+      measured = w
   view
-    column id=(id + "-tooltip") testId=(id + "-tooltip") role="tooltip" aria-live="polite" position="absolute" top="ui.space-12" left="ui.space-12" z-index=10 pointer-events="none" padding="ui.space-10" gap="ui.space-8" width="11rem" max-width="calc(100% - ui.space-24)" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.surface" box-shadow="ui.shadow-menu" font-size="ui.text-xs" line-height="ui.leading-heading"
-      if title != ""
-        text title font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      for item, i in series key=item.id
-        if not hidden.includes(item.id)
-          row gap="ui.space-8" align-items="center"
-            view width="ui.space-10" height="ui.space-10" border-radius="ui.radius-detail" background-color=item.color
-            text item.label flex=1 color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-            text seriesValue(values, i).toString() testId=(id + "-value-" + item.id) font-weight="ui.weight-medium" font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    if visible.length > 0
+      column id=(id + "-tooltip") testId=(id + "-tooltip") role="tooltip" aria-live="polite" position="absolute" top="ui.space-12" left=(anchor < 0 ? "8px" : "max(8px, min(" + chartTooltipLeft(plotWidth, anchor, measured).toString() + "px, calc(100% - 12rem - 8px)))") resize=measure z-index=20 pointer-events="none" padding="ui.space-10" gap="ui.space-8" width="12rem" max-width="calc(100% - 16px)" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.surface" box-shadow="ui.shadow-menu" font-size="ui.text-xs" line-height="ui.leading-heading" color="ui.foreground"
+        if heading != "" and not nested
+          text heading font-weight="ui.weight-medium" overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        for item, i in series key=item.id
+          if not hidden.includes(item.id)
+            row gap="ui.space-8" align-items=(indicator == "dot" ? "center" : "stretch") min-width="0px"
+              if chartIcon(icons, i) != ""
+                svg width="ui.space-12" height="ui.space-12" viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" flex-shrink=0 aria-hidden=true
+                  path d=chartIcon(icons, i)
+              else if not hideIndicator and indicator != "none"
+                view width=(indicator == "dot" ? "ui.space-10" : "ui.space-4") min-height=(indicator == "dot" ? "ui.space-10" : "ui.space-16") height=(indicator == "dot" ? "ui.space-10" : "auto") flex-shrink=0 border-radius="ui.radius-detail" background-color=(indicator == "dashed" ? "transparent" : item.color) border-left-width=(indicator == "dashed" ? "ui.stroke-standard" : "0px") border-left-style="dashed" border-left-color=item.color aria-hidden=true
+              row flex=1 min-width="0px" flex-wrap="wrap" gap="ui.space-6" align-items=(nested ? "flex-end" : "center") justify-content="space-between"
+                column flex=1 min-width="0px" gap="ui.space-6"
+                  if nested and heading != ""
+                    text heading font-weight="ui.weight-medium" overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                  text (nameOverride != "" ? nameOverride : item.label) color="ui.muted-foreground" overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                text chartTooltipValue(values, formattedValues, i, valueFormat, valuePrefix, valueSuffix) testId=(id + "-value-" + item.id) max-width="100%" overflow-wrap="anywhere" text-align="right" font-weight="ui.weight-medium" font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        if showTotal
+          row gap="ui.space-8" justify-content="space-between" flex-wrap="wrap" border-top-width="ui.border-width" border-top-style="solid" border-top-color="ui.border" padding-top="ui.space-8" font-weight="ui.weight-medium"
+            text totalLabel overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text (valuePrefix + chartDisplayValue(total, valueFormat) + valueSuffix) testId=(id + "-total") max-width="100%" overflow-wrap="anywhere" font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component SliceTooltip
   props
@@ -99,9 +167,35 @@ component LineChart
     series: ChartSeries[]
     showLegend: bool
     reduced: bool
+  view
+    LineChartOptions(id=id, label=label, points=points, series=series, showLegend=showLegend, reduced=reduced, initialIndex=-1, indicator="dot", hideLabel=false, hideIndicator=false, labelFormat="auto", tooltipTitle="", nameOverride="", valueFormat="decimal", valuePrefix="", valueSuffix="", showTotal=false, showCursor=true, icons=[], hideLegendIcon=false, legendAlign="bottom")
+
+component LineChartOptions
+  props
+    id: string
+    label: string
+    points: SeriesPoint[]
+    series: ChartSeries[]
+    showLegend: bool
+    reduced: bool
+    initialIndex: number
+    indicator: string
+    hideLabel: bool
+    hideIndicator: bool
+    labelFormat: string
+    tooltipTitle: string
+    nameOverride: string
+    valueFormat: string
+    valuePrefix: string
+    valueSuffix: string
+    showTotal: bool
+    showCursor: bool
+    icons: string[]
+    hideLegendIcon: bool
+    legendAlign: string
   inject
     uiFont: string
-  state active = -1
+  state active = initialIndex
   state pinned = false
   state hidden: string[] = []
   state width = 560
@@ -151,15 +245,19 @@ component LineChart
     else if points.length > 0 and (k == "ArrowLeft" or k == "ArrowRight" or k == "Home" or k == "End" or k == "Enter" or k == " ")
       preventDefault()
       pinned = true
-      active = k == "Home" ? 0 : k == "End" ? points.length - 1 : k == "Enter" or k == " " ? max(0, active) : max(0, min(points.length - 1, active + (k == "ArrowLeft" ? -1 : 1)))
+      active = k == "Home" ? 0 : k == "End" ? points.length - 1 : k == "Enter" or k == " " ? max(0, current) : active < 0 ? (k == "ArrowLeft" ? points.length - 1 : 0) : max(0, min(points.length - 1, current + (k == "ArrowLeft" ? -1 : 1)))
   view
-    column id=id testId=id gap="ui.space-16" min-width="0px" color="ui.foreground" role="group" aria-label=label tabindex=0 key=keys focusout=leaveFocus outline="none"
+    column id=id testId=id gap="ui.space-16" min-width="0px" color="ui.foreground" role="group" aria-label=label aria-describedby=(current >= 0 and hidden.length < series.length ? id + "-tooltip" : "") tabindex=0 key=keys focusout=leaveFocus outline="none"
       :focus-visible
         box-shadow="ui.shadow-focus"
+      if showLegend and legendAlign == "top"
+        SeriesLegendOptions(id=id, series=series, hidden=hidden, change=toggle, icons=icons, hideIcon=hideLegendIcon, verticalAlign="top")
       view id=(id + "-plot") testId=(id + "-plot") position="relative" height=(max(250, 230 + labelHeight)) min-width="0px" resize=measurePlot pointermove=inspect pointerdown=press hover=hover
         svg viewBox="0 0 560 250" width="100%" height=250 preserveAspectRatio="none" aria-hidden=true
           for tick in range(5) key=tick
             line x1=20 x2=540 y1=(20 + tick * 47.5) y2=(20 + tick * 47.5) stroke="ui.chart-grid" stroke-width="ui.stroke-thin" vector-effect="non-scaling-stroke"
+          if current >= 0 and showCursor and hidden.length < series.length
+            line x1=seriesLineX(current, points.length) x2=seriesLineX(current, points.length) y1=20 y2=210 stroke="ui.chart-grid" stroke-width="ui.stroke-standard" vector-effect="non-scaling-stroke"
           for item, i in series key=item.id
             if not hidden.includes(item.id) and points.length > 0
               path d=seriesMonotone(seriesLineY(points, i, low, high)) fill="none" stroke=item.color stroke-width="ui.stroke-standard" vector-effect="non-scaling-stroke" transition=(reduced ? "none" : "d ui.duration-normal ui.easing")
@@ -167,7 +265,7 @@ component LineChart
           text "May" position="absolute" left="0px" top="0px" font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-xs" resize=measureLabel aria-hidden=true pointer-events="none" white-space="nowrap"
         for p, i in points key=p.id
           if i % max(1, ceil(points.length / max(1, floor(width / max(32, labelWidth + 5))))) == 0
-            text p.label.slice(0, 3) position="absolute" top=230 left=(max(min(width, labelWidth) / 2, min(width - min(width, labelWidth) / 2, width * (20 + i * 520 / max(1, points.length - 1)) / 560))) max-width="100%" overflow="hidden" translate="-50% 0px" font-size="ui.text-xs" color="ui.muted-foreground" pointer-events="none" white-space="nowrap" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text chartDisplayLabel(p.label, "axis") position="absolute" top=230 left=(max(min(width, labelWidth) / 2, min(width - min(width, labelWidth) / 2, width * (20 + i * 520 / max(1, points.length - 1)) / 560))) max-width="100%" overflow="hidden" translate="-50% 0px" font-size="ui.text-xs" color="ui.muted-foreground" pointer-events="none" white-space="nowrap" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if current >= 0
           for item, i in series key=item.id
             if not hidden.includes(item.id)
@@ -177,11 +275,11 @@ component LineChart
         if current >= 0
           for p, i in points key=p.id
             if i == current
-              SeriesValuesTooltip(id=id, title=(series.length > 1 ? p.label : ""), series=series, values=p.values, hidden=hidden)
-        if points.length == 0 or series.length == 0
-          text "No chart data." testId=(id + "-empty") position="absolute" inset=0 display="flex" align-items="center" justify-content="center" color="ui.muted-foreground" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      if showLegend
-        SeriesLegend(id=id, series=series, hidden=hidden, change=toggle)
+              SeriesValuesTooltipOptions(id=id, title=(tooltipTitle == "" ? p.label : tooltipTitle), series=series, values=p.values, hidden=hidden, indicator=indicator, hideLabel=hideLabel, hideIndicator=hideIndicator, labelFormat=labelFormat, nameOverride=nameOverride, valueFormat=valueFormat, valuePrefix=valuePrefix, valueSuffix=valueSuffix, formattedValues=[], icons=icons, showTotal=showTotal, totalLabel="Total", plotWidth=width, anchor=(seriesLineX(i, points.length) / 560 * width))
+        if points.length == 0 or series.length == 0 or hidden.length == series.length
+          text (points.length == 0 or series.length == 0 ? "No chart data." : "All series are hidden. Use the legend to show a series.") testId=(id + "-empty") position="absolute" inset=0 display="flex" align-items="center" justify-content="center" color="ui.muted-foreground" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      if showLegend and legendAlign != "top"
+        SeriesLegendOptions(id=id, series=series, hidden=hidden, change=toggle, icons=icons, hideIcon=hideLegendIcon, verticalAlign="bottom")
 
 component SliceLegend
   props

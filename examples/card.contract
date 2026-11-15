@@ -1,4 +1,4 @@
-use uiFontFamily, InputStyle, Button, Checkbox, CardFrame, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter, FieldSet, FieldLegend, FieldGroup, FieldFrame, FieldContent, FieldLabel, FieldDescription, FieldError, FieldSeparator from "@rightui/ui"
+use cardSpacing, CardFrameOptions, CardHeaderOptions, CardContentOptions, CardFooterOptions, Input, ButtonContent, ToggleGroup, RadioGroupAdvanced, Badge, AvatarFrame, AvatarGroup, AvatarGroupItem, AvatarGroupCount, AspectRatioFrame, uiFontFamily, InputStyle, Button, Checkbox, CardFrame, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter, FieldSet, FieldLegend, FieldGroup, FieldFrame, FieldContent, FieldLabel, FieldDescription, FieldError, FieldSeparator from "@rightui/ui"
 
 component Demo
   props
@@ -12,7 +12,7 @@ component Demo
   state disabled = false
   state submitted = false
   state saved = false
-  derive errors = submitted and (not email.includes("@") or email.trim() == "") ? ["Enter a valid email address.", "Enter a valid email address.", "The address must contain @."] : []
+  derive errors = submitted and not cardEmailValid(email) ? ["Enter a valid email address."] : []
   action editName(v: string)
     name = v
     saved = false
@@ -22,21 +22,26 @@ component Demo
   action disable(v: bool)
     disabled = v
   action validate
-    submitted = true
-    saved = name.trim() != "" and email.includes("@")
+    if not disabled
+      submitted = true
+      saved = name.trim() != "" and cardEmailValid(email)
+      if name.trim() == ""
+        focus("composition-name")
+      else if not cardEmailValid(email)
+        focus("composition-email")
   action reset
     name = ""
     email = ""
     submitted = false
     saved = false
   view
-    column gap="ui.space-16" min-width=0 max-width="100%"
+    column appearance="none" gap="ui.space-16" min-width=0 max-width="100%"
       CardFrame(id="composition-card")
         CardHeader(id="composition-card-header")
           CardTitle(id="composition-title", title="Profile overview", level=2)
           CardDescription(id="composition-description", description="Compose card sections independently and keep data in the parent.")
           CardAction(id="composition-card-action")
-            Button(id="composition-reset", label="Effacer", variant="ghost", disabled=false, press=reset)
+            Button(id="composition-reset", label="Reset", variant="ghost", disabled=false, press=reset)
         CardContent(id="composition-content")
           FieldSet(id="composition-fields", legendId="composition-legend", descriptionId="composition-help", disabled=disabled)
             FieldLegend(id="composition-legend", label="Profile information", variant="legend")
@@ -44,7 +49,7 @@ component Demo
             FieldGroup(id="composition-group", nested=false)
               FieldFrame(id="composition-name-field", labelId="composition-name-label", descriptionId="composition-name-help", invalid=(submitted and name.trim() == ""), orientation="vertical")
                 FieldLabel(id="composition-name-label", label="Name", controlId="composition-name", disabled=disabled)
-                input id="composition-name" testId="composition-name" class=InputStyle value=name input=editName submit=validate disabled=disabled aria-labelledby="composition-name-label" aria-describedby="composition-name-help" aria-required=true aria-invalid=(submitted and name.trim() == "") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                input id="composition-name" testId="composition-name" class=InputStyle value=name input=editName submit=validate disabled=disabled aria-labelledby="composition-name-label" aria-describedby=(submitted and name.trim() == "" ? "composition-name-help composition-name-error" : "composition-name-help") aria-required=true aria-invalid=(submitted and name.trim() == "") font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 FieldDescription(id="composition-name-help", description="The name displayed on your profile.")
                 FieldError(id="composition-name-error", messages=(submitted and name.trim() == "" ? ["Enter your name."] : []))
               FieldSeparator(id="composition-separator", label="Contact")
@@ -52,14 +57,316 @@ component Demo
                 FieldContent(id="composition-email-content")
                   FieldLabel(id="composition-email-label", label="E-mail", controlId="composition-email", disabled=disabled)
                   FieldDescription(id="composition-email-help", description="Use an address containing @.")
-                input id="composition-email" testId="composition-email" class=InputStyle type="email" value=email input=editEmail submit=validate disabled=disabled aria-labelledby="composition-email-label" aria-describedby="composition-email-help composition-email-error" aria-required=true aria-invalid=(errors.length > 0) font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                input id="composition-email" testId="composition-email" class=InputStyle type="email" value=email input=editEmail submit=validate disabled=disabled aria-labelledby="composition-email-label" aria-describedby=(errors.length > 0 ? "composition-email-help composition-email-error" : "composition-email-help") aria-required=true aria-invalid=(errors.length > 0) font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 FieldError(id="composition-email-error", messages=errors)
         CardFooter(id="composition-footer", divided=true)
-          column gap="ui.space-12" min-width=0
+          column appearance="none" gap="ui.space-12" min-width=0
             Checkbox(id="composition-disable", label="Disable fields", checked=disabled, disabled=false, change=disable)
-            Button(id="composition-save", label="Valider localement", variant="primary", disabled=disabled, press=validate)
-            text (saved ? "Profile validated locally." : "No information sent.") testId="composition-result" role="status" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "Image content" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      CardFrame(id="card-image")
-        CardContent(id="card-image-content")
-          image "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27640%27 height=%27360%27 viewBox=%270 0 640 360%27%3E%3Crect width=%27640%27 height=%27360%27 fill=%27%23e5e5e5%27/%3E%3Cpath d=%27M0 360 200 130 330 280 450 100 640 360%27 fill=%27%23a3a3a3%27/%3E%3Ccircle cx=%27460%27 cy=%2770%27 r=%2728%27 fill=%27%23fafafa%27/%3E%3C/svg%3E" alt="Workspace illustration" width="100%"
+            Button(id="composition-save", label="Validate locally", variant="primary", disabled=disabled, press=validate)
+            text (saved ? "Profile validated locally." : "No information sent.") testId="composition-result" role="status" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      text "Login" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      column appearance="none" max-width=384 width="100%" min-width=0
+        CardLoginExample(id="card-login", size="default", spacing="", language="en")
+      text "Compact · scheduled reports" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      column appearance="none" max-width=320 width="100%" min-width=0
+        CardReportsExample()
+      text "Custom spacing" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      column appearance="none" max-width=384 width="100%" min-width=0
+        CardSpacingExample(reduced=reduced)
+      text "Header and footer borders · default and compact" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      for size in ["default", "sm"] key=size
+        column appearance="none" max-width=384 width="100%" min-width=0
+          CardBorderExample(size=size)
+      text "Edge-to-edge content" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      column appearance="none" max-width=384 width="100%" min-width=0
+        CardTermsExample()
+      text "Image · default and compact" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      for size in ["default", "sm"] key=size
+        column appearance="none" max-width=384 width="100%" min-width=0
+          CardImageExample(id=("card-image-" + size), size=size)
+      text "Meeting notes · header action and footer avatars" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      column appearance="none" max-width=384 width="100%" min-width=0
+        CardNotesExample()
+      text "RTL · login" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      column appearance="none" max-width=384 width="100%" min-width=0
+        CardRtlExample()
+
+fn cardEmailValid(value: string): bool = value.trim().includes("@") and value.trim().split("@").length == 2 and not value.includes(" ") and not value.includes("\t") and not value.includes("\n") and not value.includes("\u{d}") and not value.trim().startsWith("@") and not value.trim().endsWith("@")
+
+shape CardLoginLabels
+  direction: string
+  title: string
+  description: string
+  signUp: string
+  email: string
+  password: string
+  forgot: string
+  login: string
+  google: string
+  emailError: string
+  passwordError: string
+
+fn cardLoginLabels(language: string): CardLoginLabels = language == "ar" ? CardLoginLabels(direction="rtl", title="تسجيل الدخول إلى حسابك", description="أدخل بريدك الإلكتروني أدناه لتسجيل الدخول إلى حسابك", signUp="إنشاء حساب", email="البريد الإلكتروني", password="كلمة المرور", forgot="نسيت كلمة المرور؟", login="تسجيل الدخول", google="تسجيل الدخول باستخدام Google", emailError="أدخل عنوان بريد إلكتروني صالحًا.", passwordError="أدخل كلمة المرور.") : language == "he" ? CardLoginLabels(direction="rtl", title="התחבר לחשבון שלך", description="הזן את האימייל שלך למטה כדי להתחבר לחשבון שלך", signUp="הירשם", email="אימייל", password="סיסמה", forgot="שכחת את הסיסמה?", login="התחבר", google="התחבר עם Google", emailError="הזן כתובת אימייל תקינה.", passwordError="הזן סיסמה.") : CardLoginLabels(direction="ltr", title="Login to your account", description="Enter your email below to login to your account", signUp="Sign Up", email="Email", password="Password", forgot="Forgot your password?", login="Login", google="Login with Google", emailError="Enter a valid email address.", passwordError="Enter your password.")
+
+component CardLoginExample
+  props
+    id: string
+    size: string
+    spacing: string
+    language: string
+  inject
+    uiFont: string
+  derive copy = cardLoginLabels(language)
+  derive inset = cardSpacing(size, spacing)
+  state email = ""
+  state password = ""
+  state name = ""
+  state mode = "login"
+  state submitted = false
+  state result = ""
+  derive emailValid = cardEmailValid(email)
+  derive emailError = submitted and not emailValid ? copy.emailError : ""
+  derive passwordError = submitted and mode != "recovery" and password == "" ? copy.passwordError : ""
+  action editEmail(v: string)
+    email = v
+    result = ""
+  action editPassword(v: string)
+    password = v
+    result = ""
+  action editName(v: string)
+    name = v
+    result = ""
+  action submitForm
+    submitted = true
+    if not emailValid
+      result = ""
+      focus(id + "-email")
+    else if mode != "recovery" and password == ""
+      result = ""
+      focus(id + "-password")
+    else if mode == "signup" and name.trim() == ""
+      result = ""
+      focus(id + "-name")
+    else
+      result = mode == "recovery" ? "Reset preview ready. No email sent." : mode == "signup" ? "Account details validated locally. No account created." : "Credentials validated locally. No sign-in request sent."
+  action signUp
+    mode = mode == "signup" ? "login" : "signup"
+    submitted = false
+    result = ""
+  action recover
+    mode = mode == "recovery" ? "login" : "recovery"
+    submitted = false
+    result = ""
+    focus(id + "-email")
+  action google
+    result = "Google sign-in selected for this local preview. No provider connected."
+  action nameKeys(k: string)
+    if k == "Enter"
+      preventDefault()
+      submitForm()
+  view
+    CardFrameOptions(id=id, size=size, spacing=spacing, imageTop=false, direction=copy.direction)
+      CardHeaderOptions(id=(id + "-header"), spacing=inset, divided=false)
+        CardTitle(id=(id + "-title"), title=(mode == "signup" ? copy.signUp : mode == "recovery" ? copy.forgot : copy.title), level=2)
+        CardDescription(id=(id + "-description"), description=copy.description)
+        CardAction(id=(id + "-action"))
+          Button(id=(id + "-signup"), label=(mode == "signup" ? copy.login : copy.signUp), variant="link", disabled=false, press=signUp)
+      CardContentOptions(id=(id + "-content"), spacing=inset, edgeToEdge=false, connectedFooter=false)
+        FieldGroup(id=(id + "-fields"), nested=false)
+          if mode == "signup"
+            column appearance="none" key=nameKeys
+              Input(id=(id + "-name"), label="Name", value=name, placeholder="Your name", error=(submitted and name.trim() == "" ? "Enter your name." : ""), disabled=false, edit=editName)
+          FieldFrame(id=(id + "-email-field"), labelId=(id + "-email-label"), descriptionId=(emailError != "" ? id + "-email-error" : ""), invalid=(emailError != ""), orientation="vertical")
+            FieldLabel(id=(id + "-email-label"), label=copy.email, controlId=(id + "-email"), disabled=false)
+            input id=(id + "-email") testId=(id + "-email") class=InputStyle type="email" autocomplete="email" value=email input=editEmail submit=submitForm placeholder="m@example.com" aria-labelledby=(id + "-email-label") aria-describedby=(emailError != "" ? id + "-email-error" : "") aria-required=true aria-invalid=(emailError != "") direction="ltr" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            FieldError(id=(id + "-email-error"), messages=(emailError != "" ? [emailError] : []))
+          if mode != "recovery"
+            FieldFrame(id=(id + "-password-field"), labelId=(id + "-password-label"), descriptionId=(passwordError != "" ? id + "-password-error" : ""), invalid=(passwordError != ""), orientation="vertical")
+              row appearance="none" align-items="center" justify-content="space-between" gap="ui.space-8" flex-wrap="wrap" min-width=0
+                FieldLabel(id=(id + "-password-label"), label=copy.password, controlId=(id + "-password"), disabled=false)
+                Button(id=(id + "-forgot"), label=copy.forgot, variant="link", disabled=false, press=recover)
+              input id=(id + "-password") testId=(id + "-password") class=InputStyle type="password" autocomplete=(mode == "signup" ? "new-password" : "current-password") value=password input=editPassword submit=submitForm aria-labelledby=(id + "-password-label") aria-describedby=(passwordError != "" ? id + "-password-error" : "") aria-required=true aria-invalid=(passwordError != "") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              FieldError(id=(id + "-password-error"), messages=(passwordError != "" ? [passwordError] : []))
+      CardFooterOptions(id=(id + "-footer"), spacing=inset, divided=false)
+        column appearance="none" gap="ui.space-8" width="100%" min-width=0
+          Button(id=(id + "-submit"), label=(mode == "recovery" ? "Preview password reset" : mode == "signup" ? copy.signUp : copy.login), variant="primary", disabled=false, press=submitForm)
+          if mode == "recovery"
+            Button(id=(id + "-back"), label=copy.login, variant="link", disabled=false, press=recover)
+          else
+            Button(id=(id + "-google"), label=copy.google, variant="outline", disabled=false, press=google)
+          text (result != "" ? result : "Local preview. No information sent.") testId=(id + "-result") role="status" font-size="ui.text-sm" color="ui.muted-foreground" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+
+component CardSpacingExample
+  props
+    reduced: bool
+  state spacing = "16px"
+  derive inset = spacing == "20px" ? "ui.space-20" : spacing == "24px" ? "ui.space-24" : spacing == "32px" ? "ui.space-32" : "ui.space-16"
+  action choose(values: string[])
+    match values.at(values.length - 1)
+      case some(value)
+        spacing = value
+      case none
+        spacing = spacing
+  view
+    column appearance="none" gap="ui.space-16" min-width=0
+      ToggleGroup(id="card-spacing-options", label="Card spacing", options=["16px", "20px", "24px", "32px"], selected=[spacing], disabled=false, reduced=reduced, change=choose)
+      CardLoginExample(id="card-spacing", size="default", spacing=inset, language="en")
+
+component CardRtlExample
+  state language = "العربية"
+  action choose(value: string)
+    language = value
+  view
+    column appearance="none" gap="ui.space-16" min-width=0
+      RadioGroupAdvanced(id="card-language", label="Card language", options=["English", "العربية", "עברית"], value=language, disabled=false, required=true, descriptionId="", change=choose, variant="segmented")
+      CardLoginExample(id="card-rtl", size="default", spacing="", language=(language == "العربية" ? "ar" : language == "עברית" ? "he" : "en"))
+
+component CardReportsExample
+  inject
+    uiFont: string
+  state configuring = false
+  state updates = false
+  state schedule = "Weekly"
+  state teammates = true
+  action setup
+    configuring = not configuring
+  action whatsNew
+    updates = not updates
+  action choose(value: string)
+    schedule = value
+  action recipients(value: bool)
+    teammates = value
+  view
+    CardFrameOptions(id="card-small", size="sm", spacing="", imageTop=false, direction="inherit")
+      CardHeaderOptions(id="card-small-header", spacing="ui.space-12", divided=false)
+        CardTitle(id="card-small-title", title="Scheduled reports", level=2)
+        CardDescription(id="card-small-description", description="Weekly snapshots. No more manual exports.")
+      CardContentOptions(id="card-small-content", spacing="ui.space-12", edgeToEdge=false, connectedFooter=false)
+        column appearance="none" role="list" gap="ui.space-8" padding="ui.space-8 0px"
+          for feature in ["Choose a schedule (daily, or weekly).", "Send to channels or specific teammates.", "Include charts, tables, and key metrics."] key=feature
+            row appearance="none" role="listitem" gap="ui.space-8" align-items="start" min-width=0
+              image "symbol:forward-chevron" width="ui.space-16" height="ui.space-16" flex-shrink=0 color="ui.muted-foreground" aria-hidden=true
+              text feature font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+        if configuring
+          column appearance="none" gap="ui.space-12" testId="card-small-settings"
+            RadioGroupAdvanced(id="card-report-schedule", label="Report schedule", options=["Daily", "Weekly"], value=schedule, disabled=false, required=true, descriptionId="", change=choose, variant="segmented")
+            Checkbox(id="card-report-teammates", label="Include teammates", checked=teammates, disabled=false, change=recipients)
+            text (schedule + (teammates ? " report for your team." : " report for you.")) role="status" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+        if updates
+          text "New in RightUI: compact cards, shared spacing, and edge-to-edge content." testId="card-small-updates" font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      CardFooterOptions(id="card-small-footer", spacing="ui.space-12", divided=false)
+        column appearance="none" width="100%" gap="ui.space-8"
+          ButtonContent(id="card-small-setup", label="Set up scheduled reports", variant="primary", size="sm", disabled=false, press=setup)
+            text "Set up scheduled reports" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+          ButtonContent(id="card-small-news", label="See what's new", variant="outline", size="sm", disabled=false, press=whatsNew)
+            text "See what's new" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+
+component CardBorderExample
+  props
+    size: string
+  inject
+    uiFont: string
+  derive inset = cardSpacing(size, "")
+  state pressed = false
+  action act
+    pressed = not pressed
+  view
+    column appearance="none" gap="ui.space-16" min-width=0
+      CardFrameOptions(id=("card-border-header-" + size), size=size, spacing="", imageTop=false, direction="inherit")
+        CardHeaderOptions(id=("card-border-header-part-" + size), spacing=inset, divided=true)
+          CardTitle(id=("card-border-header-title-" + size), title=(size == "sm" ? "Header with Border (Small)" : "Header with Border"), level=2)
+          CardDescription(id=("card-border-header-description-" + size), description="A border separates the header from the content.")
+        CardContentOptions(id=("card-border-header-content-" + size), spacing=inset, edgeToEdge=false, connectedFooter=false)
+          text "The header divider uses the same inset as the other card sections." font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      CardFrameOptions(id=("card-border-footer-" + size), size=size, spacing="", imageTop=false, direction="inherit")
+        CardContentOptions(id=("card-border-footer-content-" + size), spacing=inset, edgeToEdge=false, connectedFooter=false)
+          text (pressed ? "Footer action selected locally." : "A border separates the content from the footer.") testId=("card-border-result-" + size) role="status" font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+        CardFooterOptions(id=("card-border-footer-part-" + size), spacing=inset, divided=true)
+          column appearance="none" width="100%"
+            ButtonContent(id=("card-border-footer-action-" + size), label="Footer with Border", variant="outline", size=(size == "sm" ? "sm" : "default"), disabled=false, press=act)
+              text "Footer with Border" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+
+component CardTermsExample
+  inject
+    uiFont: string
+  state decision = ""
+  action accept
+    decision = "Agreement accepted locally."
+  action decline
+    decision = "Agreement declined locally."
+  view
+    CardFrame(id="card-edge")
+      CardHeader(id="card-edge-header")
+        CardTitle(id="card-edge-title", title="Terms of Service", level=2)
+        CardDescription(id="card-edge-description", description="Review the terms before accepting the agreement.")
+      CardContentOptions(id="card-edge-content", spacing="", edgeToEdge=true, connectedFooter=true)
+        column appearance="none" id="card-edge-scroll" testId="card-edge-scroll" role="region" aria-label="Terms of Service" tabindex=0 max-height=192 overflow-y="auto" gap="ui.space-16" padding="ui.space-16 ui.space-24" border-top-width="ui.border-width" border-top-style="solid" border-top-color="ui.border" background-color="ui.muted" min-width=0
+          :focus-visible
+            box-shadow="ui.shadow-focus-inset"
+          for paragraph in ["These terms govern your use of the workspace, including access to shared documents, project files, and collaboration tools.", "You are responsible for the content you upload and for ensuring that your team has the appropriate permissions to view or edit it.", "We may update features or limits as the service evolves. When those changes materially affect your workflow, we will notify your workspace administrators.", "By continuing, you agree to keep your account credentials secure and to follow your organization's acceptable use policies."] key=paragraph
+            text paragraph font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      CardFooter(id="card-edge-footer", divided=true)
+        row appearance="none" width="100%" justify-content="flex-end" flex-wrap="wrap" gap="ui.space-8"
+          Button(id="card-edge-decline", label="Decline", variant="outline", disabled=false, press=decline)
+          Button(id="card-edge-accept", label="Accept", variant="primary", disabled=false, press=accept)
+        text decision testId="card-edge-result" role="status" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+
+component CardImageExample
+  props
+    id: string
+    size: string
+  inject
+    uiFont: string
+  derive inset = cardSpacing(size, "")
+  state expanded = false
+  action viewEvent
+    expanded = not expanded
+  view
+    CardFrameOptions(id=id, size=size, spacing="", imageTop=true, direction="inherit")
+      AspectRatioFrame(ratio=16 / 9, radius="0px")
+        image "assets/card/cover.jpg" alt="Abstract artwork by mymind on Unsplash" filter="grayscale(1) brightness(0.6)" position="absolute" inset=0 width="100%" height="100%" object-fit="cover"
+        view appearance="none" position="absolute" inset=0 background-color="ui.overlay" opacity=0.7 pointer-events="none" aria-hidden=true
+      CardHeaderOptions(id=(id + "-header"), spacing=inset, divided=false)
+        CardTitle(id=(id + "-title"), title="Design systems meetup", level=2)
+        CardDescription(id=(id + "-description"), description="A practical talk on component APIs, accessibility, and shipping faster.")
+        CardAction(id=(id + "-badge"))
+          Badge(label="Featured", variant="secondary")
+      if expanded
+        CardContentOptions(id=(id + "-details"), spacing=inset, edgeToEdge=false, connectedFooter=false)
+          text "Explore reusable components, keyboard navigation, and shared themes with RightUI and Exact." testId=(id + "-event") font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      CardFooterOptions(id=(id + "-footer"), spacing=inset, divided=false)
+        column appearance="none" width="100%"
+          ButtonContent(id=(id + "-view"), label=(expanded ? "Hide Event" : "View Event"), variant="primary", size=(size == "sm" ? "sm" : "default"), disabled=false, press=viewEvent)
+            text (expanded ? "Hide Event" : "View Event") font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+
+component CardNotesExample
+  inject
+    uiFont: string
+  state transcribed = false
+  action transcribe
+    transcribed = not transcribed
+  view
+    CardFrame(id="card-notes")
+      CardHeader(id="card-notes-header")
+        CardTitle(id="card-notes-title", title="Meeting Notes", level=2)
+        CardDescription(id="card-notes-description", description="Transcript from the meeting with the client.")
+        CardAction(id="card-notes-action")
+          ButtonContent(id="card-notes-transcribe", label="Transcribe", variant="outline", size="sm", disabled=false, press=transcribe)
+            svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.stroke-medium" aria-hidden=true
+              rect x=3 y=4 width=18 height=16 rx=2
+              path d="M7 10h4M7 14h3M14 10h3M14 14h3"
+            text "Transcribe" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      CardContent(id="card-notes-content")
+        column appearance="none" gap="ui.space-16"
+          text "Client requested dashboard redesign with focus on mobile responsiveness." font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+          column appearance="none" role="list" gap="ui.space-8"
+            for note, i in ["New analytics widgets for daily/weekly metrics", "Simplified navigation menu", "Dark mode support", "Timeline: 6 weeks", "Follow-up meeting scheduled for next Tuesday"] key=note
+              text ((i + 1).toString() + ". " + note) role="listitem" font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+          if transcribed
+            text "Local transcript: prioritize the mobile dashboard, analytics, navigation, and dark mode for the six-week plan." testId="card-notes-transcript" role="status" font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      CardFooter(id="card-notes-footer", divided=false)
+        AvatarGroup(id="card-notes-people", label="Meeting participants")
+          for person in ["blue", "violet", "green"] key=person
+            AvatarGroupItem(id=("card-notes-person-" + person), first=(person == "blue"))
+              AvatarFrame(id=("card-notes-avatar-" + person), name=("Participant " + person), src=(person == "blue" ? "assets/avatars/user-blue.png" : person == "violet" ? "assets/avatars/user-violet.png" : "assets/avatars/user-green.png"), fallback="", size="sm")
+          AvatarGroupCount(id="card-notes-more", label="8 more participants", count=8, size="sm", first=false)

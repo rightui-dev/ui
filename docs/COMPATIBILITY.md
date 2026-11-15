@@ -1,6 +1,6 @@
 # Compatibility
 
-125 catalog entries. Evidence recorded on 2026-11-15 against rightui 0.3.0-beta.4 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
+125 catalog entries. Evidence recorded on 2026-11-15 against rightui 0.3.0-beta.6 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
 
 This records validation evidence, not full compatibility certification. Partial checks cover specific examples or interactions, not every variant. Built only means compilation succeeded, without a targeted interaction result.
 
@@ -17,22 +17,22 @@ iOS validation is incomplete. Windows and Android are not supported.
 
 | Component | iOS | macOS | Web | Windows | Android |
 | --- | --- | --- | --- | --- | --- |
-| Accordion | ⚠️ Partial checks | ✅ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
+| Accordion | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Alert | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Alert Dialog | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
-| Aspect Ratio | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Attachment | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Aspect Ratio | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
+| Attachment | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Avatar | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
-| Badge | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Breadcrumb | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Bubble | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Badge | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
+| Breadcrumb | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
+| Bubble | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Button | ⚠️ Partial checks | ✅ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Button Group | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Calendar | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
-| Card | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Card | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Carousel | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Chart | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Checkbox | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Chart | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
+| Checkbox | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Code Block | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Collapsible | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Combobox | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
@@ -147,16 +147,16 @@ iOS validation is incomplete. Windows and Android are not supported.
 
 | Component | iOS | macOS | Web | Windows | Android |
 | --- | --- | --- | --- | --- | --- |
-| Area Chart - Interactive | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
-| Area Chart | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Area Chart - Linear | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Area Chart - Step | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Area Chart - Legend | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Area Chart - Stacked | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Area Chart - Stacked Expand | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Area Chart - Icons | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Area Chart - Gradient | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Area Chart - Axes | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Area Chart - Interactive | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
+| Area Chart | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Area Chart - Linear | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Area Chart - Step | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Area Chart - Legend | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Area Chart - Stacked | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Area Chart - Stacked Expand | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Area Chart - Icons | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Area Chart - Gradient | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Area Chart - Axes | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Built only | ❌ Not supported | ❌ Not supported |
 
 ## Evidence
 
@@ -199,5 +199,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 - **drawer-options-web:** Thirteen isolated browser checks passed, including detached insets, controls and focus without a handle, controlled snap points across resize, and scroll-to-full-height with fixed content and footer. Native and motion checks are recorded separately. [Source](https://github.com/rightui-dev/ui/blob/main/tools/fixtures/overlays/app.test.contract)
 - **popover-invoker-web:** Targeted desktop and mobile browser checks cover repeated trigger toggling, outside dismissal, internal theme changes and Escape. A public Popover check verifies edited input persists after outside dismissal and reopening. [Source](https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract)
 - **feedback-beta4:** Targeted archive tests cover toast stacking, actions, loading persistence and completion, Hover Card and four Tooltip sides. Browser geometry and pointer motion were checked. Mac interactions were checked for Toast, Tooltip and Hover Card. iOS compilation and archive validation completed; device interactions were not rechecked for this release. [Source](https://github.com/rightui-dev/ui/blob/main/docs/FEEDBACK-VALIDATION.md)
+- **beta5-native-pending:** No release-specific iOS or macOS build or interaction checks were run for the current nine-family batch or shared area-gallery updates. Earlier native evidence remains historical. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
+- **beta5-web:** The local beta.5 candidate passed 59 browser tests: 45 historical scenarios, three component-pager checks and eleven targeted tests for the nine updated families. Coverage includes disabled/keyboard Accordion, mixed/group Checkbox, Card validation and cover rendering, Attachment previews/retry/removal, Bubble actions/collapse, Breadcrumb links/menus/mobile Drawer, Badge languages/links, and Chart values, visible-series totals, formats and RTL. Card and AspectRatio test screenshots were inspected. This is partial web coverage; no new native validation is claimed. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 
 The machine-readable row-to-evidence mapping is in [metadata/compatibility.json](https://github.com/rightui-dev/ui/blob/main/metadata/compatibility.json). A successful build does not certify every interaction.

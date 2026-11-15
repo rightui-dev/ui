@@ -1,25 +1,42 @@
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 use Button from "./button.contract"
+use BreadcrumbRoot, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator from "./breadcrumb-parts.contract"
 component Breadcrumb
   props
     id: string
     labels: string[]
     choose: action
+  view
+    BreadcrumbOptions(id=id, labels=labels, choose=choose, hrefs=[], separator="chevron", label="Breadcrumb", direction="inherit")
+
+component BreadcrumbOptions
+  props
+    id: string
+    labels: string[]
+    choose: action
+    hrefs: string[]
+    separator: string
+    label: string
+    direction: string
   inject
     uiFont: string
   view
-    nav id=id testId=id aria-label="Fil d’Ariane"
-      row gap="ui.space-10" align-items="center" flex-wrap="wrap"
-        for label, i in labels key=label
+    BreadcrumbRoot(id=id, label=label, direction=direction)
+      BreadcrumbList()
+        for item, i in labels key=i
           if i > 0
-            svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-medium" aria-hidden=true
-              path d="m9 5 7 7-7 7"
-          if i == labels.length - 1
-            text label aria-current="page" font-size="ui.text-sm" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          else
-            button id=(id + "-" + i.toString()) testId=(id + "-" + i.toString()) class=Control press=choose(i) padding="0px" min-height="ui.space-20" border="0" background-color="transparent" color="ui.muted-foreground"
-              text label font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            BreadcrumbSeparator(kind=separator, direction=direction)
+          BreadcrumbItem()
+            if i == labels.length - 1
+              BreadcrumbPage(label=item)
+            else if i < hrefs.length and (match hrefs.at(i) { case some(href) => href, case none => "" }) != ""
+              BreadcrumbLink(id=id + "-" + i.toString(), href=(match hrefs.at(i) { case some(href) => href, case none => "" }), label=item)
+            else
+              button id=(id + "-" + i.toString()) testId=(id + "-" + i.toString()) class=Control press=choose(i) padding="0px" min-height="ui.space-20" border="0" background-color="transparent" color="ui.muted-foreground"
+                :hover
+                  color="ui.foreground"
+                text item font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component Pagination
   props

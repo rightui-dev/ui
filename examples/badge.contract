@@ -1,15 +1,50 @@
-use Badge from "@rightui/ui"
+use Badge, BadgeWithOptions, BadgeOptions, BadgeContent, BadgeIcon, BadgeSpinner, Select, uiFontFamily from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
+  inject
+    uiFont: string
   derive narrow = width < 600
+  state language = "Arabic"
+  derive rtl = language != "English"
+  derive hebrew = language == "Hebrew"
+  action chooseLanguage(value: string)
+    language = value
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
-      Badge(label="1", variant="outline")
-      Badge(label="Default", variant="default")
-      Badge(label="Secondary", variant="secondary")
-      Badge(label="Destructive", variant="destructive")
-      Badge(label="Ghost", variant="ghost")
-      Badge(label="Link", variant="link")
+      row gap="ui.space-8" flex-wrap="wrap" align-items="center"
+        Badge(label="Badge", variant="default")
+        Badge(label="Secondary", variant="secondary")
+        Badge(label="Destructive", variant="destructive")
+        Badge(label="Outline", variant="outline")
+        Badge(label="Ghost", variant="ghost")
+        BadgeWithOptions(label="Link", variant="link", options=BadgeOptions(icon="", trailingIcon=false, href="/docs/components/badge", fill="", ink="", direction="ltr", invalid=false))
+      row gap="ui.space-8" flex-wrap="wrap" align-items="center"
+        BadgeWithOptions(label="Verified", variant="secondary", options=BadgeOptions(icon="verified", trailingIcon=false, href="", fill="", ink="", direction="ltr", invalid=false))
+        BadgeWithOptions(label="Bookmark", variant="outline", options=BadgeOptions(icon="bookmark", trailingIcon=true, href="", fill="", ink="", direction="ltr", invalid=false))
+      row gap="ui.space-8" flex-wrap="wrap" align-items="center"
+        BadgeContent(variant="destructive", iconPosition="start", href="", fill="", ink="", direction="ltr", invalid=false)
+          BadgeSpinner(reduced=reduced, label="Deleting")
+          text "Deleting" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        BadgeContent(variant="secondary", iconPosition="end", href="", fill="", ink="", direction="ltr", invalid=false)
+          text "Generating" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          BadgeSpinner(reduced=reduced, label="Generating")
+      BadgeContent(href="/docs/components/badge", iconPosition="end", variant="default", fill="", ink="", direction="ltr", invalid=false)
+        text "Open Link" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        BadgeIcon(name="arrow-up-right")
+      row gap="ui.space-8" flex-wrap="wrap" align-items="center"
+        BadgeWithOptions(label="Blue", variant="default", options=BadgeOptions(icon="", trailingIcon=false, href="", fill="color-mix(in srgb, ui.chart-1 12%, ui.background)", ink="ui.chart-1", direction="ltr", invalid=false))
+        BadgeWithOptions(label="Green", variant="default", options=BadgeOptions(icon="", trailingIcon=false, href="", fill="color-mix(in srgb, ui.success 12%, ui.background)", ink="ui.success", direction="ltr", invalid=false))
+        BadgeWithOptions(label="Sky", variant="default", options=BadgeOptions(icon="", trailingIcon=false, href="", fill="color-mix(in srgb, ui.chart-2 12%, ui.background)", ink="ui.chart-2", direction="ltr", invalid=false))
+        BadgeWithOptions(label="Purple", variant="default", options=BadgeOptions(icon="", trailingIcon=false, href="", fill="color-mix(in srgb, ui.chart-3 12%, ui.background)", ink="ui.chart-3", direction="ltr", invalid=false))
+        BadgeWithOptions(label="Red", variant="default", options=BadgeOptions(icon="", trailingIcon=false, href="", fill="color-mix(in srgb, ui.danger 12%, ui.background)", ink="ui.danger", direction="ltr", invalid=false))
+      Select(id="badge-language", label="Language", options=["English", "Arabic", "Hebrew"], value=language, disabled=false, reduced=reduced, change=chooseLanguage)
+      row testId="badge-rtl-examples" direction=(rtl ? "rtl" : "ltr") gap="ui.space-8" flex-wrap="wrap" align-items="center"
+        BadgeWithOptions(label=rtl ? (hebrew ? "תג" : "شارة") : "Badge", variant="default", options=BadgeOptions(icon="", trailingIcon=false, href="", fill="", ink="", direction=rtl ? "rtl" : "ltr", invalid=false))
+        BadgeWithOptions(label=rtl ? (hebrew ? "משני" : "ثانوي") : "Secondary", variant="secondary", options=BadgeOptions(icon="", trailingIcon=false, href="", fill="", ink="", direction=rtl ? "rtl" : "ltr", invalid=false))
+        BadgeWithOptions(label=rtl ? (hebrew ? "הרסני" : "مدمر") : "Destructive", variant="destructive", options=BadgeOptions(icon="", trailingIcon=false, href="", fill="", ink="", direction=rtl ? "rtl" : "ltr", invalid=false))
+        BadgeWithOptions(label=rtl ? (hebrew ? "קווי מתאר" : "مخطط") : "Outline", variant="outline", options=BadgeOptions(icon="", trailingIcon=false, href="", fill="", ink="", direction=rtl ? "rtl" : "ltr", invalid=false))
+        BadgeWithOptions(label=rtl ? (hebrew ? "מאומת" : "متحقق") : "Verified", variant="secondary", options=BadgeOptions(icon="verified", trailingIcon=false, href="", fill="", ink="", direction=rtl ? "rtl" : "ltr", invalid=false))
+        BadgeWithOptions(label=rtl ? (hebrew ? "סימנייה" : "إشارة مرجعية") : "Bookmark", variant="outline", options=BadgeOptions(icon="bookmark", trailingIcon=true, href="", fill="", ink="", direction=rtl ? "rtl" : "ltr", invalid=false))

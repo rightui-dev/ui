@@ -103,7 +103,16 @@ component AspectRatio
     ratio: number
   slot
   view
-    view aspect-ratio=max(0.1, ratio) width="100%" min-width="0px" position="relative" overflow="hidden" border-radius="ui.radius-control"
+    AspectRatioFrame(ratio=ratio, radius="ui.radius-control")
+      children
+
+component AspectRatioFrame
+  props
+    ratio: number
+    radius: string
+  slot
+  view
+    view appearance="none" aspect-ratio=(ratio > 0 ? ratio : 1) width="100%" min-width="0px" position="relative" overflow="hidden" border-radius=radius
       children
 
 component Item

@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -46,6 +46,11 @@ if (created) run([process.execPath, "install", "--frozen-lockfile"], sdk);
 run([process.execPath, "link"], root);
 run([process.execPath, "install"], root);
 run([process.execPath, "install"], resolve(root, "examples/native"));
+
+for (const directory of ["avatars", "card"]) {
+  cpSync(resolve(root, "examples/native/node_modules/@rightui/ui/assets", directory),
+    resolve(root, "examples/native/assets", directory), { recursive: true });
+}
 
 console.log(`Native demo dependencies ready. Exact: ${sdk} (${revision}).`);
 console.log("No native build or device launch was performed.");

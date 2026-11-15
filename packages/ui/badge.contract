@@ -1,12 +1,121 @@
 use uiFontFamily from "./typography-context.contract"
+use uiSpin from "./spinner.contract"
+
+fn badgeFill(variant: string, hovered: bool): string = variant == "primary" or variant == "default" ? (hovered ? "ui.primary-hover" : "ui.primary") : variant == "destructive" ? (hovered ? "color-mix(in srgb, ui.destructive 20%, transparent)" : "light-dark(color-mix(in srgb, ui.destructive 10%, transparent), color-mix(in srgb, ui.destructive 20%, transparent))") : variant == "outline" or variant == "ghost" ? (hovered ? "ui.muted" : "transparent") : variant == "link" ? "transparent" : (hovered ? "ui.secondary-hover" : "ui.muted")
+fn badgeInk(variant: string, hovered: bool): string = variant == "primary" or variant == "default" ? "ui.primary-foreground" : variant == "success" ? "ui.success" : variant == "destructive" ? "ui.destructive" : variant == "link" ? "ui.primary" : hovered and (variant == "outline" or variant == "ghost") ? "ui.muted-foreground" : "ui.foreground"
+
+style BadgeSurface
+  display="flex"
+  width="auto"
+  align-self="flex-start"
+  flex-shrink=0
+  align-items="center"
+  justify-content="center"
+  box-sizing="border-box"
+  gap="ui.space-4"
+  height="ui.space-20"
+  padding="ui.space-2 ui.space-8"
+  border-radius="ui.radius-4xl"
+  border-width="ui.border-width"
+  border-style="solid"
+  white-space="nowrap"
+  font-size="ui.text-xs"
+  line-height="ui.leading-heading"
+  font-weight="ui.weight-medium"
+  text-decoration="none"
+  outline="none"
+  :focus-visible
+    border-color="ui.ring"
+    box-shadow="ui.shadow-focus"
+
+// Slot composition keeps SVGs, spinners and custom content in one public surface.
+component BadgeContent
+  props
+    variant: string
+    href: string
+    fill: string
+    ink: string
+    direction: string
+    invalid: bool
+    iconPosition: string
+  inject
+    uiFont: string
+  slot
+  state hovered = false
+  action hoverChanged(inside: bool)
+    hovered = inside
+  view
+    if href != ""
+      link href=href class=BadgeSurface hover=hoverChanged direction=direction aria-invalid=invalid
+        font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        padding-left=(iconPosition == "start" ? "ui.space-6" : "ui.space-8") padding-right=(iconPosition == "end" ? "ui.space-6" : "ui.space-8")
+        background-color=(fill != "" ? fill : badgeFill(variant, hovered)) color=(ink != "" ? ink : badgeInk(variant, hovered))
+        border-color=(invalid ? "ui.destructive" : variant == "outline" ? "ui.border" : "transparent")
+        text-decoration=(variant == "link" and hovered ? "underline" : "none")
+        children
+    else
+      row class=BadgeSurface hover=hoverChanged direction=direction aria-invalid=invalid
+        font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        padding-left=(iconPosition == "start" ? "ui.space-6" : "ui.space-8") padding-right=(iconPosition == "end" ? "ui.space-6" : "ui.space-8")
+        background-color=(fill != "" ? fill : badgeFill(variant, variant == "ghost" and hovered)) color=(ink != "" ? ink : badgeInk(variant, variant == "ghost" and hovered))
+        border-color=(invalid ? "ui.destructive" : variant == "outline" ? "ui.border" : "transparent")
+        text-decoration=(variant == "link" and hovered ? "underline" : "none")
+        children
+
+component BadgeIcon
+  props
+    name: string
+  view
+    svg width="ui.space-12" height="ui.space-12" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
+      if name == "verified" or name == "check" or name == "✓"
+        path d="M9 3 12 2 15 3 18 3 20 6 21 9 22 12 21 15 20 18 18 21 15 21 12 22 9 21 6 21 4 18 3 15 2 12 3 9 4 6 6 3Z"
+        path d="m8 12 3 3 5-6"
+      else if name == "bookmark"
+        path d="M6 3h12v18l-6-4-6 4Z"
+      else if name == "arrow-up-right" or name == "↗"
+        path d="M7 17 17 7M7 7h10v10"
+      else if name == "plus" or name == "+"
+        path d="M12 5v14M5 12h14"
+
+component BadgeSpinner
+  props
+    reduced: bool
+    label: string
+  view
+    row role="status" aria-label=label width="ui.space-12" height="ui.space-12" flex-shrink=0
+      svg width="ui.space-12" height="ui.space-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" stroke-linecap="round" aria-hidden=true
+        animation=(reduced ? "none" : "uiSpin ui.duration-spin ui.easing-linear infinite")
+        circle cx=12 cy=12 r=9 opacity="ui.opacity-faint"
+        path d="M12 3a9 9 0 0 1 9 9"
+
+shape BadgeOptions
+  icon: string
+  trailingIcon: bool
+  href: string
+  fill: string
+  ink: string
+  direction: string
+  invalid: bool
+
+component BadgeWithOptions
+  props
+    label: string
+    variant: string
+    options: BadgeOptions
+  inject
+    uiFont: string
+  view
+    BadgeContent(variant=variant, href=options.href, fill=options.fill, ink=options.ink, direction=options.direction, invalid=options.invalid, iconPosition=options.icon == "" ? "" : options.trailingIcon ? "end" : "start")
+      if options.icon != "" and not options.trailingIcon
+        BadgeIcon(name=options.icon)
+      text label font-size="ui.text-xs" line-height="ui.leading-heading" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      if options.icon != "" and options.trailingIcon
+        BadgeIcon(name=options.icon)
+
+// Preserve the original two-prop API on SDKs without prop defaults.
 component Badge
   props
     label: string
     variant: string
-  inject
-    uiFont: string
   view
-    row align-items="center" justify-content="center" padding="ui.space-2 ui.space-8" border-radius="ui.radius-4xl" border-width="ui.border-width" border-style="solid" border-color=(variant == "outline" ? "ui.border" : "transparent")
-      background-color=((variant == "primary" or variant == "default") ? "ui.primary" : variant == "outline" or variant == "ghost" or variant == "link" ? "transparent" : variant == "destructive" ? "ui.destructive" : "ui.muted")
-      color=((variant == "primary" or variant == "default") ? "ui.primary-foreground" : variant == "success" ? "ui.success" : variant == "destructive" ? "ui.on-danger" : "ui.foreground")
-      text label font-size="ui.text-xs" line-height="ui.leading-heading" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    BadgeWithOptions(label=label, variant=variant, options=BadgeOptions(icon="", trailingIcon=false, href="", fill="", ink="", direction="inherit", invalid=false))

@@ -4,6 +4,19 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.3.0-beta.6] - 2026-11-15
+
+- Keep FieldLabel and Checkbox hover and pressed backgrounds transparent while preserving activation, mixed state and keyboard focus.
+- Replace Attachment demo photography with local document previews and fresh project-oriented filenames.
+
+## [0.3.0-beta.5] - 2026-11-15
+
+- Extend Accordion keyboard navigation and disabled items, and add mixed-state and grouped Checkbox compositions while preserving legacy signatures.
+- Add configurable Card frame, header, content and footer spacing, complete interactive card examples, and a public AspectRatioFrame. Bundle the documentation cover image with its provenance.
+- Add composable Attachment media, actions, groups and modal previews, plus Bubble content, reactions, collapse and contextual actions through additive Options APIs.
+- Add composable Badge icons, spinners, real links and RTL options, and Breadcrumb links, menus and responsive Drawer navigation.
+- Add configurable Chart tooltips, legends, formats, visible-series totals, keyboard inspection and RTL across bar, line and area charts. Preserve all existing public call signatures.
+
 ## [0.3.0-beta.4] - 2026-11-15
 
 - Add a viewport-level toast stack with directional entrance and exit motion, status icons, loading feedback and configurable top or bottom placement. Preserve the original Toast call signature.

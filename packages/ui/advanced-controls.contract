@@ -15,8 +15,12 @@ component CheckboxMixed
     if not disabled
       change(checked != "true")
   view
-    button id=id testId=id appearance="none" role=(checked == "mixed" ? "button" : "checkbox") aria-checked=(checked == "true") aria-label=(checked == "mixed" ? label + ", partially selected" : label) aria-description=(checked == "mixed" ? "Some items are selected. Activate to select all items." : "") disabled=disabled press=toggle
-      display="flex" align-items="center" justify-content=(labelVisible ? "flex-start" : "center") gap="ui.space-8" min-height="ui.space-32" padding="0px" border="0" background-color="transparent" color="ui.foreground" cursor="pointer"
+    button id=id testId=id appearance="none" role=(checked == "mixed" ? "button" : "checkbox") aria-pressed=(checked == "mixed" ? "mixed" : "undefined") aria-checked=(checked == "true") aria-label=(checked == "mixed" ? label + ", partially selected" : label) aria-description=(checked == "mixed" ? "Some items are selected. Activate to select all items." : "") disabled=disabled press=toggle
+      display="flex" align-items="center" justify-content=(labelVisible ? "flex-start" : "center") gap="ui.space-8" min-height="ui.touch-target" padding="0px" border="0" background-color="transparent" color="ui.foreground" cursor="pointer"
+      :hover
+        background-color="transparent"
+      :active
+        background-color="transparent"
       :disabled
         opacity="ui.opacity-disabled"
       :focus-visible
@@ -125,29 +129,48 @@ component AccordionMultiple
     expanded: number[]
     reduced: bool
     change: action
+  view
+    AccordionMultipleOptions(id=id, titles=titles, descriptions=descriptions, expanded=expanded, disabledItems=[], collapsible=true, reduced=reduced, change=change)
+
+component AccordionMultipleOptions
+  props
+    id: string
+    titles: string[]
+    descriptions: string[]
+    expanded: number[]
+    disabledItems: number[]
+    collapsible: bool
+    reduced: bool
+    change: action
   inject
     uiFont: string
   state hovered = -1
   action hoverItem(index: number, inside: bool)
     hovered = inside ? index : -1
   action toggle(index: number)
-    change(expanded.includes(index) ? expanded.filter(i => i != index) : expanded.concat([index]))
+    if not disabledItems.includes(index) and (collapsible or not expanded.includes(index) or expanded.length > 1)
+      change(expanded.includes(index) ? expanded.filter(i => i != index) : expanded.concat([index]))
   action keys(index: number, key: string)
     if key == "ArrowDown" or key == "ArrowUp" or key == "Home" or key == "End"
       preventDefault()
-      let next = key == "Home" ? 0 : key == "End" ? titles.length - 1 : (index + (key == "ArrowDown" ? 1 : titles.length - 1)) % max(1, titles.length)
-      focus(id + "-trigger-" + next.toString())
+      let enabled = titles.map((title, item) => item).filter(item => not disabledItems.includes(item))
+      let before = enabled.filter(item => item < index)
+      let after = enabled.filter(item => item > index)
+      let next = key == "Home" ? enabled.at(0) : key == "End" ? enabled.at(enabled.length - 1) : key == "ArrowDown" ? (after.length > 0 ? after.at(0) : enabled.at(0)) : (before.length > 0 ? before.at(before.length - 1) : enabled.at(enabled.length - 1))
+      if enabled.length > 0
+        let target = match next { case some(item) => item, case none => index }
+        focus(id + "-trigger-" + target.toString())
   view
     column id=id testId=id min-width="0px"
       for title, i in titles key=title
         column border-bottom-width=(i == titles.length - 1 ? "0px" : "ui.border-width") border-bottom-style=(i == titles.length - 1 ? "solid" : "solid") border-bottom-color=(i == titles.length - 1 ? "transparent" : "ui.border")
-          button id=(id + "-trigger-" + i.toString()) testId=(id + "-trigger-" + i.toString()) class=Control aria-expanded=expanded.includes(i) aria-controls=(id + "-panel-" + i.toString()) press=toggle(i) key=keys(i) hover=hoverItem(i)
-            display="flex" align-items="flex-start" gap="ui.space-16" padding="ui.space-16" border="0" background-color="transparent" color="ui.foreground"
-            text title flex=1 min-width="0px" text-align="left" text-decoration=(hovered == i ? "underline" : "none") font-family=uiFontFamily(uiFont) data-rightui-font="body"
-            svg width="ui.space-16" height="ui.space-16" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" rotate=(expanded.includes(i) ? "180deg" : "0deg") transition=(reduced ? "none" : "rotate ui.duration-normal ui.easing") aria-hidden=true
+          button id=(id + "-trigger-" + i.toString()) testId=(id + "-trigger-" + i.toString()) class=Control disabled=disabledItems.includes(i) aria-expanded=expanded.includes(i) aria-controls=(id + "-panel-" + i.toString()) press=toggle(i) key=keys(i) hover=hoverItem(i)
+            display="flex" align-items="flex-start" gap="ui.space-16" padding="ui.space-16 0px" border="0" background-color="transparent" color="ui.foreground"
+            text title font-size="ui.text-sm" font-weight="ui.weight-medium" flex=1 min-width="0px" text-align="left" text-decoration=(hovered == i ? "underline" : "none") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            svg width="ui.space-16" height="ui.space-16" margin-top="ui.space-2" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" rotate=(expanded.includes(i) ? "180deg" : "0deg") transition=(reduced ? "none" : "rotate ui.duration-normal ui.easing") aria-hidden=true
               path d="m6 9 6 6 6-6"
           column id=(id + "-panel-" + i.toString()) testId=(expanded.includes(i) ? id + "-panel-" + i.toString() : "") role="region" aria-labelledby=(id + "-trigger-" + i.toString()) aria-hidden=(not expanded.includes(i)) inert=(not expanded.includes(i)) height=(expanded.includes(i) ? "auto" : "0px") overflow="hidden" -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing")
-            column padding="0px ui.space-16 ui.space-16" min-width="0px"
+            column padding="0px 0px ui.space-16" min-width="0px"
               match descriptions.at(i)
                 case some(description)
                   text description font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"

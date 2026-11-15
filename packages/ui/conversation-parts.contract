@@ -28,6 +28,9 @@ component MessageFooter
     row id=id testId=id gap="0px" min-width="0px" padding=(align == "end" ? "0px ui.space-12" : "0px") justify-content=(align == "end" ? "flex-end" : "flex-start") color="ui.muted-foreground"
       children
 
+fn bubbleFill(variant: string): string = variant == "primary" or variant == "default" ? "ui.primary" : variant == "ghost" ? "transparent" : variant == "outline" ? "ui.surface" : variant == "tinted" ? "color-mix(in srgb, ui.primary 12%, ui.surface)" : variant == "destructive" ? "color-mix(in srgb, ui.danger 12%, ui.surface)" : variant == "secondary" ? "ui.muted" : "color-mix(in srgb, ui.muted 65%, ui.surface)"
+fn bubbleInk(variant: string): string = variant == "primary" or variant == "default" ? "ui.primary-foreground" : variant == "destructive" ? "ui.danger" : "ui.foreground"
+
 component BubbleFrame
   props
     id: string
@@ -35,7 +38,7 @@ component BubbleFrame
     variant: string
   slot
   view
-    column id=id testId=id max-width=(variant == "ghost" ? "100%" : "80%") min-width="0px" align-self=(align == "end" ? "flex-end" : "flex-start") padding="ui.space-10 ui.space-12" border-radius="ui.ai-radius-bubble" background-color=(variant == "muted" ? "ui.muted" : "transparent")
+    column id=id testId=id position="relative" width=(variant == "ghost" ? "100%" : "auto") max-width=(variant == "ghost" ? "100%" : "80%") min-width="0px" box-sizing="border-box" align-self=(align == "end" ? "flex-end" : "flex-start") padding=(variant == "ghost" ? "0px" : "ui.space-10 ui.space-12") border-radius=(variant == "ghost" ? "0px" : "ui.ai-radius-bubble") border-width=(variant == "ghost" ? "0px" : "ui.border-width") border-style="solid" border-color=(variant == "outline" ? "ui.border" : "transparent") background-color=bubbleFill(variant) color=bubbleInk(variant)
       children
 
 component MessageAction

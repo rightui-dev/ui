@@ -1,5 +1,9 @@
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
+use AttachmentFrame, AttachmentMedia, AttachmentContent, AttachmentTitle, AttachmentDescription, AttachmentActions, AttachmentAction, AttachmentTrigger, AttachmentPreview from "./attachment-parts.contract"
+use BubbleFrame from "./conversation-parts.contract"
+use BubbleReactions from "./bubble-parts.contract"
+
 component Attachment
   props
     id: string
@@ -8,24 +12,52 @@ component Attachment
     content: string
     status: string
     remove: action
+  view
+    AttachmentOptions(id=id, name=name, metadata=metadata, content=content, status=status, remove=remove, size="default", orientation="horizontal", imageSource="", cardWidth="", previewHref="", reduced=true, copyable=false, copyValue="")
+
+component AttachmentOptions
+  props
+    id: string
+    name: string
+    metadata: string
+    content: string
+    status: string
+    remove: action
+    size: string
+    orientation: string
+    imageSource: string
+    cardWidth: string
+    previewHref: string
+    reduced: bool
+    copyable: bool
+    copyValue: string
   inject
     uiFont: string
   state preview = false
+  state copied = false
   action toggle
     preview = not preview
+  action dismiss
+    preview = false
+    focus(id + "-preview")
+  action copy
+    copyText(copyValue == "" ? content : copyValue)
+    copied = true
   view
-    column gap="ui.space-8" min-width="0px"
-      row gap="ui.space-8" padding="ui.space-8 ui.space-10" align-items="center" border-width="ui.border-width" border-style="solid" border-color=(status == "error" ? "ui.danger" : "ui.border") border-radius="ui.radius-panel" background-color="ui.surface"
-        view width="ui.space-40" height="ui.space-40" border-radius="ui.radius-lg" background-color="ui.muted" display="flex" align-items="center" justify-content="center"
-          image "symbol:document" width="ui.space-16" height="ui.space-16"
-        button id=(id + "-preview") testId=(id + "-preview") class=Control press=toggle aria-expanded=preview aria-controls=(id + "-content") flex=1 padding="0px" border="none" background-color="transparent" color="ui.foreground" text-align="left"
-          column gap="ui.space-2" min-width="0px"
-            text name font-size="ui.text-sm" font-weight="ui.weight-medium" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-            text metadata font-size="ui.text-xs" color="ui.muted-foreground" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        button testId=(id + "-remove") class=Control press=remove aria-label=("Retirer " + name) padding="ui.space-8" border="none" background-color="transparent" color="ui.muted-foreground"
-          image "symbol:close" width="ui.space-14" height="ui.space-14"
-      if preview
-        text content id=(id + "-content") testId=(id + "-content") padding="ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-panel" font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.foreground" white-space="pre-wrap" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    AttachmentFrame(id=id, status=status, size=size, orientation=orientation, cardWidth=cardWidth)
+      AttachmentMedia(name=name, source=imageSource, status=status, size=size, orientation=orientation, reduced=reduced)
+      AttachmentContent()
+        AttachmentTitle(name=name, status=status, size=size, reduced=reduced)
+        if metadata != ""
+          AttachmentDescription(text=metadata, status=status)
+      AttachmentActions(orientation=orientation)
+        if copyable and (content != "" or copyValue != "")
+          AttachmentAction(id=id + "-copy", label=(copied ? "Copied " : copyValue == "" ? "Copy " : "Copy link to ") + name, icon="copy", press=copy)
+        AttachmentAction(id=id + "-remove", label="Remove " + name, icon="remove", press=remove)
+      AttachmentTrigger(id=id + "-preview", label=(previewHref == "" ? "Preview " + name : "Open " + name + " (opens in a new tab)"), disabled=(status != "done"), expanded=preview, controls=id + "-dialog", href=(status == "done" ? previewHref : ""), press=toggle)
+    if copied
+      text ("Copied " + name) role="status" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    AttachmentPreview(id=id + "-dialog", open=preview, name=name, metadata=metadata, content=content, contentId=id + "-content", imageSource=imageSource, reduced=reduced, dismiss=dismiss)
 
 component Bubble
   props
@@ -34,24 +66,42 @@ component Bubble
     align: string
     variant: string
     collapsible: bool
+  view
+    BubbleOptions(id=id, body=body, align=align, variant=variant, collapsible=collapsible, reactions=true, reduced=true, initialCollapsed=false, previewLength=180)
+
+component BubbleOptions
+  props
+    id: string
+    body: string
+    align: string
+    variant: string
+    collapsible: bool
+    reactions: bool
+    reduced: bool
+    initialCollapsed: bool
+    previewLength: number
   inject
     uiFont: string
-  state bubbleCollapsed: bool = false
+  state bubbleCollapsed: bool = initialCollapsed
   state bubbleReacted: bool = false
+  derive shownBody = collapsible and bubbleCollapsed ? body.slice(0, previewLength) + (body.length > previewLength ? "…" : "") : body
   action toggle
     bubbleCollapsed = not bubbleCollapsed
   action react
     bubbleReacted = not bubbleReacted
   view
-    column id=id testId=id gap="ui.space-4" max-width="80%" min-width="0px" align-self=(align == "end" ? "flex-end" : "flex-start")
-      column gap="ui.space-6" padding="ui.space-8 ui.space-12" border-radius="ui.radius-panel" border-width="ui.border-width" border-style="solid" border-color=(variant == "outline" ? "ui.border" : "transparent") background-color=((variant == "primary" or variant == "default") ? "ui.primary" : variant == "ghost" or variant == "outline" ? "transparent" : "ui.muted") color=((variant == "primary" or variant == "default") ? "ui.primary-foreground" : variant == "destructive" ? "ui.danger" : "ui.foreground")
-        if not bubbleCollapsed
-          text body testId=(id + "-body") font-size="ui.text-sm" line-height="ui.leading-code" white-space="pre-wrap" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    BubbleFrame(id=id, align=align, variant=variant)
+      column gap="ui.space-6" min-width="0px"
+        text shownBody id=(id + "-body") testId=(id + "-body") font-size="ui.text-sm" line-height="ui.leading-code" white-space="pre-wrap" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if collapsible
-          button testId=(id + "-collapse") class=Control press=toggle aria-expanded=(not bubbleCollapsed) padding="0px" min-height="ui.space-24" border="none" background-color="transparent" color="inherit"
-            text (bubbleCollapsed ? "Afficher le message" : "Collapse") font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      button testId=(id + "-reaction") class=Control press=react aria-pressed=bubbleReacted aria-label="Helpful reaction" align-self="flex-end" min-height="ui.space-24" padding="ui.space-2 ui.space-8" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-full" background-color="ui.muted" color="ui.foreground"
-        text (bubbleReacted ? "Utile · 1" : "Utile") font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          button id=(id + "-collapse") testId=(id + "-collapse") class=Control press=toggle aria-expanded=(not bubbleCollapsed) aria-controls=(id + "-body") display="flex" align-items="center" gap="ui.space-4" padding="0px" min-height="ui.space-24" border="none" background-color="transparent" color="inherit" align-self="flex-start"
+            text (bubbleCollapsed ? "Show more" : "Show less") font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" rotate=(bubbleCollapsed ? "0deg" : "180deg") transition=(reduced ? "none" : "rotate ui.duration-fast ui.easing") aria-hidden=true
+              path d="m6 9 6 6 6-6"
+      if reactions
+        BubbleReactions(id=id + "-reactions", label="Message reactions", side="bottom", align="end", interactive=true)
+          button id=(id + "-reaction") testId=(id + "-reaction") class=Control press=react aria-pressed=bubbleReacted aria-label="Helpful reaction" min-height="ui.space-24" padding="ui.space-2 ui.space-8" border="none" border-radius="ui.radius-full" background-color="transparent" color="ui.foreground"
+            text (bubbleReacted ? "Helpful · 1" : "Helpful") font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component Marker
   props

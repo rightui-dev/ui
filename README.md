@@ -1,8 +1,11 @@
 # rightui
 
+This checkout prepares the local **0.3.0-beta.6** candidate. Install its archive for local review; npm commands for this version apply only after a separately authorized publication.
+
+
 [npm package](https://www.npmjs.com/package/@rightui/ui) · [Documentation](https://rightui.dev/docs/installation)
 
-Composable Exact Contract components and Tamber themes, inspired by shadcn/ui. The installable package is **@rightui/ui 0.3.0-beta.4**. Exact compiles the Contract UI; TypeScript or Rust supplies data logic.
+Composable Exact Contract components and Tamber themes, inspired by shadcn/ui. The installable package is **@rightui/ui 0.3.0-beta.6**. Exact compiles the Contract UI; TypeScript or Rust supplies data logic.
 
 Official public repositories: [UI sources](https://github.com/rightui-dev/ui) and [website](https://github.com/rightui-dev/website).
 
@@ -11,12 +14,12 @@ Official public repositories: [UI sources](https://github.com/rightui-dev/ui) an
 Use **Bun 1.4.2** for Exact. In an existing Exact app:
 
 ```sh
-bun add --exact @rightui/ui@0.3.0-beta.4
+bun add --exact @rightui/ui@0.3.0-beta.6
 ```
 
 Follow the [installation guide](docs/INSTALLATION.md) for app creation, registration of Geist and Newsreader (regular and italic), and the root `uiFont` provider. Set `uiFont = "theme"` in the root's `provide` block to use your configured body family. The public npm package does not require GitHub access. The private root package `@rightui/registry` is development infrastructure, not the consumer package. See [distribution](docs/DISTRIBUTION.md).
 
-For a source/offline build, run `bun run native:setup` and `bun run package:ui`; install `dist/rightui-ui-0.3.0-beta.4.tgz` in the consumer app.
+For a source/offline build, run `bun run native:setup` and `bun run package:ui`; install `dist/rightui-ui-0.3.0-beta.6.tgz` in the consumer app.
 
 This delivery installs Contract sources and theme tokens as a package.
 

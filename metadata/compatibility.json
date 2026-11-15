@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0-beta.4",
+  "version": "0.3.0-beta.6",
   "asOf": "2026-11-15",
   "exactRevision": "53426cf02bf986a5e781abc4f953d79989c6dc05",
   "platforms": [
@@ -26,19 +26,19 @@
   ],
   "statuses": {
     "checked": {
-      "label": "✅ Partial checks",
+      "label": "\u2705 Partial checks",
       "description": "Targeted checks completed. Coverage varies by component."
     },
     "built": {
-      "label": "✅ Built only",
+      "label": "\u2705 Built only",
       "description": "Compiled successfully. Interactions have not been verified."
     },
     "blocked": {
-      "label": "⚠️ Partial checks",
+      "label": "\u26a0\ufe0f Partial checks",
       "description": "Validation incomplete for the current release."
     },
     "unsupported": {
-      "label": "❌ Not supported",
+      "label": "\u274c Not supported",
       "description": "Outside rightui support. The project targets web, iOS and macOS."
     }
   },
@@ -244,6 +244,16 @@
       "id": "feedback-beta4",
       "description": "Targeted archive tests cover toast stacking, actions, loading persistence and completion, Hover Card and four Tooltip sides. Browser geometry and pointer motion were checked. Mac interactions were checked for Toast, Tooltip and Hover Card. iOS compilation and archive validation completed; device interactions were not rechecked for this release.",
       "url": "https://github.com/rightui-dev/ui/blob/main/docs/FEEDBACK-VALIDATION.md"
+    },
+    {
+      "id": "beta5-native-pending",
+      "description": "No release-specific iOS or macOS build or interaction checks were run for the current nine-family batch or shared area-gallery updates. Earlier native evidence remains historical.",
+      "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    },
+    {
+      "id": "beta5-web",
+      "description": "The local beta.5 candidate passed 59 browser tests: 45 historical scenarios, three component-pager checks and eleven targeted tests for the nine updated families. Coverage includes disabled/keyboard Accordion, mixed/group Checkbox, Card validation and cover rendering, Attachment previews/retry/removal, Bubble actions/collapse, Breadcrumb links/menus/mobile Drawer, Badge languages/links, and Chart values, visible-series totals, formats and RTL. Card and AspectRatio test screenshots were inspected. This is partial web coverage; no new native validation is claimed.",
+      "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
     }
   ],
   "overrides": [
@@ -402,8 +412,7 @@
       "platform": "web",
       "status": "checked",
       "evidence": [
-        "web-chart-area-interactive",
-        "web-run"
+        "beta5-web"
       ]
     },
     {
@@ -424,15 +433,6 @@
       "evidence": [
         "native-reasoning",
         "native-run"
-      ]
-    },
-    {
-      "kind": "component",
-      "slug": "accordion",
-      "platform": "macos",
-      "status": "checked",
-      "evidence": [
-        "native-accordion-theme"
       ]
     },
     {
@@ -460,15 +460,6 @@
       "status": "checked",
       "evidence": [
         "web-manual-inline-citation"
-      ]
-    },
-    {
-      "kind": "component",
-      "slug": "accordion",
-      "platform": "web",
-      "status": "checked",
-      "evidence": [
-        "web-accordion-spacing"
       ]
     },
     {
@@ -706,6 +697,429 @@
       "status": "built",
       "evidence": [
         "feedback-beta4"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "accordion",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "beta5-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "accordion",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "accordion",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "checkbox",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "beta5-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "checkbox",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "checkbox",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "aspect-ratio",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "beta5-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "aspect-ratio",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "aspect-ratio",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "card",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "beta5-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "card",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "card",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "attachment",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "beta5-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "attachment",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "attachment",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "bubble",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "beta5-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "bubble",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "bubble",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "badge",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "beta5-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "badge",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "badge",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "breadcrumb",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "beta5-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "breadcrumb",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "breadcrumb",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "chart",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "beta5-web"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "chart",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "chart",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-interactive",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-interactive",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-default",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-default",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-linear",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-linear",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-step",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-step",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-legend",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-legend",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-stacked",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-stacked",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-stacked-expand",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-stacked-expand",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-icons",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-icons",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-gradient",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-gradient",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-axes",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
+      ]
+    },
+    {
+      "kind": "chart",
+      "slug": "chart-area-axes",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "beta5-native-pending"
       ]
     }
   ]

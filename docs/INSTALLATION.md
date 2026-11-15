@@ -1,14 +1,17 @@
 # Install rightui
 
+This checkout prepares the local **0.3.0-beta.6** candidate. Install its archive for local review; npm commands for this version apply only after a separately authorized publication.
+
+
 ## Existing Exact app
 
 Use **Bun exactly 1.4.2** for Exact compilation. Install the public beta from npm:
 
 ```sh
-bun add --exact @rightui/ui@0.3.0-beta.4
+bun add --exact @rightui/ui@0.3.0-beta.6
 ```
 
-Equivalent package-manager commands are `npm install --save-exact @rightui/ui@0.3.0-beta.4`, `pnpm add --save-exact @rightui/ui@0.3.0-beta.4` and `yarn add --exact @rightui/ui@0.3.0-beta.4`. Exact still requires Bun 1.4.2. No GitHub access is needed to install the public package.
+Equivalent package-manager commands are `npm install --save-exact @rightui/ui@0.3.0-beta.6`, `pnpm add --save-exact @rightui/ui@0.3.0-beta.6` and `yarn add --exact @rightui/ui@0.3.0-beta.6`. Exact still requires Bun 1.4.2. No GitHub access is needed to install the public package.
 
 ## 1. Create a new Exact app
 
@@ -22,7 +25,7 @@ git -C .tooling/exact checkout --detach 53426cf02bf986a5e781abc4f953d79989c6dc05
 (cd .tooling/exact && bun install --frozen-lockfile)
 bun .tooling/exact/scripts/exact.mjs new my-app
 cd my-app
-bun add --exact @rightui/ui@0.3.0-beta.4
+bun add --exact @rightui/ui@0.3.0-beta.6
 ```
 
 Keep the generated Exact app configuration. The package exports `index.contract` and supplies `ui.tamber`; Exact resolves these during compilation. The private repository root `@rightui/registry` is development infrastructure, not the consumer package. TypeScript or Rust supplies data logic; both use the same Contract UI.
@@ -101,21 +104,21 @@ rightui is in beta. No stable release is available. See the [versioning policy](
 
 ## Offline and manual installation
 
-The versioned archive remains available for offline distribution. From the UI source checkout, `bun run native:setup` and `bun run package:ui` produce `dist/rightui-ui-0.3.0-beta.4.tgz` and its SHA-256 sidecar. The public GitHub release includes the archive and checksum; npm is the package registry.
+The versioned archive remains available for offline distribution. From the UI source checkout, `bun run native:setup` and `bun run package:ui` produce `dist/rightui-ui-0.3.0-beta.6.tgz` and its SHA-256 sidecar. The public GitHub release includes the archive and checksum; npm is the package registry.
 
 For the public npm archive, run from your app:
 
 ```sh
 mkdir -p vendor/rightui
-npm pack @rightui/ui@0.3.0-beta.4 --pack-destination vendor/rightui
-bun add ./vendor/rightui/rightui-ui-0.3.0-beta.4.tgz
+npm pack @rightui/ui@0.3.0-beta.6 --pack-destination vendor/rightui
+bun add ./vendor/rightui/rightui-ui-0.3.0-beta.6.tgz
 ```
 
 For editable local sources, extract that archive and install the entire package:
 
 ```sh
 mkdir -p vendor/rightui-ui
-tar -xzf ./vendor/rightui/rightui-ui-0.3.0-beta.4.tgz -C vendor/rightui-ui --strip-components=1
+tar -xzf ./vendor/rightui/rightui-ui-0.3.0-beta.6.tgz -C vendor/rightui-ui --strip-components=1
 bun add file:./vendor/rightui-ui
 ```
 
