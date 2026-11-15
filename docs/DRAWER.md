@@ -145,7 +145,7 @@ A parent that immediately sets `open=false`, including a custom content button, 
 
 Attached panels reach the bottom window edge. In the automatic scrolling mode, the bottom safe-area inset is inside the scrollable content, so the scroll viewport reaches the window edge without an opaque strip clipping it. Composed fixed footers keep their bottom safe-area space outside the body scroller. Detached panels keep their outside gap clear of the home indicator. Do not add the same bottom safe-area inset again in a footer. At full height, the header accounts for the top safe area.
 
-`SheetContent(side="bottom")` shares the standard drawer surface and 30%/90% stops while retaining its Sheet body/footer composition and optional close button. The other sides retain their side-specific layout.
+`SheetContent` is a fixed panel with simple slide and backdrop-fade animations on every edge, including bottom. It has no handle, drag gesture or snap points. Use Drawer for interactive resizing, snap points, floating edges and spring motion.
 
 Use unique IDs for mounted overlays. Do not make a logical ancestor inert: transported content keeps that ancestry. An iframe has its own window, so a drawer opened inside it covers that frame.
 

@@ -4,6 +4,11 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.3.0-beta.3] - 2026-11-15
+
+- Keep SheetContent a simple edge panel on all four sides. The bottom variant no longer uses Drawer dragging, snap points, spring bounce or a handle; Drawer keeps those interactions.
+- Give every Sheet side matching directional entrance and exit animations with a coordinated backdrop fade and reduced-motion support. Existing SheetContent props and focus callbacks remain unchanged.
+
 ## [0.3.0-beta.2] - 2026-11-15
 
 - First published 0.3 beta; includes the window overlays and SafeArea from the local beta.1 candidate below. Breaking: migrate SheetContent to controlled `open`, ordered `focusIds` and a `dismiss` callback, and load assets/sheet.css on web. See docs/SHEET.md.

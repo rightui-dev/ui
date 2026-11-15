@@ -1,6 +1,6 @@
 # Compatibility
 
-125 catalog entries. Evidence recorded on 2026-11-15 against rightui 0.3.0-beta.2 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
+125 catalog entries. Evidence recorded on 2026-11-15 against rightui 0.3.0-beta.3 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
 
 This records validation evidence, not full compatibility certification. Partial checks cover specific examples or interactions, not every variant. Built only means compilation succeeded, without a targeted interaction result.
 
@@ -69,7 +69,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 | Scroll Area | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Select | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Separator | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
-| Sheet | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
+| Sheet | ✅ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Sidebar | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Skeleton | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Slider | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
@@ -189,8 +189,8 @@ iOS validation is incomplete. Windows and Android are not supported.
 - **web-0-2-release:** The 0.2 release candidate passed 34 browser interaction tests, including theme choices, code-copy feedback reset after three seconds, repeated mobile dashboard/sidebar opening, package-manager commands and shared component demonstrations. The production web build includes all catalog entries. This is targeted coverage, not full variant certification. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 - **web-switch-0-2:** At 390px, pointer activation changed Switch from on to off, Space changed it back to on, and a pointer press on the disabled Switch left the shared state unchanged. The documentation article retained 24px side insets without document overflow. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 - **mac-site-0-2:** The same Contract website was compiled for macOS and manually checked through Home, Blocks and Dashboard, repeated Back/Forward navigation, disabled history endpoints, page titles, immersive blocks and the globe opening the equivalent website URL. The delivered Mac archive was signature-checked and its downloaded SHA-256 matched the approved artifact. This does not certify every native component. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
-- **sheet-modal-web:** SheetContent passed six browser interaction tests and targeted desktop/mobile viewport, focus, background interaction and scroll-position checks. Four edges and optional close controls were covered. This is targeted web validation, not full platform certification. [Source](https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md)
-- **sheet-modal-native-pending:** The authored window-level Sheet composition has targeted simulator coverage; full native accessibility and device validation remain incomplete. [Source](https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md)
+- **sheet-modal-web:** Eight isolated package tests cover fields, Escape, optional close controls, four edges, initially open content and reopening during exit. Real pointer checks verified all four entry/exit translations and synchronized backdrop fades; mobile reduced-motion checks observed no intermediate movement. [Source](https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md)
+- **sheet-modal-native-pending:** iOS simulator interactions and recording checks cover all four authored window-level Sheet edges, absent handles, close controls and entry/exit motion. Native accessibility and physical-device performance validation remain incomplete. [Source](https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md)
 - **avatar-web:** Five isolated web checks cover failed-image recovery after source changes, legacy fallback, clamped counts, account-menu selection and Escape, keyboard navigation and existing text dropdown behavior. [Source](https://github.com/rightui-dev/ui/blob/main/tools/fixtures/avatar/app.test.contract)
 - **avatar-first-pointer-web:** Beta.5 follow-up: with idle activation held, real first-pointer clicks at 1440px and 390px activated the built app, opened the Avatar menu and focused Profile. This targeted web check does not establish native behavior. [Source](https://github.com/rightui-dev/ui/blob/main/tools/check-avatar-first-click.browser.py)
 - **avatar-native-pending:** The updated Avatar compositions have not received targeted native validation. [Source](https://github.com/rightui-dev/ui/blob/main/docs/AVATAR.md)

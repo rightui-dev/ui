@@ -1,22 +1,53 @@
 font "Geist"
   100 900 = "assets/fonts/Geist.ttf"
 use Demo from "./sheet-demo.contract"
+use SheetContent, SheetBody, SheetFooter from "@rightui/ui/sheet"
 shape Viewport
   width: number
   height: number
   prefersReducedMotion: bool
+routes nav
+  main "/"
+  initial "/initial"
 component App
   resource viewport = exactViewport() as shape Viewport
   state backgroundPresses = 0
+  state initialOpen = true
+  state focused = ""
   action backgroundPress
     backgroundPresses = backgroundPresses + 1
+  action openInitial
+    initialOpen = true
+  action closeInitial
+    initialOpen = false
+    focus("initial-open")
+  action fixtureKeys(k: string)
+    if top(nav).name == "initial" and k == "F8"
+      preventDefault()
+      stopPropagation()
+      if initialOpen
+        closeInitial()
+      else
+        openInitial()
+  action rememberFocus(e: FocusEvent)
+    focused = e.target
   provide
     uiFont = "sans"
   view
-    column min-height="200vh" gap=24 padding=24 background-color="ui.background" color="ui.foreground"
+    column min-height="200vh" gap=24 padding=24 background-color="ui.background" color="ui.foreground" keycapture=fixtureKeys focusin=rememberFocus
       text "Sheet viewport regression"
       button id="outside" testId="outside" press=backgroundPress
         text "Background control"
       text backgroundPresses.toString() testId="outside-counter"
       column position="relative" overflow="hidden" translate="0px 0px" border-color="ui.border" border-width="ui.border-width" border-style="solid" padding=24 max-width=560 height=400
-        Demo(width=viewport.width, reduced=viewport.prefersReducedMotion)
+        if top(nav).name == "initial"
+          button id="initial-open" testId="initial-open" press=openInitial
+            text "Open initially visible sheet"
+          SheetContent(id="initial-sheet", open=initialOpen, focusIds=["initial-close"], dismiss=closeInitial, title="Initially open", description="Controlled lifecycle regression", side="bottom", reduced=viewport.prefersReducedMotion, showCloseButton=true)
+            SheetBody()
+              text "This panel starts open and can reverse a closing transition."
+            SheetFooter()
+              button id="initial-close" testId="initial-close" press=closeInitial
+                text "Close"
+        else
+          Demo(width=viewport.width, reduced=viewport.prefersReducedMotion)

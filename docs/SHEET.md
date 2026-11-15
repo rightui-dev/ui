@@ -1,18 +1,18 @@
 # Sheet
 
-`SheetContent` renders an authored RightUI surface above the whole application window. Its content is transported out of the surrounding layout, including clipped or transformed demo containers. It does not request an iOS system sheet or a macOS sheet. Left/right panels use 75% of the window, capped at 24rem. The top panel uses the full width and is capped at half the window height. The bottom panel shares `DrawerSurface` with Drawer: it opens at 30% of the window height and can be dragged between 30% and 90%. It is not capped at 50%. The backdrop covers the window in every orientation.
+`SheetContent` renders an authored RightUI surface above the whole application window. Its content is transported out of the surrounding layout, including clipped or transformed demo containers. It does not request an iOS system sheet or a macOS sheet. Left/right panels use 75% of the window, capped at 24rem. Top/bottom panels use the full width and are capped at half the window height. The backdrop covers the window in every orientation.
 
-The parent controls visibility with `open` and `dismiss`. Keep form state in that parent so values survive closing and reopening. `SheetBody` scrolls between the header and `SheetFooter`; the controls account for safe-area insets. `showCloseButton=false` hides the corner control, so keep a visible footer close action. `reduced=true` disables entrance and snap motion.
+The parent controls visibility with `open` and `dismiss`. Keep form state in that parent so values survive closing and reopening. `SheetBody` scrolls between the header and `SheetFooter`; the controls account for safe-area insets. `showCloseButton=false` hides the corner control, so keep a visible footer close action. `reduced=true` disables entrance and exit motion.
 
 Import these components from `@rightui/ui/sheet`.
 
-## Bottom sheet
+## Motion and Drawer
 
-Set `side="bottom"` to use the shared RightUI drawer surface, retaining the same `open`, `focusIds` and `dismiss` API. Drag its handle to resize, release to settle at 30% or 90%, or pull down to dismiss. Each opening starts at 30%. The handle remains available when `showCloseButton=false`.
+Set `side` to `"top"`, `"right"`, `"bottom"` or `"left"`. Each panel slides from its edge on opening and returns to that edge on closing. The backdrop fades at the same time. Both directions use `ui.duration-slow` and `ui.easing`; changing those theme tokens changes all four orientations together. The layer remains present until the exit finishes, including when a parent sets `open=false` directly. Reopening during that exit reverses the motion from its current position.
 
-ArrowUp/ArrowDown move to the next/previous stop; Home/End select the smallest/largest stop. Enter, Space or pressing the handle cycles through the stops. Escape, the backdrop and a visible close action dismiss. The snap motion uses the `ui.easing-drawer` spring token, unless reduced motion is enabled. This is an authored RightUI panel, not a system sheet card.
+Sheet is a fixed panel: it has no resize handle, drag gesture, snap points or spring bounce. Escape, the backdrop and a visible close action dismiss it. Keep `SheetContent` mounted while changing `open` so its exit can finish; removing its parent immediately also removes its surface.
 
-Use [DrawerAdvanced](DRAWER.md) when you need custom snap points. SheetContent keeps the standard 30%/90% behavior for its bottom side.
+Use [Drawer](DRAWER.md) for a draggable bottom surface, snap points, a handle, floating edges or scroll-to-full-screen behavior. The bottom orientation of `SheetContent` now follows the same simple behavior as its other orientations; its existing props remain unchanged.
 
 ## Migration from the dialog lifecycle
 
@@ -20,9 +20,9 @@ This is a breaking change to `SheetContent`. Replace `showModal(id)` and `close(
 
 - `open`: whether this sheet is visible.
 - `dismiss`: closes the state and restores focus to the trigger.
-- `focusIds`: the enabled, focusable content controls in their intended keyboard order. Do not include the optional corner close button or the bottom drag handle; SheetContent adds those automatically. Update the list when controls become disabled or are removed.
+- `focusIds`: the enabled, focusable content controls in their intended keyboard order. Do not include the optional corner close button; SheetContent adds it automatically. Update the list when controls become disabled or are removed.
 
-SheetContent handles Escape, backdrop presses and Tab/Shift+Tab containment. It initially focuses its panel without scrolling it; a bottom sheet initially focuses its resize handle. The parent remains responsible for choosing the trigger that receives focus on dismissal, especially when several controls open the same sheet. Do not make a logical ancestor of the sheet inert: its transported content retains that ancestry.
+SheetContent handles Escape, backdrop presses and Tab/Shift+Tab containment. It initially focuses its panel without scrolling it. The parent remains responsible for choosing the trigger that receives focus on dismissal, especially when several controls open the same sheet. Do not make a logical ancestor of the sheet inert: its transported content retains that ancestry.
 
 ```contract
 use Button from "@rightui/ui"
@@ -68,4 +68,6 @@ The scoped stylesheet supplies web viewport and scrolling support. Load it befor
 
 The older controlled `Sheet(open=..., focusIds=..., dismiss=...)` remains available. `SheetContent` adds a separate body/footer composition and optional corner close control.
 
-The new shared overlay composition is pending integration validation on web, iOS and macOS. Earlier native-dialog checks do not validate this presentation. The package fixture exercises a clipped, transformed parent, reopening with persistent field values, Escape, optional close control and the four orientations. Browser geometry, real-pointer animation and native interaction checks must be reported separately from compilation.
+Eight isolated package browser tests passed for persistent fields, Escape, optional close controls, four orientations, initially open content and reopening during an interrupted exit. Real pointer checks measured opening and closing translation plus backdrop opacity on all four sides; mobile reduced-motion checks observed no intermediate motion. The layer stayed within the window without focus-induced internal scrolling.
+
+iOS simulator interaction and recording checks covered all four edges, full-window presentation, absent handles, close controls and animated entry/exit. Native accessibility, physical-device frame rate and exhaustive platform coverage remain incomplete. These checks do not certify every native interaction; compilation and delivery are recorded separately in the website validation report.

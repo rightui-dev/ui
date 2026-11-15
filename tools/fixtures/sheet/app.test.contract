@@ -45,6 +45,7 @@ test "top sheet opens and closes on mobile"
   tap "sheet-open-top"
   clock settle
   expect tree has "sheet-top-cancel"
+  expect tree missing "sheet-top-handle"
   tap "sheet-top-cancel"
   clock settle
   tap "outside"
@@ -57,6 +58,7 @@ test "right sheet opens and closes on mobile"
   tap "sheet-open-right"
   clock settle
   expect tree has "sheet-right-cancel"
+  expect tree missing "sheet-right-handle"
   tap "sheet-right-cancel"
   clock settle
   tap "outside"
@@ -69,6 +71,7 @@ test "bottom sheet opens and closes on mobile"
   tap "sheet-open-bottom"
   clock settle
   expect tree has "sheet-bottom-cancel"
+  expect tree missing "sheet-bottom-handle"
   tap "sheet-bottom-cancel"
   clock settle
   tap "outside"
@@ -81,8 +84,48 @@ test "left sheet opens and closes on mobile"
   tap "sheet-open-left"
   clock settle
   expect tree has "sheet-left-cancel"
+  expect tree missing "sheet-left-handle"
   tap "sheet-left-cancel"
   clock settle
   tap "outside"
   expect text "outside-counter" == "1"
+  expect no failures
+
+test "an initially open sheet closes through its controlled parent"
+  at "/initial"
+  size 390x844
+  clock data
+  clock settle
+  expect tree has "initial-sheet-panel"
+  expect tree missing "initial-sheet-handle"
+  expect state focused == "initial-sheet-panel"
+  tap "initial-close"
+  clock settle
+  expect tree missing "initial-sheet-layer"
+  expect state focused == "initial-open"
+  tap "initial-open"
+  clock settle
+  expect tree has "initial-sheet-panel"
+  type "initial-close" key "Escape"
+  clock settle
+  expect tree missing "initial-sheet-layer"
+  expect no failures
+
+test "reopening during a controlled exit keeps the sheet interactive"
+  at "/initial"
+  size 390x844
+  clock data
+  clock settle
+  type "initial-close" key "F8"
+  clock +80 real
+  expect state initialOpen == false
+  expect tree has "initial-sheet-layer"
+  type "initial-open" key "F8"
+  clock settle
+  expect state initialOpen == true
+  expect tree has "initial-sheet-panel"
+  expect state focused == "initial-sheet-panel"
+  tap "initial-close"
+  clock settle
+  expect tree missing "initial-sheet-layer"
   expect no failures

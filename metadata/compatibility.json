@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0-beta.2",
+  "version": "0.3.0-beta.3",
   "asOf": "2026-11-15",
   "exactRevision": "53426cf02bf986a5e781abc4f953d79989c6dc05",
   "platforms": [
@@ -197,12 +197,12 @@
     },
     {
       "id": "sheet-modal-web",
-      "description": "SheetContent passed six browser interaction tests and targeted desktop/mobile viewport, focus, background interaction and scroll-position checks. Four edges and optional close controls were covered. This is targeted web validation, not full platform certification.",
+      "description": "Eight isolated package tests cover fields, Escape, optional close controls, four edges, initially open content and reopening during exit. Real pointer checks verified all four entry/exit translations and synchronized backdrop fades; mobile reduced-motion checks observed no intermediate movement.",
       "url": "https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md"
     },
     {
       "id": "sheet-modal-native-pending",
-      "description": "The authored window-level Sheet composition has targeted simulator coverage; full native accessibility and device validation remain incomplete.",
+      "description": "iOS simulator interactions and recording checks cover all four authored window-level Sheet edges, absent handles, close controls and entry/exit motion. Native accessibility and physical-device performance validation remain incomplete.",
       "url": "https://github.com/rightui-dev/ui/blob/main/docs/SHEET.md"
     },
     {
@@ -518,14 +518,14 @@
       "platform": "web",
       "status": "checked",
       "evidence": [
-        "window-overlays-web"
+        "sheet-modal-web"
       ]
     },
     {
       "kind": "component",
       "slug": "sheet",
       "platform": "ios",
-      "status": "blocked",
+      "status": "checked",
       "evidence": [
         "sheet-modal-native-pending"
       ]
