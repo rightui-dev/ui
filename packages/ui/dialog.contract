@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use OverlayLayer from "./overlay-layer.contract"
 use uiFontFamily from "./typography-context.contract"
 use Button from "./button.contract"
@@ -13,6 +14,7 @@ component DialogFrame
     focusIds: string[]
     dismiss: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   slot
   state focused = ""
@@ -52,11 +54,11 @@ component DialogFrame
               background-color="ui.surface" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-panel" padding="ui.space-24" gap="ui.space-16" box-shadow="ui.shadow-panel"
               animation=(reduced ? "none" : "uiModalZoomIn ui.duration-normal ui.easing both")
               -exact-exit-animation=(reduced ? "none" : "uiModalZoomOut ui.duration-normal ui.easing both")
-              button id=(id + "-close") testId=(id + "-close") class=Control autofocus=true press=dismiss aria-label="Close" position="absolute" top="ui.space-16" right="ui.space-16" width="ui.space-16" height="ui.space-16" min-height="ui.space-16" padding="0px" border="none" background-color="transparent" color="ui.foreground" opacity="ui.opacity-soft"
+              button id=(id + "-close") testId=(id + "-close") class=Control font-weight=uiWeights.medium autofocus=true press=dismiss aria-label="Close" position="absolute" top="ui.space-16" right="ui.space-16" width="ui.space-16" height="ui.space-16" min-height="ui.space-16" padding="0px" border="none" background-color="transparent" color="ui.foreground" opacity="ui.opacity-soft"
                 svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
                   path d="m6 6 12 12M6 18 18 6"
               column gap="ui.space-8" padding-right="ui.space-24" flex-shrink=0
-                text title hyphens="auto" id=(id + "-title") role="heading" aria-level=2 font-size="ui.text-lg" font-weight="ui.weight-semibold" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                text title hyphens="auto" id=(id + "-title") role="heading" aria-level=2 font-size="ui.text-lg" font-weight=uiWeights.semibold color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 text description hyphens="auto" id=(id + "-description") font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               children
 

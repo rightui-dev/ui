@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 use CalendarAdvanced, CalendarDate, advancedAllowed, advancedISODate, advancedRangeValid, advancedISOValid from "./calendar-advanced.contract"
@@ -29,6 +30,7 @@ component DateRangePicker
     presets: DateRangePreset[]
     change: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state opened = false
   state openEpoch = 0
@@ -90,7 +92,7 @@ component DateRangePicker
   view
     column min-width="0px" align-items="flex-start"
       button id=id testId=id class=Control press=toggle key=triggerKeys disabled=disabled aria-haspopup="dialog" aria-expanded=opened aria-controls=(id + "-popup")
-        display="flex" align-items="center" gap="ui.space-8" padding="ui.space-8 ui.space-12" width="18.75rem" max-width="100%" text-align="left" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color=(low == "" ? "ui.muted-foreground" : "ui.foreground") font-weight="ui.weight-regular"
+        display="flex" align-items="center" gap="ui.space-8" padding="ui.space-8 ui.space-12" width="18.75rem" max-width="100%" text-align="left" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color=(low == "" ? "ui.muted-foreground" : "ui.foreground") font-weight=uiWeights.regular
         svg width="ui.space-16" height="ui.space-16" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
           rect x=3 y=5 width=18 height=16 rx=2
           path d="M16 3v4M8 3v4M3 11h18"
@@ -103,7 +105,7 @@ component DateRangePicker
             if presets.length > 0
               row role="group" aria-label="Presets" gap="ui.space-4" flex-wrap="wrap" padding="ui.space-8" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border"
                 for value, i in presets key=value.label
-                  button id=(id + "-preset-" + i.toString()) testId=(id + "-preset-" + i.toString()) class=Control press=preset(value) disabled=(disabled or not advancedRangeValid(value.low, value.high, minimum, maximum, disabledDates, disabledWeekends)) aria-pressed=(low == value.low and high == value.high) padding="ui.space-4 ui.space-8" min-height="ui.space-32" border="none" background-color="transparent" color="ui.foreground"
+                  button id=(id + "-preset-" + i.toString()) testId=(id + "-preset-" + i.toString()) class=Control font-weight=uiWeights.medium press=preset(value) disabled=(disabled or not advancedRangeValid(value.low, value.high, minimum, maximum, disabledDates, disabledWeekends)) aria-pressed=(low == value.low and high == value.high) padding="ui.space-4 ui.space-8" min-height="ui.space-32" border="none" background-color="transparent" color="ui.foreground"
                     text value.label font-family=uiFontFamily(uiFont) data-rightui-font="body"
             row gap="ui.space-16" min-width="0px"
               CalendarAdvanced(id=id + "-first", low=low, high=high, selected=[], mode="range", navigation=(narrow or nextYear > 9999 ? "both" : "previous"), year=year, month=month, minimum=minimum, maximum=maximum, disabledDates=disabledDates, disabledWeekends=disabledWeekends, disabled=disabled, changeMonth=firstMonth, change=selected)

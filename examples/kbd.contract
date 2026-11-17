@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Kbd, ButtonContent from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state commandStatus = ""
@@ -13,12 +15,12 @@ component Demo
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       Kbd(label="⌘")
-      text "Shortcut group" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Shortcut group" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       row gap="ui.space-4"
         Kbd(label="⌘")
         Kbd(label="Shift")
         Kbd(label="P")
-      text "Button shortcut" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Button shortcut" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       ButtonContent(id="variation-kbd-button", label="Open command", variant="outline", size="default", disabled=false, press=command)
         text "Command" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         Kbd(label="⌘K")

@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, ContentMessage, MessageScrollerViewport, MessageScrollerTranscriptStart, CardFrameOptions, CardHeaderOptions, CardTitle, CardDescription, CardAction, Button, ButtonControl, MessageIcon, InputGroupFrame, InputGroupAddon, Spinner from "@rightui/ui"
 
 fn nextPrompt(step: number): string = step == 0 ? "How do I keep a streamed reply in view?" : step == 1 ? "What if I scroll up to read an earlier reply?" : step == 2 ? "Can I stop the reply without losing my place?" : "How do I load older messages?"
@@ -8,6 +9,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
     rightuiDemoTime: number
     rightuiRunDemo: action
@@ -79,7 +81,7 @@ component Demo
           column testId="scroller-empty" height="21rem" box-sizing="border-box" padding="ui.space-24" gap="ui.space-12" align-items="center" justify-content="center" text-align="center"
             view display="flex" align-items="center" justify-content="center" width="ui.space-40" height="ui.space-40" background-color="ui.muted" border-radius="ui.radius-control"
               MessageIcon(name="message", filled=false)
-            text "What are we building?" font-size="ui.text-base" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text "What are we building?" font-size="ui.text-base" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
             text "Press send to start a conversation, then scroll while the reply arrives." font-size="ui.text-sm" line-height="ui.leading-relaxed" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         else
           MessageScrollerViewport(id="content-scroller", messages=thread, height="21rem", busy=busy, reduced=reduced, latest=latest)

@@ -11,12 +11,14 @@ task to the first component in your app's root Contract file, merging the provid
 with your existing `provide` block:
 
 ```contract
+use defaultFontWeights from "@rightui/ui"
 component App
   state copiedId = ""
   state copiedText = ""
   state copyVersion = 0
   provide
     uiFont = "theme"
+    uiWeights = defaultFontWeights()
     uiCopiedId = copiedId
     uiCopiedText = copiedText
     uiCopyCode = copyCode

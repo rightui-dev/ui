@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 fn buttonFill(variant: string, hovered: bool): string = ((variant == "primary" or variant == "default") ? (hovered ? "ui.primary-hover" : "ui.primary") : variant == "destructive" ? (hovered ? "ui.destructive-hover" : "ui.destructive") : variant == "secondary" ? (hovered ? "ui.secondary-hover" : "ui.muted") : variant == "outline" ? (hovered ? "ui.outline-hover" : "ui.outline") : variant == "link" ? "transparent" : hovered ? "ui.ghost-hover" : "transparent")
@@ -42,8 +43,10 @@ component ButtonFrame
   action tipKeys(k: string)
     if k == "Escape" and describedBy != ""
       hidePopover(describedBy)
+  inject
+    uiWeights: FontWeights
   view
-    button id=id testId=id class=Control press=press disabled=disabled hover=hoverChanged focus=focusTip blur=blurTip key=tipKeys aria-label=label aria-pressed=(match pressed { case some(value) => value ? "true" : "false", case none => "undefined" }) aria-describedby=describedBy
+    button id=id testId=id class=Control font-weight=uiWeights.medium press=press disabled=disabled hover=hoverChanged focus=focusTip blur=blurTip key=tipKeys aria-label=label aria-pressed=(match pressed { case some(value) => value ? "true" : "false", case none => "undefined" }) aria-describedby=describedBy
       display="flex" flex-shrink=0 align-items="center" justify-content="center" padding=(icon ? "0px" : size == "xs" ? "0px ui.space-8" : size == "sm" ? "ui.space-4 ui.space-12" : size == "lg" ? "ui.space-8 ui.space-24" : "ui.space-6 ui.space-16") gap="param.gap"
       width=(icon ? height : "auto") height=height min-height=height
       border-radius=(radius != "" ? radius : size.endsWith("xs") or size.endsWith("sm") ? "ui.radius-md" : "ui.radius-control")
@@ -137,8 +140,10 @@ component DisclosureButtonFrame
   state hovered = false
   action hoverChanged(inside: bool)
     hovered = inside
+  inject
+    uiWeights: FontWeights
   view
-    button id=id testId=id class=Control press=press hover=hoverChanged aria-label=label aria-expanded=expanded aria-controls=controls popovertarget=popoverTarget popovertargetaction="show"
+    button id=id testId=id class=Control font-weight=uiWeights.medium press=press hover=hoverChanged aria-label=label aria-expanded=expanded aria-controls=controls popovertarget=popoverTarget popovertargetaction="show"
       display="flex" align-items="center" justify-content=(icon ? "center" : "flex-start") text-align="left" gap="ui.control-gap"
       width=(icon ? "ui.control-sm" : "100%") min-height=(icon ? "ui.control-sm" : "ui.control") height=(icon ? "ui.control-sm" : "auto") flex-shrink=0 padding=(icon ? "0px" : "ui.space-8 ui.space-12")
       background-color=buttonFill(variant, hovered) color=buttonInk(variant) border-width=(variant == "outline" ? "ui.border-width" : "0px") border-style="solid" border-color="ui.input"

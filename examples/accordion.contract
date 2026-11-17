@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Accordion from "@rightui/ui"
 use AccordionMultiple, AccordionOptions, CardFrame, CardHeader, CardTitle, CardDescription, CardContent from "@rightui/ui"
 
@@ -6,6 +7,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state expanded: number[] = [0]
@@ -17,9 +19,9 @@ component Demo
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       AccordionMultiple(id="advanced-accordion", titles=["Is it accessible?", "Is it styled?", "Is it animated?"], descriptions=["Yes. It supports keyboard navigation and exposes each panel state.", "Yes. It follows the shared RightUI design tokens.", "Yes. It uses the same height animation and reduced-motion preference."], expanded=expanded, reduced=reduced, change=setExpanded)
-      text "Single expansion" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Single expansion" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Accordion(id="single-expansion", titles=["Overview", "Details"], descriptions=["One panel at a time.", "Select a heading to expand."], expanded=singleExpanded, reduced=reduced, change=setSingleExpanded)
-      text "Disabled item and required expansion" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Disabled item and required expansion" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       AccordionOptions(id="accordion-disabled", titles=["Account history", "Premium information", "Email preferences"], descriptions=["Review your account activity.", "This item is disabled.", "Choose which updates you receive."], expanded=singleExpanded, disabledItems=[1], collapsible=false, reduced=reduced, change=setSingleExpanded)
       CardFrame(id="accordion-card")
         CardHeader(id="accordion-card-header")

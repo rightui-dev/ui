@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Button from "./button.contract"
 use Control, Field from "./styles.contract"
@@ -12,6 +13,7 @@ component DataTable
     rows: DataRow[]
     pageSize: number
   inject
+    uiWeights: FontWeights
     uiFont: string
   state query = ""
   state sort = "email"
@@ -41,7 +43,7 @@ component DataTable
     page = min(count - 1, currentPage + 1)
   view
     column id=id testId=id gap="ui.space-16" min-width="0px" color="ui.foreground"
-      input id=(id + "-search") testId=(id + "-search") class=Field value=query input=search placeholder="Filter emails or status..." aria-label="Filter payments" max-width="20rem" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      input id=(id + "-search") testId=(id + "-search") class=Field font-weight=uiWeights.regular value=query input=search placeholder="Filter emails or status..." aria-label="Filter payments" max-width="20rem" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       scroll max-height=480 overflow="auto" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" min-width="0px"
         table width="100%" border-spacing=0 font-size="ui.text-sm"
           thead
@@ -50,7 +52,7 @@ component DataTable
                 DataTableCheck(id=id + "-all", label="Select page", checked=visible.length > 0 and visible.filter(r => selected.includes(r.id)).length == visible.length, disabled=visible.length == 0, change=pickAll)
               for col in ["status", "email", "amount"] key=col
                 th border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" scope="col" padding="ui.space-8 ui.space-12" text-align=(col == "amount" ? "right" : "left") aria-sort=(sort == col ? (descending ? "descending" : "ascending") : "none")
-                  button class=Control id=(id + "-sort-" + col) testId=(id + "-sort-" + col) press=order(col) padding="ui.space-4 ui.space-8" border="0" background-color="transparent" color="ui.muted-foreground" min-height="ui.space-32"
+                  button class=Control font-weight=uiWeights.medium id=(id + "-sort-" + col) testId=(id + "-sort-" + col) press=order(col) padding="ui.space-4 ui.space-8" border="0" background-color="transparent" color="ui.muted-foreground" min-height="ui.space-32"
                     text ((col == "status" ? "Status" : col == "email" ? "Email" : "Amount") + (sort == col ? (descending ? " ↓" : " ↑") : "")) font-family=uiFontFamily(uiFont) data-rightui-font="body"
           tbody
             for r in visible key=r.id
@@ -61,7 +63,7 @@ component DataTable
                   text r.status font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-12"
                   text r.email font-family=uiFontFamily(uiFont) data-rightui-font="body"
-                td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-12" text-align="right" font-weight="ui.weight-medium"
+                td border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-12" text-align="right" font-weight=uiWeights.medium
                   text ("$" + r.amount.toFixed(2)) font-family=uiFontFamily(uiFont) data-rightui-font="body"
             if visible.length == 0
               tr
@@ -84,8 +86,10 @@ component DataTableCheck
   action toggle
     if not disabled
       change(not checked)
+  inject
+    uiWeights: FontWeights
   view
-    button id=id testId=id class=Control press=toggle role="checkbox" aria-checked=checked aria-label=label disabled=disabled
+    button id=id testId=id class=Control font-weight=uiWeights.medium press=toggle role="checkbox" aria-checked=checked aria-label=label disabled=disabled
       width="ui.space-32" min-height="ui.space-32" height="ui.space-32" padding="ui.space-8" border="0" background-color="transparent" display="flex" align-items="center" justify-content="center"
       view width="ui.space-16" height="ui.space-16" border-radius="ui.radius-checkbox" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color=(checked ? "ui.primary" : "ui.surface") display="flex" align-items="center" justify-content="center" aria-hidden=true
         if checked

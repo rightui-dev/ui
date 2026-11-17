@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use OverlayLayer from "./overlay-layer.contract"
 use uiFontFamily from "./typography-context.contract"
 use ButtonContent, IconButton from "./button.contract"
@@ -111,6 +112,7 @@ component ToastCard
     dismiss: action
     act: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state mounted = false
   state closing = false
@@ -170,7 +172,7 @@ component ToastCard
               path d="M12 11v6M12 7h.01"
         column flex=1 min-width="0px" gap="ui.space-4"
           if message.title != ""
-            text message.title testId=(message.id + "-title") font-size="ui.text-sm" font-weight="ui.weight-medium" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text message.title testId=(message.id + "-title") font-size="ui.text-sm" font-weight=uiWeights.medium line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           if message.description != ""
             text message.description testId=(message.id + "-description") font-size="ui.text-sm" color="ui.muted-foreground" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if message.actionLabel != ""

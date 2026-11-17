@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 use buttonFill, buttonInk from "./button.contract"
@@ -31,6 +32,7 @@ component TooltipAdvanced
     side: string
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive placement = side == "bottom" or side == "left" or side == "right" ? side : "top"
   derive vertical = placement == "top" or placement == "bottom"
@@ -68,7 +70,7 @@ component TooltipAdvanced
       hidePopover(id + "-tip")
   view
     row align-items="center" hover=hover focusin=enter focusout=leave key=keys
-      button id=id testId=id class=Control aria-describedby=(id + "-tip") press=show popovertarget=(id + "-tip") popovertargetaction="show"
+      button id=id testId=id class=Control font-weight=uiWeights.medium aria-describedby=(id + "-tip") press=show popovertarget=(id + "-tip") popovertargetaction="show"
         display="flex" flex-shrink=0 align-items="center" justify-content="center" height="ui.control" min-height="ui.control" padding="ui.space-6 ui.space-16" gap="ui.control-gap"
         border-width="ui.border-width" border-style="solid" border-color="ui.input" border-radius="ui.radius-control" background-color=buttonFill("outline", hovered) color=buttonInk("outline") box-shadow="ui.shadow-control"
         text label font-family=uiFontFamily(uiFont) data-rightui-font="body"

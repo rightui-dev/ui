@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, ControlStyle as Control, InputStyle as Field from "@rightui/ui"
 use Brand, BrandIcon from "./brand.contract"
 
@@ -12,11 +13,12 @@ component AuthField
     edit: action
     submit: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     column gap="ui.space-12" min-width=0
-      text label id=(id + "-label") font-size="ui.text-sm" font-weight="ui.weight-medium" line-height="ui.leading-label" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      input id=id testId=id class=Field type=kind value=value input=edit submit=submit placeholder=placeholder aria-labelledby=(id + "-label") aria-describedby=(id + "-hint") aria-required=true font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text label id=(id + "-label") font-size="ui.text-sm" font-weight=uiWeights.medium line-height="ui.leading-label" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      input id=id testId=id class=Field font-weight=uiWeights.regular type=kind value=value input=edit submit=submit placeholder=placeholder aria-labelledby=(id + "-label") aria-describedby=(id + "-hint") aria-required=true font-family=uiFontFamily(uiFont) data-rightui-font="body"
         ::placeholder
           color="ui.muted-foreground"
       if hint != ""
@@ -28,6 +30,7 @@ component AuthForm
     variant: number
     switchMode: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state name = ""
   state email = ""
@@ -60,16 +63,16 @@ component AuthForm
       column min-width=0 width="100%" margin-bottom="ui.space-negative-4" gap=(variant == 1 or variant == 3 ? "ui.space-8" : "ui.space-4") align-items=(variant == 1 ? "stretch" : "center")
         if variant == 5
           BrandIcon(name="gallery")
-        text (variant == 5 ? "Welcome to Acme Inc." : signup ? "Create your account" : variant == 3 or variant == 4 ? "Welcome back" : "Login to your account") role="heading" aria-level=1 font-size=(variant == 1 ? "ui.text-base" : variant == 3 or variant == 5 ? "ui.text-xl" : "ui.text-2xl") font-weight=(variant == 1 or variant == 3 ? "ui.weight-semibold" : "ui.weight-bold") text-align=(variant == 1 ? "left" : "center") line-height="ui.leading-snug" width="100%" min-width=0 font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text (variant == 5 ? "Welcome to Acme Inc." : signup ? "Create your account" : variant == 3 or variant == 4 ? "Welcome back" : "Login to your account") role="heading" aria-level=1 font-size=(variant == 1 ? "ui.text-base" : variant == 3 or variant == 5 ? "ui.text-xl" : "ui.text-2xl") font-weight=(variant == 1 or variant == 3 ? uiWeights.semibold : uiWeights.bold) text-align=(variant == 1 ? "left" : "center") line-height="ui.leading-snug" width="100%" min-width=0 font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if variant != 5
           text (signup ? variant == 1 ? "Enter your information below to create your account" : variant == 2 ? "Fill in the form below to create your account" : "Enter your email below to create your account" : variant == 3 ? "Login with your Apple or Google account" : variant == 4 ? "Login to your Acme Inc account" : "Enter your email below to login to your account") font-size=(variant == 4 and not signup ? "ui.text-base" : "ui.text-sm") color="ui.muted-foreground" line-height="ui.leading-control" text-align=(variant == 1 ? "left" : "center") width="100%" min-width=0 font-family=uiFontFamily(uiFont) data-rightui-font="body"
         else
-          button class=Control press=switchMode padding="ui.space-0" border="0" background-color="transparent" color="ui.muted-foreground"
+          button class=Control font-weight=uiWeights.medium press=switchMode padding="ui.space-0" border="0" background-color="transparent" color="ui.muted-foreground"
             text (signup ? "Already have an account? Sign in" : "Don’t have an account? Sign up") font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if variant == 3 and not signup
         column gap="ui.space-12"
           for provider in ["Apple", "Google"] key=provider
-            button id=("auth-provider-" + provider) testId=("auth-provider-" + provider) class=Control press=social(provider) border-width="ui.border-width" border-style="solid" border-color="ui.input" background-color="transparent" box-shadow="ui.shadow-control" display="flex" align-items="center" justify-content="center" gap="ui.space-8" padding="ui.space-6 ui.space-12"
+            button id=("auth-provider-" + provider) testId=("auth-provider-" + provider) class=Control font-weight=uiWeights.medium press=social(provider) border-width="ui.border-width" border-style="solid" border-color="ui.input" background-color="transparent" box-shadow="ui.shadow-control" display="flex" align-items="center" justify-content="center" gap="ui.space-8" padding="ui.space-6 ui.space-12"
               BrandIcon(name=provider.toLowerCase())
               text ("Login with " + provider) font-family=uiFontFamily(uiFont) data-rightui-font="body"
         row align-items="center" gap="ui.space-12" margin="ui.space-negative-8 ui.space-0"
@@ -91,17 +94,17 @@ component AuthForm
         else
           column gap="ui.space-12"
             row justify-content="space-between" gap="ui.space-8" flex-wrap="wrap" align-items="center"
-              text "Password" id="auth-password-label" font-size="ui.text-sm" font-weight="ui.weight-medium" line-height="ui.leading-label" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text "Password" id="auth-password-label" font-size="ui.text-sm" font-weight=uiWeights.medium line-height="ui.leading-label" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               button id="auth-recover" testId="auth-recover" appearance="none" press=recovery border="0" padding="ui.space-0" background-color="transparent" color="ui.foreground"
                 text "Forgot your password?" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-            input id="auth-password" testId="auth-password" class=Field type="password" value=password input=setPassword submit=submit aria-labelledby="auth-password-label" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            input id="auth-password" testId="auth-password" class=Field font-weight=uiWeights.regular type="password" value=password input=setPassword submit=submit aria-labelledby="auth-password-label" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               ::placeholder
                 color="ui.muted-foreground"
       column gap="ui.space-12"
-        button id="auth-submit" testId="auth-submit" class=Control press=submit background-color="ui.primary" color="ui.primary-foreground" border="0" padding="ui.space-6 ui.space-16"
+        button id="auth-submit" testId="auth-submit" class=Control font-weight=uiWeights.medium press=submit background-color="ui.primary" color="ui.primary-foreground" border="0" padding="ui.space-6 ui.space-16"
           text (signup ? "Create Account" : "Login") font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if variant == 1
-          button class=Control press=social("Google") border-width="ui.border-width" border-style="solid" border-color="ui.input" background-color="transparent" padding="ui.space-6 ui.space-16"
+          button class=Control font-weight=uiWeights.medium press=social("Google") border-width="ui.border-width" border-style="solid" border-color="ui.input" background-color="transparent" padding="ui.space-6 ui.space-16"
             text (signup ? "Sign up with Google" : "Login with Google") font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if variant == 2 or variant == 4 or variant == 5
         row align-items="center" gap="ui.space-12" margin="ui.space-negative-8 ui.space-0"
@@ -110,15 +113,15 @@ component AuthForm
           view height="ui.border-width" flex=1 background-color="ui.border"
         row gap="ui.space-16" flex-wrap="wrap"
           for provider in (variant == 2 ? ["GitHub"] : variant == 4 ? ["Apple", "Google", "Meta"] : ["Apple", "Google"]) key=provider
-            button class=Control aria-label=("Continue with " + provider) press=social(provider) flex="1 1 0px" border-width="ui.border-width" border-style="solid" border-color="ui.input" background-color="transparent" box-shadow="ui.shadow-control" display="flex" align-items="center" justify-content="center" gap="ui.space-8" padding="ui.space-6 ui.space-8"
+            button class=Control font-weight=uiWeights.medium aria-label=("Continue with " + provider) press=social(provider) flex="1 1 0px" border-width="ui.border-width" border-style="solid" border-color="ui.input" background-color="transparent" box-shadow="ui.shadow-control" display="flex" align-items="center" justify-content="center" gap="ui.space-8" padding="ui.space-6 ui.space-8"
               BrandIcon(name=provider.toLowerCase())
               if variant != 4
                 text (variant == 2 ? (signup ? "Sign up with GitHub" : "Login with GitHub") : "Continue with " + provider) font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if variant != 5
-        button margin-top="ui.space-negative-16" min-height=0 id="auth-switch" testId="auth-switch" class=Control press=switchMode padding="ui.space-0" border="0" background-color="transparent" color="ui.muted-foreground"
+        button margin-top="ui.space-negative-16" min-height=0 id="auth-switch" testId="auth-switch" class=Control font-weight=uiWeights.medium press=switchMode padding="ui.space-0" border="0" background-color="transparent" color="ui.muted-foreground"
           row justify-content="center" gap="ui.space-4" flex-wrap="wrap"
-            text (signup ? "Already have an account?" : "Don’t have an account?") font-size="ui.text-sm" font-weight="ui.weight-regular" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-            text (signup ? "Sign in" : "Sign up") font-size="ui.text-sm" font-weight="ui.weight-regular" line-height="ui.leading-normal" text-decoration="underline" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text (signup ? "Already have an account?" : "Don’t have an account?") font-size="ui.text-sm" font-weight=uiWeights.regular line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text (signup ? "Sign in" : "Sign up") font-size="ui.text-sm" font-weight=uiWeights.regular line-height="ui.leading-normal" text-decoration="underline" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if message != ""
         text message testId="auth-message" role="status" font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 

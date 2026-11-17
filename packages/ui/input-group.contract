@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use ButtonContent from "./button.contract"
 component InputGroup
@@ -13,10 +14,11 @@ component InputGroup
     edit: action
     submit: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     column gap="ui.space-8" min-width="0px"
-      text label id=(id + "-label") font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text label id=(id + "-label") font-size="ui.text-sm" font-weight=uiWeights.medium color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       row id=(id + "-group") testId=(id + "-group") role="group" aria-labelledby=(id + "-label") align-items="center" gap="ui.space-8"
         min-height="ui.space-36" padding="0px ui.space-6 0px ui.space-12" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.surface" color="ui.foreground"
         if prefix != ""

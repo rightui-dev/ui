@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Input, Switch, ResizablePanelGroup, ResizablePanel, ResizableHandle from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state horizontal = 32
@@ -22,21 +24,21 @@ component Demo
       DemoPanels(id="resizable-vertical", title="Vertical", orientation="vertical", initialDir="ltr", initialHandle=false, disabled=false, reduced=reduced)
       DemoPanels(id="resizable-handle", title="With handle", orientation="horizontal", initialDir="ltr", initialHandle=true, disabled=false, reduced=reduced)
       DemoPanels(id="resizable-rtl", title="RTL", orientation="horizontal", initialDir="rtl", initialHandle=true, disabled=false, reduced=reduced)
-      text "Nested panels" font-size="ui.text-base" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Nested panels" font-size="ui.text-base" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       view height=360 width="100%" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-md"
         ResizablePanelGroup(id="split-horizontal", orientation="horizontal", dir="ltr", value=horizontal)
           ResizablePanel(id="split-sidebar", label="Library", minContentWidth="7rem")
-            text "Library" font-size="ui.text-sm" font-weight="ui.weight-semibold" color="ui.foreground" hyphens="auto" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text "Library" font-size="ui.text-sm" font-weight=uiWeights.semibold color="ui.foreground" hyphens="auto" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             for item in ["Project", "Media", "Music", "Exports"] key=item
               text item font-size="ui.text-caption" color="ui.muted-foreground" hyphens="auto" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           ResizableHandle(id="split-x", groupId="split-horizontal", primaryId="split-sidebar", label="Library width", orientation="horizontal", dir="ltr", value=horizontal, minimum=20, maximum=65, reset=32, withHandle=true, disabled=false, change=changeHorizontal)
           ResizablePanelGroup(id="split-vertical", orientation="vertical", dir="ltr", value=vertical)
             ResizablePanel(id="split-editor", label="Editor", minContentWidth="7rem")
-              text "Editor" font-size="ui.text-sm" font-weight="ui.weight-semibold" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text "Editor" font-size="ui.text-sm" font-weight=uiWeights.semibold color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               Input(id="split-name", label="Name", value=draft, placeholder="Your project", error="", disabled=false, edit=editDraft)
             ResizableHandle(id="split-y", groupId="split-vertical", primaryId="split-editor", label="Editor height", orientation="vertical", dir="ltr", value=vertical, minimum=25, maximum=75, reset=58, withHandle=true, disabled=false, change=changeVertical)
             ResizablePanel(id="split-timeline", label="Timeline", minContentWidth="7rem")
-              text "Timeline" font-size="ui.text-sm" font-weight="ui.weight-semibold" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text "Timeline" font-size="ui.text-sm" font-weight=uiWeights.semibold color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               text draft testId="split-echo" font-size="ui.text-caption" color="ui.muted-foreground" hyphens="auto" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               view height="ui.space-24" border-radius="ui.radius-inline" background-color="ui.ring"
       DemoPanels(id="variation-resize-disabled", title="Disabled", orientation="horizontal", initialDir="ltr", initialHandle=true, disabled=true, reduced=reduced)
@@ -51,6 +53,7 @@ component DemoPanels
     disabled: bool
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state ratio = 50
   state rtl = initialDir == "rtl"
@@ -63,7 +66,7 @@ component DemoPanels
     handle = value
   view
     column gap="ui.space-12" min-width=0
-      text title font-size="ui.text-base" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text title font-size="ui.text-base" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if id == "resizable-handle"
         Switch(id=id + "-toggle", label="withHandle", checked=handle, disabled=false, reduced=reduced, change=changeHandle)
       if id == "resizable-rtl"
@@ -71,8 +74,8 @@ component DemoPanels
       view height=200 width="100%" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-md"
         ResizablePanelGroup(id=id, orientation=orientation, dir=(rtl ? "rtl" : "ltr"), value=ratio)
           ResizablePanel(id=id + "-first", label="First panel", minContentWidth="0px")
-            text (rtl ? "واحد" : "One") font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text (rtl ? "واحد" : "One") font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
           ResizableHandle(id=id + "-handle", groupId=id, primaryId=id + "-first", label="Resize panels", orientation=orientation, dir=(rtl ? "rtl" : "ltr"), value=ratio, minimum=20, maximum=80, reset=50, withHandle=handle, disabled=disabled, change=resize)
           ResizablePanel(id=id + "-second", label="Second panel", minContentWidth="0px")
-            text (rtl ? "اثنان" : "Two") font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text (rtl ? "اثنان" : "Two") font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       text (ratio.toFixed(0) + "% / " + (100 - ratio).toFixed(0) + "%") testId=(id + "-value") font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

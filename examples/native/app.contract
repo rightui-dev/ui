@@ -1,3 +1,4 @@
+use defaultFontWeights from "@rightui/ui"
 font "Geist"
   100 900 = "assets/fonts/Geist.ttf"
   100 900 italic = "assets/fonts/Geist-Italic.ttf"
@@ -31,6 +32,7 @@ component Native
   derive shown = entries.filter(e => (e.title + " " + e.group).toLowerCase().includes(query.trim().toLowerCase()))
   provide
     uiFont = "theme"
+    uiWeights = defaultFontWeights()
     rightuiDemoTime = demoTime
     rightuiRunDemo = runDemo
     uiCopiedId = copiedId

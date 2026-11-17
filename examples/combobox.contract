@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Combobox from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state platform = "macOS"
@@ -13,5 +15,5 @@ component Demo
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       Combobox(id="catalog-platform", label="Platform", options=["iOS", "Android", "Web", "macOS", "Windows", "Linux"], value=platform, disabled=false, reduced=reduced, change=setPlatform)
-      text "Disabled" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Disabled" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Combobox(id="combobox-disabled", label="Unavailable platform", options=["Web"], value="Web", disabled=true, reduced=reduced, change=setPlatform)

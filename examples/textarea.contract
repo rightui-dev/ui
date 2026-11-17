@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Textarea, Field, Button from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state notes = ""
@@ -18,7 +20,7 @@ component Demo
       Textarea(id="catalog-notes", label="Notes", value=notes, placeholder="Describe your project…", error="", disabled=false, edit=editNotes)
       Textarea(id="catalog-textarea-invalid", label="Invalid textarea", value=notes, placeholder="Required", error="This field is required.", disabled=false, edit=editNotes)
       Textarea(id="catalog-textarea-disabled", label="Disabled textarea", value="Read only preview", placeholder="", error="", disabled=true, edit=editNotes)
-      text "Field description and submit action" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Field description and submit action" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Field(id="variation-textarea-field", description="Include timing and delivery preferences.", error="")
         Textarea(id="variation-textarea-described", label="Project brief", value=notes, placeholder="Your brief", error="", disabled=false, edit=editNotes)
       Button(id="variation-textarea-submit", label="Save brief", variant="outline", disabled=false, press=saveBrief)

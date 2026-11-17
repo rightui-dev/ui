@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 use AttachmentFrame, AttachmentMedia, AttachmentContent, AttachmentTitle, AttachmentDescription, AttachmentActions, AttachmentAction, AttachmentTrigger, AttachmentPreview from "./attachment-parts.contract"
@@ -82,6 +83,7 @@ component BubbleOptions
     initialCollapsed: bool
     previewLength: number
   inject
+    uiWeights: FontWeights
     uiFont: string
   state bubbleCollapsed: bool = initialCollapsed
   state bubbleReacted: bool = false
@@ -95,13 +97,13 @@ component BubbleOptions
       column gap="ui.space-6" min-width="0px"
         text shownBody id=(id + "-body") testId=(id + "-body") font-size="ui.text-sm" line-height="ui.leading-code" white-space="pre-wrap" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if collapsible
-          button id=(id + "-collapse") testId=(id + "-collapse") class=Control press=toggle aria-expanded=(not bubbleCollapsed) aria-controls=(id + "-body") display="flex" align-items="center" gap="ui.space-4" padding="0px" min-height="ui.space-24" border="none" background-color="transparent" color="inherit" align-self="flex-start"
+          button id=(id + "-collapse") testId=(id + "-collapse") class=Control font-weight=uiWeights.medium press=toggle aria-expanded=(not bubbleCollapsed) aria-controls=(id + "-body") display="flex" align-items="center" gap="ui.space-4" padding="0px" min-height="ui.space-24" border="none" background-color="transparent" color="inherit" align-self="flex-start"
             text (bubbleCollapsed ? "Show more" : "Show less") font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" rotate=(bubbleCollapsed ? "0deg" : "180deg") transition=(reduced ? "none" : "rotate ui.duration-fast ui.easing") aria-hidden=true
               path d="m6 9 6 6 6-6"
       if reactions
         BubbleReactions(id=id + "-reactions", label="Message reactions", side="bottom", align="end", interactive=true)
-          button id=(id + "-reaction") testId=(id + "-reaction") class=Control press=react aria-pressed=bubbleReacted aria-label="Helpful reaction" min-height="ui.space-24" padding="ui.space-2 ui.space-8" border="none" border-radius="ui.radius-full" background-color="transparent" color="ui.foreground"
+          button id=(id + "-reaction") testId=(id + "-reaction") class=Control font-weight=uiWeights.medium press=react aria-pressed=bubbleReacted aria-label="Helpful reaction" min-height="ui.space-24" padding="ui.space-2 ui.space-8" border="none" border-radius="ui.radius-full" background-color="transparent" color="ui.foreground"
             text (bubbleReacted ? "Helpful · 1" : "Helpful") font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component Marker
@@ -173,12 +175,13 @@ component MessageHeader
   props
     label: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   slot
   view
     row gap="ui.space-8" align-items="center" max-width="100%" min-width="0px" padding="0px ui.space-12"
       if label != ""
-        text label font-size="ui.text-xs" font-weight="ui.weight-medium" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text label font-size="ui.text-xs" font-weight=uiWeights.medium color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       children
 
 component MessageMeta

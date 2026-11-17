@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, BubbleOptions, BubbleFrame, BubbleContent, BubbleGroup, BubbleReactions, BubbleButton, BubbleLink, BubbleAction, BubblePopoverAction, MarkdownDocument, parseMarkdown, Button from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state reply = "Choose a reply."
   state helpful = false
@@ -24,7 +26,7 @@ component Demo
     read = true
   view
     column gap="ui.space-32" min-width="0px" max-width="100%" width="100%"
-      text "Conversation and grouping" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Conversation and grouping" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       BubbleOptions(id="bubble-outgoing", body="Can you show me the RightUI conversation components?", align="end", variant="default", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
       BubbleGroup(id="bubble-incoming-group", label="Assistant replies")
         BubbleOptions(id="bubble-incoming-one", body="Yes. Start with the message surface.", align="start", variant="muted", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
@@ -36,7 +38,7 @@ component Demo
       BubbleGroup(id="bubble-outgoing-group", label="Your consecutive replies")
         BubbleOptions(id="bubble-outgoing-one", body="Show me the variants.", align="end", variant="default", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
         BubbleOptions(id="bubble-outgoing-two", body="Then show me the actions.", align="end", variant="default", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
-      text "Seven variants" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Seven variants" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       BubbleOptions(id="bubble-default", body="Default RightUI bubble", align="start", variant="default", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
       BubbleOptions(id="bubble-secondary", body="Secondary RightUI bubble", align="end", variant="secondary", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
       BubbleOptions(id="bubble-muted", body="Muted supporting message", align="start", variant="muted", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
@@ -44,14 +46,14 @@ component Demo
       BubbleOptions(id="bubble-outline", body="Outline RightUI bubble", align="start", variant="outline", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
       BubbleOptions(id="bubble-destructive", body="Error: the local command could not open the requested file.", align="end", variant="destructive", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
       BubbleOptions(id="bubble-ghost", body="Ghost content spans the available width without a frame.", align="start", variant="ghost", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
-      text "Markdown" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Markdown" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       BubbleFrame(id="bubble-markdown-user", align="end", variant="muted")
         BubbleContent(id="bubble-markdown-user-content")
           MarkdownDocument(id="bubble-markdown-question", blocks=parseMarkdown("Can you explain **reusable components** and `Exact Contract`?"))
       BubbleFrame(id="bubble-markdown-assistant", align="start", variant="ghost")
         BubbleContent(id="bubble-markdown-assistant-content")
           MarkdownDocument(id="bubble-markdown-document", blocks=parseMarkdown("## RightUI components\n\nUse **public components** for consistent behavior.\n\n- Keep keyboard focus visible.\n- Respect *reduced motion*.\n\n> Reuse the same tokens across the library.\n\n```contract\ncomponent Greeting\n  view\n    text \"Hello from RightUI\"\n```\n\n[Jump to reply feedback](#bubble-help-result)"))
-      text "Links and buttons" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Links and buttons" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       BubbleOptions(id="bubble-help-question", body="How can I help you today?", align="start", variant="muted", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
       BubbleGroup(id="bubble-help-options", label="Reply options")
         BubbleButton(id="bubble-help-password-button", label="I forgot my password", press=choose("Password help selected. Use your account's password reset flow."), align="end", variant="tinted")
@@ -59,7 +61,7 @@ component Demo
         BubbleButton(id="bubble-help-human-button", label="Something else. Talk to a human.", press=choose("Human support selected. This local demo records your choice."), align="end", variant="tinted")
       BubbleLink(id="bubble-link-feedback", label="Jump to reply feedback", href="#bubble-help-result", align="end", variant="outline")
       text reply id="bubble-help-result" testId="bubble-help-result" role="status" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "Reactions and actions" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Reactions and actions" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       BubbleFrame(id="bubble-reaction-start", align="end", variant="muted")
         BubbleContent(id="bubble-reaction-start-content")
           text "These reactions sit at the start of the lower edge." font-size="ui.text-sm" line-height="ui.leading-code" font-family=uiFontFamily(uiFont) data-rightui-font="body"
@@ -83,7 +85,7 @@ component Demo
           text (approved ? "Local action approved." : "Approve this local action?") font-size="ui.text-sm" line-height="ui.leading-code" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         BubbleReactions(id="bubble-confirmation-actions", label="Approval action", side="bottom", align="end", interactive=true)
           Button(id="bubble-confirm-action", label=(approved ? "Approved" : "Yes, approve it"), variant="ghost", disabled=approved, press=approve)
-      text "Read receipt tooltip" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Read receipt tooltip" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       BubbleOptions(id="bubble-tooltip-question", body="Did you remove the stale route?", align="start", variant="secondary", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
       BubbleFrame(id="bubble-tooltip-message", align="end", variant="default")
         BubbleContent(id="bubble-tooltip-content")
@@ -92,14 +94,14 @@ component Demo
           BubbleAction(id="bubble-tooltip-action", label="Read on Jan 5, 2026 at 4:32 PM", icon="check", press=showRead, pressed=none)
       if read
         text "Read on Jan 5, 2026 at 4:32 PM" role="status" font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "Error details popover" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Error details popover" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       BubbleOptions(id="bubble-popover-request", body="Run the local command.", align="end", variant="default", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
       BubbleFrame(id="bubble-popover-message", align="start", variant="destructive")
         BubbleContent(id="bubble-popover-content")
           text "Failed to run the command." font-size="ui.text-sm" line-height="ui.leading-code" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         BubbleReactions(id="bubble-popover-actions", label="Error actions", side="bottom", align="end", interactive=true)
           BubblePopoverAction(id="bubble-error-details", label="Show error details", reduced=reduced)
-            text "Command failed with exit code 1" role="heading" aria-level=3 font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text "Command failed with exit code 1" role="heading" aria-level=3 font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
             text "ENOENT: no such file or directory, open pnpm-lock.yaml" font-size="ui.text-sm" color="ui.muted-foreground" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "Show more / show less" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Show more / show less" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       BubbleOptions(id="content-bubble-in", body="Here is the session brief.\nPlease check the spaces and lighting before our appointment.\n\nKeep keyboard focus visible in the dialog, menu and drawer. Reuse the shared RightUI tokens so the other themes can choose their own focus treatment.\n\nCheck the full message before preparing the final selection.", align="start", variant="muted", collapsible=true, initialCollapsed=true, reduced=reduced, reactions=true, previewLength=180)

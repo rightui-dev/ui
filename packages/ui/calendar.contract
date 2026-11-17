@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 use IconButton from "./button.contract"
@@ -18,6 +19,7 @@ component Calendar
     disabled: bool
     change: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state hoveredDay = -1
   state active = match parseNumber(value.slice(8, 10)) { case some(d) => max(1, min(31, floor(d))), case none => 1 }
@@ -74,7 +76,7 @@ component Calendar
         IconButton(id=(id + "-previous"), label="Previous month", variant="ghost", disabled=disabled, press=shiftMonth(-1))
           svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.stroke-standard" aria-hidden=true
             path d="m15 18-6-6 6-6"
-        text (calendarMonth(month) + " " + year.toString()) testId=(id + "-month") font-size="ui.text-sm" font-weight="ui.weight-medium" aria-live="polite" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text (calendarMonth(month) + " " + year.toString()) testId=(id + "-month") font-size="ui.text-sm" font-weight=uiWeights.medium aria-live="polite" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         IconButton(id=(id + "-next"), label="Next month", variant="ghost", disabled=disabled, press=shiftMonth(1))
           svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.stroke-standard" aria-hidden=true
             path d="m9 18 6-6-6-6"
@@ -84,7 +86,7 @@ component Calendar
         for cell in range(ceil((offset + days) / 7) * 7) key=cell
           if cell < offset or cell >= offset + days
             button class=Control testId=(id + "-outside-" + cell.toString()) press=selectOutside(cell < offset ? -1 : 1, cell < offset ? calendarDays(month == 1 ? year - 1 : year, month == 1 ? 12 : month - 1) - offset + cell + 1 : cell - offset - days + 1) disabled=disabled tabindex=-1
-              height="ui.space-32" min-height="ui.space-32" padding="0px" border="0" font-size="ui.text-sm" font-weight="ui.weight-regular" border-radius="ui.radius-control" background-color="transparent" color="ui.muted-foreground"
+              height="ui.space-32" min-height="ui.space-32" padding="0px" border="0" font-size="ui.text-sm" font-weight=uiWeights.regular border-radius="ui.radius-control" background-color="transparent" color="ui.muted-foreground"
               :hover
                 background-color="ui.muted"
                 color="ui.foreground"
@@ -96,7 +98,7 @@ component Calendar
               button id=(id + "-day-" + (cell - offset + 1).toString()) testId=(id + "-day-" + (cell - offset + 1).toString()) class=Control
                 press=select(cell - offset + 1) key=keys(cell - offset + 1) hover=hoverDay(cell - offset + 1) disabled=disabled tabindex=(activeDay == cell - offset + 1 ? 0 : -1)
                 aria-label=calendarISO(year, month, cell - offset + 1) aria-pressed=(value == calendarISO(year, month, cell - offset + 1) or end == calendarISO(year, month, cell - offset + 1))
-                height="ui.space-32" min-height="ui.space-32" width="100%" box-sizing="border-box" padding="0px" border="0" font-size="ui.text-sm" font-weight="ui.weight-regular"
+                height="ui.space-32" min-height="ui.space-32" width="100%" box-sizing="border-box" padding="0px" border="0" font-size="ui.text-sm" font-weight=uiWeights.regular
                 border-radius=(mode == "range" and value != "" and end != "" and calendarISO(year, month, cell - offset + 1) > value and calendarISO(year, month, cell - offset + 1) < end ? (cell % 7 == 0 ? "ui.radius-control 0px 0px ui.radius-control" : cell % 7 == 6 ? "0px ui.radius-control ui.radius-control 0px" : "0px") : "ui.radius-control")
                 background-color=(value == calendarISO(year, month, cell - offset + 1) or end == calendarISO(year, month, cell - offset + 1) ? "ui.primary" : hoveredDay == cell - offset + 1 ? "ui.muted" : mode == "range" and value != "" and end != "" and calendarISO(year, month, cell - offset + 1) > value and calendarISO(year, month, cell - offset + 1) < end ? "ui.muted" : "transparent")
                 color=(value == calendarISO(year, month, cell - offset + 1) or end == calendarISO(year, month, cell - offset + 1) ? "ui.primary-foreground" : "ui.foreground")

@@ -270,7 +270,7 @@ export function createTheme(options: Partial<ThemeSettings> & {interactive?: boo
   const declaration=createFontDeclaration(fontPath,italicFontPath,serifFontPath,serifItalicFontPath);
   const font=options.includeFont===false ? '' : '// In app.contract declare:\n'+declaration.trimEnd().split('\n').map(line=>line ? '// '+line : '//').join('\n')+'\n';
   const accent = interactive ? (presets[settings.preset]?.['ui.primary'] ?? neutral['ui.primary']) : 'ui.primary';
-  return '// RightUI theme. Copy the bundled Geist and Newsreader fonts and their licenses from @rightui/ui/assets/fonts.\n// Light/dark/system is controlled separately by setScheme().\n// In App, provide uiFont = "theme" to use this configuration\'s body family.\ntamber app\n'+axes+'\ntheme\n  AccentColor = '+accent+'\n'+declarations(settings,interactive)+'\n'+font;
+  return '// RightUI theme. Copy the bundled Geist and Newsreader fonts and their licenses from @rightui/ui/assets/fonts.\n// Light/dark/system is controlled separately by setScheme().\n// In App, provide uiFont = "theme" to use this configuration\'s body family. Also import defaultFontWeights and provide uiWeights = defaultFontWeights().\ntamber app\n'+axes+'\ntheme\n  AccentColor = '+accent+'\n'+declarations(settings,interactive)+'\n'+font;
 }
 
 export function createFontDeclaration(fontPath='assets/fonts/Geist.ttf', italicFontPath='assets/fonts/Geist-Italic.ttf', serifFontPath='assets/fonts/Newsreader.ttf', serifItalicFontPath='assets/fonts/Newsreader-Italic.ttf'): string {

@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control, Field from "./styles.contract"
 use CheckboxMixed from "./advanced-controls.contract"
@@ -29,6 +30,7 @@ component DataGrid
     selectionChanged: action
     openRow: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state query = ""
   state sortColumn = ""
@@ -86,10 +88,10 @@ component DataGrid
   view
     column id=id testId=id gap="ui.space-16" min-width="0px" color="ui.foreground"
       row gap="ui.space-12" flex-wrap="wrap" align-items="flex-end" justify-content="space-between"
-        input id=(id + "-search") testId=(id + "-search") class=Field value=query input=search placeholder="Filter rows..." aria-label=("Filter " + label) flex="1 1 12rem" max-width="20rem" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        input id=(id + "-search") testId=(id + "-search") class=Field font-weight=uiWeights.regular value=query input=search placeholder="Filter rows..." aria-label=("Filter " + label) flex="1 1 12rem" max-width="20rem" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if columns.length > 0
           Popover(id=id + "-columns", label="Columns", focusId=id + "-column-" + focusColumn.toString(), reduced=reduced)
-            text "Toggle columns" font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text "Toggle columns" font-size="ui.text-sm" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
             column gap="ui.space-4"
               for column, i in columns key=column.id
                 CheckboxMixed(id=id + "-column-" + i.toString(), label=column.label, labelVisible=true, checked=(hidden.includes(column.id) ? "false" : "true"), disabled=(not hidden.includes(column.id) and visibleColumns.length == 1), change=showColumn(column.id))
@@ -102,10 +104,10 @@ component DataGrid
               for column in visibleColumns key=column.id
                 th scope="col" padding="ui.space-8 ui.space-12" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" text-align=column.align aria-sort=(sortColumn == column.id and sortOrder != "none" ? (sortOrder == "desc" ? "descending" : "ascending") : "none")
                   if column.sortable
-                    button id=(id + "-sort-" + column.id) testId=(id + "-sort-" + column.id) class=Control press=sortByColumn(column) padding="ui.space-4 0px" min-height="ui.space-32" border="0" background-color="transparent" color="ui.foreground" text-align=column.align
+                    button id=(id + "-sort-" + column.id) testId=(id + "-sort-" + column.id) class=Control font-weight=uiWeights.medium press=sortByColumn(column) padding="ui.space-4 0px" min-height="ui.space-32" border="0" background-color="transparent" color="ui.foreground" text-align=column.align
                       text (column.label + (sortColumn == column.id and sortOrder != "none" ? (sortOrder == "desc" ? " ↓" : " ↑") : "")) font-family=uiFontFamily(uiFont) data-rightui-font="body"
                   else
-                    text column.label font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                    text column.label font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
               th scope="col" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" padding="ui.space-12"
                 text "Actions" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           tbody
@@ -117,11 +119,11 @@ component DataGrid
                   td testId=(id + "-cell-" + row.id + "-" + column.id) padding="ui.space-12" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" text-align=column.align
                     if column.kind == "badge"
                       row justify-content=(column.align == "right" ? "flex-end" : "flex-start")
-                        text gridValue(row, columns.map(value => value.id).indexOf(column.id)) border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-full" padding="ui.space-2 ui.space-8" font-size="ui.text-xs" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                        text gridValue(row, columns.map(value => value.id).indexOf(column.id)) border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-full" padding="ui.space-2 ui.space-8" font-size="ui.text-xs" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
                     else
                       text (column.kind == "currency" ? "$" + gridNumber(row, columns.map(value => value.id).indexOf(column.id)).toFixed(2) : column.kind == "percent" ? gridValue(row, columns.map(value => value.id).indexOf(column.id)) + "%" : gridValue(row, columns.map(value => value.id).indexOf(column.id))) font-variant-numeric=(column.kind == "text" ? "normal" : "tabular-nums") font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 td padding="ui.space-4 ui.space-12" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border"
-                  button class=Control id=(id + "-open-" + row.id) testId=(id + "-open-" + row.id) press=openRow(row.id) aria-label=("Open row " + row.id) min-height="ui.space-32" width="ui.space-32" padding="0px" border="0" background-color="transparent" color="ui.foreground"
+                  button class=Control font-weight=uiWeights.medium id=(id + "-open-" + row.id) testId=(id + "-open-" + row.id) press=openRow(row.id) aria-label=("Open row " + row.id) min-height="ui.space-32" width="ui.space-32" padding="0px" border="0" background-color="transparent" color="ui.foreground"
                     svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.stroke-standard" stroke-linecap="round" aria-hidden=true
                       path d="M5 12h.01M12 12h.01M19 12h.01"
             if visible.length == 0
@@ -134,7 +136,7 @@ component DataGrid
           view width="7rem"
             Select(id=id + "-page-size", label="Rows per page", options=["5", "10", "20", "50"], value=pageSize.toString(), disabled=false, reduced=reduced, change=chooseSize)
           row gap="ui.space-8" align-items="center"
-            text ("Page " + (currentPage + 1).toString() + " of " + pageCount.toString()) testId=(id + "-page") font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text ("Page " + (currentPage + 1).toString() + " of " + pageCount.toString()) testId=(id + "-page") font-size="ui.text-sm" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
             for command in ["first", "previous", "next", "last"] key=command
-              button id=(id + "-" + command) testId=(id + "-" + command) class=Control press=go(command == "first" ? 0 : command == "previous" ? currentPage - 1 : command == "next" ? currentPage + 1 : pageCount - 1) disabled=(command == "first" or command == "previous" ? currentPage == 0 : currentPage == pageCount - 1) aria-label=(command + " page") width="ui.space-32" height="ui.space-32" min-height="ui.space-32" padding="0px" border-width="ui.border-width" border-style="solid" border-color="ui.input" background-color="ui.surface" color="ui.foreground"
+              button id=(id + "-" + command) testId=(id + "-" + command) class=Control font-weight=uiWeights.medium press=go(command == "first" ? 0 : command == "previous" ? currentPage - 1 : command == "next" ? currentPage + 1 : pageCount - 1) disabled=(command == "first" or command == "previous" ? currentPage == 0 : currentPage == pageCount - 1) aria-label=(command + " page") width="ui.space-32" height="ui.space-32" min-height="ui.space-32" padding="0px" border-width="ui.border-width" border-style="solid" border-color="ui.input" background-color="ui.surface" color="ui.foreground"
                 text (command == "first" ? "«" : command == "previous" ? "‹" : command == "next" ? "›" : "»") font-family=uiFontFamily(uiFont) data-rightui-font="body"

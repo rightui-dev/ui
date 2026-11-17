@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use uiPopupIn, uiPopupOut from "./popup-motion.contract"
 use Field, Control from "./styles.contract"
@@ -11,6 +12,7 @@ component Combobox
     reduced: bool
     change: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state expanded = false
   state openEpoch = 0
@@ -74,8 +76,8 @@ component Combobox
       focus(next < 0 ? id + "-search" : id + "-option-" + next.toString())
   view
     column gap="ui.space-8" min-width="0px"
-      text label id=(id + "-label") font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      button id=id testId=id class=Field disabled=disabled press=open aria-expanded=expanded aria-controls=(id + "-list") aria-haspopup="listbox" aria-labelledby=(id + "-label")
+      text label id=(id + "-label") font-size="ui.text-sm" font-weight=uiWeights.medium color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      button id=id testId=id class=Field font-weight=uiWeights.regular disabled=disabled press=open aria-expanded=expanded aria-controls=(id + "-list") aria-haspopup="listbox" aria-labelledby=(id + "-label")
         display="flex" align-items="center" justify-content="space-between" gap="ui.space-8"
         text (value == "" ? "Choose…" : value) flex=1 min-width="0px" text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-medium" aria-hidden=true
@@ -88,13 +90,13 @@ component Combobox
             -exact-exit-animation=(reduced ? "none" : "uiPopupOut ui.duration-fast ui.easing both")
             width=width max-width="calc(100vw - ui.space-32)" max-height="min(30rem, 70vh)" box-sizing="border-box" margin="ui.space-4" padding="0px" gap="0px"
             border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" box-shadow="ui.shadow-menu"
-            input id=(id + "-search") testId=(id + "-search") class=Field value=query input=edit key=searchKeys font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            input id=(id + "-search") testId=(id + "-search") class=Field font-weight=uiWeights.regular value=query input=edit key=searchKeys font-family=uiFontFamily(uiFont) data-rightui-font="body"
               role="combobox" aria-expanded=true aria-controls=(id + "-options") aria-description="Type to filter, then use Arrow Down to browse results." aria-label=("Rechercher : " + label) placeholder="Rechercher…" border="none" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" border-radius="0px" min-height="ui.space-40" padding="ui.space-8 ui.space-12"
             scroll min-height="0px" flex="1 1 auto" max-height="18rem"
               column id=(id + "-options") role="listbox" aria-label=label gap="0px" padding="ui.space-4"
                 for option, i in filtered key=option
                   button id=(id + "-option-" + i.toString()) testId=(id + "-option-" + i.toString()) class=Control role="option" aria-selected=(value == option)
-                    press=pick(option) key=optionKeys(i) tabindex=-1 min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius="ui.radius-item" font-weight="ui.weight-regular" background-color=(value == option ? "ui.muted" : "ui.surface") color="ui.foreground"
+                    press=pick(option) key=optionKeys(i) tabindex=-1 min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius="ui.radius-item" font-weight=uiWeights.regular background-color=(value == option ? "ui.muted" : "ui.surface") color="ui.foreground"
                     text option text-align="left" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 if filtered.length == 0
                   text "No results." testId=(id + "-empty") role="status" padding="ui.space-12" font-size="ui.text-caption" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

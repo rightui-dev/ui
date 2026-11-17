@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, RangeSlider, Slider from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state low = 20
@@ -18,9 +20,9 @@ component Demo
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       RangeSlider(id="advanced-range", label="Price range", lower=low, upper=high, minimum=0, maximum=100, step=5, minimumSteps=1, vertical=false, disabled=false, change=setRange)
-      text "Single thumb" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Single thumb" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Slider(id="variation-slider-single", label="Volume", value=volume, minimum=0, maximum=100, step=1, disabled=false, change=updateVolume)
-      text "Vertical range" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Vertical range" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       RangeSlider(id="variation-slider-true-false", label="Vertical range", lower=low, upper=high, minimum=0, maximum=100, step=5, minimumSteps=1, vertical=true, disabled=false, change=setRange)
-      text "Disabled range" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Disabled range" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       RangeSlider(id="variation-slider-false-true", label="Disabled range", lower=low, upper=high, minimum=0, maximum=100, step=5, minimumSteps=1, vertical=false, disabled=true, change=setRange)

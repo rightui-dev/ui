@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control, Field as FieldStyle from "./styles.contract"
 component Label
@@ -6,9 +7,10 @@ component Label
     text: string
     required: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
-    text (text + (required ? " *" : "")) id=id font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    text (text + (required ? " *" : "")) id=id font-size="ui.text-sm" font-weight=uiWeights.medium color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component Field
   props
@@ -65,6 +67,7 @@ component RadioGroupAdvanced
     change: action
     variant: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   action pick(i: number)
     if not disabled
@@ -85,7 +88,7 @@ component RadioGroupAdvanced
       gap=(variant == "segmented" ? "ui.space-4" : "ui.space-12") padding=(variant == "segmented" ? "ui.space-4" : "0px")
       border-radius=(variant == "segmented" ? "ui.radius-control" : "0px") background-color=(variant == "segmented" ? "ui.muted" : "transparent")
       for option, i in options key=option
-        button id=(id + "-" + i.toString()) testId=(id + "-" + i.toString()) class=Control role="radio" aria-checked=(value == option)
+        button id=(id + "-" + i.toString()) testId=(id + "-" + i.toString()) class=Control font-weight=uiWeights.medium role="radio" aria-checked=(value == option)
           tabindex=(value == option or (options.indexOf(value) == -1 and i == 0) ? 0 : -1) disabled=disabled press=pick(i) key=keys
           display="flex" align-items="center" justify-content=(variant == "segmented" ? "center" : "flex-start") gap="ui.space-8" flex=(variant == "segmented" ? "1 1 auto" : "0 1 auto")
           padding=(variant == "segmented" ? "ui.space-6 ui.space-8" : "0px") min-height=(variant == "segmented" ? "ui.control-sm" : "ui.space-20")
@@ -104,12 +107,13 @@ component Toggle
     reduced: bool
     change: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   action toggle
     if not disabled
       change(not pressed)
   view
-    button id=id testId=id class=Control aria-pressed=pressed disabled=disabled press=toggle
+    button id=id testId=id class=Control font-weight=uiWeights.medium aria-pressed=pressed disabled=disabled press=toggle
       padding="0px ui.space-8" min-width="ui.space-36" height="ui.space-36" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color=(pressed ? "ui.muted" : "transparent") color="ui.foreground"
       transition=(reduced ? "none" : "background-color ui.duration-fast ui.easing")
       text label font-family=uiFontFamily(uiFont) data-rightui-font="body"
@@ -124,6 +128,7 @@ component ToggleGroup
     reduced: bool
     change: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   action toggle(value: string)
     if not disabled
@@ -143,7 +148,7 @@ component ToggleGroup
   view
     row id=id testId=id role="group" aria-label=label gap="ui.space-4" flex-wrap="wrap"
       for option, i in options key=option
-        button id=(id + "-" + i.toString()) testId=(id + "-" + i.toString()) class=Control aria-pressed=selected.includes(option) disabled=disabled press=toggle(option) key=keys(i)
+        button id=(id + "-" + i.toString()) testId=(id + "-" + i.toString()) class=Control font-weight=uiWeights.medium aria-pressed=selected.includes(option) disabled=disabled press=toggle(option) key=keys(i)
           padding="0px ui.space-8" min-width="ui.space-36" height="ui.space-36" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color=(selected.includes(option) ? "ui.muted" : "transparent") color="ui.foreground"
           transition=(reduced ? "none" : "background-color ui.duration-fast ui.easing")
           text option font-family=uiFontFamily(uiFont) data-rightui-font="body"
@@ -174,8 +179,10 @@ component RadioControl
     tabIndex: number
     press: action
     keys: action
+  inject
+    uiWeights: FontWeights
   view
-    button id=id testId=id class=Control role="radio" aria-label=label aria-checked=checked tabindex=tabIndex disabled=disabled press=press key=keys
+    button id=id testId=id class=Control font-weight=uiWeights.medium role="radio" aria-label=label aria-checked=checked tabindex=tabIndex disabled=disabled press=press key=keys
       display="flex" align-items="center" justify-content="center" padding="0px" min-height="ui.touch-target" min-width="ui.touch-target" border="0" background-color="transparent" color="ui.foreground"
       RadioIndicator(checked=checked)
 

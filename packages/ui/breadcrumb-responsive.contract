@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control, QuietLink from "./styles.contract"
 use Button from "./button.contract"
@@ -26,6 +27,7 @@ component BreadcrumbResponsiveLayout
     label: string
     direction: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   state drawerOpen = false
   derive tailStart = entries.length > 3 ? max(1, entries.length - (mobile ? 1 : 2)) : 1
@@ -51,7 +53,7 @@ component BreadcrumbResponsiveLayout
             BreadcrumbSeparator(kind="chevron", direction=direction)
             BreadcrumbItem()
               if mobile
-                button id=(id + "-more") testId=(id + "-more") class=Control press=showHidden aria-label="Show hidden pages" aria-haspopup="dialog" aria-expanded=drawerOpen aria-controls=(id + "-drawer")
+                button id=(id + "-more") testId=(id + "-more") class=Control font-weight=uiWeights.medium press=showHidden aria-label="Show hidden pages" aria-haspopup="dialog" aria-expanded=drawerOpen aria-controls=(id + "-drawer")
                   display="flex" align-items="center" justify-content="center" min-height="ui.space-28" padding="ui.space-2 ui.space-4" border="0" border-radius="ui.radius-sm" background-color="transparent" color="ui.muted-foreground"
                   :hover
                     background-color="ui.muted"

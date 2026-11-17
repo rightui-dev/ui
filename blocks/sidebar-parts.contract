@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use ExpoMark from "./brand.contract"
 use uiFontFamily, ControlStyle as Control, InputStyle as Field from "@rightui/ui"
 use DropdownMenu, MenuEntry from "@rightui/ui"
@@ -126,11 +127,12 @@ component SidebarLink
     badge: string
     choose: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     button id=id testId=id class=Control press=choose(label) aria-label=label aria-current=(selected ? "page" : "false")
       display="flex" align-items="center" gap="ui.space-8" min-height="ui.space-32" width="100%" padding="ui.space-6 ui.space-8" border="0" border-radius="ui.radius-sm"
-      background-color=(selected ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm" font-weight=(selected ? "ui.weight-medium" : "ui.weight-regular")
+      background-color=(selected ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm" font-weight=(selected ? uiWeights.medium : uiWeights.regular)
       :hover
         background-color="ui.muted"
       if icon != ""
@@ -151,6 +153,7 @@ component SidebarRichMenu
     entries: MenuEntry[]
     choose: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state expanded = false
   state width = 224
@@ -220,7 +223,7 @@ component SidebarRichMenu
     column padding="ui.space-8" min-width=0 box-sizing="border-box"
       button id=id testId=id class=Control press=toggle key=triggerKeys aria-haspopup="menu" aria-expanded=expanded aria-controls=(id + "-menu") aria-label=title
         display="flex" align-items="center" gap="ui.space-8" width="100%" min-height=(compact ? "ui.space-32" : "ui.space-48") padding=(compact ? "ui.space-0" : "ui.space-8")
-        border="0" border-radius="ui.radius-sm" background-color=(expanded ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-regular"
+        border="0" border-radius="ui.radius-sm" background-color=(expanded ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm" font-weight=uiWeights.regular
         :hover
           background-color="ui.muted"
         view width="ui.space-32" height="ui.space-32" flex-shrink=0 border-radius="ui.radius-md" display="flex" align-items="center" justify-content="center"
@@ -231,8 +234,8 @@ component SidebarRichMenu
             SidebarIcon(name=icon)
         if not compact
           column gap="ui.space-2" flex=1 min-width=0 align-items="flex-start"
-            text title testId=(id + "-title") font-size="ui.text-sm" font-weight="ui.weight-medium" white-space="nowrap" overflow="hidden" text-overflow="ellipsis" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-            text subtitle testId=(id + "-subtitle") font-size="ui.text-xs" font-weight="ui.weight-regular" white-space="nowrap" overflow="hidden" text-overflow="ellipsis" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text title testId=(id + "-title") font-size="ui.text-sm" font-weight=uiWeights.medium white-space="nowrap" overflow="hidden" text-overflow="ellipsis" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text subtitle testId=(id + "-subtitle") font-size="ui.text-xs" font-weight=uiWeights.regular white-space="nowrap" overflow="hidden" text-overflow="ellipsis" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           SidebarIcon(name="ChevronsUpDown")
       column id=(id + "-menu") testId=(id + "-menu") role="menu" aria-label=(avatar ? "Account" : "Teams") popover="auto" toggle=changed
         position-area="right" position-try-fallbacks="flip-inline, flip-block, flip-block flip-inline" margin="ui.space-4" width=width max-width="calc(100vw - ui.space-32)" max-height="80vh" overflow="auto" box-sizing="border-box"
@@ -242,8 +245,8 @@ component SidebarRichMenu
             view width="ui.space-32" height="ui.space-32" flex-shrink=0 border-radius="ui.radius-md" background-color="ui.muted" display="flex" align-items="center" justify-content="center"
               ExpoMark()
             column gap="ui.space-2" flex=1 min-width=0
-              text title font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-              text subtitle font-size="ui.text-xs" font-weight="ui.weight-regular" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text title font-size="ui.text-sm" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text subtitle font-size="ui.text-xs" font-weight=uiWeights.regular font-family=uiFontFamily(uiFont) data-rightui-font="body"
           view height="ui.border-width" margin="ui.space-4 ui.space-negative-4" background-color="ui.border"
         else
           text "Teams" padding="ui.space-6 ui.space-8" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
@@ -251,7 +254,7 @@ component SidebarRichMenu
           if (avatar and (i == 1 or i == 4)) or (not avatar and i == 3)
             view height="ui.border-width" margin="ui.space-4 ui.space-negative-4" background-color="ui.border"
           button id=(id + "-item-" + entry.id) testId=(id + "-item-" + entry.id) class=Control role="menuitem" tabindex=-1 press=pick(entry) key=itemKeys(i)
-            display="flex" align-items="center" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius="ui.radius-inline" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-regular"
+            display="flex" align-items="center" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius="ui.radius-inline" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight=uiWeights.regular
             :hover
               background-color="ui.muted"
             :focus-visible
@@ -282,6 +285,7 @@ component SidebarBrand
     switcher: bool
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state team = "Acme Inc"
   derive plan = team == "Acme Inc" ? "Enterprise" : team == "Acme Corp." ? "Startup" : "Free"
@@ -298,5 +302,5 @@ component SidebarBrand
           SidebarIcon(name=(docs ? "GalleryVerticalEnd" : "Command"))
         if not compact
           column gap="ui.space-2" flex=1 min-width=0
-            text (docs ? "Documentation" : "Acme Inc") font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-            text (docs ? "v1.0.0" : "Enterprise") font-size="ui.text-xs" font-weight="ui.weight-regular" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text (docs ? "Documentation" : "Acme Inc") font-size="ui.text-sm" font-weight=uiWeights.medium color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text (docs ? "v1.0.0" : "Enterprise") font-size="ui.text-xs" font-weight=uiWeights.regular color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

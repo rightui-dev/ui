@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, AspectRatio, RadioGroupAdvanced from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state language = "العربية"
   derive direction = language == "English" ? "ltr" : "rtl"
@@ -13,23 +15,23 @@ component Demo
     language = value
   view
     column appearance="none" gap="ui.space-16" min-width=0 max-width="100%"
-      text "Landscape · 16:9" appearance="none" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Landscape · 16:9" appearance="none" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       column appearance="none" id="ratio-landscape" testId="ratio-landscape" max-width=384 width="100%" min-width=0
         AspectRatio(ratio=16 / 9)
           image "assets/card/cover.jpg" alt="Abstract artwork by mymind on Unsplash" filter="grayscale(1)" position="absolute" inset=0 width="100%" height="100%" object-fit="cover"
-      text "Ultrawide · 21:9" appearance="none" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Ultrawide · 21:9" appearance="none" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       column appearance="none" id="ratio-ultrawide" testId="ratio-ultrawide" max-width=384 width="100%" min-width=0
         AspectRatio(ratio=21 / 9)
           image "assets/card/cover.jpg" alt="Abstract artwork by mymind on Unsplash" filter="grayscale(1)" position="absolute" inset=0 width="100%" height="100%" object-fit="cover"
-      text "Square · 1:1" appearance="none" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Square · 1:1" appearance="none" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       column appearance="none" id="ratio-square" testId="ratio-square" max-width=192 width="100%" min-width=0
         AspectRatio(ratio=1)
           image "assets/card/cover.jpg" alt="Abstract artwork by mymind on Unsplash" filter="grayscale(1)" position="absolute" inset=0 width="100%" height="100%" object-fit="cover"
-      text "Portrait · 9:16" appearance="none" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Portrait · 9:16" appearance="none" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       column appearance="none" id="ratio-portrait" testId="ratio-portrait" max-width=160 width="100%" min-width=0
         AspectRatio(ratio=9 / 16)
           image "assets/card/cover.jpg" alt="Abstract artwork by mymind on Unsplash" filter="grayscale(1)" position="absolute" inset=0 width="100%" height="100%" object-fit="cover"
-      text "RTL" appearance="none" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "RTL" appearance="none" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       column appearance="none" max-width=384 width="100%" min-width=0 gap="ui.space-8"
         RadioGroupAdvanced(id="ratio-language", label="Caption language", options=["English", "العربية", "עברית"], value=language, disabled=false, required=true, descriptionId="", change=chooseLanguage, variant="segmented")
         column appearance="none" id="ratio-rtl" testId="ratio-rtl" direction=direction gap="ui.space-8" role="figure" aria-label=caption

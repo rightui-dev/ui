@@ -1,3 +1,4 @@
+use defaultFontWeights from "@rightui/ui"
 font "Geist"
   100 900 = "assets/fonts/Geist.ttf"
 
@@ -137,6 +138,7 @@ component App
     toastShown = false
   provide
     uiFont = "sans"
+    uiWeights = defaultFontWeights()
   view
     column id="fixture-root" testId="fixture-root" focusin=rememberFocus width="100%" min-height="100%" box-sizing="border-box" padding=24 gap=24 background-color="ui.background" color="ui.foreground"
       text "Window-wide overlay regression"

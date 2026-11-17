@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Badge, Direction from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state rtl = false
@@ -15,7 +17,7 @@ component Demo
           Badge(label="1", variant="outline")
           text (rtl ? "مرحباً بالعالم" : "Hello world") font-size="ui.text-sm" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           Badge(label="2", variant="outline")
-      text "Nested direction" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Nested direction" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Direction(id="direction-outer", direction="rtl")
         column gap="ui.space-8"
           text "Outer RTL scope" font-family=uiFontFamily(uiFont) data-rightui-font="body"

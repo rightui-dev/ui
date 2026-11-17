@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use AdvancedMenuEntry, AdvancedMenuSelection, AdvancedMenuLine from "./menu-advanced.contract"
 use Control from "./styles.contract"
@@ -29,6 +30,7 @@ component ApprovalItem
     title: string
     description: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   slot
   view
@@ -37,7 +39,7 @@ component ApprovalItem
         svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
           path d="m4 6 6 6-6 6M12 18h8"
       column flex=1 gap="ui.space-4" min-width=120
-        text title font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text title font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
         text description color="ui.muted-foreground" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       children
 
@@ -129,6 +131,7 @@ component CompactAiMenu
     reduced: bool
     radio: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state expanded = false
   derive options = entries.filter(item => item.kind == "radio" or item.kind == "item")
@@ -180,7 +183,7 @@ component CompactAiMenu
       open(k == "ArrowUp")
   view
     row flex-shrink=0
-      button id=id testId=id class=Control press=toggle key=triggerKeys aria-label=(prefix == "Context" ? label : (prefix == "" ? "Model" : prefix) + ": " + label) aria-haspopup="menu" aria-expanded=expanded aria-controls=(id + "-menu") display="flex" align-items="center" gap="ui.space-8" height="ui.space-32" min-height="ui.space-32" width=(prefix == "Context" ? "ui.space-32" : "auto") justify-content="center" padding=(prefix == "Context" ? "0px" : "0px ui.space-10") border-width="ui.border-width" border-style="solid" border-color="ui.input" border-radius="ui.ai-radius-control" background-color="ui.surface" color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-medium"
+      button id=id testId=id class=Control press=toggle key=triggerKeys aria-label=(prefix == "Context" ? label : (prefix == "" ? "Model" : prefix) + ": " + label) aria-haspopup="menu" aria-expanded=expanded aria-controls=(id + "-menu") display="flex" align-items="center" gap="ui.space-8" height="ui.space-32" min-height="ui.space-32" width=(prefix == "Context" ? "ui.space-32" : "auto") justify-content="center" padding=(prefix == "Context" ? "0px" : "0px ui.space-10") border-width="ui.border-width" border-style="solid" border-color="ui.input" border-radius="ui.ai-radius-control" background-color="ui.surface" color="ui.foreground" font-size="ui.text-sm" font-weight=uiWeights.medium
         if prefix == "Context"
           svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
             path d="M12 5v14M5 12h14"

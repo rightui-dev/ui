@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, NativeSelect from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state language = "English"
@@ -13,5 +15,5 @@ component Demo
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       NativeSelect(id="controls-native", label="Language", options=["English", "English", "العربية"], value=language, disabled=false, change=changeLanguage)
-      text "Disabled" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Disabled" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       NativeSelect(id="variation-native-select-disabled", label="Language", options=["English", "English", "العربية"], value=language, disabled=true, change=changeLanguage)

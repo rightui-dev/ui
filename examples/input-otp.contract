@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, InputOTP from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state otp = ""
@@ -16,7 +18,7 @@ component Demo
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       InputOTP(id="controls-otp", label="Verification code", value=otp, length=6, disabled=false, change=editOTP)
-      text "Four digits and disabled" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Four digits and disabled" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       InputOTP(id="otp-four", label="Four digit PIN", value=pin, length=4, disabled=false, change=editPIN)
       InputOTP(id="otp-disabled", label="Disabled code", value="123456", length=6, disabled=true, change=editOTP)
       text ("Entered code: " + otp) testId="otp-controlled-result" role="status" font-family=uiFontFamily(uiFont) data-rightui-font="body"

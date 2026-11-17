@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily, uiContentFontFamily from "./typography-context.contract"
 use CodeBlockAI from "./code-block.contract"
 
@@ -40,14 +41,15 @@ component MarkdownText
     heading: number
     quote: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
-    text font-size=(heading == 1 ? "ui.text-3xl" : heading == 2 ? "ui.text-2xl" : heading == 3 ? "ui.text-xl" : heading > 0 ? "ui.text-lg" : "ui.text-sm") font-weight=(heading > 0 ? "ui.weight-semibold" : "ui.weight-regular") line-height=(heading > 0 ? "ui.leading-tight" : "ui.leading-code") color=(quote ? "ui.muted-foreground" : "ui.foreground") min-width="0px" overflow-wrap="break-word" role=(heading > 0 ? "heading" : "") aria-level=heading
+    text font-size=(heading == 1 ? "ui.text-3xl" : heading == 2 ? "ui.text-2xl" : heading == 3 ? "ui.text-xl" : heading > 0 ? "ui.text-lg" : "ui.text-sm") font-weight=(heading > 0 ? uiWeights.semibold : uiWeights.regular) line-height=(heading > 0 ? "ui.leading-tight" : "ui.leading-code") color=(quote ? "ui.muted-foreground" : "ui.foreground") min-width="0px" overflow-wrap="break-word" role=(heading > 0 ? "heading" : "") aria-level=heading
       for run, i in inlines key=i
         if run.href != "" and markdownSafeHref(run.href)
-          text run.text href=run.href font-family=uiFontFamily(uiFont) data-rightui-font="body" color="ui.primary" text-decoration="underline" font-weight=(run.bold ? "ui.weight-bold" : heading > 0 ? "ui.weight-semibold" : "ui.weight-regular") font-style=(run.italic ? "italic" : "normal")
+          text run.text href=run.href font-family=uiFontFamily(uiFont) data-rightui-font="body" color="ui.primary" text-decoration="underline" font-weight=(run.bold ? uiWeights.bold : heading > 0 ? uiWeights.semibold : uiWeights.regular) font-style=(run.italic ? "italic" : "normal")
         else
-          text run.text font-family=uiContentFontFamily(uiFont, run.code) data-rightui-font=(run.code ? "code" : "body") font-size=(run.code ? "ui.text-caption" : "inherit") font-weight=(run.bold ? "ui.weight-bold" : heading > 0 ? "ui.weight-semibold" : "ui.weight-regular") font-style=(run.italic ? "italic" : "normal") background-color=(run.code ? "ui.muted" : "transparent") border-radius=(run.code ? "ui.radius-detail" : "0px")
+          text run.text font-family=uiContentFontFamily(uiFont, run.code) data-rightui-font=(run.code ? "code" : "body") font-size=(run.code ? "ui.text-caption" : "inherit") font-weight=(run.bold ? uiWeights.bold : heading > 0 ? uiWeights.semibold : uiWeights.regular) font-style=(run.italic ? "italic" : "normal") background-color=(run.code ? "ui.muted" : "transparent") border-radius=(run.code ? "ui.radius-detail" : "0px")
 
 component MarkdownDocument
   props

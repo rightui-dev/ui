@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Slider from "@rightui/ui"
 use RadioGroup from "@rightui/ui"
 use Switch from "@rightui/ui"
@@ -9,6 +10,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state name = ""
@@ -53,19 +55,19 @@ component Demo
               FieldDescription(id="composition-email-help", description="Use an address containing @.")
             input id="composition-email" testId="composition-email" padding="ui.space-10" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-sm" background-color="ui.background" color="ui.foreground" type="email" value=email input=editEmail submit=validate disabled=disabled aria-labelledby="composition-email-label" aria-describedby="composition-email-help composition-email-error" aria-required=true aria-invalid=(errors.length > 0) font-family=uiFontFamily(uiFont) data-rightui-font="body"
             FieldError(id="composition-email-error", messages=errors)
-      text "Responsive checkbox" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Responsive checkbox" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       FieldFrame(id="field-checkbox", labelId="field-checkbox-label", descriptionId="", invalid=false, orientation=(narrow ? "vertical" : "horizontal"))
         FieldLabel(id="field-checkbox-label", label="Checkbox preference", controlId="field-check-control", disabled=false)
         Checkbox(id="field-check-control", label="Notifications", checked=enabled, disabled=false, change=setEnabled)
-      text "Responsive switch" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Responsive switch" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       FieldFrame(id="field-switch", labelId="field-switch-label", descriptionId="", invalid=false, orientation=(narrow ? "vertical" : "horizontal"))
         FieldLabel(id="field-switch-label", label="Switch preference", controlId="field-switch-control", disabled=false)
         Switch(id="field-switch-control", label="Email updates", checked=enabled, disabled=false, reduced=reduced, change=setEnabled)
-      text "Responsive radio" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Responsive radio" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       FieldFrame(id="field-radio", labelId="field-radio-label", descriptionId="", invalid=false, orientation=(narrow ? "vertical" : "horizontal"))
         FieldLabel(id="field-radio-label", label="Radio preference", controlId="field-radio-control", disabled=false)
         RadioGroup(id="field-radio-control", label="Delivery", options=["Daily", "Weekly"], value=frequency, disabled=false, required=false, descriptionId="", change=setFrequency)
-      text "Responsive slider" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Responsive slider" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       FieldFrame(id="field-slider", labelId="field-slider-label", descriptionId="", invalid=false, orientation=(narrow ? "vertical" : "horizontal"))
         FieldLabel(id="field-slider-label", label="Slider preference", controlId="field-slider-control", disabled=false)
         Slider(id="field-slider-control", label="Volume", value=volume, minimum=0, maximum=100, step=1, disabled=false, change=setVolume)

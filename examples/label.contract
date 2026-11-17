@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Label, Field from "@rightui/ui"
 
 component Demo
@@ -5,12 +6,13 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state quality = "Balanced"
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       Label(id="catalog-quality-label", text="Export quality", required=true)
-      text "Label inside a field" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Label inside a field" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Field(id="variation-label-field", description="Select an export quality.", error="")
         Label(id="variation-label-required", text="Quality", required=true)

@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control, Field from "./styles.contract"
 
@@ -15,6 +16,7 @@ component Command
     entries: CommandEntry[]
     choose: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state query = ""
   derive filtered = entries.filter(item => (item.label + " " + item.keywords).toLowerCase().includes(query.trim().toLowerCase()))
@@ -60,12 +62,12 @@ component Command
           focus(id + "-search")
   view
     column id=id testId=id role="region" aria-label=label min-width="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-panel" background-color="ui.surface" padding="ui.space-6" gap="ui.space-6"
-      input id=(id + "-search") testId=(id + "-search") class=Field value=query input=edit key=searchKeys font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      input id=(id + "-search") testId=(id + "-search") class=Field font-weight=uiWeights.regular value=query input=edit key=searchKeys font-family=uiFontFamily(uiFont) data-rightui-font="body"
         aria-label=label aria-controls=(id + "-results") placeholder="Rechercher une commande…"
       scroll max-height="18rem" min-height="0px"
         column id=(id + "-results") gap="ui.space-2"
           for item in filtered key=item.id
-            button id=(id + "-item-" + item.id) testId=(id + "-item-" + item.id) class=Control
+            button id=(id + "-item-" + item.id) testId=(id + "-item-" + item.id) class=Control font-weight=uiWeights.medium
               disabled=item.disabled press=pick(item) key=itemKeys(item.id)
               display="flex" align-items="center" flex-wrap="wrap" gap="ui.space-12" padding="ui.space-10 ui.space-12" border-radius="ui.radius-sm" border="0" background-color="transparent" color="ui.foreground"
               :hover

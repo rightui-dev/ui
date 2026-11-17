@@ -1,3 +1,4 @@
+use defaultFontWeights from "@rightui/ui"
 font "Geist"
   100 900 = "assets/fonts/Geist.ttf"
 use Demo as ToastDemo from "./toast-demo.contract"
@@ -26,6 +27,7 @@ component App
     every(32, tickDemo)
   provide
     uiFont = "sans"
+    uiWeights = defaultFontWeights()
     rightuiDemoTime = demoTime
     rightuiRunDemo = runDemo
   view

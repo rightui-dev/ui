@@ -9,6 +9,7 @@ Use `Drawer` for the standard 30% and 90% stops, `DrawerAdvanced` for custom sto
 `Drawer` accepts `id`, `open`, `title`, `description`, `reduced`, `focusIds` and `dismiss`, plus its content slot. Each opening starts at 30%. Drag the handle to resize, release to settle at a stop, or pull down to dismiss. The release position and velocity select the destination.
 
 ```contract
+use defaultFontWeights from "@rightui/ui"
 use Button, Drawer from "@rightui/ui"
 
 component Example
@@ -20,6 +21,7 @@ component Example
     focus("drawer-open")
   provide
     uiFont = "sans"
+    uiWeights = defaultFontWeights()
   view
     column
       Button(id="drawer-open", label="Open drawer", variant="outline", disabled=false, press=reveal)
@@ -81,6 +83,7 @@ Set `options.scrollable=false` to use the content slot as a bounded flex column.
 Plain fixed views can sit before or after `DrawerBody`. Only the body scrolls. Do not add an outer scroller around this composition: it would make the fixed sections scroll too. The automatic body and `DrawerBody` already contain a `DrawerInset`. Use `DrawerInset` for separate fixed content regions; do not nest another one inside a body.
 
 ```contract
+use defaultFontWeights from "@rightui/ui"
 use Button, DrawerContent, DrawerOptions, DrawerBody, DrawerInset, DrawerFooter from "@rightui/ui"
 
 component Example
@@ -99,6 +102,7 @@ component Example
     focus("details-open")
   provide
     uiFont = "sans"
+    uiWeights = defaultFontWeights()
   view
     column
       Button(id="details-open", label="Open details", variant="outline", disabled=false, press=reveal)

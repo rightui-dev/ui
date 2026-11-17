@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Field from "./styles.contract"
 component Input
@@ -10,11 +11,12 @@ component Input
     disabled: bool
     edit: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     column gap="ui.space-8" min-width=0
-      text label id=(id + "-label") font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body" color="ui.foreground"
-      input id=id testId=id class=Field value=value input=edit placeholder=placeholder disabled=disabled font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text label id=(id + "-label") font-size="ui.text-sm" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body" color="ui.foreground"
+      input id=id testId=id class=Field font-weight=uiWeights.regular value=value input=edit placeholder=placeholder disabled=disabled font-family=uiFontFamily(uiFont) data-rightui-font="body"
         aria-labelledby=(id + "-label") aria-invalid=(error != "") aria-describedby=(id + "-hint")
         border-color=(error == "" ? "ui.border" : "ui.danger")
         ::placeholder
@@ -30,12 +32,13 @@ component InputControl
     disabled: bool
     edit: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   params
     radius: length = "ui.radius-control" control="token" group="Shape"
     insetX: length = "ui.space-12" control="token" group="Spacing"
     insetY: length = "ui.space-4" control="token" group="Spacing"
   view
-    input id=id testId=id class=Field aria-label=label value=value input=edit placeholder=placeholder disabled=disabled border-radius="param.radius" padding="param.insetY param.insetX" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    input id=id testId=id class=Field font-weight=uiWeights.regular aria-label=label value=value input=edit placeholder=placeholder disabled=disabled border-radius="param.radius" padding="param.insetY param.insetX" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       ::placeholder
         color="ui.muted-foreground"

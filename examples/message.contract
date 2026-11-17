@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Button, ButtonControl, Attachment, BubbleOptions, BubbleFrame, BubbleReactions, MessageIcon, Message, MessageGroup, MessageRow, MessageAvatar, MessageBody, MessageHeader, MessageMeta, Avatar, MessageTyping from "@rightui/ui"
 
 component Demo
@@ -47,6 +48,7 @@ component MessageExamples
   props
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state attached = true
   state sent = false
@@ -64,7 +66,7 @@ component MessageExamples
     sent = true
   view
     column gap="ui.space-24" min-width=0
-      text "Header, footer and actions" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Header, footer and actions" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Message(id="variation-message-out", author="You", initials="ME", time="", align="end")
         BubbleOptions(id="variation-message-out-bubble", body="The preview is ready for review.", align="end", variant="default", collapsible=false, reactions=false, reduced=reduced, initialCollapsed=false, previewLength=180)
         MessageMeta(label="Delivered", align="end")
@@ -72,7 +74,7 @@ component MessageExamples
             MessageIcon(name="copy", filled=false)
           ButtonControl(id="variation-message-action", label="Acknowledge message", variant="ghost", size="icon-xs", disabled=false, pressed=some(acknowledgment == "Acknowledged"), describedBy="", press=acknowledge)
             MessageIcon(name="check", filled=false)
-      text "Grouped messages and attachment" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Grouped messages and attachment" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       MessageGroup(id="variation-message-group")
         MessageRow(id="variation-message-first", align="start")
           MessageAvatar()

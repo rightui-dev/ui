@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use ButtonControl, PopoverTrigger from "./button.contract"
 use PopoverFrame from "./disclosure.contract"
@@ -29,12 +30,13 @@ component BubbleButton
     variant: string
     press: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state hovered = false
   action hoverChanged(inside: bool)
     hovered = inside
   view
-    button id=id testId=id class=Control hover=hoverChanged text-decoration=(hovered ? "underline" : "none") press=press align-self=(align == "end" ? "flex-end" : "flex-start") width="auto" max-width="80%" min-width="0px" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color=(variant == "outline" ? "ui.border" : "transparent") border-radius="ui.ai-radius-bubble" padding="ui.space-10 ui.space-12" background-color=bubbleFill(variant) color=bubbleInk(variant) text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    button id=id testId=id class=Control font-weight=uiWeights.medium hover=hoverChanged text-decoration=(hovered ? "underline" : "none") press=press align-self=(align == "end" ? "flex-end" : "flex-start") width="auto" max-width="80%" min-width="0px" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color=(variant == "outline" ? "ui.border" : "transparent") border-radius="ui.ai-radius-bubble" padding="ui.space-10 ui.space-12" background-color=bubbleFill(variant) color=bubbleInk(variant) text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       text label font-size="ui.text-sm" line-height="ui.leading-code" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component BubbleLink
@@ -45,12 +47,13 @@ component BubbleLink
     align: string
     variant: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   state hovered = false
   action hoverChanged(inside: bool)
     hovered = inside
   view
-    link id=id testId=id class=Control hover=hoverChanged text-decoration=(hovered ? "underline" : "none") href=href align-self=(align == "end" ? "flex-end" : "flex-start") width="auto" max-width="80%" min-width="0px" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color=(variant == "outline" ? "ui.border" : "transparent") border-radius="ui.ai-radius-bubble" padding="ui.space-10 ui.space-12" background-color=bubbleFill(variant) color=bubbleInk(variant) font-size="ui.text-sm" line-height="ui.leading-code" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    link id=id testId=id class=Control font-weight=uiWeights.medium hover=hoverChanged text-decoration=(hovered ? "underline" : "none") href=href align-self=(align == "end" ? "flex-end" : "flex-start") width="auto" max-width="80%" min-width="0px" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color=(variant == "outline" ? "ui.border" : "transparent") border-radius="ui.ai-radius-bubble" padding="ui.space-10 ui.space-12" background-color=bubbleFill(variant) color=bubbleInk(variant) font-size="ui.text-sm" line-height="ui.leading-code" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       text label font-size="ui.text-sm" line-height="ui.leading-code" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component BubbleReactions

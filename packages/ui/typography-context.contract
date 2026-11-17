@@ -5,3 +5,13 @@ fn uiFontFamily(value: string): string = value == "sans" ? "ui.font-sans" : (val
 // Keep a mixed body/code choice behind one call: the family attribute must not
 // combine a literal family token with an opaque function-call branch.
 fn uiContentFontFamily(value: string, code: bool): string = code ? "ui.font-code" : uiFontFamily(value)
+
+shape FontWeights
+  regular: number
+  medium: number
+  semibold: number
+  bold: number
+  heavy: number
+
+fn defaultFontWeights(): FontWeights = FontWeights(regular=400, medium=500, semibold=600, bold=700, heavy=800)
+fn scaleFontWeights(base: FontWeights, percent: number): FontWeights = FontWeights(regular=round(base.regular * percent / 100), medium=round(base.medium * percent / 100), semibold=round(base.semibold * percent / 100), bold=round(base.bold * percent / 100), heavy=round(base.heavy * percent / 100))

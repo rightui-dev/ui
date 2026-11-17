@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 component Tabs
   props
@@ -52,6 +53,7 @@ component TabStrip
     disabledIndices: number[]
     direction: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   state markerX = 0
   state markerY = 0
@@ -116,7 +118,7 @@ component TabStrip
             min-width="auto" width="auto" height=(vertical ? compact ? "ui.tabs-height-vertical-compact" : "ui.tabs-height-vertical-default" : compact ? "ui.tabs-height-horizontal-compact" : "ui.tabs-height-horizontal-default") min-height="0px"
             border-width="ui.border-width" border-style="solid" border-color="transparent" border-radius="ui.radius-item" padding=(compact ? "ui.space-2 ui.space-6" : "ui.space-4 ui.space-8") white-space="nowrap"
             background-color=(not ready and selected == i and variant != "line" ? "ui.tab-active" : "transparent") cursor="pointer" pointer-events=(disabledIndices.includes(i) ? "none" : "auto")
-            color=(selected == i ? "ui.foreground" : "ui.tab-inactive") font-size="ui.text-sm" line-height="ui.leading-control" font-weight="ui.weight-medium"
+            color=(selected == i ? "ui.foreground" : "ui.tab-inactive") font-size="ui.text-sm" line-height="ui.leading-control" font-weight=uiWeights.medium
             transition=(reduced ? "none" : "color ui.duration-fast ui.easing, border-color ui.duration-fast ui.easing, box-shadow ui.duration-fast ui.easing")
             :focus-visible
               border-color="ui.focus"
@@ -129,7 +131,7 @@ component TabStrip
             match counts.at(i)
               case some(count)
                 if count != ""
-                  text count display="flex" align-items="center" justify-content="center" width="ui.space-20" min-width="ui.space-20" height="ui.space-20" box-sizing="border-box" padding="0px ui.space-4" border-width="ui.border-width" border-style="solid" border-color="transparent" border-radius="ui.radius-full" background-color="ui.tab-count" color="ui.foreground" font-size="ui.text-xs" line-height="ui.leading-heading" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                  text count display="flex" align-items="center" justify-content="center" width="ui.space-20" min-width="ui.space-20" height="ui.space-20" box-sizing="border-box" padding="0px ui.space-4" border-width="ui.border-width" border-style="solid" border-color="transparent" border-radius="ui.radius-full" background-color="ui.tab-count" color="ui.foreground" font-size="ui.text-xs" line-height="ui.leading-heading" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
               case none
                 view display="none"
         for revision in [measurementKey] key=revision

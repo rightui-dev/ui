@@ -1,6 +1,6 @@
 # rightui — @rightui/ui
 
-This checkout prepares the local **0.3.0-beta.8** candidate. Install its archive for local review; npm commands for this version apply only after a separately authorized publication.
+This checkout prepares the local **0.4.0-beta.1** candidate. Install its archive for local review; npm commands for this version apply only after a separately authorized publication.
 
 
 Composable Exact Contract components with a shared Tamber design system, inspired by shadcn/ui. Targets web, iOS and macOS.
@@ -9,10 +9,10 @@ This package contains Contract sources, theme tokens and the Geist and Newsreade
 
 ## Install
 
-Version: **0.3.0-beta.8**. This is a preview release. Use **Bun exactly 1.4.2** for Exact compilation. From an existing Exact app:
+Version: **0.4.0-beta.1**. This is a preview release. Use **Bun exactly 1.4.2** for Exact compilation. From an existing Exact app:
 
 ```sh
-bun add --exact @rightui/ui@0.3.0-beta.8
+bun add --exact @rightui/ui@0.4.0-beta.1
 mkdir -p assets/fonts
 cp node_modules/@rightui/ui/assets/fonts/Geist.ttf assets/fonts/
 cp node_modules/@rightui/ui/assets/fonts/Geist-Italic.ttf assets/fonts/
@@ -25,7 +25,7 @@ cp node_modules/@rightui/ui/assets/fonts/OFL-Newsreader.txt assets/fonts/
 
 npm, pnpm and Yarn can also install this package from the npm registry. See the [complete installation guide](https://rightui.dev/docs/installation) for creating an app with the pinned Exact SDK. GitHub access is not required to install the public package.
 
-For an offline install, use the immutable `rightui-ui-0.3.0-beta.8.tgz` archive with `bun add ./rightui-ui-0.3.0-beta.8.tgz`. Source contributors can produce it with `bun run package:ui` from the UI repository.
+For an offline install, use the immutable `rightui-ui-0.4.0-beta.1.tgz` archive with `bun add ./rightui-ui-0.4.0-beta.1.tgz`. Source contributors can produce it with `bun run package:ui` from the UI repository.
 
 In your application's `app.json`, add `rightui-font` to the top-level `data`
 array, keeping existing names and all other configuration:
@@ -40,6 +40,7 @@ Exact requires this declaration for RightUI's custom typography markers on
 web and native targets. The names omit the `data-` prefix.
 
 ```contract
+use defaultFontWeights from "@rightui/ui"
 font "Geist"
   100 900 = "assets/fonts/Geist.ttf"
   100 900 italic = "assets/fonts/Geist-Italic.ttf"
@@ -53,6 +54,7 @@ use Button, uiFontFamily from "@rightui/ui"
 component App
   provide
     uiFont = "theme"
+    uiWeights = defaultFontWeights()
   state count = 0
   action increment
     count = count + 1
@@ -81,6 +83,7 @@ task to the first component in your app's root Contract file, merging the provid
 with your existing `provide` block:
 
 ```contract
+use defaultFontWeights from "@rightui/ui"
 use CodeBlock from "@rightui/ui"
 
 component App
@@ -89,6 +92,7 @@ component App
   state copyVersion = 0
   provide
     uiFont = "theme"
+    uiWeights = defaultFontWeights()
     uiCopiedId = copiedId
     uiCopiedText = copiedText
     uiCopyCode = copyCode

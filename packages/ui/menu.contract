@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 use uiPopupIn, uiPopupOut from "./popup-motion.contract"
@@ -20,6 +21,7 @@ component ActionMenuTrigger
     reduced: bool
     choose: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   slot
   state expanded = false
@@ -108,7 +110,7 @@ component ActionMenuTrigger
             stopPropagation()
   view
     column min-width="0px" align-items="flex-start"
-      button id=id testId=id class=Control press=toggle contextmenu=context key=triggerKeys
+      button id=id testId=id class=Control font-weight=uiWeights.medium press=toggle contextmenu=context key=triggerKeys
         contextPopover=(contextual ? id + "-menu" : "")
         aria-label=label aria-haspopup="menu" aria-expanded=expanded aria-controls=(id + "-menu")
         display="flex" align-items="center" justify-content="center"
@@ -131,7 +133,7 @@ component ActionMenuTrigger
                   view role="separator" height="ui.border-width" margin="ui.space-4 ui.space-negative-4" background-color="ui.border"
                 button id=(id + "-item-" + item.id) testId=(id + "-item-" + item.id) class=Control
                   role="menuitem" tabindex=-1 disabled=item.disabled press=pick(item) key=itemKeys(item.id)
-                  display="flex" width="100%" box-sizing="border-box" align-items="center" flex-wrap="wrap" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius="ui.radius-item" font-weight="ui.weight-regular" background-color="transparent"
+                  display="flex" width="100%" box-sizing="border-box" align-items="center" flex-wrap="wrap" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius="ui.radius-item" font-weight=uiWeights.regular background-color="transparent"
                   color=(item.destructive ? "ui.danger" : "ui.foreground")
                   :hover
                     background-color="ui.muted"

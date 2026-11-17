@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, HoverCard, AvatarFrame from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
@@ -12,7 +14,7 @@ component Demo
         row gap="ui.space-12" align-items="center"
           AvatarFrame(id="controls-hover-avatar", name="@ccheever", src="assets/avatars/user-blue.png", fallback="CC", size="lg")
           column gap="ui.space-4" flex=1 min-width="0px"
-            text "@ccheever" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text "@ccheever" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
             text "Explore Exact and its native UI tools." font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         link id="controls-hover-profile" testId="controls-hover-profile" href="https://github.com/expo/exact" color="ui.foreground" font-size="ui.text-sm"
           text "Explore Exact" font-family=uiFontFamily(uiFont) data-rightui-font="body"

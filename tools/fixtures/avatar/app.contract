@@ -1,3 +1,4 @@
+use defaultFontWeights from "@rightui/ui"
 font "Geist"
   100 900 = "assets/fonts/Geist.ttf"
 use Avatar, AvatarFrame, AvatarMenu, AvatarGroupCount, DropdownMenu, MenuEntry, Button from "@rightui/ui"
@@ -18,6 +19,7 @@ component App
     chosen = value
   provide
     uiFont = "sans"
+    uiWeights = defaultFontWeights()
   view
     column gap=24 padding=24 background-color="ui.background" color="ui.foreground"
       AvatarFrame(id="recovery", name="Image recovery", src=src, fallback="CC", size="default")

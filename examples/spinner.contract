@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Spinner, Empty from "@rightui/ui"
 
 component Demo
@@ -5,11 +6,12 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       Spinner(id="catalog-spinner", label="Processing", reduced=reduced)
-      text "Loading empty state" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Loading empty state" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Empty(id="variation-spinner-empty", title="Loading projects", description="Your projects will appear here.")
         Spinner(id="variation-spinner-loading", label="Loading", reduced=reduced)

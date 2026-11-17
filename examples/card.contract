@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use cardSpacing, CardFrameOptions, CardHeaderOptions, CardContentOptions, CardFooterOptions, Input, ButtonContent, ToggleGroup, RadioGroupAdvanced, Badge, AvatarFrame, AvatarGroup, AvatarGroupItem, AvatarGroupCount, AspectRatioFrame, uiFontFamily, InputStyle, Button, Checkbox, CardFrame, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter, FieldSet, FieldLegend, FieldGroup, FieldFrame, FieldContent, FieldLabel, FieldDescription, FieldError, FieldSeparator from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state name = ""
@@ -49,7 +51,7 @@ component Demo
             FieldGroup(id="composition-group", nested=false)
               FieldFrame(id="composition-name-field", labelId="composition-name-label", descriptionId="composition-name-help", invalid=(submitted and name.trim() == ""), orientation="vertical")
                 FieldLabel(id="composition-name-label", label="Name", controlId="composition-name", disabled=disabled)
-                input id="composition-name" testId="composition-name" class=InputStyle value=name input=editName submit=validate disabled=disabled aria-labelledby="composition-name-label" aria-describedby=(submitted and name.trim() == "" ? "composition-name-help composition-name-error" : "composition-name-help") aria-required=true aria-invalid=(submitted and name.trim() == "") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                input id="composition-name" testId="composition-name" class=InputStyle font-weight=uiWeights.regular value=name input=editName submit=validate disabled=disabled aria-labelledby="composition-name-label" aria-describedby=(submitted and name.trim() == "" ? "composition-name-help composition-name-error" : "composition-name-help") aria-required=true aria-invalid=(submitted and name.trim() == "") font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 FieldDescription(id="composition-name-help", description="The name displayed on your profile.")
                 FieldError(id="composition-name-error", messages=(submitted and name.trim() == "" ? ["Enter your name."] : []))
               FieldSeparator(id="composition-separator", label="Contact")
@@ -57,37 +59,37 @@ component Demo
                 FieldContent(id="composition-email-content")
                   FieldLabel(id="composition-email-label", label="E-mail", controlId="composition-email", disabled=disabled)
                   FieldDescription(id="composition-email-help", description="Use an address containing @.")
-                input id="composition-email" testId="composition-email" class=InputStyle type="email" value=email input=editEmail submit=validate disabled=disabled aria-labelledby="composition-email-label" aria-describedby=(errors.length > 0 ? "composition-email-help composition-email-error" : "composition-email-help") aria-required=true aria-invalid=(errors.length > 0) font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                input id="composition-email" testId="composition-email" class=InputStyle font-weight=uiWeights.regular type="email" value=email input=editEmail submit=validate disabled=disabled aria-labelledby="composition-email-label" aria-describedby=(errors.length > 0 ? "composition-email-help composition-email-error" : "composition-email-help") aria-required=true aria-invalid=(errors.length > 0) font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 FieldError(id="composition-email-error", messages=errors)
         CardFooter(id="composition-footer", divided=true)
           column appearance="none" gap="ui.space-12" min-width=0
             Checkbox(id="composition-disable", label="Disable fields", checked=disabled, disabled=false, change=disable)
             Button(id="composition-save", label="Validate locally", variant="primary", disabled=disabled, press=validate)
             text (saved ? "Profile validated locally." : "No information sent.") testId="composition-result" role="status" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
-      text "Login" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      text "Login" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
       column appearance="none" max-width=384 width="100%" min-width=0
         CardLoginExample(id="card-login", size="default", spacing="", language="en")
-      text "Compact · scheduled reports" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      text "Compact · scheduled reports" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
       column appearance="none" max-width=320 width="100%" min-width=0
         CardReportsExample()
-      text "Custom spacing" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      text "Custom spacing" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
       column appearance="none" max-width=384 width="100%" min-width=0
         CardSpacingExample(reduced=reduced)
-      text "Header and footer borders · default and compact" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      text "Header and footer borders · default and compact" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
       for size in ["default", "sm"] key=size
         column appearance="none" max-width=384 width="100%" min-width=0
           CardBorderExample(size=size)
-      text "Edge-to-edge content" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      text "Edge-to-edge content" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
       column appearance="none" max-width=384 width="100%" min-width=0
         CardTermsExample()
-      text "Image · default and compact" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      text "Image · default and compact" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
       for size in ["default", "sm"] key=size
         column appearance="none" max-width=384 width="100%" min-width=0
           CardImageExample(id=("card-image-" + size), size=size)
-      text "Meeting notes · header action and footer avatars" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      text "Meeting notes · header action and footer avatars" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
       column appearance="none" max-width=384 width="100%" min-width=0
         CardNotesExample()
-      text "RTL · login" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
+      text "RTL · login" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body" appearance="none"
       column appearance="none" max-width=384 width="100%" min-width=0
         CardRtlExample()
 
@@ -115,6 +117,7 @@ component CardLoginExample
     spacing: string
     language: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive copy = cardLoginLabels(language)
   derive inset = cardSpacing(size, spacing)
@@ -178,14 +181,14 @@ component CardLoginExample
               Input(id=(id + "-name"), label="Name", value=name, placeholder="Your name", error=(submitted and name.trim() == "" ? "Enter your name." : ""), disabled=false, edit=editName)
           FieldFrame(id=(id + "-email-field"), labelId=(id + "-email-label"), descriptionId=(emailError != "" ? id + "-email-error" : ""), invalid=(emailError != ""), orientation="vertical")
             FieldLabel(id=(id + "-email-label"), label=copy.email, controlId=(id + "-email"), disabled=false)
-            input id=(id + "-email") testId=(id + "-email") class=InputStyle type="email" autocomplete="email" value=email input=editEmail submit=submitForm placeholder="m@example.com" aria-labelledby=(id + "-email-label") aria-describedby=(emailError != "" ? id + "-email-error" : "") aria-required=true aria-invalid=(emailError != "") direction="ltr" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            input id=(id + "-email") testId=(id + "-email") class=InputStyle font-weight=uiWeights.regular type="email" autocomplete="email" value=email input=editEmail submit=submitForm placeholder="m@example.com" aria-labelledby=(id + "-email-label") aria-describedby=(emailError != "" ? id + "-email-error" : "") aria-required=true aria-invalid=(emailError != "") direction="ltr" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             FieldError(id=(id + "-email-error"), messages=(emailError != "" ? [emailError] : []))
           if mode != "recovery"
             FieldFrame(id=(id + "-password-field"), labelId=(id + "-password-label"), descriptionId=(passwordError != "" ? id + "-password-error" : ""), invalid=(passwordError != ""), orientation="vertical")
               row appearance="none" align-items="center" justify-content="space-between" gap="ui.space-8" flex-wrap="wrap" min-width=0
                 FieldLabel(id=(id + "-password-label"), label=copy.password, controlId=(id + "-password"), disabled=false)
                 Button(id=(id + "-forgot"), label=copy.forgot, variant="link", disabled=false, press=recover)
-              input id=(id + "-password") testId=(id + "-password") class=InputStyle type="password" autocomplete=(mode == "signup" ? "new-password" : "current-password") value=password input=editPassword submit=submitForm aria-labelledby=(id + "-password-label") aria-describedby=(passwordError != "" ? id + "-password-error" : "") aria-required=true aria-invalid=(passwordError != "") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              input id=(id + "-password") testId=(id + "-password") class=InputStyle font-weight=uiWeights.regular type="password" autocomplete=(mode == "signup" ? "new-password" : "current-password") value=password input=editPassword submit=submitForm aria-labelledby=(id + "-password-label") aria-describedby=(passwordError != "" ? id + "-password-error" : "") aria-required=true aria-invalid=(passwordError != "") font-family=uiFontFamily(uiFont) data-rightui-font="body"
               FieldError(id=(id + "-password-error"), messages=(passwordError != "" ? [passwordError] : []))
       CardFooterOptions(id=(id + "-footer"), spacing=inset, divided=false)
         column appearance="none" gap="ui.space-8" width="100%" min-width=0

@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, HoverCardStyled from "@rightui/ui"
 
 component Demo
@@ -5,13 +6,14 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     row justify-content="center" padding="ui.space-48 ui.space-0"
       HoverCardStyled(id="ai-context-budget", label="8% context", variant="outline", size="sm")
         column min-width=0 max-width="100%" gap="ui.space-12" font-size="ui.text-sm"
           row justify-content="space-between" align-items="center" gap="ui.space-12" min-width=0 flex-wrap="wrap"
-            text "Context" font-weight="ui.weight-medium" min-width=0 font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text "Context" font-weight=uiWeights.medium min-width=0 font-family=uiFontFamily(uiFont) data-rightui-font="body"
             text "10.7k / 128k" color="ui.muted-foreground" flex-shrink=0 white-space="nowrap" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           view role="progressbar" aria-label="Context used" aria-valuenow=8 aria-valuemin=0 aria-valuemax=100 height="ui.space-6" border-radius="ui.radius-full" background-color="ui.muted"
             view width="8%" height="ui.space-6" border-radius="ui.radius-full" background-color="ui.primary"

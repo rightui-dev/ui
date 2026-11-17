@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Button from "./button.contract"
 use Control, Field from "./styles.contract"
@@ -19,6 +20,7 @@ component Questionnaire
     questions: QuestionnaireQuestion[]
     complete: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state step = 0
   state answers: QuestionnaireAnswer[] = []
@@ -72,25 +74,25 @@ component Questionnaire
       if questions.length == 0
         text "Aucune question." font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       else if finished
-        text "Your answers" font-size="ui.text-lg" font-weight="ui.weight-semibold" color="ui.foreground" role="heading" aria-level=3 font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text "Your answers" font-size="ui.text-lg" font-weight=uiWeights.semibold color="ui.foreground" role="heading" aria-level=3 font-family=uiFontFamily(uiFont) data-rightui-font="body"
         column testId=(id + "-result") gap="ui.space-8" role="status"
           for q in questions key=q.id
             column gap="ui.space-4"
-              text q.title font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text q.title font-size="ui.text-sm" font-weight=uiWeights.medium color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               text (match first(answers.filter(a => a.id == q.id)) { case some(a) => a.values.length == 0 ? "Skipped" : a.values.join(", "), case none => "Skipped" }) testId=(id + "-answer-" + q.id) font-size="ui.text-sm" color="ui.muted-foreground" overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         row gap="ui.space-8" flex-wrap="wrap"
           Button(id=id + "-back", label="Modifier", variant="outline", disabled=false, press=back)
           Button(id=id + "-restart", label="Recommencer", variant="primary", disabled=false, press=restart)
       else
-        text ("Question " + (step + 1).toString() + " sur " + questions.length.toString()) testId=(id + "-progress") font-size="ui.text-xs" font-weight="ui.weight-medium" color="ui.muted-foreground" aria-live="polite" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        text question.title font-size="ui.text-lg" font-weight="ui.weight-semibold" color="ui.foreground" role="heading" aria-level=3 font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text ("Question " + (step + 1).toString() + " sur " + questions.length.toString()) testId=(id + "-progress") font-size="ui.text-xs" font-weight=uiWeights.medium color="ui.muted-foreground" aria-live="polite" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text question.title font-size="ui.text-lg" font-weight=uiWeights.semibold color="ui.foreground" role="heading" aria-level=3 font-family=uiFontFamily(uiFont) data-rightui-font="body"
         text question.description font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if question.kind == "freeform"
-          textarea id=(id + "-input") testId=(id + "-input") class=Field value=freeform input=edit aria-label=question.title placeholder="Your answer…" min-height="6.25rem" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          textarea id=(id + "-input") testId=(id + "-input") class=Field font-weight=uiWeights.regular value=freeform input=edit aria-label=question.title placeholder="Your answer…" min-height="6.25rem" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         else
           column role=(question.kind == "single" ? "radiogroup" : "group") aria-label=question.title gap="ui.space-8"
             for option, i in question.options key=option
-              button id=(id + "-choice-" + i.toString()) testId=(id + "-choice-" + i.toString()) class=Control tabindex=(question.kind == "multi" or values.includes(option) or (values.length == 0 and i == 0) ? 0 : -1) role=(question.kind == "single" ? "radio" : "checkbox") aria-checked=values.includes(option) press=choose(option) key=choiceKey(i) padding="ui.space-12" min-height="ui.space-44" border-width=(values.includes(option) ? "ui.border-width" : "ui.border-width") border-style=(values.includes(option) ? "solid" : "solid") border-color=(values.includes(option) ? "ui.foreground" : "ui.border") background-color=(values.includes(option) ? "ui.muted" : "ui.surface") color="ui.foreground" text-align="left"
+              button id=(id + "-choice-" + i.toString()) testId=(id + "-choice-" + i.toString()) class=Control font-weight=uiWeights.medium tabindex=(question.kind == "multi" or values.includes(option) or (values.length == 0 and i == 0) ? 0 : -1) role=(question.kind == "single" ? "radio" : "checkbox") aria-checked=values.includes(option) press=choose(option) key=choiceKey(i) padding="ui.space-12" min-height="ui.space-44" border-width=(values.includes(option) ? "ui.border-width" : "ui.border-width") border-style=(values.includes(option) ? "solid" : "solid") border-color=(values.includes(option) ? "ui.foreground" : "ui.border") background-color=(values.includes(option) ? "ui.muted" : "ui.surface") color="ui.foreground" text-align="left"
                 text option font-family=uiFontFamily(uiFont) data-rightui-font="body"
         row gap="ui.space-8" flex-wrap="wrap" align-items="center"
           Button(id=id + "-back", label="Retour", variant="outline", disabled=(step == 0), press=back)

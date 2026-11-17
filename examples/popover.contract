@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Input, Popover from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state folder = "Editing"
@@ -14,6 +16,6 @@ component Demo
     column gap="ui.space-16" min-width=0 max-width="100%"
       Popover(id="catalog-popover", label="Folder name", focusId="catalog-folder", reduced=reduced)
         Input(id="catalog-folder", label="Folder name", value=folder, placeholder="Your folder", error="", disabled=false, edit=editFolder)
-      text "Basic content" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Basic content" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Popover(id="variation-popover-basic", label="About this workspace", focusId="", reduced=reduced)
         text "A shared space for your project assets." font-family=uiFontFamily(uiFont) data-rightui-font="body"

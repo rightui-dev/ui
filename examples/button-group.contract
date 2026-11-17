@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, ButtonGroupSeparator from "@rightui/ui"
 use Button, ButtonGroup from "@rightui/ui"
 
@@ -6,6 +7,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state hasItem = false
@@ -18,7 +20,7 @@ component Demo
       ButtonGroup(label="Manage items")
         Button(id="catalog-create", label="Add", variant="primary", disabled=false, press=createItem)
         Button(id="catalog-remove", label="Remove", variant="outline", disabled=not hasItem, press=removeItem)
-      text "Separated nested groups" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Separated nested groups" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       ButtonGroup(label="Nested actions")
         ButtonGroup(label="Create actions")
           Button(id="group-nested-add", label="Add", variant="outline", disabled=false, press=createItem)

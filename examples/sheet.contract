@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Button, Input from "@rightui/ui"
 use SheetContent, SheetBody, SheetFooter from "@rightui/ui/sheet"
 
@@ -6,6 +7,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state name = "Pedro Duarte"
   state username = "@peduarte"
@@ -47,7 +49,7 @@ component Demo
         SheetFooter()
           Button(id="sheet-save", label="Save changes", variant="primary", disabled=false, press=dismiss)
           Button(id="sheet-dismiss", label="Close", variant="outline", disabled=false, press=dismiss)
-      text "Side" role="heading" aria-level=3 font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Side" role="heading" aria-level=3 font-size="ui.text-sm" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
       row gap="ui.space-8" flex-wrap="wrap"
         for edge in ["top", "right", "bottom", "left"] key=edge
           Button(id="sheet-open-" + edge, label=edge, variant="outline", disabled=false, press=openSide(edge))
@@ -58,6 +60,6 @@ component Demo
             SheetFooter()
               Button(id="sheet-" + edge + "-save", label="Save changes", variant="primary", disabled=false, press=dismissSide(edge))
               Button(id="sheet-" + edge + "-cancel", label="Cancel", variant="outline", disabled=false, press=dismissSide(edge))
-      text "No Close Button" role="heading" aria-level=3 font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "No Close Button" role="heading" aria-level=3 font-size="ui.text-sm" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
       row
         Button(id="sheet-open-no-close", label="Open Sheet", variant="outline", disabled=false, press=openWithoutClose)

@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use uiPopupIn, uiPopupOut from "./popup-motion.contract"
 use Field, Pressable from "./styles.contract"
@@ -11,6 +12,7 @@ component Select
     reduced: bool
     change: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state expanded = false
   state openEpoch = 0
@@ -77,8 +79,8 @@ component Select
             active = active
   view
     column gap="ui.space-8" min-width="0px"
-      text label id=(id + "-label") font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      button id=id testId=id class=Field disabled=disabled press=open key=keys
+      text label id=(id + "-label") font-size="ui.text-sm" font-weight=uiWeights.medium color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      button id=id testId=id class=Field font-weight=uiWeights.regular disabled=disabled press=open key=keys
         role="combobox" aria-expanded=expanded aria-controls=(id + "-list") aria-haspopup="listbox" aria-labelledby=(id + "-label")
         display="flex" justify-content="space-between" align-items="center" gap="ui.space-8"
         text value flex=1 min-width="0px" text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
@@ -99,7 +101,7 @@ component Select
                   appearance="none" role="option" aria-selected=(value == option) tabindex=(active == i ? 0 : -1)
                   press=pick(i) class=Pressable
                   background-color=(active == i ? "ui.muted" : "ui.surface")
-                  color="ui.foreground" border="0" border-radius="ui.radius-item" min-height="ui.space-32" padding="ui.space-6 ui.space-8" font-weight="ui.weight-regular"
+                  color="ui.foreground" border="0" border-radius="ui.radius-item" min-height="ui.space-32" padding="ui.space-6 ui.space-8" font-weight=uiWeights.regular
                   :focus-visible
                     box-shadow="ui.shadow-focus"
                   row gap="ui.space-8" align-items="center"

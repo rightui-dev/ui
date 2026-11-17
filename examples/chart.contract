@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Card, ChartOptions, ChartPoint, AreaChartOptions, Button, ButtonControl, LineChartOptions, PieChart, RadarChart, RadialChart, SeriesPoint, ChartSeries, ChartSlice, SeriesValuesTooltipOptions from "@rightui/ui"
 fn paritySeries(): ChartSeries[] = [ChartSeries(id="desktop", label="Desktop", color="ui.chart-1"), ChartSeries(id="mobile", label="Mobile", color="ui.chart-2")]
 fn parityMonths(): SeriesPoint[] = [SeriesPoint(id="jan", label="January", values=[186, 80]), SeriesPoint(id="feb", label="February", values=[305, 200]), SeriesPoint(id="mar", label="March", values=[237, 120]), SeriesPoint(id="apr", label="April", values=[73, 190]), SeriesPoint(id="may", label="May", values=[209, 130]), SeriesPoint(id="jun", label="June", values=[214, 140])]
@@ -25,16 +26,17 @@ component ChartOptionButton
 
 component TooltipExamples
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     row gap="ui.space-12" flex-wrap="wrap" min-width=0
       for indicator in ["dot", "line", "dashed", "none"] key=indicator
         column gap="ui.space-8" width="14rem" max-width="100%" min-width=0
-          text (indicator == "none" ? "No indicator" : indicator) text-transform="capitalize" font-weight="ui.weight-medium" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          text (indicator == "none" ? "No indicator" : indicator) text-transform="capitalize" font-weight=uiWeights.medium font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           view position="relative" min-width=0 height=140
             SeriesValuesTooltipOptions(id=("chart-tooltip-" + indicator), title="Page Views", series=(indicator == "line" ? [ChartSeries(id="desktop", label="Desktop", color="ui.chart-1")] : paritySeries()), values=[12486, 1000], hidden=[], indicator=indicator, hideLabel=(indicator == "dashed"), hideIndicator=false, labelFormat="auto", nameOverride="", valueFormat="decimal", valuePrefix="", valueSuffix="", formattedValues=[], icons=[], showTotal=false, totalLabel="Total", plotWidth=0, anchor=-1)
       column gap="ui.space-8" width="14rem" max-width="100%" min-width=0
-        text "Custom value and total" font-weight="ui.weight-medium" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text "Custom value and total" font-weight=uiWeights.medium font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         view position="relative" min-width=0 height=160
           SeriesValuesTooltipOptions(id="chart-tooltip-advanced", title="RightUI activity", series=paritySeries(), values=[450, 300], hidden=[], indicator="dot", hideLabel=false, hideIndicator=false, labelFormat="auto", nameOverride="", valueFormat="decimal", valuePrefix="", valueSuffix=" kcal", formattedValues=["450 kcal", "300 kcal"], icons=[], showTotal=true, totalLabel="Total", plotWidth=0, anchor=-1)
 
@@ -43,6 +45,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state donut = false
   state empty = false
@@ -144,5 +147,5 @@ component Demo
       row gap="ui.space-12"
         Button(id="parity-sweep", label=(half ? "Show full circles" : "Show semicircles"), variant="outline", disabled=false, press=toggleSweep)
       RadialChart(id="parity-radial", label="Visitors by browser, concentric radial bars", items=(empty ? [] : parityBrowsers()), maximum=275, sweep=(half ? 180 : 360), showLegend=true, reduced=reduced)
-      text "Explicit maximum without legend" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Explicit maximum without legend" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       RadarChart(id="radar-fixed", label="Visitors on a fixed scale", points=parityRadar(), series=paritySeries(), maximum=400, showLegend=false, reduced=reduced)

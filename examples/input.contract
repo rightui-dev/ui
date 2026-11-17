@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, FieldGroup, Button from "@rightui/ui"
 use Input from "@rightui/ui"
 
@@ -6,6 +7,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state folder = "Editing"
@@ -19,7 +21,7 @@ component Demo
       Input(id="catalog-folder", label="Folder name", value=folder, placeholder="Your folder", error="", disabled=false, edit=editFolder)
       Input(id="catalog-input-invalid", label="Invalid input", value=folder, placeholder="Required", error="This field is required.", disabled=false, edit=editFolder)
       Input(id="catalog-input-disabled", label="Disabled input", value="Read only preview", placeholder="", error="", disabled=true, edit=editFolder)
-      text "Grouped inline fields and action" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Grouped inline fields and action" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       FieldGroup(id="input-inline-group", nested=false)
         row gap="ui.space-12" flex-wrap="wrap"
           Input(id="input-inline-name", label="Folder", value=folder, placeholder="Folder", error="", disabled=false, edit=editFolder)

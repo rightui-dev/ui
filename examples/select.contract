@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Select from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state preset = "Studio"
@@ -14,7 +16,7 @@ component Demo
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       Select(id="preset", label="Espace de travail", options=["Studio", "Personnel", "Team"], value=preset, disabled=false, reduced=reduce, change=selectPreset)
-      text "Disabled" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Disabled" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Select(id="variation-select-disabled", label="Espace de travail", options=["Studio", "Personnel", "Team"], value=preset, disabled=true, reduced=reduce, change=selectPreset)
-      text "Scrollable options" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Scrollable options" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Select(id="variation-select-long", label="Destination", options=["Workspace 1","Workspace 2","Workspace 3","Workspace 4","Workspace 5","Workspace 6","Workspace 7","Workspace 8","Workspace 9","Workspace 10","Workspace 11","Workspace 12","Workspace 13","Workspace 14","Workspace 15","Workspace 16","Workspace 17","Workspace 18","Workspace 19","Workspace 20","Workspace 21","Workspace 22","Workspace 23","Workspace 24"], value=preset, disabled=false, reduced=reduced, change=selectPreset)

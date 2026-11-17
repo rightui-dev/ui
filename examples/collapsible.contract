@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Checkbox from "@rightui/ui"
 use Button, Alert, Collapsible from "@rightui/ui"
 
@@ -6,6 +7,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state details = false
@@ -27,7 +29,7 @@ component Demo
       Button(id="collapsible-open", label="Open collapsible", variant="outline", disabled=false, press=openExample)
       Collapsible(id="catalog-details", label=(details ? "Hide details" : "Show details"), open=details, reduced=reduced, change=setDetails)
         Alert(id="catalog-details-alert", title="Content on demand", description="Cette section peut contenir vos propres composants.", variant="default")
-      text "Settings and nested files" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Settings and nested files" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Collapsible(id="settings-panel", label="Settings", open=details, reduced=reduced, change=setDetails)
         Checkbox(id="settings-enabled", label="Enable notifications", checked=settingsEnabled, disabled=false, change=changeSettings)
       Collapsible(id="files-root", label="Project files", open=filesOpen, reduced=reduced, change=changeFiles)

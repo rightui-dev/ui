@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use uiPopupIn, uiPopupOut from "./popup-motion.contract"
 use Control from "./styles.contract"
@@ -13,6 +14,7 @@ component Menubar
     reduced: bool
     choose: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state active = 0
   state expanded = false
@@ -123,7 +125,7 @@ component Menubar
       padding="ui.space-4" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" min-height="ui.space-36" box-sizing="border-box"
       for group, i in groups key=group.id
         column align-items="flex-start"
-          button id=(id + "-" + group.id) testId=(id + "-" + group.id) class=Control role="menuitem"
+          button id=(id + "-" + group.id) testId=(id + "-" + group.id) class=Control font-weight=uiWeights.medium role="menuitem"
             tabindex=(active == i ? 0 : -1) aria-haspopup="menu" aria-expanded=(expanded and active == i) aria-controls=(id + "-" + group.id + "-menu")
             press=toggle(i) key=triggerKeys(i) padding="ui.space-4 ui.space-8" min-height="ui.space-28" border="0" border-radius="ui.radius-sm" background-color=(expanded and active == i ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm"
             text group.label font-family=uiFontFamily(uiFont) data-rightui-font="body"
@@ -138,7 +140,7 @@ component Menubar
                   for entry in group.entries key=entry.id
                     button id=(id + "-" + group.id + "-item-" + entry.id) testId=(id + "-" + group.id + "-item-" + entry.id) class=Control
                       role="menuitem" tabindex=-1 disabled=entry.disabled press=pick(entry) key=itemKeys(i, entry.id)
-                      display="flex" width="100%" box-sizing="border-box" align-items="center" gap="ui.space-24" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius="ui.radius-item" background-color="transparent" color=(entry.destructive ? "ui.danger" : "ui.foreground") font-size="ui.text-sm" font-weight="ui.weight-regular"
+                      display="flex" width="100%" box-sizing="border-box" align-items="center" gap="ui.space-24" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius="ui.radius-item" background-color="transparent" color=(entry.destructive ? "ui.danger" : "ui.foreground") font-size="ui.text-sm" font-weight=uiWeights.regular
                       :hover
                         background-color="ui.muted"
                       :focus-visible

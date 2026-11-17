@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Separator from "@rightui/ui"
 
 component Demo
@@ -5,22 +6,23 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       Separator(vertical=false)
-      text "Vertical separator" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Vertical separator" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       row height="ui.space-32" gap="ui.space-16" align-items="center"
         text "Library" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         Separator(vertical=true)
         text "Exports" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "Menu separators" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Menu separators" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       column gap="ui.space-8"
         text "Profile" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         Separator(vertical=false)
         text "Settings" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "List separators" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "List separators" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       column gap="ui.space-8"
         text "First project" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         Separator(vertical=false)

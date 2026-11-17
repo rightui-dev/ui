@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 keyframes traceSweep64
   from translate="-64px 0px"
@@ -107,6 +108,7 @@ component TraceTitle
     running: bool
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state width = 64
   action measure(w: number, h: number)
@@ -114,10 +116,10 @@ component TraceTitle
   derive band = width <= 64 ? "64" : width <= 128 ? "128" : width <= 256 ? "256" : width <= 512 ? "512" : "1024"
   view
     view position="relative" flex="0 1 auto" min-width="0px" max-width="100%" overflow="hidden" resize=measure
-      text title class=TraceTitleText min-width="0px" overflow="hidden" text-overflow="ellipsis" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text title class=TraceTitleText font-weight=uiWeights.regular min-width="0px" overflow="hidden" text-overflow="ellipsis" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if running and not reduced
         view position="absolute" left="0px" top="0px" bottom="0px" width=64 pointer-events="none" aria-hidden=true mask-image="linear-gradient(to right, transparent 0%, #000000 50%, transparent 100%)" animation=("traceSweep" + band + " ui.duration-shimmer ui.easing-linear infinite")
-          text title class=TraceTitleText position="absolute" left="0px" top="0px" width=width color="ui.trace-shimmer" animation=("traceCounter" + band + " ui.duration-shimmer ui.easing-linear infinite") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          text title class=TraceTitleText font-weight=uiWeights.regular position="absolute" left="0px" top="0px" width=width color="ui.trace-shimmer" animation=("traceCounter" + band + " ui.duration-shimmer ui.easing-linear infinite") font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component TraceLine
   props
@@ -147,9 +149,11 @@ component TraceDisclosure
     reduced: bool
     toggle: action
   slot
+  inject
+    uiWeights: FontWeights
   view
     column min-width="0px"
-      button id=id testId=id class=Control press=toggle aria-label=title aria-expanded=open aria-controls=(id + "-content")
+      button id=id testId=id class=Control font-weight=uiWeights.medium press=toggle aria-label=title aria-expanded=open aria-controls=(id + "-content")
         display="flex" align-items="center" align-self="flex-start" text-align="left" gap="ui.space-4" padding="ui.space-4 0px" margin="ui.space-negative-4 0px" min-height="ui.space-28" border="0" border-radius="ui.radius-md" background-color="transparent" color=(status == "error" ? "ui.danger" : "ui.muted-foreground")
         transition=(reduced ? "none" : "color ui.duration-fast ui.easing")
         :hover

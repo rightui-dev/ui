@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, TooltipAdvanced from "@rightui/ui"
 
 component Demo
@@ -5,11 +6,12 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     column gap="ui.space-24" min-width=0 max-width="100%" align-items="center"
       TooltipAdvanced(id="catalog-tooltip", label="Hover", description="Add to library", side="top", reduced=reduced)
-      text "Placement" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Placement" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       column gap="ui.space-12" align-items="center" padding="ui.space-24 0px"
         TooltipAdvanced(id="tooltip-top", label="Top", description="Add to library", side="top", reduced=reduced)
         row flex-direction=(width < 600 ? "column" : "row") gap="ui.space-24" align-items="center" justify-content="center"

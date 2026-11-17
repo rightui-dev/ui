@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 
@@ -49,6 +50,7 @@ component RangeSlider
     disabled: bool
     change: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state active = 0
   state dragging = false
@@ -108,7 +110,7 @@ component RangeSlider
   view
     column id=id testId=id gap="ui.space-8" min-width="0px" color="ui.foreground"
       row gap="ui.space-8" align-items="center" justify-content="space-between" flex-wrap="wrap"
-        text label font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text label font-size="ui.text-sm" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
         text (low.toString() + " — " + high.toString()) testId=(id + "-value") font-size="ui.text-sm" font-variant-numeric="tabular-nums" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       view id=(id + "-track") testId=(id + "-track") role="group" aria-label=label position="relative" width=(vertical ? "ui.touch-target" : "100%") height=(vertical ? 192 : "ui.touch-target") touch-action="none" pointerdown=begin(-1) pointerup=finish pointermove=move opacity=(disabled ? "ui.opacity-disabled" : 1) cursor=(disabled ? "default" : "pointer")
         view id=(id + "-rail") position="absolute" left=(vertical ? "50%" : "ui.space-8") top=(vertical ? "ui.space-8" : "50%") translate=(vertical ? "-50% 0px" : "0px -50%") right=(vertical ? "auto" : "ui.space-8") bottom=(vertical ? "ui.space-8" : "auto") width=(vertical ? "ui.space-4" : "auto") height=(vertical ? "auto" : "ui.space-4") background-color="ui.muted" border-radius="ui.radius-full"
@@ -143,6 +145,7 @@ component AccordionMultipleOptions
     reduced: bool
     change: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state hovered = -1
   action hoverItem(index: number, inside: bool)
@@ -164,9 +167,9 @@ component AccordionMultipleOptions
     column id=id testId=id min-width="0px"
       for title, i in titles key=title
         column border-bottom-width=(i == titles.length - 1 ? "0px" : "ui.border-width") border-bottom-style=(i == titles.length - 1 ? "solid" : "solid") border-bottom-color=(i == titles.length - 1 ? "transparent" : "ui.border")
-          button id=(id + "-trigger-" + i.toString()) testId=(id + "-trigger-" + i.toString()) class=Control disabled=disabledItems.includes(i) aria-expanded=expanded.includes(i) aria-controls=(id + "-panel-" + i.toString()) press=toggle(i) key=keys(i) hover=hoverItem(i)
+          button id=(id + "-trigger-" + i.toString()) testId=(id + "-trigger-" + i.toString()) class=Control font-weight=uiWeights.medium disabled=disabledItems.includes(i) aria-expanded=expanded.includes(i) aria-controls=(id + "-panel-" + i.toString()) press=toggle(i) key=keys(i) hover=hoverItem(i)
             display="flex" align-items="flex-start" gap="ui.space-16" padding="ui.space-16 0px" border="0" background-color="transparent" color="ui.foreground"
-            text title font-size="ui.text-sm" font-weight="ui.weight-medium" flex=1 min-width="0px" text-align="left" text-decoration=(hovered == i ? "underline" : "none") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text title font-size="ui.text-sm" font-weight=uiWeights.medium flex=1 min-width="0px" text-align="left" text-decoration=(hovered == i ? "underline" : "none") font-family=uiFontFamily(uiFont) data-rightui-font="body"
             svg width="ui.space-16" height="ui.space-16" margin-top="ui.space-2" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" rotate=(expanded.includes(i) ? "180deg" : "0deg") transition=(reduced ? "none" : "rotate ui.duration-normal ui.easing") aria-hidden=true
               path d="m6 9 6 6 6-6"
           column id=(id + "-panel-" + i.toString()) testId=(expanded.includes(i) ? id + "-panel-" + i.toString() : "") role="region" aria-labelledby=(id + "-trigger-" + i.toString()) aria-hidden=(not expanded.includes(i)) inert=(not expanded.includes(i)) height=(expanded.includes(i) ? "auto" : "0px") overflow="hidden" -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing")

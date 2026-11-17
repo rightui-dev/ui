@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, AttachmentOptions, Button, AttachmentGroup, AttachmentFrame, AttachmentMedia, AttachmentContent, AttachmentTitle, AttachmentDescription, AttachmentActions, AttachmentAction, AttachmentTrigger, AttachmentPreview from "@rightui/ui"
 use AttachmentDemoFile, attachmentDemoFiles, attachmentDemoDocuments from "./attachment-data.contract"
 
@@ -6,6 +7,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state attached = true
   state linked = true
@@ -63,31 +65,31 @@ component Demo
     documents = attachmentDemoDocuments()
   view
     column gap="ui.space-16" min-width="0px" max-width="100%" width="100%"
-      text "Preview and actions" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Preview and actions" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if attached
         AttachmentOptions(id="content-attachment", name="project-brief.txt", metadata="Text · Project overview · Ready", content="RightUI component review\nCheck keyboard navigation, responsive layouts and shared themes.\nDeliver a reusable Exact interface.", status="done", copyable=true, reduced=reduced, remove=remove, size="default", orientation="horizontal", imageSource="", cardWidth="", previewHref="", copyValue="")
       Button(id="attachment-restore", label="Restore sample attachments", variant="outline", disabled=false, press=restore)
       if linked
         AttachmentOptions(id="attachment-link", name="rightui-guide.txt", metadata="Text · Open the RightUI guide", content="", imageSource="", previewHref="https://rightui.dev/llms.txt", copyable=true, copyValue="https://rightui.dev/llms.txt", status="done", reduced=reduced, remove=removeLink, size="default", orientation="horizontal", cardWidth="")
-      text "Document previews" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Document previews" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       AttachmentGroup(id="attachment-documents", label="Document previews", compact=false)
         for file in documents key=file.id
           AttachmentOptions(id="attachment-document-" + file.id, name=file.name, metadata=file.metadata, content=file.content, imageSource=file.source, orientation="vertical", status="done", reduced=reduced, remove=removeDocument(file.id), size="default", cardWidth="", previewHref="", copyable=false, copyValue="")
       if documents.length == 0
         text "No documents. Restore the samples to start again." role="status" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "Full attachment group" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Full attachment group" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       AttachmentGroup(id="attachment-group-full", label="Project files", compact=false)
         for file in files key=file.id
           AttachmentOptions(id="attachment-full-" + file.id, name=file.name, metadata=file.metadata, content=file.content, imageSource=file.source, cardWidth="18rem", status="done", reduced=reduced, remove=removeFile(file.id), size="default", orientation="horizontal", previewHref="", copyable=false, copyValue="")
       if files.length == 0
         text "No attachments. Restore the samples to start again." role="status" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "Compact attachment group" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Compact attachment group" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       AttachmentGroup(id="attachment-group-compact", label="Compact attachments", compact=true)
         for file in compactFiles key=file.id
           AttachmentOptions(id="attachment-compact-" + file.id, name=file.name, metadata=file.metadata, content=file.content, imageSource=file.source, cardWidth="15rem", size="xs", status="done", reduced=reduced, remove=removeCompact(file.id), orientation="horizontal", previewHref="", copyable=false, copyValue="")
       if compactFiles.length == 0
         text "No compact attachments." role="status" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "States and sizes" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "States and sizes" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       text "The following states demonstrate local preparation; no file is sent." font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if idle
         AttachmentOptions(id="attachment-idle", name="component-inventory.csv", metadata="CSV · Ready to upload", content="component,status\nButton,ready", status="idle", size="xs", reduced=reduced, remove=removeIdle, orientation="horizontal", imageSource="", cardWidth="", previewHref="", copyable=false, copyValue="")

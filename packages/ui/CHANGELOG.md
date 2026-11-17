@@ -4,6 +4,10 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.4.0-beta.1] - 2026-11-17
+
+- Add the required `uiWeights` context with `FontWeights`, `defaultFontWeights` and `scaleFontWeights` for proportional semantic weights. Applications must add the provider; custom weight token overrides migrate into the base record. See `docs/MIGRATION-0.4.md`.
+
 ## [0.3.0-beta.8] - 2026-11-15
 
 - Add MessageTyping with a one-second staggered three-dot wave and reduced-motion support.

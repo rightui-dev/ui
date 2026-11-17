@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 // Pass the resolved inset to each part: caller-owned slots retain their caller's providers.
 fn cardSpacing(size: string, spacing: string): string = spacing != "" ? spacing : size == "sm" ? "ui.space-12" : "ui.space-24"
@@ -48,9 +49,10 @@ component CardTitle
     title: string
     level: number
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
-    text title appearance="none" id=id testId=id grid-column="1" grid-row="1" min-width="0px" font-size="ui.text-base" line-height="ui.leading-solid" font-weight="ui.weight-semibold" role="heading" aria-level=level overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    text title appearance="none" id=id testId=id grid-column="1" grid-row="1" min-width="0px" font-size="ui.text-base" line-height="ui.leading-solid" font-weight=uiWeights.semibold role="heading" aria-level=level overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component CardDescription
   props
@@ -254,9 +256,10 @@ component FieldLegend
     label: string
     variant: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
-    text label id=id testId=id margin-bottom="ui.space-12" font-size=(variant == "label" ? "ui.text-sm" : "ui.text-base") font-weight="ui.weight-medium" line-height="ui.leading-normal" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    text label id=id testId=id margin-bottom="ui.space-12" font-size=(variant == "label" ? "ui.text-sm" : "ui.text-base") font-weight=uiWeights.medium line-height="ui.leading-normal" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component FieldGroup
   props
@@ -294,12 +297,13 @@ component FieldLabel
     controlId: string
     disabled: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   action activate
     if not disabled
       focus(controlId)
   view
-    text label id=id testId=id press=activate appearance="none" background-color="transparent" font-size="ui.text-sm" font-weight="ui.weight-medium" line-height="ui.leading-compact" color="ui.foreground" opacity=(disabled ? "ui.opacity-disabled" : 1) font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    text label id=id testId=id press=activate appearance="none" background-color="transparent" font-size="ui.text-sm" font-weight=uiWeights.medium line-height="ui.leading-compact" color="ui.foreground" opacity=(disabled ? "ui.opacity-disabled" : 1) font-family=uiFontFamily(uiFont) data-rightui-font="body"
       :hover
         background-color="transparent"
       :active
@@ -311,9 +315,10 @@ component FieldTitle
     title: string
     disabled: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
-    text title id=id testId=id font-size="ui.text-sm" font-weight="ui.weight-medium" line-height="ui.leading-compact" color="ui.foreground" opacity=(disabled ? "ui.opacity-disabled" : 1) font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    text title id=id testId=id font-size="ui.text-sm" font-weight=uiWeights.medium line-height="ui.leading-compact" color="ui.foreground" opacity=(disabled ? "ui.opacity-disabled" : 1) font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component FieldDescription
   props
@@ -329,11 +334,12 @@ component FieldError
     id: string
     messages: string[]
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive unique = messages.filter((message, index) => message.trim() != "" and messages.indexOf(message) == index)
   view
     if unique.length > 0
-      column id=id testId=id role="alert" gap="ui.space-4" font-size="ui.text-sm" font-weight="ui.weight-regular" color="ui.danger"
+      column id=id testId=id role="alert" gap="ui.space-4" font-size="ui.text-sm" font-weight=uiWeights.regular color="ui.danger"
         if unique.length == 1
           text unique.join("") testId=(id + "-message-0") overflow-wrap="break-word" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         else
@@ -358,8 +364,10 @@ component ButtonGroupText
   props
     id: string
   slot
+  inject
+    uiWeights: FontWeights
   view
-    row id=id testId=id align-items="center" gap="ui.space-8" min-height="ui.space-36" padding="0px ui.space-16" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.muted" font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" box-shadow="ui.shadow-control"
+    row id=id testId=id align-items="center" gap="ui.space-8" min-height="ui.space-36" padding="0px ui.space-16" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.muted" font-size="ui.text-sm" font-weight=uiWeights.medium color="ui.foreground" box-shadow="ui.shadow-control"
       children
 
 component ButtonGroupSeparator

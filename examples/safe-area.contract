@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use SafeArea, Switch, uiFontFamily from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state top = true
   state bottom = true
@@ -28,6 +30,6 @@ component Demo
       column testId="safe-area-preview" background-color="ui.muted" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-panel" overflow="clip"
         SafeArea(top=top, bottom=bottom, left=left, right=right)
           column testId="safe-area-content" gap="ui.space-8" padding="ui.space-16" background-color="ui.surface"
-            text "Content inside SafeArea" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) color="ui.foreground" data-rightui-font="body"
+            text "Content inside SafeArea" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) color="ui.foreground" data-rightui-font="body"
             text "The muted space uses this window's actual safe-area insets. Toggle an edge to include or remove its padding." font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) color="ui.muted-foreground" data-rightui-font="body"
       text "Insets can be zero, especially in desktop browsers. This example does not simulate a notch or add a minimum inset." font-size="ui.text-xs" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) color="ui.muted-foreground" data-rightui-font="body"

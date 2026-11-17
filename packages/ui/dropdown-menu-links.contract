@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 use uiPopupIn, uiPopupOut from "./popup-motion.contract"
@@ -17,6 +18,7 @@ component DropdownMenuLinks
     customTrigger: bool
     direction: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   slot
   state expanded = false
@@ -77,7 +79,7 @@ component DropdownMenuLinks
             stopPropagation()
   view
     column min-width="0px" max-width="100%" align-items="flex-start" direction=direction
-      button id=id testId=id class=Control press=toggle key=triggerKeys
+      button id=id testId=id class=Control font-weight=uiWeights.medium press=toggle key=triggerKeys
         aria-label=label aria-haspopup="menu" aria-expanded=expanded aria-controls=(id + "-menu")
         popovertarget=(expanded ? id + "-menu" : "") popovertargetaction="show"
         display="flex" align-items="center" justify-content="center" gap="ui.space-4" min-height="ui.space-28" padding="ui.space-2 ui.space-4" border="0" border-radius="ui.radius-sm" background-color="transparent" color="ui.muted-foreground"

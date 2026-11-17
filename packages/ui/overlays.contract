@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use OverlayLayer from "./overlay-layer.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
@@ -44,6 +45,7 @@ component ModalFrame
     focusIds: string[]
     dismiss: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   slot
   state focused = ""
@@ -90,13 +92,13 @@ component ModalFrame
               animation=(reduced ? "none" : alert ? "uiModalZoomIn ui.duration-normal ui.easing both" : side == "left" ? "uiPanelLeftIn ui.duration-enter ui.easing both" : side == "right" ? "uiPanelRightIn ui.duration-enter ui.easing both" : side == "top" ? "uiPanelTopIn ui.duration-enter ui.easing both" : "uiPanelBottomIn ui.duration-enter ui.easing both")
               -exact-exit-animation=(reduced ? "none" : alert ? "uiModalZoomOut ui.duration-normal ui.easing both" : side == "left" ? "uiPanelLeftOut ui.duration-slow ui.easing both" : side == "right" ? "uiPanelRightOut ui.duration-slow ui.easing both" : side == "top" ? "uiPanelTopOut ui.duration-slow ui.easing both" : "uiPanelBottomOut ui.duration-slow ui.easing both")
               if not alert
-                button id=(id + "-close") testId=(id + "-close") class=Control autofocus=true press=dismiss aria-label="Close" position="absolute" top="ui.space-16" right="ui.space-16" z-index=1 width="ui.space-16" height="ui.space-16" min-height="ui.space-16" padding="0px" border="none" background-color="transparent" color="ui.foreground" opacity="ui.opacity-soft"
+                button id=(id + "-close") testId=(id + "-close") class=Control font-weight=uiWeights.medium autofocus=true press=dismiss aria-label="Close" position="absolute" top="ui.space-16" right="ui.space-16" z-index=1 width="ui.space-16" height="ui.space-16" min-height="ui.space-16" padding="0px" border="none" background-color="transparent" color="ui.foreground" opacity="ui.opacity-soft"
                   svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
                     path d="m6 6 12 12M6 18 18 6"
               scroll flex="1 1 auto" min-height="0px"
                 column gap="ui.space-16" min-width="0px" padding=(alert ? "0px" : "ui.space-16")
                   column gap="ui.space-8" padding-right=(alert ? "0px" : "ui.space-24")
-                    text title id=(id + "-title") role="heading" aria-level=2 hyphens="auto" font-size=(alert ? "ui.text-lg" : "ui.text-base") font-weight="ui.weight-semibold" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                    text title id=(id + "-title") role="heading" aria-level=2 hyphens="auto" font-size=(alert ? "ui.text-lg" : "ui.text-base") font-weight=uiWeights.semibold color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                     text description id=(id + "-description") hyphens="auto" font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                   children
 
@@ -126,11 +128,12 @@ component AlertDialog
     dismiss: action
     confirm: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     ModalFrame(id=id, open=open, title=title, description=description, side="center", alert=true, reduced=reduced, focusIds=[id + "-cancel", id + "-confirm"], dismiss=dismiss)
       row gap="ui.space-8" flex-wrap="wrap" justify-content="flex-end"
-        button id=(id + "-cancel") testId=(id + "-cancel") class=Control autofocus=true press=dismiss padding="ui.space-8 ui.space-16" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground"
+        button id=(id + "-cancel") testId=(id + "-cancel") class=Control font-weight=uiWeights.medium autofocus=true press=dismiss padding="ui.space-8 ui.space-16" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground"
           text "Cancel" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        button id=(id + "-confirm") testId=(id + "-confirm") class=Control press=confirm padding="ui.space-8 ui.space-16" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.primary" color="ui.primary-foreground"
+        button id=(id + "-confirm") testId=(id + "-confirm") class=Control font-weight=uiWeights.medium press=confirm padding="ui.space-8 ui.space-16" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.primary" color="ui.primary-foreground"
           text confirmLabel font-family=uiFontFamily(uiFont) data-rightui-font="body"

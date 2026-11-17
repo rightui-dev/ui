@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, ControlStyle as Control from "@rightui/ui"
 
 component TreeFile
@@ -7,12 +8,13 @@ component TreeFile
     selected: string
     choose: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state hovered = false
   action hover(inside: bool)
     hovered = inside
   view
-    button class=Control hover=hover testId=("ai-file-tree-" + path) press=choose(path) aria-current=(selected == path ? "true" : "false") display="flex" align-items="center" gap="ui.space-8" width="100%" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-12" border="0" border-radius="ui.radius-sm" background-color=(selected == path or hovered ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm" text-align="left"
+    button class=Control font-weight=uiWeights.medium hover=hover testId=("ai-file-tree-" + path) press=choose(path) aria-current=(selected == path ? "true" : "false") display="flex" align-items="center" gap="ui.space-8" width="100%" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-12" border="0" border-radius="ui.radius-sm" background-color=(selected == path or hovered ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm" text-align="left"
       svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke"
         path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6"
       text name font-family=uiFontFamily(uiFont) data-rightui-font="body"
@@ -22,6 +24,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state appOpen = true
   state componentsOpen = true
@@ -37,7 +40,7 @@ component Demo
     selected = path
   view
     column width="100%" max-width="20rem" padding="ui.space-24 ui.space-0" font-size="ui.text-sm"
-      button id="ai-file-tree-app" testId="ai-file-tree-app" class=Control aria-label="app" aria-controls="ai-file-tree-app-files" aria-expanded=appOpen press=appToggle display="flex" align-items="center" width="100%" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-12" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-regular" text-align="left"
+      button id="ai-file-tree-app" testId="ai-file-tree-app" class=Control aria-label="app" aria-controls="ai-file-tree-app-files" aria-expanded=appOpen press=appToggle display="flex" align-items="center" width="100%" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-12" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight=uiWeights.regular text-align="left"
         :hover
           background-color="ui.muted"
         row gap="ui.space-8" align-items="center"
@@ -50,7 +53,7 @@ component Demo
         column id="ai-file-tree-app-files" padding-left="ui.space-16"
           TreeFile(path="app/layout.tsx", name="layout.tsx", selected=selected, choose=choose)
           TreeFile(path="app/page.tsx", name="page.tsx", selected=selected, choose=choose)
-      button id="ai-file-tree-components" testId="ai-file-tree-components" class=Control aria-label="components" aria-controls="ai-file-tree-component-files" aria-expanded=componentsOpen press=componentsToggle display="flex" align-items="center" width="100%" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-12" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-regular" text-align="left"
+      button id="ai-file-tree-components" testId="ai-file-tree-components" class=Control aria-label="components" aria-controls="ai-file-tree-component-files" aria-expanded=componentsOpen press=componentsToggle display="flex" align-items="center" width="100%" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-12" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight=uiWeights.regular text-align="left"
         :hover
           background-color="ui.muted"
         row gap="ui.space-8" align-items="center"
@@ -61,7 +64,7 @@ component Demo
           text "components" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if componentsOpen
         column id="ai-file-tree-component-files" padding-left="ui.space-16"
-          button id="ai-file-tree-ui" testId="ai-file-tree-ui" class=Control aria-label="ui" aria-controls="ai-file-tree-ui-files" aria-expanded=uiOpen press=uiToggle display="flex" align-items="center" width="100%" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-12" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-regular" text-align="left"
+          button id="ai-file-tree-ui" testId="ai-file-tree-ui" class=Control aria-label="ui" aria-controls="ai-file-tree-ui-files" aria-expanded=uiOpen press=uiToggle display="flex" align-items="center" width="100%" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-12" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight=uiWeights.regular text-align="left"
             :hover
               background-color="ui.muted"
             row gap="ui.space-8" align-items="center"

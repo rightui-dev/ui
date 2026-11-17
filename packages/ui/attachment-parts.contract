@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use ButtonControl from "./button.contract"
 use Control from "./styles.contract"
@@ -54,12 +55,13 @@ component AttachmentTitle
     size: string
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     if status == "uploading" or status == "processing"
       TraceTitle(title=name, running=true, reduced=reduced)
     else
-      text name font-size=(size == "default" ? "ui.text-sm" : "ui.text-xs") font-weight="ui.weight-medium" white-space="nowrap" overflow="hidden" text-overflow="ellipsis" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text name font-size=(size == "default" ? "ui.text-sm" : "ui.text-xs") font-weight=uiWeights.medium white-space="nowrap" overflow="hidden" text-overflow="ellipsis" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component AttachmentDescription
   props
@@ -109,11 +111,13 @@ component AttachmentTrigger
     controls: string
     href: string
     press: action
+  inject
+    uiWeights: FontWeights
   view
     if href != ""
-      link id=id testId=id href=href target="_blank" rel="noopener noreferrer" class=Control aria-label=label position="absolute" inset="0px" z-index=1 border-radius="ui.radius-panel"
+      link id=id testId=id href=href target="_blank" rel="noopener noreferrer" class=Control font-weight=uiWeights.medium aria-label=label position="absolute" inset="0px" z-index=1 border-radius="ui.radius-panel"
     else
-      button id=id testId=id class=Control press=press disabled=disabled aria-label=label aria-haspopup="dialog" aria-expanded=expanded aria-controls=controls position="absolute" inset="0px" z-index=1 padding="0px" border="none" border-radius="ui.radius-panel" background-color="transparent"
+      button id=id testId=id class=Control font-weight=uiWeights.medium press=press disabled=disabled aria-label=label aria-haspopup="dialog" aria-expanded=expanded aria-controls=controls position="absolute" inset="0px" z-index=1 padding="0px" border="none" border-radius="ui.radius-panel" background-color="transparent"
         :hover
           background-color="color-mix(in srgb, ui.muted 20%, transparent)"
 

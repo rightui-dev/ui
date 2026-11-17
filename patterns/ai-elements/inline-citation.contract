@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily from "@rightui/ui"
 shape CitationSource
   id: string
@@ -11,6 +12,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
     rightuiDemoTime: number
     rightuiRunDemo: action
@@ -56,20 +58,20 @@ component Demo
     column max-width="24rem" gap="ui.space-12" padding="ui.space-24 ui.space-0" font-size="ui.text-sm" line-height="ui.leading-relaxed"
       text "" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         text "Exact renders the same interface on the web, iOS and macOS using each platform's host." font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        text " github.com " id="ai-inline-citation-0" testId="ai-inline-citation-0" role="button" tabindex=0 aria-haspopup="dialog" press=show(0) hover=hover(0) focusin=show(0) focusout=leave key=triggerKeys(0) background-color="ui.muted" color="ui.foreground" font-size="ui.text-xs" font-weight="ui.weight-medium" border-radius="ui.ai-radius-control" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text " github.com " id="ai-inline-citation-0" testId="ai-inline-citation-0" role="button" tabindex=0 aria-haspopup="dialog" press=show(0) hover=hover(0) focusin=show(0) focusout=leave key=triggerKeys(0) background-color="ui.muted" color="ui.foreground" font-size="ui.text-xs" font-weight=uiWeights.medium border-radius="ui.ai-radius-control" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       text "" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         text "Contract describes the view, its state and the actions behind each interaction." font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        text " github.com " id="ai-inline-citation-1" testId="ai-inline-citation-1" role="button" tabindex=0 aria-haspopup="dialog" press=show(1) hover=hover(1) focusin=show(1) focusout=leave key=triggerKeys(1) background-color="ui.muted" color="ui.foreground" font-size="ui.text-xs" font-weight="ui.weight-medium" border-radius="ui.ai-radius-control" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text " github.com " id="ai-inline-citation-1" testId="ai-inline-citation-1" role="button" tabindex=0 aria-haspopup="dialog" press=show(1) hover=hover(1) focusin=show(1) focusout=leave key=triggerKeys(1) background-color="ui.muted" color="ui.foreground" font-size="ui.text-xs" font-weight=uiWeights.medium border-radius="ui.ai-radius-control" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         text " TypeScript or Rust supplies the data through a typed boundary, keeping data logic separate from the interface." font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        text " github.com " id="ai-inline-citation-2" testId="ai-inline-citation-2" role="button" tabindex=0 aria-haspopup="dialog" press=show(2) hover=hover(2) focusin=show(2) focusout=leave key=triggerKeys(2) background-color="ui.muted" color="ui.foreground" font-size="ui.text-xs" font-weight="ui.weight-medium" border-radius="ui.ai-radius-control" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text " github.com " id="ai-inline-citation-2" testId="ai-inline-citation-2" role="button" tabindex=0 aria-haspopup="dialog" press=show(2) hover=hover(2) focusin=show(2) focusout=leave key=triggerKeys(2) background-color="ui.muted" color="ui.foreground" font-size="ui.text-xs" font-weight=uiWeights.medium border-radius="ui.ai-radius-control" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       text "" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         text "Resources expose loading and error states, so the view can show progress or offer a retry." font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        text " github.com " id="ai-inline-citation-3" testId="ai-inline-citation-3" role="button" tabindex=0 aria-haspopup="dialog" press=show(3) hover=hover(3) focusin=show(3) focusout=leave key=triggerKeys(3) background-color="ui.muted" color="ui.foreground" font-size="ui.text-xs" font-weight="ui.weight-medium" border-radius="ui.ai-radius-control" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text " github.com " id="ai-inline-citation-3" testId="ai-inline-citation-3" role="button" tabindex=0 aria-haspopup="dialog" press=show(3) hover=hover(3) focusin=show(3) focusout=leave key=triggerKeys(3) background-color="ui.muted" color="ui.foreground" font-size="ui.text-xs" font-weight=uiWeights.medium border-radius="ui.ai-radius-control" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         text " Tamber keeps named colors and theme modes together in app.tamber." font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        text " github.com " id="ai-inline-citation-4" testId="ai-inline-citation-4" role="button" tabindex=0 aria-haspopup="dialog" press=show(4) hover=hover(4) focusin=show(4) focusout=leave key=triggerKeys(4) background-color="ui.muted" color="ui.foreground" font-size="ui.text-xs" font-weight="ui.weight-medium" border-radius="ui.ai-radius-control" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text " github.com " id="ai-inline-citation-4" testId="ai-inline-citation-4" role="button" tabindex=0 aria-haspopup="dialog" press=show(4) hover=hover(4) focusin=show(4) focusout=leave key=triggerKeys(4) background-color="ui.muted" color="ui.foreground" font-size="ui.text-xs" font-weight=uiWeights.medium border-radius="ui.ai-radius-control" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if hideAt == 0 or rightuiDemoTime < hideAt or popupFocused
         column id="ai-inline-citation-content" testId="ai-inline-citation-content" popover="auto" role="dialog" aria-label=source.title position-area="bottom" position-try-fallbacks="flip-block, flip-inline" margin="ui.space-8" width="16rem" padding="ui.space-16" gap="ui.space-4" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.ai-radius-popover" background-color="ui.surface" color="ui.foreground" box-shadow="ui.shadow-menu" hover=popupHover focusin=enter focusout=leave key=closeTip
-          text source.title font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          text source.title font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
           text source.description color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           link id="ai-inline-citation-source-link" href=source.url target="_blank" rel="noreferrer" aria-label=(source.host + " (opens in a new tab)")
             text source.host font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"

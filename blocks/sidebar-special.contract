@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, ControlStyle as Control, InputStyle as Field from "@rightui/ui"
 use Calendar from "@rightui/ui"
 use Checkbox from "@rightui/ui"
@@ -12,6 +13,7 @@ component SidebarMail
     reduced: bool
     choose: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state folder = "Inbox"
   state search = ""
@@ -35,22 +37,22 @@ component SidebarMail
         column flex=1 min-width=0 min-height=0
           column gap="ui.space-14" padding="ui.space-16" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border"
             row justify-content="space-between" align-items="center" gap="ui.space-8"
-              text folder font-size="ui.text-base" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text folder font-size="ui.text-base" font-weight=uiWeights.medium color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               Switch(id=id + "-unread", label="Unreads", checked=unread, disabled=false, reduced=reduced, change=changeUnread)
-            input id=(id + "-search") testId=(id + "-search") class=Field value=search input=editSearch placeholder="Type to search..." aria-label="Search mail" min-height="ui.space-32" padding="ui.space-6 ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            input id=(id + "-search") testId=(id + "-search") class=Field font-weight=uiWeights.regular value=search input=editSearch placeholder="Type to search..." aria-label="Search mail" min-height="ui.space-32" padding="ui.space-6 ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           scroll flex=1 min-height=0
             column
               for mail, i in sidebarMails() key=mail.email
                 if (not unread or i % 2 == 0) and (search == "" or (mail.name + " " + mail.subject + " " + mail.teaser).toLowerCase().includes(search.toLowerCase()))
                   button id=(id + "-mail-" + i.toString()) testId=(id + "-mail-" + i.toString()) class=Control press=choose(mail.subject)
                     display="flex" flex-direction="column" align-items="stretch" gap="ui.space-8" padding="ui.space-16" border="0" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" border-radius="ui.radius-flat"
-                    background-color=(selected == mail.subject ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-regular"
+                    background-color=(selected == mail.subject ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm" font-weight=uiWeights.regular
                     :hover
                       background-color="ui.muted"
                     row justify-content="space-between" gap="ui.space-8"
                       text mail.name font-size="ui.text-sm" text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                       text mail.date font-size="ui.text-xs" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-                    text mail.subject font-size="ui.text-sm" font-weight="ui.weight-medium" text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                    text mail.subject font-size="ui.text-sm" font-weight=uiWeights.medium text-align="left" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                     text mail.teaser font-size="ui.text-xs" line-height="ui.leading-snug" text-align="left" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component SidebarFiles
@@ -59,6 +61,7 @@ component SidebarFiles
     selected: string
     choose: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state opened: string[] = ["/components", "/components/ui"]
   derive files = sidebarFiles()
@@ -67,10 +70,10 @@ component SidebarFiles
   view
     scroll height="100%" min-height=0
       column padding="ui.space-8" gap="ui.space-12"
-        text "Changes" padding="ui.space-8" font-size="ui.text-xs" font-weight="ui.weight-medium" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text "Changes" padding="ui.space-8" font-size="ui.text-xs" font-weight=uiWeights.medium color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         for item, i in ["README.md", "api/hello/route.ts", "app/layout.tsx"] key=item
           SidebarLink(id=id + "-change-" + i.toString(), label=item, icon="File", selected=(selected == item), compact=false, badge=(i == 1 ? "U" : "M"), choose=choose)
-        text "Files" padding="ui.space-8" font-size="ui.text-xs" font-weight="ui.weight-medium" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text "Files" padding="ui.space-8" font-size="ui.text-xs" font-weight=uiWeights.medium color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         column gap="ui.space-2"
           for file, i in files key=file.path
             if file.parent == "" or (opened.includes(file.parent) and not files.filter(parent => parent.folder and file.path.startsWith(parent.path + "/")).map(parent => opened.includes(parent.path)).includes(false))
@@ -79,12 +82,12 @@ component SidebarFiles
                   view width="ui.space-12" flex-shrink=0 aria-hidden=true
                 view flex=1 min-width=0
                   if file.folder
-                    button id=(id + "-file-" + i.toString()) testId=(id + "-file-" + i.toString()) class=Control press=toggle(file.path)
+                    button id=(id + "-file-" + i.toString()) testId=(id + "-file-" + i.toString()) class=Control font-weight=uiWeights.medium press=toggle(file.path)
                       aria-expanded=opened.includes(file.path) display="flex" align-items="center" gap="ui.space-6" min-height="ui.space-32" width="100%" padding="ui.space-6 ui.space-8" border="0" background-color="transparent" color="ui.foreground"
                       view rotate=(opened.includes(file.path) ? "90deg" : "0deg")
                         SidebarIcon(name="ChevronRight")
                       SidebarIcon(name="Folder")
-                      text file.name text-align="left" font-size="ui.text-sm" font-weight="ui.weight-regular" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                      text file.name text-align="left" font-size="ui.text-sm" font-weight=uiWeights.regular font-family=uiFontFamily(uiFont) data-rightui-font="body"
                   else
                     SidebarLink(id=id + "-file-" + i.toString(), label=file.name, icon="File", selected=(selected == file.name), compact=false, badge="", choose=choose)
 
@@ -94,6 +97,7 @@ component SidebarCalendar
     reduced: bool
     choose: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state selected = "2024-10-08"
   state year = 2024
@@ -132,7 +136,7 @@ component SidebarCalendar
           Calendar(id=id + "-calendar", value=selected, year=year, month=month, changeMonth=changeMonth, end="", mode="single", disabled=false, change=selectDate)
           for group, gi in ["My Calendars", "Favorites", "Other"] key=group
             column padding="ui.space-8" border-top-width="ui.border-width" border-top-style="solid" border-top-color="ui.border" gap="ui.space-2"
-              button id=(id + "-group-" + gi.toString()) testId=(id + "-group-" + gi.toString()) class=Control press=toggleGroup(group) aria-expanded=expanded.includes(group)
+              button id=(id + "-group-" + gi.toString()) testId=(id + "-group-" + gi.toString()) class=Control font-weight=uiWeights.medium press=toggleGroup(group) aria-expanded=expanded.includes(group)
                 display="flex" align-items="center" justify-content="space-between" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm"
                 text group font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 view rotate=(expanded.includes(group) ? "90deg" : "0deg")
@@ -142,8 +146,8 @@ component SidebarCalendar
                   Checkbox(id=id + "-calendar-" + gi.toString() + "-" + i.toString(), label=item, checked=(not hidden.includes(item)), disabled=false, change=toggleCalendar(item))
       column padding="ui.space-8" gap="ui.space-8" border-top-width="ui.border-width" border-top-style="solid" border-top-color="ui.border"
         if adding
-          input id=(id + "-new-name") testId=(id + "-new-name") class=Field value=draft input=editName submit=addCalendar placeholder="Calendar name" aria-label="Calendar name" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          button id=(id + "-add-calendar") testId=(id + "-add-calendar") class=Control press=addCalendar padding="ui.space-6 ui.space-8" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground"
+          input id=(id + "-new-name") testId=(id + "-new-name") class=Field font-weight=uiWeights.regular value=draft input=editName submit=addCalendar placeholder="Calendar name" aria-label="Calendar name" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          button id=(id + "-add-calendar") testId=(id + "-add-calendar") class=Control font-weight=uiWeights.medium press=addCalendar padding="ui.space-6 ui.space-8" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground"
             text "Add calendar" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         else
           SidebarLink(id=id + "-new", label="New Calendar", icon="Plus", selected=false, compact=false, badge="", choose=startAdding)

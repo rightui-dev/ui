@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 use uiPopupIn, uiPopupOut from "./popup-motion.contract"
@@ -46,19 +47,20 @@ component AdvancedMenuLine
     hover: action
     keys: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive checked = entry.kind == "checkbox" ? checks.includes(entry.id) : advancedMenuRadio(entry, radios)
   view
     if entry.kind == "separator"
       view testId=(id + "-separator-" + entry.id) role="separator" height="ui.border-width" margin="ui.space-4 ui.space-negative-4" background-color="ui.border"
     else if entry.kind == "label"
-      text entry.label testId=(id + "-label-" + entry.id) padding="ui.space-6 ui.space-8" font-size="ui.text-sm" font-weight="ui.weight-medium" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text entry.label testId=(id + "-label-" + entry.id) padding="ui.space-6 ui.space-8" font-size="ui.text-sm" font-weight=uiWeights.medium color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
     else if entry.kind == "checkbox" or entry.kind == "radio"
       button id=(id + "-item-" + entry.id) testId=(id + "-item-" + entry.id) class=Control press=activate hover=hover key=keys disabled=entry.disabled tabindex=-1
         aria-label=entry.label role=(entry.kind == "checkbox" ? "menuitemcheckbox" : "menuitemradio") aria-checked=checked
         display="flex" width="100%" box-sizing="border-box" align-items="center" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius=radius
         background-color=(openParents.includes(entry.id) ? "ui.muted" : "transparent") color=(entry.kind == "destructive" ? "ui.danger" : "ui.foreground")
-        font-size="ui.text-sm" font-weight="ui.weight-regular" cursor="default"
+        font-size="ui.text-sm" font-weight=uiWeights.regular cursor="default"
         :hover
           background-color="ui.muted"
         :focus-visible
@@ -83,7 +85,7 @@ component AdvancedMenuLine
         aria-label=entry.label role="menuitem" aria-haspopup="menu" aria-expanded=openParents.includes(entry.id) aria-controls=(id + "-sub-" + entry.id)
         display="flex" width="100%" box-sizing="border-box" align-items="center" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius=radius
         background-color=(openParents.includes(entry.id) ? "ui.muted" : "transparent") color=(entry.kind == "destructive" ? "ui.danger" : "ui.foreground")
-        font-size="ui.text-sm" font-weight="ui.weight-regular" cursor="default"
+        font-size="ui.text-sm" font-weight=uiWeights.regular cursor="default"
         :hover
           background-color="ui.muted"
         :focus-visible
@@ -108,7 +110,7 @@ component AdvancedMenuLine
         aria-label=entry.label role="menuitem"
         display="flex" width="100%" box-sizing="border-box" align-items="center" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" border-radius=radius
         background-color=(openParents.includes(entry.id) ? "ui.muted" : "transparent") color=(entry.kind == "destructive" ? "ui.danger" : "ui.foreground")
-        font-size="ui.text-sm" font-weight="ui.weight-regular" cursor="default"
+        font-size="ui.text-sm" font-weight=uiWeights.regular cursor="default"
         :hover
           background-color="ui.muted"
         :focus-visible
@@ -176,6 +178,7 @@ component AdvancedMenuRoot
     check: action
     radio: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state active = 0
   state expanded = false
@@ -371,7 +374,7 @@ component AdvancedMenuRoot
             press=toggle(index) hover=hoverTrigger(index) contextmenu=context(index) key=triggerKeys(index) contextPopover=(contextual ? advancedMenuPrefix(id, bar, menu.id) + "-menu" : "") tabindex=(not bar or active == index ? 0 : -1)
             aria-haspopup="menu" aria-expanded=(expanded and active == index) aria-controls=(advancedMenuPrefix(id, bar, menu.id) + "-menu")
             padding=(contextual ? "ui.space-24 ui.space-32" : bar ? "ui.space-4 ui.space-8" : "ui.space-8 ui.space-16") min-height=(bar ? "ui.space-28" : "ui.space-36")
-            border-width=(contextual ? "ui.border-width" : bar ? "0px" : "ui.border-width") border-style=(contextual ? "dashed" : bar ? "solid" : "solid") border-color=(contextual ? "ui.border" : bar ? "transparent" : "ui.border") border-radius=(bar ? "ui.radius-sm" : "ui.radius-control") background-color=(bar and expanded and active == index ? "ui.muted" : "ui.surface") color="ui.foreground" font-size="ui.text-sm" font-weight=(bar ? "ui.weight-medium" : "ui.weight-medium")
+            border-width=(contextual ? "ui.border-width" : bar ? "0px" : "ui.border-width") border-style=(contextual ? "dashed" : bar ? "solid" : "solid") border-color=(contextual ? "ui.border" : bar ? "transparent" : "ui.border") border-radius=(bar ? "ui.radius-sm" : "ui.radius-control") background-color=(bar and expanded and active == index ? "ui.muted" : "ui.surface") color="ui.foreground" font-size="ui.text-sm" font-weight=(bar ? uiWeights.medium : uiWeights.medium)
             text menu.label font-family=uiFontFamily(uiFont) data-rightui-font="body"
           if expanded and active == index
             for epoch in [opening] key=epoch

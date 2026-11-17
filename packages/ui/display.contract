@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use AvatarFrame from "./composition.contract"
 use uiFontFamily from "./typography-context.contract"
 keyframes uiSkeletonPulse
@@ -12,6 +13,7 @@ component Alert
     description: string
     variant: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     row id=id testId=id role="status" gap="ui.space-12" padding="ui.space-12 ui.space-16" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" min-width="0px" background-color="ui.surface"
@@ -19,7 +21,7 @@ component Alert
         circle cx=12 cy=12 r=9
         path d="M12 7v6m0 3v1"
       column gap="ui.space-2" min-width="0px"
-        text title font-size="ui.text-sm" font-weight="ui.weight-medium" color=((variant == "danger" or variant == "destructive") ? "ui.danger" : "ui.foreground") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text title font-size="ui.text-sm" font-weight=uiWeights.medium color=((variant == "danger" or variant == "destructive") ? "ui.danger" : "ui.foreground") font-family=uiFontFamily(uiFont) data-rightui-font="body"
         text description font-size="ui.text-sm" line-height="ui.leading-normal" color=((variant == "danger" or variant == "destructive") ? "ui.danger" : "ui.muted-foreground") hyphens="auto" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component Avatar
@@ -78,9 +80,10 @@ component Kbd
   props
     label: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
-    text label display="flex" align-items="center" justify-content="center" min-width="ui.space-20" height="ui.space-20" box-sizing="border-box" font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-xs" font-weight="ui.weight-medium" line-height="ui.leading-normal" padding="0px ui.space-4" background-color="ui.muted" color="ui.muted-foreground" border-radius="ui.radius-sm"
+    text label display="flex" align-items="center" justify-content="center" min-width="ui.space-20" height="ui.space-20" box-sizing="border-box" font-family=uiFontFamily(uiFont) data-rightui-font="body" font-size="ui.text-xs" font-weight=uiWeights.medium line-height="ui.leading-normal" padding="0px ui.space-4" background-color="ui.muted" color="ui.muted-foreground" border-radius="ui.radius-sm"
 
 component Empty
   props
@@ -88,13 +91,14 @@ component Empty
     title: string
     description: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   slot
   view
     column id=id testId=id align-items="center" justify-content="center" gap="ui.space-24" padding="ui.space-24" border-width="ui.border-width" border-style="dashed" border-color="ui.border" border-radius="ui.radius-panel" min-width="0px"
       svg width="ui.space-32" height="ui.space-32" viewBox="0 0 24 24" stroke="ui.muted-foreground" stroke-width="ui.stroke-medium" fill="none" aria-hidden=true
         path d="M3 7h7l2 2h9v11H3ZM3 7V4h7l2 3"
-      text title font-size="ui.text-lg" font-weight="ui.weight-medium" text-align="center" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text title font-size="ui.text-lg" font-weight=uiWeights.medium text-align="center" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       text description font-size="ui.text-sm" line-height="ui.leading-normal" text-align="center" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       children
 
@@ -121,12 +125,13 @@ component Item
     title: string
     description: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   slot
   view
     row id=id testId=id flex-wrap="wrap" align-items="center" gap="ui.space-16" padding="ui.space-16" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control"
       column flex="1 1 10rem" min-width="0px" gap="ui.space-4"
-        text title font-size="ui.text-sm" font-weight="ui.weight-semibold" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text title font-size="ui.text-sm" font-weight=uiWeights.semibold color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         text description font-size="ui.text-caption" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       children
 
@@ -154,6 +159,7 @@ component Table
     headers: string[]
     rows: TableRow[]
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     scroll id=(id + "-scroll") aria-label=(label + ": horizontal scrolling") tabindex=0 min-width="0px" max-height="30rem"
@@ -161,7 +167,7 @@ component Table
         thead
           tr
             for heading in headers key=heading
-              th scope="col" height="ui.space-40" padding="0px ui.space-8" text-align="left" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" color="ui.foreground" font-weight="ui.weight-medium"
+              th scope="col" height="ui.space-40" padding="0px ui.space-8" text-align="left" border-bottom-width="ui.border-width" border-bottom-style="solid" border-bottom-color="ui.border" color="ui.foreground" font-weight=uiWeights.medium
                 text heading font-family=uiFontFamily(uiFont) data-rightui-font="body"
         tbody
           for row in rows key=row.id

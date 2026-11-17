@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, ChartPoint, Button from "@rightui/ui"
 use AreaGalleryChart from "@rightui/ui"
 component Demo
@@ -5,13 +6,14 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state period = 90
   action choose(days: number)
     period = days
   view
     column gap="ui.space-20" padding="ui.space-24" min-width=0 border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-card" background-color="ui.surface"
-      text "Area Chart - Interactive" font-size="ui.text-base" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Area Chart - Interactive" font-size="ui.text-base" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       text "Showing total visitors for the last 3 months" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       row gap="ui.space-8" flex-wrap="wrap"
         for days in [90, 30, 7] key=days

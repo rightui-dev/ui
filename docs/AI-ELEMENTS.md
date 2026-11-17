@@ -23,10 +23,12 @@ members to the **root** component, where Exact permits tasks. The clock runs onl
 while a sample is active; it is not an always-running animation loop.
 
 ```contract
+use defaultFontWeights from "@rightui/ui"
   state demoTime = 0
   state demoUntil = 0
   provide
     uiFont = "theme"
+    uiWeights = defaultFontWeights()
     rightuiDemoTime = demoTime
     rightuiRunDemo = runDemo
   action runDemo(duration: number)

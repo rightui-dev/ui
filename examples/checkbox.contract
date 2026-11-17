@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Checkbox, CheckboxMixed, FieldFrame, FieldContent, FieldDescription, FieldError from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state checked = "mixed"
@@ -26,7 +28,7 @@ component Demo
     column gap="ui.space-16" min-width=0 max-width="100%"
       CheckboxMixed(id="advanced-mixed", label="Select all items", labelVisible=true, checked=checked, disabled=false, change=setChecked)
       text ("Selection: " + checked) testId="checkbox-selection" role="status" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "Controlled and disabled" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Controlled and disabled" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       CheckboxMixed(id="checkbox-controlled", label="Controlled selection", labelVisible=true, checked=checked, disabled=false, change=setChecked)
       CheckboxMixed(id="checkbox-disabled", label="Disabled selection", labelVisible=true, checked="true", disabled=true, change=setChecked)
       FieldFrame(id="checkbox-description-field", labelId="", descriptionId="checkbox-description", invalid=false, orientation="horizontal")
@@ -37,7 +39,7 @@ component Demo
         Checkbox(id="checkbox-invalid", label="Accept required terms", checked=terms, disabled=false, change=setTerms)
         if not terms
           FieldError(id="checkbox-error", messages=["Accept the terms to continue."])
-      text "Desktop items" font-family=uiFontFamily(uiFont) data-rightui-font="body" font-weight="ui.weight-semibold"
+      text "Desktop items" font-family=uiFontFamily(uiFont) data-rightui-font="body" font-weight=uiWeights.semibold
       Checkbox(id="checkbox-list-0", label="Hard disks", checked=item0, disabled=false, change=setItem0)
       Checkbox(id="checkbox-list-1", label="External disks", checked=item1, disabled=false, change=setItem1)
       Checkbox(id="checkbox-list-2", label="Connected servers", checked=item2, disabled=false, change=setItem2)

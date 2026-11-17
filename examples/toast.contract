@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, ToastViewport, ToastMessage, Button from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
     rightuiDemoTime: number
     rightuiRunDemo: action
@@ -44,23 +46,23 @@ component Demo
   view
     column gap="ui.space-24" min-width="0px" max-width="100%"
       column gap="ui.space-8"
-        text "Stacked notifications" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text "Stacked notifications" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
         text "Click again to add another toast. Hover over the stack to expand it and pause dismissal." font-size="ui.text-sm" color="ui.muted-foreground" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         row flex-wrap="wrap" gap="ui.space-8"
           Button(id="toast-show", label="Show toast", variant="outline", disabled=false, press=show("default"))
           Button(id="toast-show-stack", label="Show stack", variant="outline", disabled=false, press=showStack)
       column gap="ui.space-8"
-        text "Types" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text "Types" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
         row flex-wrap="wrap" gap="ui.space-8"
           for kind in ["default", "success", "info", "warning", "error", "loading"] key=kind
             Button(id="toast-type-" + kind, label=(kind == "default" ? "Default" : kind == "success" ? "Success" : kind == "info" ? "Info" : kind == "warning" ? "Warning" : kind == "error" ? "Error" : "Loading"), variant="outline", disabled=false, press=show(kind))
       column gap="ui.space-8"
-        text "Position" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text "Position" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
         row flex-wrap="wrap" gap="ui.space-8"
           for edge in ["top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"] key=edge
             Button(id="toast-position-" + edge, label=(edge == "top-left" ? "Top left" : edge == "top-center" ? "Top center" : edge == "top-right" ? "Top right" : edge == "bottom-left" ? "Bottom left" : edge == "bottom-center" ? "Bottom center" : "Bottom right"), variant=(position == edge ? "secondary" : "outline"), disabled=false, press=choose(edge))
       column gap="ui.space-8"
-        text "Async operation" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text "Async operation" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
         text "The same notification changes from loading to success when the operation completes." font-size="ui.text-sm" color="ui.muted-foreground" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         row
           Button(id="toast-promise", label="Create event", variant="outline", disabled=false, press=showPromise)

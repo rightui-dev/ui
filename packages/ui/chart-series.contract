@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 fn chartNiceStep(raw: number): number = raw <= 1 ? 1 : raw <= 2 ? 2 : raw <= 2.5 ? 2.5 : raw <= 3 ? 3 : raw <= 5 ? 5 : raw <= 10 ? 10 : raw <= 20 ? 20 : raw <= 25 ? 25 : raw <= 30 ? 30 : raw <= 50 ? 50 : raw <= 100 ? 100 : raw <= 200 ? 200 : raw <= 250 ? 250 : raw <= 300 ? 300 : raw <= 500 ? 500 : raw <= 1000 ? 1000 : raw <= 2000 ? 2000 : raw <= 2500 ? 2500 : raw <= 3000 ? 3000 : raw <= 5000 ? 5000 : raw <= 10000 ? 10000 : raw <= 20000 ? 20000 : raw <= 25000 ? 25000 : raw <= 30000 ? 30000 : raw <= 50000 ? 50000 : ceil(raw / 100000) * 100000
@@ -69,6 +70,7 @@ component SeriesLegendOptions
     hideIcon: bool
     verticalAlign: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   action keys(itemId: string, k: string)
     if k == "Enter" or k == " "
@@ -79,7 +81,7 @@ component SeriesLegendOptions
     row gap="ui.space-12" flex-wrap="wrap" justify-content="center" padding-top=(verticalAlign == "top" ? "0px" : "ui.space-4") padding-bottom=(verticalAlign == "top" ? "ui.space-4" : "0px")
       for item, i in series key=item.id
         button id=(id + "-legend-" + item.id) testId=(id + "-legend-" + item.id) class=Control press=change(item.id) key=keys(item.id) role="checkbox" aria-checked=(not hidden.includes(item.id)) aria-label=("Show " + item.label)
-          display="flex" align-items="center" gap="ui.space-6" border="0" padding="ui.space-4 ui.space-6" min-height="ui.space-32" background-color="transparent" color="ui.foreground" font-size="ui.text-xs" font-weight="ui.weight-regular" text-decoration=(hidden.includes(item.id) ? "line-through" : "none") min-width="0px" max-width="100%"
+          display="flex" align-items="center" gap="ui.space-6" border="0" padding="ui.space-4 ui.space-6" min-height="ui.space-32" background-color="transparent" color="ui.foreground" font-size="ui.text-xs" font-weight=uiWeights.regular text-decoration=(hidden.includes(item.id) ? "line-through" : "none") min-width="0px" max-width="100%"
           if not hideIcon and chartIcon(icons, i) != ""
             svg width="ui.space-12" height="ui.space-12" viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" flex-shrink=0 aria-hidden=true
               path d=chartIcon(icons, i)
@@ -119,6 +121,7 @@ component SeriesValuesTooltipOptions
     plotWidth: number
     anchor: number
   inject
+    uiWeights: FontWeights
     uiFont: string
   state measured = 192
   derive visible = series.filter(item => not hidden.includes(item.id))
@@ -132,7 +135,7 @@ component SeriesValuesTooltipOptions
     if visible.length > 0
       column id=(id + "-tooltip") testId=(id + "-tooltip") role="tooltip" aria-live="polite" position="absolute" top="ui.space-12" left=(anchor < 0 ? "8px" : "max(8px, min(" + chartTooltipLeft(plotWidth, anchor, measured).toString() + "px, calc(100% - 12rem - 8px)))") resize=measure z-index=20 pointer-events="none" padding="ui.space-10" gap="ui.space-8" width="12rem" max-width="calc(100% - 16px)" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.surface" box-shadow="ui.shadow-menu" font-size="ui.text-xs" line-height="ui.leading-heading" color="ui.foreground"
         if heading != "" and not nested
-          text heading font-weight="ui.weight-medium" overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          text heading font-weight=uiWeights.medium overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         for item, i in series key=item.id
           if not hidden.includes(item.id)
             row gap="ui.space-8" align-items=(indicator == "dot" ? "center" : "stretch") min-width="0px"
@@ -144,11 +147,11 @@ component SeriesValuesTooltipOptions
               row flex=1 min-width="0px" flex-wrap="wrap" gap="ui.space-6" align-items=(nested ? "flex-end" : "center") justify-content="space-between"
                 column flex=1 min-width="0px" gap="ui.space-6"
                   if nested and heading != ""
-                    text heading font-weight="ui.weight-medium" overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                    text heading font-weight=uiWeights.medium overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                   text (nameOverride != "" ? nameOverride : item.label) color="ui.muted-foreground" overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-                text chartTooltipValue(values, formattedValues, i, valueFormat, valuePrefix, valueSuffix) testId=(id + "-value-" + item.id) max-width="100%" overflow-wrap="anywhere" text-align="right" font-weight="ui.weight-medium" font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                text chartTooltipValue(values, formattedValues, i, valueFormat, valuePrefix, valueSuffix) testId=(id + "-value-" + item.id) max-width="100%" overflow-wrap="anywhere" text-align="right" font-weight=uiWeights.medium font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if showTotal
-          row gap="ui.space-8" justify-content="space-between" flex-wrap="wrap" border-top-width="ui.border-width" border-top-style="solid" border-top-color="ui.border" padding-top="ui.space-8" font-weight="ui.weight-medium"
+          row gap="ui.space-8" justify-content="space-between" flex-wrap="wrap" border-top-width="ui.border-width" border-top-style="solid" border-top-color="ui.border" padding-top="ui.space-8" font-weight=uiWeights.medium
             text totalLabel overflow-wrap="anywhere" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             text (valuePrefix + chartDisplayValue(total, valueFormat) + valueSuffix) testId=(id + "-total") max-width="100%" overflow-wrap="anywhere" font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
@@ -288,6 +291,7 @@ component SliceLegend
     active: number
     choose: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   action keys(i: number, k: string)
     if k == "Enter" or k == " "
@@ -298,7 +302,7 @@ component SliceLegend
     row gap="ui.space-12" flex-wrap="wrap" justify-content="center"
       for item, i in items key=item.id
         button id=(id + "-legend-" + item.id) testId=(id + "-legend-" + item.id) class=Control press=choose(i) key=keys(i) aria-pressed=(active == i) aria-label=("Inspect " + item.label)
-          display="flex" align-items="center" gap="ui.space-6" border="0" padding="ui.space-4 ui.space-6" min-height="ui.space-32" background-color=(active == i ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-xs" font-weight="ui.weight-regular"
+          display="flex" align-items="center" gap="ui.space-6" border="0" padding="ui.space-4 ui.space-6" min-height="ui.space-32" background-color=(active == i ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-xs" font-weight=uiWeights.regular
           view width="ui.space-10" height="ui.space-10" border-radius="ui.radius-detail" background-color=item.color
           text item.label font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
@@ -311,6 +315,7 @@ component PieChart
     showLegend: bool
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state active = -1
   state pinned = false
@@ -379,7 +384,7 @@ component PieChart
             circle cx=120 cy=120 r=60 fill="ui.surface"
         if donut
           column position="absolute" left="50%" top="50%" translate="-50% -50%" align-items="center" pointer-events="none" gap="ui.space-2"
-            text total.toString() testId=(id + "-total") font-size="ui.text-3xl" line-height="ui.leading-tight" font-weight="ui.weight-bold" font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text total.toString() testId=(id + "-total") font-size="ui.text-3xl" line-height="ui.leading-tight" font-weight=uiWeights.bold font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             text "Visitors" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if total <= 0
           text "No chart data." testId=(id + "-empty") position="absolute" bottom="0px" left="0px" right="0px" text-align="center" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

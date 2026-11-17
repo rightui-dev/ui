@@ -50,6 +50,7 @@ cp node_modules/@rightui/ui/assets/fonts/OFL-Newsreader.txt assets/fonts/
 Register the real regular and italic faces at the top of `app.contract`:
 
 ```contract
+use defaultFontWeights from "@rightui/ui"
 font "Geist"
   100 900 = "assets/fonts/Geist.ttf"
   100 900 italic = "assets/fonts/Geist-Italic.ttf"
@@ -63,6 +64,7 @@ use Button, Input, Card from "@rightui/ui"
 component App
   provide
     uiFont = "theme"
+    uiWeights = defaultFontWeights()
   view
     Card(id="welcome", title="Your application", description="A shared theme")
 ```
@@ -114,10 +116,12 @@ Their dark modes use lighter accents with dark button text. Density,
 corners and typeface remain separate choices.
 
 ```contract
+use defaultFontWeights from "@rightui/ui"
 component App
   state fontChoice = "theme"
   provide
     uiFont = fontChoice
+    uiWeights = defaultFontWeights()
   action useForest
     setMode("ui-preset", "forest")
     setMode("ui-density", "compact")
@@ -302,3 +306,7 @@ static app also verified a Card param override. A separate small web build
 verified the three-family helper with a real bundled italic face, a context
 provider and an input. This evidence does not include iOS or macOS device
 validation, nor replace validation of the consuming application's migration.
+
+## Proportional weights
+
+Provide `uiWeights = scaleFontWeights(defaultFontWeights(), 100)` at the root. 110 scales regular 400 to 440 and semibold 600 to 660. Custom base weights use a `FontWeights` record. Apply the regular field to the app root and the appropriate field to custom text. Stay within the font’s supported range. See [Migration to 0.4](MIGRATION-0.4.md).

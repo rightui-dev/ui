@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, ChartPoint, Button from "@rightui/ui"
 use AreaGalleryChart from "@rightui/ui"
 component Demo
@@ -5,11 +6,12 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     column gap="ui.space-20" padding="ui.space-24" min-width=0 border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-card" background-color="ui.surface"
-      text "Area Chart - Gradient" font-size="ui.text-base" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Area Chart - Gradient" font-size="ui.text-base" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       text "Showing total visitors for the last 6 months" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       AreaGalleryChart(id="chart-area-gradient", points=[ChartPoint(label="January", desktop=186, mobile=80), ChartPoint(label="February", desktop=305, mobile=200), ChartPoint(label="March", desktop=237, mobile=120), ChartPoint(label="April", desktop=73, mobile=190), ChartPoint(label="May", desktop=209, mobile=130), ChartPoint(label="June", desktop=214, mobile=140)], others=[0, 0, 0, 0, 0, 0], mode="gradient", width=width, reduced=reduced)
-      text "Trending up by 5.2% this month ↗" font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Trending up by 5.2% this month ↗" font-size="ui.text-sm" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
       text "January - June 2024" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

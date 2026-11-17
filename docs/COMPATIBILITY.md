@@ -1,6 +1,6 @@
 # Compatibility
 
-125 catalog entries. Evidence recorded on 2026-11-16 against rightui 0.3.0-beta.8 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
+125 catalog entries. Evidence recorded on 2026-11-17 against rightui 0.4.0-beta.1 and Exact `53426cf02bf986a5e781abc4f953d79989c6dc05`.
 
 This records validation evidence, not full compatibility certification. Partial checks cover specific examples or interactions, not every variant. Built only means compilation succeeded, without a targeted interaction result.
 
@@ -47,7 +47,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 | Empty | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Field | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Hover Card | ✅ Built only | ✅ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
-| Input | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Input | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Input Group | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Input OTP | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Item | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
@@ -202,5 +202,6 @@ iOS validation is incomplete. Windows and Android are not supported.
 - **beta5-native-pending:** No release-specific iOS or macOS build or interaction checks were run for the current nine-family batch or shared area-gallery updates. Earlier native evidence remains historical. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 - **beta5-web:** The local beta.5 candidate passed 59 browser tests: 45 historical scenarios, three component-pager checks and eleven targeted tests for the nine updated families. Coverage includes disabled/keyboard Accordion, mixed/group Checkbox, Card validation and cover rendering, Attachment previews/retry/removal, Bubble actions/collapse, Breadcrumb links/menus/mobile Drawer, Badge languages/links, and Chart values, visible-series totals, formats and RTL. Card and AspectRatio test screenshots were inspected. This is partial web coverage; no new native validation is claimed. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 - **beta8-message-navigation:** Three targeted web regression scenarios passed for Message actions, MessageScroller streaming/stop/resume and history navigation, and NavigationMenu keyboard dismissal and links. Desktop and mobile browser checks also verified typing-dot motion, preserved reading position and trigger-aligned panels. iOS and macOS compiled successfully; native interactions have not been verified for these additions. [Source](https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract)
+- **web-weight-scale:** Local 0.4 preview: computed font weights preserve body/title ratios at 25%, 110% and 112%. Six public Input fields inherit the scaled regular weight. Initial render and activation agree; continuous changes defer persistence and theme export until settlement. These are targeted web checks, not a frame-rate guarantee. [Source](https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md)
 
 The machine-readable row-to-evidence mapping is in [metadata/compatibility.json](https://github.com/rightui-dev/ui/blob/main/metadata/compatibility.json). A successful build does not certify every interaction.

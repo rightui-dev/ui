@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, ControlStyle as Control, InputStyle as Field from "@rightui/ui"
 use DropdownMenu, MenuEntry from "@rightui/ui"
 use SidebarIcon, SidebarLink, SidebarBrand, SidebarUser from "./sidebar-parts.contract"
@@ -10,6 +11,7 @@ component SidebarDocs
     reduced: bool
     choose: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state collapsed: string[] = []
   state expanded: string[] = ["Build Your Application"]
@@ -40,9 +42,9 @@ component SidebarDocs
       else if variant != 14
         SidebarBrand(id=id, docs=true, compact=false, switcher=false, reduced=reduced)
       if variant == 1 or variant == 2 or variant == 5
-        input id=(id + "-search") testId=(id + "-search") class=Field value=search input=editSearch placeholder="Search the docs..." aria-label="Search the docs" margin="ui.space-0 ui.space-8" width="calc(100% - ui.space-16)" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        input id=(id + "-search") testId=(id + "-search") class=Field font-weight=uiWeights.regular value=search input=editSearch placeholder="Search the docs..." aria-label="Search the docs" margin="ui.space-0 ui.space-8" width="calc(100% - ui.space-16)" height="ui.space-32" min-height="ui.space-32" padding="ui.space-4 ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if variant == 14
-        text "Table of Contents" font-size="ui.text-xs" font-weight="ui.weight-medium" color="ui.sidebar-label" padding="ui.space-12 ui.space-16" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text "Table of Contents" font-size="ui.text-xs" font-weight=uiWeights.medium color="ui.sidebar-label" padding="ui.space-12 ui.space-16" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       scroll flex=1 min-height=0
         column gap=(variant == 4 ? "ui.space-16" : "ui.space-8") padding="ui.space-8"
           for group, gi in groups key=group.title
@@ -52,7 +54,7 @@ component SidebarDocs
               else if variant == 2 or variant == 5
                 button id=(id + "-group-" + gi.toString()) testId=(id + "-group-" + gi.toString()) class=Control press=toggle(group.title)
                   aria-expanded=(variant == 2 ? not collapsed.includes(group.title) : expanded.includes(group.title)) aria-controls=(id + "-children-" + gi.toString())
-                  display="flex" align-items="center" justify-content="space-between" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-medium"
+                  display="flex" align-items="center" justify-content="space-between" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-weight=uiWeights.medium
                   text group.title text-align="left" flex=1 font-family=uiFontFamily(uiFont) data-rightui-font="body"
                   svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke-soft" aria-hidden=true
                     if variant == 5
@@ -62,7 +64,7 @@ component SidebarDocs
                     else
                       path d=(variant == 2 ? (collapsed.includes(group.title) ? "m9 5 7 7-7 7" : "m5 9 7 7 7-7") : (expanded.includes(group.title) ? "m5 9 7 7 7-7" : "m9 5 7 7-7 7"))
               else
-                text group.title padding="ui.space-8" font-size=(variant == 1 ? "ui.text-xs" : "ui.text-sm") font-weight="ui.weight-medium" color=(variant == 1 ? "ui.muted-foreground" : "ui.foreground") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                text group.title padding="ui.space-8" font-size=(variant == 1 ? "ui.text-xs" : "ui.text-sm") font-weight=uiWeights.medium color=(variant == 1 ? "ui.muted-foreground" : "ui.foreground") font-family=uiFontFamily(uiFont) data-rightui-font="body"
               if variant != 6 and (search != "" or (variant == 2 ? not collapsed.includes(group.title) : variant == 5 ? expanded.includes(group.title) : true))
                 column id=(id + "-children-" + gi.toString()) testId=(id + "-children-" + gi.toString()) gap="ui.space-2"
                   margin-left=(variant == 3 or variant == 5 or variant == 6 or variant == 14 ? "ui.space-14" : "ui.space-0")
@@ -73,10 +75,10 @@ component SidebarDocs
                       SidebarLink(id=id + "-doc-" + gi.toString() + "-" + i.toString(), label=item, icon="", selected=(selected == item), compact=false, badge="", choose=choose)
       if variant == 6
         column gap="ui.space-10" padding="ui.space-16" margin="ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-lg" background-color="ui.surface"
-          text "Subscribe to our newsletter" font-size="ui.text-sm" font-weight="ui.weight-semibold" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          text "Subscribe to our newsletter" font-size="ui.text-sm" font-weight=uiWeights.semibold color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           text "Opt-in to receive updates and news about the sidebar." font-size="ui.text-sm" color="ui.muted-foreground" line-height="ui.leading-snug" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          input id=(id + "-email") testId=(id + "-email") class=Field type="email" value=email input=editEmail placeholder="Email" aria-label="Email" min-height="ui.space-32" padding="ui.space-6 ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          button id=(id + "-subscribe") testId=(id + "-subscribe") class=Control press=subscribe min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" background-color="ui.primary" color="ui.primary-foreground"
+          input id=(id + "-email") testId=(id + "-email") class=Field font-weight=uiWeights.regular type="email" value=email input=editEmail placeholder="Email" aria-label="Email" min-height="ui.space-32" padding="ui.space-6 ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          button id=(id + "-subscribe") testId=(id + "-subscribe") class=Control font-weight=uiWeights.medium press=subscribe min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" background-color="ui.primary" color="ui.primary-foreground"
             text (subscribed ? "Subscribed" : "Subscribe") font-family=uiFontFamily(uiFont) data-rightui-font="body"
           if email != "" and not subscribed and not email.includes("@")
             text "Enter a valid email address." role="status" font-size="ui.text-xs" color="ui.danger" font-family=uiFontFamily(uiFont) data-rightui-font="body"
@@ -90,6 +92,7 @@ component SidebarPlatform
     reduced: bool
     choose: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state expanded: string[] = ["Playground"]
   action toggle(title: string)
@@ -101,15 +104,15 @@ component SidebarPlatform
         column gap="ui.space-8"
           column padding="ui.space-8" gap="ui.space-0"
             if not compact
-              text "Platform" font-size="ui.text-xs" font-weight="ui.weight-medium" color="ui.sidebar-label" padding="ui.space-0 ui.space-8" height="ui.space-32" display="flex" align-items="center" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text "Platform" font-size="ui.text-xs" font-weight=uiWeights.medium color="ui.sidebar-label" padding="ui.space-0 ui.space-8" height="ui.space-32" display="flex" align-items="center" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             column gap="ui.space-4"
               for group, gi in sidebarPlatform() key=group.title
                 column gap="ui.space-0"
                   button id=(id + "-platform-" + gi.toString()) testId=(id + "-platform-" + gi.toString()) class=Control press=toggle(group.title)
-                    aria-label=group.title aria-expanded=expanded.includes(group.title) display="flex" align-items="center" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" background-color="transparent" color="ui.foreground" font-weight="ui.weight-regular"
+                    aria-label=group.title aria-expanded=expanded.includes(group.title) display="flex" align-items="center" gap="ui.space-8" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" background-color="transparent" color="ui.foreground" font-weight=uiWeights.regular
                     SidebarIcon(name=group.icon)
                     if not compact
-                      text group.title flex=1 min-width=0 text-align="left" font-size="ui.text-sm" font-weight="ui.weight-regular" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                      text group.title flex=1 min-width=0 text-align="left" font-size="ui.text-sm" font-weight=uiWeights.regular font-family=uiFontFamily(uiFont) data-rightui-font="body"
                       view rotate=(expanded.includes(group.title) ? "90deg" : "0deg")
                         SidebarIcon(name="ChevronRight")
                   if not compact and expanded.includes(group.title)
@@ -118,7 +121,7 @@ component SidebarPlatform
                         SidebarLink(id=id + "-platform-" + gi.toString() + "-" + i.toString(), label=item, icon="", selected=(selected == item), compact=false, badge="", choose=choose)
           if not compact
             column padding="ui.space-8" gap="ui.space-0"
-              text "Projects" font-size="ui.text-xs" font-weight="ui.weight-medium" color="ui.sidebar-label" padding="ui.space-0 ui.space-8" height="ui.space-32" display="flex" align-items="center" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text "Projects" font-size="ui.text-xs" font-weight=uiWeights.medium color="ui.sidebar-label" padding="ui.space-0 ui.space-8" height="ui.space-32" display="flex" align-items="center" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               column gap="ui.space-4"
                 for project, i in ["Design Engineering", "Sales & Marketing", "Travel"] key=project
                   SidebarLink(id=id + "-project-" + i.toString(), label=project, icon=(i == 0 ? "Frame" : i == 1 ? "PieChart" : "Map"), selected=(selected == project), compact=false, badge="", choose=choose)
@@ -136,6 +139,7 @@ component SidebarNotion
     reduced: bool
     choose: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state collapsed: string[] = sidebarWorkspaces().map(workspace => workspace.title)
   action toggle(title: string)
@@ -148,20 +152,20 @@ component SidebarNotion
           SidebarLink(id=id + "-main-" + i.toString(), label=item, icon=(i == 0 ? "Search" : i == 1 ? "Sparkles" : i == 2 ? "Home" : "Inbox"), selected=(selected == item), compact=false, badge=(i == 3 ? "10" : ""), choose=choose)
       scroll flex=1 min-height=0
         column padding="ui.space-8" gap="ui.space-12"
-          text "Favorites" font-size="ui.text-xs" font-weight="ui.weight-medium" color="ui.sidebar-label" padding="ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          text "Favorites" font-size="ui.text-xs" font-weight=uiWeights.medium color="ui.sidebar-label" padding="ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           for item, i in sidebarFavorites() key=item
             row gap="ui.space-0" align-items="center" min-width=0
               text (match sidebarFavoriteIcons().at(i) { case some(icon) => icon, case none => "" }) font-size="ui.text-sm" padding-left="ui.space-8" aria-hidden=true font-family=uiFontFamily(uiFont) data-rightui-font="body"
               SidebarLink(id=id + "-favorite-" + i.toString(), label=item, icon="", selected=(selected == item), compact=false, badge="", choose=choose)
-          text "Workspaces" font-size="ui.text-xs" font-weight="ui.weight-medium" color="ui.sidebar-label" padding="ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          text "Workspaces" font-size="ui.text-xs" font-weight=uiWeights.medium color="ui.sidebar-label" padding="ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           for workspace, wi in sidebarWorkspaces() key=workspace.title
             column gap="ui.space-2"
-              button id=(id + "-workspace-" + wi.toString()) testId=(id + "-workspace-" + wi.toString()) class=Control press=toggle(workspace.title)
+              button id=(id + "-workspace-" + wi.toString()) testId=(id + "-workspace-" + wi.toString()) class=Control font-weight=uiWeights.medium press=toggle(workspace.title)
                 aria-expanded=(not collapsed.includes(workspace.title)) display="flex" align-items="center" gap="ui.space-6" min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" background-color="transparent" color="ui.foreground"
                 view rotate=(collapsed.includes(workspace.title) ? "0deg" : "90deg")
                   SidebarIcon(name="ChevronRight")
                 text workspace.icon font-size="ui.text-sm" aria-hidden=true font-family=uiFontFamily(uiFont) data-rightui-font="body"
-                text workspace.title flex=1 min-width=0 text-align="left" white-space="nowrap" overflow="hidden" text-overflow="ellipsis" font-size="ui.text-sm" font-weight="ui.weight-regular" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                text workspace.title flex=1 min-width=0 text-align="left" white-space="nowrap" overflow="hidden" text-overflow="ellipsis" font-size="ui.text-sm" font-weight=uiWeights.regular font-family=uiFontFamily(uiFont) data-rightui-font="body"
               if not collapsed.includes(workspace.title)
                 column gap="ui.space-2" margin-left="ui.space-16" padding-left="ui.space-12" border-left-width="ui.border-width" border-left-style="solid" border-left-color="ui.border"
                   for item, i in workspace.items key=item

@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Button, IconButton, SidebarTrigger from "@rightui/ui"
 use ControlStyle as Control, InputStyle as Field from "@rightui/ui"
 use DropdownMenu, MenuEntry from "@rightui/ui"
@@ -12,6 +13,7 @@ component SidebarSettings
     narrow: bool
     dismiss: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state selected = "Messages & media"
   state focused = ""
@@ -52,7 +54,7 @@ component SidebarSettings
               text "Settings" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               SidebarIcon(name="ChevronRight")
             text selected testId=(id + "-selected") font-size="ui.text-sm" color="ui.foreground" flex=1 font-family=uiFontFamily(uiFont) data-rightui-font="body"
-            button id=(id + "-close") testId=(id + "-close") class=Control autofocus=true press=closeSettings aria-label="Close dialog" padding="ui.space-4" min-height="ui.space-28" border="0" background-color="transparent" color="ui.muted-foreground"
+            button id=(id + "-close") testId=(id + "-close") class=Control font-weight=uiWeights.medium autofocus=true press=closeSettings aria-label="Close dialog" padding="ui.space-4" min-height="ui.space-28" border="0" background-color="transparent" color="ui.muted-foreground"
               svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.icon-stroke" aria-hidden=true
                 path d="m6 6 12 12M6 18 18 6"
           scroll flex=1 min-height=0 padding="ui.space-0 ui.space-16 ui.space-16"
@@ -80,6 +82,7 @@ component SidebarBlockWithScroll
     openSettings: action
     scrolled: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state expanded = true
   state mobileOpen = false
@@ -146,7 +149,7 @@ component SidebarBlockWithScroll
               SidebarIcon(name="ChevronRight")
               text current font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             view flex=1
-            input id=(id + "-global-search") testId=(id + "-global-search") class=Field value=query input=editQuery placeholder="Search..." aria-label="Search" width=(narrow ? "10rem" : "15rem") min-height="ui.space-32" padding="ui.space-4 ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            input id=(id + "-global-search") testId=(id + "-global-search") class=Field font-weight=uiWeights.regular value=query input=editQuery placeholder="Search..." aria-label="Search" width=(narrow ? "10rem" : "15rem") min-height="ui.space-32" padding="ui.space-4 ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         row position="relative" flex=1 min-height=0 min-width=0 flex-direction=(variant == 14 ? "row-reverse" : "row")
           if not narrow
             view id=(id + "-gap") width=(expanded or compact ? desktopWidth : "0rem") flex-shrink=0 min-width=0
@@ -194,7 +197,7 @@ component SidebarBlockWithScroll
                 if variant == 10
                   if not narrow
                     text "Edit Oct 08" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-                  button id=(id + "-star") testId=(id + "-star") class=Control press=toggleStar aria-label="Favorite page" aria-pressed=starred min-height="ui.space-28" padding="ui.space-4" border="0" background-color=(starred ? "ui.muted" : "transparent") color="ui.foreground"
+                  button id=(id + "-star") testId=(id + "-star") class=Control font-weight=uiWeights.medium press=toggleStar aria-label="Favorite page" aria-pressed=starred min-height="ui.space-28" padding="ui.space-4" border="0" background-color=(starred ? "ui.muted" : "transparent") color="ui.foreground"
                     SidebarIcon(name="Star")
                   DropdownMenu(id=id + "-actions", label="Actions", reduced=reduced, choose=choose, entries=[MenuEntry(id="Customize Page", label="Customize Page", shortcut="", disabled=false, destructive=false), MenuEntry(id="Turn into wiki", label="Turn into wiki", shortcut="", disabled=false, destructive=false), MenuEntry(id="Copy Link", label="Copy Link", shortcut="", disabled=false, destructive=false), MenuEntry(id="Duplicate", label="Duplicate", shortcut="", disabled=false, destructive=false), MenuEntry(id="Move to", label="Move to", shortcut="", disabled=false, destructive=false), MenuEntry(id="Move to Trash", label="Move to Trash", shortcut="", disabled=false, destructive=true), MenuEntry(id="Undo", label="Undo", shortcut="", disabled=false, destructive=false), MenuEntry(id="View analytics", label="View analytics", shortcut="", disabled=false, destructive=false), MenuEntry(id="Version History", label="Version History", shortcut="", disabled=false, destructive=false), MenuEntry(id="Notifications", label="Notifications", shortcut="", disabled=false, destructive=false), MenuEntry(id="Import", label="Import", shortcut="", disabled=false, destructive=false), MenuEntry(id="Export", label="Export", shortcut="", disabled=false, destructive=false)])
             scroll flex=1 min-height=0 padding=(variant == 10 ? "ui.space-40 ui.space-16" : variant == 4 or variant == 7 or variant == 8 ? "ui.space-0 ui.space-16 ui.space-16" : "ui.space-16") scroll=scrolled

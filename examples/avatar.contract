@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, AvatarFrame, AvatarBadge, AvatarStatus, AvatarGroup, AvatarGroupItemDirected, AvatarGroupCount, AvatarGroupOverflowDirected, AvatarMenu, MenuEntry, Direction from "@rightui/ui"
 
 fn avatarName(person: number): string = person == 0 ? "@ccheever" : person == 1 ? "@maxleiter" : "@evilrabbit"
@@ -66,11 +67,12 @@ component AvatarExample
     title: string
     description: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   slot
   view
     column gap="ui.space-12" min-width=0
-      text title role="heading" aria-level=3 font-size="ui.text-base" font-weight="ui.weight-semibold" color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text title role="heading" aria-level=3 font-size="ui.text-base" font-weight=uiWeights.semibold color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       text description font-size="ui.text-sm" line-height="ui.leading-relaxed" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       row min-height="ui.space-80" align-items="center" justify-content="center" gap="ui.space-16" flex-wrap="wrap" padding="ui.space-16" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.panel-radius" min-width=0
         children

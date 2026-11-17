@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 
@@ -79,6 +80,7 @@ component CodeBlockView
     compact: bool
     variant: string
   inject
+    uiWeights: FontWeights
     uiFont: string
     uiCopiedId: string
     uiCopiedText: string
@@ -102,20 +104,20 @@ component CodeBlockView
               path d="m4 17 6-5-6-5M12 19h8"
             else
               path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8ZM14 2v6h6M10 12l-2 2 2 2M14 12l2 2-2 2"
-          text heading testId=(id + "-title") min-width="0px" overflow="hidden" text-overflow="ellipsis" white-space="nowrap" font-size=(compact ? "ui.text-xs" : "ui.text-sm") line-height="ui.leading-normal" font-weight="ui.weight-medium" color=(variant == "destructive" ? "ui.danger" : "ui.foreground") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          text heading testId=(id + "-title") min-width="0px" overflow="hidden" text-overflow="ellipsis" white-space="nowrap" font-size=(compact ? "ui.text-xs" : "ui.text-sm") line-height="ui.leading-normal" font-weight=uiWeights.medium color=(variant == "destructive" ? "ui.danger" : "ui.foreground") font-family=uiFontFamily(uiFont) data-rightui-font="body"
         row gap="ui.space-4" align-items="center" flex-shrink=0 margin="ui.space-negative-4 ui.space-negative-6 ui.space-negative-4 0px"
-          button id=(id + "-wrap") testId=(id + "-wrap") class=Control press=toggleWrap aria-label="Wrap lines" title="Wrap lines" aria-pressed=wrapped aria-controls=(id + "-content") display="flex" align-items="center" justify-content="center" width="ui.space-28" height="ui.space-28" min-height="ui.space-28" padding="0px" border="0" background-color=(wrapped ? "ui.code-highlight" : "transparent") color=(wrapped ? "ui.foreground" : "ui.muted-foreground")
+          button id=(id + "-wrap") testId=(id + "-wrap") class=Control font-weight=uiWeights.medium press=toggleWrap aria-label="Wrap lines" title="Wrap lines" aria-pressed=wrapped aria-controls=(id + "-content") display="flex" align-items="center" justify-content="center" width="ui.space-28" height="ui.space-28" min-height="ui.space-28" padding="0px" border="0" background-color=(wrapped ? "ui.code-highlight" : "transparent") color=(wrapped ? "ui.foreground" : "ui.muted-foreground")
             :hover
               background-color="ui.code-highlight"
             svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-detail" stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
               path d="M3 6h18M3 11h14a4 4 0 0 1 0 8h-4M3 16h4M13 16l-3 3 3 3"
           if showDownload
-            button id=(id + "-download") testId=(id + "-download") class=Control press=download aria-label="Download code" title="Download code" display="flex" align-items="center" justify-content="center" width="ui.space-28" height="ui.space-28" min-height="ui.space-28" padding="0px" border="0" background-color="transparent" color="ui.muted-foreground"
+            button id=(id + "-download") testId=(id + "-download") class=Control font-weight=uiWeights.medium press=download aria-label="Download code" title="Download code" display="flex" align-items="center" justify-content="center" width="ui.space-28" height="ui.space-28" min-height="ui.space-28" padding="0px" border="0" background-color="transparent" color="ui.muted-foreground"
               :hover
                 background-color="ui.code-highlight"
               svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-detail" stroke-linecap="round" stroke-linejoin="round" aria-hidden=true
                 path d="M12 3v12M7 10l5 5 5-5M5 16v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"
-          button id=(id + "-copy") testId=(id + "-copy") class=Control press=copy aria-label=(copyConfirmed ? "Copied" : "Copy code") title=(copyConfirmed ? "Copied" : "Copy code") display="flex" align-items="center" justify-content="center" width="ui.space-28" height="ui.space-28" min-height="ui.space-28" padding="0px" border="0" background-color="transparent" color="ui.muted-foreground"
+          button id=(id + "-copy") testId=(id + "-copy") class=Control font-weight=uiWeights.medium press=copy aria-label=(copyConfirmed ? "Copied" : "Copy code") title=(copyConfirmed ? "Copied" : "Copy code") display="flex" align-items="center" justify-content="center" width="ui.space-28" height="ui.space-28" min-height="ui.space-28" padding="0px" border="0" background-color="transparent" color="ui.muted-foreground"
             :hover
               background-color="ui.code-highlight"
             svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-detail" stroke-linecap="round" stroke-linejoin="round" aria-hidden=true

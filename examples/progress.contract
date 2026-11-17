@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, Progress, Slider from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state progress = 64
@@ -13,5 +15,5 @@ component Demo
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       Progress(id="catalog-progress", label="Preparation", value=progress)
-      text "Controlled progress" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Controlled progress" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Slider(id="variation-progress-control", label="Preparation progress", value=progress, minimum=0, maximum=100, step=1, disabled=false, change=updateProgress)

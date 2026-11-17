@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, MessageFrame, MessageContent, BubbleFrame, MessageIcon from "@rightui/ui"
 use TraceFrame, TraceLine, TraceDisclosure, TraceCollapsible, CodeBlockContent from "@rightui/ui"
 use ButtonAI as ButtonContent from "@rightui/ui"
@@ -55,6 +56,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
     rightuiDemoTime: number
     rightuiRunDemo: action
@@ -109,7 +111,7 @@ component Demo
       input id="ai-chat-files" type="file" multiple=true change=picked display="none" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       row justify-content="space-between" align-items="flex-start" gap="ui.space-16" padding="ui.space-32 ui.space-32 ui.space-16"
         column gap="ui.space-4"
-          text "New Thread" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          text "New Thread" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
           text "Ask the agent to change your code." font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         ButtonContent(id="ai-chat-reset", label="Reset conversation", variant="outline", size="icon", disabled=busy, press=reset)
           MessageIcon(name="arrow.clockwise", filled=false)
@@ -117,7 +119,7 @@ component Demo
         column flex=1 gap="ui.space-8" align-items="center" justify-content="center" padding="ui.space-32"
           view width="ui.space-40" height="ui.space-40" display="flex" align-items="center" justify-content="center" border-radius="ui.radius-md" background-color="ui.muted"
             MessageIcon(name="message", filled=false)
-          text "What should we build?" font-size="ui.text-lg" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          text "What should we build?" font-size="ui.text-lg" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
           text "The agent can read your code, run commands and make changes. Press send to start." max-width="20rem" text-align="center" font-size="ui.text-sm" line-height="ui.leading-relaxed" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       else
         column flex=1 min-height=0 position="relative"

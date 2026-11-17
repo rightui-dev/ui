@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use uiSpin from "./spinner.contract"
 
@@ -39,6 +40,7 @@ component BadgeContent
     invalid: bool
     iconPosition: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   slot
   state hovered = false
@@ -46,7 +48,7 @@ component BadgeContent
     hovered = inside
   view
     if href != ""
-      link href=href class=BadgeSurface hover=hoverChanged direction=direction aria-invalid=invalid
+      link href=href class=BadgeSurface font-weight=uiWeights.medium hover=hoverChanged direction=direction aria-invalid=invalid
         font-family=uiFontFamily(uiFont) data-rightui-font="body"
         padding-left=(iconPosition == "start" ? "ui.space-6" : "ui.space-8") padding-right=(iconPosition == "end" ? "ui.space-6" : "ui.space-8")
         background-color=(fill != "" ? fill : badgeFill(variant, hovered)) color=(ink != "" ? ink : badgeInk(variant, hovered))
@@ -54,7 +56,7 @@ component BadgeContent
         text-decoration=(variant == "link" and hovered ? "underline" : "none")
         children
     else
-      row class=BadgeSurface hover=hoverChanged direction=direction aria-invalid=invalid
+      row class=BadgeSurface font-weight=uiWeights.medium hover=hoverChanged direction=direction aria-invalid=invalid
         font-family=uiFontFamily(uiFont) data-rightui-font="body"
         padding-left=(iconPosition == "start" ? "ui.space-6" : "ui.space-8") padding-right=(iconPosition == "end" ? "ui.space-6" : "ui.space-8")
         background-color=(fill != "" ? fill : badgeFill(variant, variant == "ghost" and hovered)) color=(ink != "" ? ink : badgeInk(variant, variant == "ghost" and hovered))
@@ -103,12 +105,13 @@ component BadgeWithOptions
     variant: string
     options: BadgeOptions
   inject
+    uiWeights: FontWeights
     uiFont: string
   view
     BadgeContent(variant=variant, href=options.href, fill=options.fill, ink=options.ink, direction=options.direction, invalid=options.invalid, iconPosition=options.icon == "" ? "" : options.trailingIcon ? "end" : "start")
       if options.icon != "" and not options.trailingIcon
         BadgeIcon(name=options.icon)
-      text label font-size="ui.text-xs" line-height="ui.leading-heading" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text label font-size="ui.text-xs" line-height="ui.leading-heading" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if options.icon != "" and options.trailingIcon
         BadgeIcon(name=options.icon)
 

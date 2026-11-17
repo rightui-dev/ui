@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiPopupIn from "./popup-motion.contract"
 use uiFontFamily from "./typography-context.contract"
 use Button, ButtonControl from "./button.contract"
@@ -19,6 +20,7 @@ component MessageScroller
     send: action
     latest: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state draft = ""
   action edit(v: string)
@@ -33,7 +35,7 @@ component MessageScroller
         Button(id=id + "-history", label=(historyLoaded ? "Start of conversation" : "Load earlier messages"), variant="outline", disabled=historyLoaded, press=loadHistory)
       MessageScrollerTranscript(id=id, messages=messages, height="17.5rem", latest=latest)
       row gap="ui.space-8" align-items="center" min-width="0px" max-width="100%"
-        input id=(id + "-draft") testId=(id + "-draft") class=Field value=draft input=edit submit=post placeholder="Your message…" aria-label="Your message" flex="1 1 10rem" min-width="0px" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        input id=(id + "-draft") testId=(id + "-draft") class=Field font-weight=uiWeights.regular value=draft input=edit submit=post placeholder="Your message…" aria-label="Your message" flex="1 1 10rem" min-width="0px" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         Button(id=id + "-send", label="Send", variant="primary", disabled=(draft.trim() == ""), press=post)
 
 component MessageScrollerTranscript

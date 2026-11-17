@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, InputGroup from "@rightui/ui"
 use Button, Empty from "@rightui/ui"
 
@@ -6,6 +7,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   action createItem
@@ -18,6 +20,6 @@ component Demo
     column gap="ui.space-16" min-width=0 max-width="100%"
       Empty(id="catalog-empty", title="No favorites", description="Add your first item to this workspace.")
         Button(id="catalog-empty-add", label="Ajouter un favori", variant="primary", disabled=false, press=createItem)
-      text "Search empty items" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Search empty items" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       Empty(id="empty-search", title="No matching items", description="Try another search.")
         InputGroup(id="empty-search-input", label="Search items", value=query, placeholder="Search", prefix="", suffix="", buttonLabel="", disabled=false, edit=editQuery, submit=createItem)

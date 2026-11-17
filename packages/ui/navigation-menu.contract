@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use uiPopupIn, uiPopupOut from "./popup-motion.contract"
 use Control from "./styles.contract"
@@ -13,6 +14,7 @@ component NavigationMenu
     entries: NavigationMenuEntry[]
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state expanded = false
   state openEpoch = 0
@@ -60,7 +62,7 @@ component NavigationMenu
       keys(k)
   view
     column role="navigation" aria-label=label align-items="flex-start"
-      button id=id testId=id class=Control press=toggle key=keys aria-expanded=expanded aria-controls=(id + "-content")
+      button id=id testId=id class=Control font-weight=uiWeights.medium press=toggle key=keys aria-expanded=expanded aria-controls=(id + "-content")
         display="flex" align-items="center" gap="ui.space-6" padding="ui.space-8 ui.space-16" border="0" background-color=(expanded ? "ui.muted" : "ui.surface") color="ui.foreground"
         text label font-family=uiFontFamily(uiFont) data-rightui-font="body"
         svg width="ui.space-12" height="ui.space-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
@@ -80,7 +82,7 @@ component NavigationMenu
                 :focus-visible
                   background-color="ui.muted"
                   box-shadow="ui.shadow-focus"
-                text entry.title font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                text entry.title font-size="ui.text-sm" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 text entry.description font-size="ui.text-sm" line-height="ui.leading-snug" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 shape NavigationMenuSection
@@ -97,6 +99,7 @@ component NavigationMenuSections
     sections: NavigationMenuSection[]
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   state active = -1
   state openEpoch = 0
@@ -184,7 +187,7 @@ component NavigationMenuSections
       for section, i in sections key=section.id
         if section.entries.length > 0
           button id=(id + "-" + section.id) testId=(id + "-" + section.id) class=Control press=toggleSection(i) hover=triggerHover(i) key=triggerKeys(i) aria-expanded=(active == i) aria-controls=(id + "-content") aria-haspopup="true" popovertarget=(active >= 0 ? id + "-content" : "") popovertargetaction="show"
-            display="flex" align-items="center" gap="ui.space-6" padding="ui.space-8 ui.space-12" border="0" border-radius="ui.radius-item" background-color=(active == i ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm" font-weight="ui.weight-medium" transition=(reduced ? "none" : "background-color ui.duration-fast ui.easing")
+            display="flex" align-items="center" gap="ui.space-6" padding="ui.space-8 ui.space-12" border="0" border-radius="ui.radius-item" background-color=(active == i ? "ui.muted" : "transparent") color="ui.foreground" font-size="ui.text-sm" font-weight=uiWeights.medium transition=(reduced ? "none" : "background-color ui.duration-fast ui.easing")
             :hover
               background-color="ui.muted"
             :focus-visible
@@ -194,7 +197,7 @@ component NavigationMenuSections
               path d="m6 9 6 6 6-6"
         else
           link id=(id + "-" + section.id) testId=(id + "-" + section.id) href=section.href class=Control
-            display="flex" align-items="center" padding="ui.space-8 ui.space-12" border-radius="ui.radius-item" color="ui.foreground" text-decoration="none" font-size="ui.text-sm" font-weight="ui.weight-medium"
+            display="flex" align-items="center" padding="ui.space-8 ui.space-12" border-radius="ui.radius-item" color="ui.foreground" text-decoration="none" font-size="ui.text-sm" font-weight=uiWeights.medium
             :hover
               background-color="ui.muted"
             :focus-visible
@@ -218,5 +221,5 @@ component NavigationMenuSections
                       :focus-visible
                         background-color="ui.muted"
                         box-shadow="ui.shadow-focus"
-                      text entry.title font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                      text entry.title font-size="ui.text-sm" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
                       text entry.description font-size="ui.text-sm" line-height="ui.leading-snug" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

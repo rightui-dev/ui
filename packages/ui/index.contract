@@ -62,7 +62,7 @@ use TraceFrame, TraceLine, TraceTitle, TraceDescription, TraceDisclosure, TraceC
 use Control as ControlStyle, Field as InputStyle, Hit, QuietLink, Heading, Paragraph, CardStyle, FeatureCardStyle, InsetCardStyle, MutedStyle from "./styles.contract"
 use Composer, CompactAiMenu, ApprovalItem, InputGroupFrame, InputGroupAddon from "./ai-controls.contract"
 use uiReveal from "./motion.contract"
-use uiFontFamily from "./typography-context.contract"
+use uiFontFamily, FontWeights, defaultFontWeights, scaleFontWeights from "./typography-context.contract"
 use AvatarMenu from "./avatar-menu.contract"
 use OverlayLayer from "./overlay-layer.contract"
 use SafeArea from "./safe-area.contract"

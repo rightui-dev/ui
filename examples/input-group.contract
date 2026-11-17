@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, InputGroup from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state message = ""
@@ -18,9 +20,9 @@ component Demo
       InputGroup(id="controls-search", label="Search", value=message, placeholder="Search…", prefix="https://", suffix=".com", buttonLabel="Submit", disabled=false, edit=editMessage, submit=showToast)
       if activated
         text ("Search submitted: " + message) testId="input-group-result" role="status" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "Prefix only" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Prefix only" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       InputGroup(id="input-group-prefix-only", label="Prefix only", value=message, placeholder="example", prefix="https://", suffix="", buttonLabel="", disabled=false, edit=editMessage, submit=showToast)
-      text "Suffix only" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Suffix only" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       InputGroup(id="input-group-suffix-only", label="Suffix only", value=message, placeholder="example", prefix="", suffix=".com", buttonLabel="", disabled=false, edit=editMessage, submit=showToast)
-      text "Disabled" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Disabled" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       InputGroup(id="input-group-disabled", label="Disabled", value=message, placeholder="example", prefix="https://", suffix=".com", buttonLabel="", disabled=true, edit=editMessage, submit=showToast)

@@ -7,12 +7,14 @@ imports and existing props remain unchanged by this typography migration.
 ## Keep the current configured appearance
 
 ```contract
+use defaultFontWeights from "@rightui/ui"
 use Button from "@rightui/ui"
 
 component App
   state saved = false
   provide
     uiFont = "theme"
+    uiWeights = defaultFontWeights()
   action save
     saved = true
   view
@@ -51,12 +53,14 @@ declaration, Exact reports `bake-undeclared-data`. A website that authors
 ## Offer three typefaces
 
 ```contract
+use defaultFontWeights from "@rightui/ui"
 use Button from "@rightui/ui"
 
 component App
   state fontChoice = "sans"
   provide
     uiFont = fontChoice
+    uiWeights = defaultFontWeights()
   action chooseFont(value: string)
     fontChoice = value
   view

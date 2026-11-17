@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use IconButton from "./button.contract"
 use Control from "./styles.contract"
@@ -35,6 +36,7 @@ component CalendarAdvanced
     changeMonth: action
     change: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state hoveredDay = -1
   state active = ""
@@ -104,7 +106,7 @@ component CalendarAdvanced
               path d="m15 18-6-6 6-6"
         else
           view width="ui.space-32" height="ui.space-32" aria-hidden=true
-        text (calendarMonth(month) + " " + year.toString()) testId=(id + "-month") font-size="ui.text-sm" font-weight="ui.weight-medium" aria-live="polite" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        text (calendarMonth(month) + " " + year.toString()) testId=(id + "-month") font-size="ui.text-sm" font-weight=uiWeights.medium aria-live="polite" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if navigation == "both" or navigation == "next"
           IconButton(id=id + "-next", label="Next month", variant="ghost", disabled=(disabled or year == 9999 and month == 12 or maximum != "" and calendarISO(year, month, days) >= maximum), press=shiftMonth(1))
             svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
@@ -124,7 +126,7 @@ component CalendarAdvanced
               button id=(id + "-date-" + calendarISO(year, month, cell - offset + 1)) testId=(id + "-date-" + calendarISO(year, month, cell - offset + 1)) class=Control press=select(cell - offset + 1) key=keys(cell - offset + 1) hover=hoverDay(cell - offset + 1)
                 disabled=(disabled or not advancedAllowed(year, month, cell - offset + 1, minimum, maximum, disabledDates, disabledWeekends)) tabindex=(focusDate == calendarISO(year, month, cell - offset + 1) ? 0 : -1)
                 aria-label=calendarISO(year, month, cell - offset + 1) aria-pressed=(low == calendarISO(year, month, cell - offset + 1) or high == calendarISO(year, month, cell - offset + 1) or selected.includes(calendarISO(year, month, cell - offset + 1)))
-                position="relative" width="100%" height="ui.space-32" min-height="ui.space-32" padding="0px" border="none" border-radius="ui.radius-control" font-size="ui.text-sm" font-weight="ui.weight-regular"
+                position="relative" width="100%" height="ui.space-32" min-height="ui.space-32" padding="0px" border="none" border-radius="ui.radius-control" font-size="ui.text-sm" font-weight=uiWeights.regular
                 background-color=(low == calendarISO(year, month, cell - offset + 1) or high == calendarISO(year, month, cell - offset + 1) or selected.includes(calendarISO(year, month, cell - offset + 1)) ? "ui.primary" : hoveredDay == cell - offset + 1 ? "ui.muted" : "transparent") color=(low == calendarISO(year, month, cell - offset + 1) or high == calendarISO(year, month, cell - offset + 1) or selected.includes(calendarISO(year, month, cell - offset + 1)) ? "ui.primary-foreground" : "ui.foreground")
                 text (cell - offset + 1).toString() font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if error != "" and high == "" and low == errorStart

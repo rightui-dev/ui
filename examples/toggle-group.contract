@@ -1,3 +1,4 @@
+use FontWeights from "@rightui/ui"
 use uiFontFamily, ToggleGroup from "@rightui/ui"
 
 component Demo
@@ -5,6 +6,7 @@ component Demo
     width: number
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   derive narrow = width < 600
   state styles: string[] = ["Italic"]
@@ -13,5 +15,5 @@ component Demo
   view
     column gap="ui.space-16" min-width=0 max-width="100%"
       ToggleGroup(id="catalog-styles", label="Text styles", options=["Italic", "Underline", "Strikethrough"], selected=styles, disabled=false, reduced=reduced, change=setStyles)
-      text "Disabled" font-size="ui.text-sm" font-weight="ui.weight-semibold" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      text "Disabled" font-size="ui.text-sm" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
       ToggleGroup(id="variation-toggle-group-disabled", label="Text styles", options=["Italic", "Underline", "Strikethrough"], selected=styles, disabled=true, reduced=reduced, change=setStyles)

@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
 use ChartSeries, SeriesLegendOptions, SeriesValuesTooltipOptions, chartNiceStep, chartDisplayLabel, chartDisplayValue from "./chart-series.contract"
@@ -45,6 +46,7 @@ component ChartOptions
     desktopLabel: string
     mobileLabel: string
   inject
+    uiWeights: FontWeights
     uiFont: string
   state hidden: string[] = initialSeries == "desktop" ? ["mobile"] : initialSeries == "mobile" ? ["desktop"] : []
   state active = initialIndex
@@ -104,10 +106,10 @@ component ChartOptions
       if showSeriesControl
         row gap="ui.space-8" flex-wrap="wrap" role="group" aria-label="Chart series"
           for name in ["both", "desktop", "mobile"] key=name
-            button class=Control id=(id + "-" + name) testId=(id + "-" + name) press=choose(name) aria-pressed=series == name padding="ui.space-6 ui.space-12" min-height="ui.space-32" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color=(series == name ? "ui.muted" : "transparent") color="ui.foreground" text-transform="capitalize"
+            button class=Control font-weight=uiWeights.medium id=(id + "-" + name) testId=(id + "-" + name) press=choose(name) aria-pressed=series == name padding="ui.space-6 ui.space-12" min-height="ui.space-32" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color=(series == name ? "ui.muted" : "transparent") color="ui.foreground" text-transform="capitalize"
               text (name == "desktop" ? desktopLabel : name == "mobile" ? mobileLabel : name) font-family=uiFontFamily(uiFont) data-rightui-font="body"
               if showTotals and name != "both"
-                text chartDisplayValue(sum(points.map(p => name == "desktop" ? p.desktop : p.mobile)), valueFormat) font-weight="ui.weight-semibold" font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                text chartDisplayValue(sum(points.map(p => name == "desktop" ? p.desktop : p.mobile)), valueFormat) font-weight=uiWeights.semibold font-variant-numeric="tabular-nums" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if showLegend and legendAlign == "top"
         SeriesLegendOptions(id=id, series=config, hidden=hidden, change=toggle, icons=icons, hideIcon=hideLegendIcon, verticalAlign="top")
       view id=(id + "-plot") testId=(id + "-plot") position="relative" min-width="0px" height=260 role="group" aria-label=label aria-describedby=(showTooltip and current >= 0 and hidden.length < 2 ? id + "-tooltip" : "") tabindex=0 key=keys pointermove=pointer pointerdown=press hover=hover resize=measure outline="none"
@@ -139,7 +141,7 @@ component ChartOptions
       if showPointControls
         row gap="ui.space-8" flex-wrap="wrap" aria-label="Explore monthly values"
           for point, i in points key=point.label
-            button class=Control id=(id + "-point-" + i.toString()) testId=(id + "-point-" + i.toString()) press=inspect(i) aria-pressed=current == i padding="ui.space-4 ui.space-8" min-height="ui.space-28" background-color=(current == i ? "ui.muted" : "transparent") border="0" color="ui.muted-foreground" font-size="ui.text-xs"
+            button class=Control font-weight=uiWeights.medium id=(id + "-point-" + i.toString()) testId=(id + "-point-" + i.toString()) press=inspect(i) aria-pressed=current == i padding="ui.space-4 ui.space-8" min-height="ui.space-28" background-color=(current == i ? "ui.muted" : "transparent") border="0" color="ui.muted-foreground" font-size="ui.text-xs"
               text chartDisplayLabel(point.label, "axis") font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 fn naturalPower(k: number): number = k > 44 ? 0 : k == 0 ? 1 : k == 1 ? 0.26794919243112281 : k == 2 ? 0.07179676972449088 : k == 3 ? 0.019237886466840617 : k == 4 ? 0.0051547761428715703 : k == 5 ? 0.0013812181046456555 : k == 6 ? 0.00037009627571104941 : k == 7 ? 9.9166998198541869e-05 : k == 8 ? 2.6571717083117901e-05 : k == 9 ? 7.119870133929712e-06 : k == 10 ? 1.9077634526009366e-06 : k == 11 ? 5.1118367647403156e-07 : k == 12 ? 1.3697125329518911e-07 : k == 13 ? 3.6701336706724693e-08 : k == 14 ? 9.8340935317096054e-09 : k == 15 ? 2.6350374201137172e-09 : k == 16 ? 7.0605614874525981e-10 : k == 17 ? 1.8918717486732108e-10 : k == 18 ? 5.0692550724024295e-11 : k == 19 ? 1.358302802877604e-11 : k == 20 ? 3.6395613910798461e-12 : k == 21 ? 9.7521753554333854e-13 : k == 22 ? 2.6130875109350738e-13 : k == 23 ? 7.0017468830690579e-14 : k == 24 ? 1.8761124229254853e-14 : k == 25 ? 5.0270280863288097e-15 : k == 26 ? 1.3469881160603771e-15 : k == 27 ? 3.6092437791269757e-16 : k == 28 ? 9.6709395590412697e-17 : k == 29 ? 2.591320444895307e-17 : k == 30 ? 6.9434222053995546e-18 : k == 31 ? 1.8604843726451361e-18 : k == 32 ? 4.9851528518098844e-19 : k == 33 ? 1.3357676807881673e-19 : k == 34 ? 3.5791787134278322e-20 : k == 35 ? 9.5903804582965288e-21 : k == 36 ? 2.5697346989077761e-21 : k == 37 ? 6.8855833733457311e-22 : k == 38 ? 1.8449865043051551e-22 : k == 39 ? 4.9436264387488662e-23 : k == 40 ? 1.3246407119439064e-23 : k == 41 ? 3.5493640902675723e-24 : k == 42 ? 9.5104924163122292e-25 : k == 43 ? 2.5483287625731797e-25 : k == 44 ? 6.8282263398048592e-26 : 0

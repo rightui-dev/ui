@@ -1,3 +1,4 @@
+use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use uiPopupIn, uiPopupOut from "./popup-motion.contract"
 use uiReveal, uiPopover from "./motion.contract"
@@ -25,6 +26,7 @@ component AccordionOptions
     reduced: bool
     change: action
   inject
+    uiWeights: FontWeights
     uiFont: string
   state hovered = -1
   action setHover(i: number, inside: bool)
@@ -46,10 +48,10 @@ component AccordionOptions
     column id=id testId=id
       for title, i in titles key=title
         column border-bottom-width=(i == titles.length - 1 ? "0px" : "ui.border-width") border-bottom-style=(i == titles.length - 1 ? "solid" : "solid") border-bottom-color=(i == titles.length - 1 ? "transparent" : "ui.border") min-width="0px"
-          button id=(id + "-trigger-" + i.toString()) testId=(id + "-trigger-" + i.toString()) class=Control disabled=disabledItems.includes(i)
+          button id=(id + "-trigger-" + i.toString()) testId=(id + "-trigger-" + i.toString()) class=Control font-weight=uiWeights.medium disabled=disabledItems.includes(i)
             aria-expanded=(expanded == i) aria-controls=(id + "-panel-" + i.toString()) press=toggle(i) key=keys(i) hover=setHover(i)
             display="flex" align-items="flex-start" justify-content="space-between" gap="ui.space-16" padding="ui.space-16 0px" border="0" background-color="transparent" color="ui.foreground"
-            text title flex=1 min-width="0px" text-align="left" text-decoration=(hovered == i ? "underline" : "none") font-size="ui.text-sm" font-weight="ui.weight-medium" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            text title flex=1 min-width="0px" text-align="left" text-decoration=(hovered == i ? "underline" : "none") font-size="ui.text-sm" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
             svg width="ui.space-16" height="ui.space-16" margin-top="ui.space-2" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" rotate=(expanded == i ? "180deg" : "0deg") transition=(reduced ? "none" : "rotate ui.duration-normal ui.easing") aria-hidden=true
               path d="m6 9 6 6 6-6"
           column id=(id + "-panel-" + i.toString()) testId=(expanded == i ? id + "-panel-" + i.toString() : "") role="region" aria-labelledby=(id + "-trigger-" + i.toString()) aria-hidden=(expanded != i) inert=(expanded != i) height=(expanded == i ? "auto" : "0px") min-height="0px" overflow="hidden"
@@ -116,6 +118,7 @@ component Popover
     focusId: string
     reduced: bool
   inject
+    uiWeights: FontWeights
     uiFont: string
   slot
   state expanded = false
@@ -133,7 +136,7 @@ component Popover
       expanded = false
   view
     column align-items="flex-start"
-      button id=id testId=id class=Control aria-haspopup="dialog" aria-expanded=expanded aria-controls=(id + "-content") popovertarget=(expanded ? id + "-content" : "") popovertargetaction="show" press=toggle
+      button id=id testId=id class=Control font-weight=uiWeights.medium aria-haspopup="dialog" aria-expanded=expanded aria-controls=(id + "-content") popovertarget=(expanded ? id + "-content" : "") popovertargetaction="show" press=toggle
         padding="ui.space-8 ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground"
         text label font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if expanded

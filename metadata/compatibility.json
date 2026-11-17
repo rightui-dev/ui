@@ -1,6 +1,6 @@
 {
-  "version": "0.3.0-beta.8",
-  "asOf": "2026-11-16",
+  "version": "0.4.0-beta.1",
+  "asOf": "2026-11-17",
   "exactRevision": "53426cf02bf986a5e781abc4f953d79989c6dc05",
   "platforms": [
     {
@@ -259,6 +259,11 @@
       "id": "beta8-message-navigation",
       "description": "Three targeted web regression scenarios passed for Message actions, MessageScroller streaming/stop/resume and history navigation, and NavigationMenu keyboard dismissal and links. Desktop and mobile browser checks also verified typing-dot motion, preserved reading position and trigger-aligned panels. iOS and macOS compiled successfully; native interactions have not been verified for these additions.",
       "url": "https://github.com/rightui-dev/website/blob/main/apps/site/app.test.contract"
+    },
+    {
+      "id": "web-weight-scale",
+      "description": "Local 0.4 preview: computed font weights preserve body/title ratios at 25%, 110% and 112%. Six public Input fields inherit the scaled regular weight. Initial render and activation agree; continuous changes defer persistence and theme export until settlement. These are targeted web checks, not a frame-rate guarantee.",
+      "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
     }
   ],
   "overrides": [
@@ -1206,6 +1211,15 @@
       "status": "built",
       "evidence": [
         "beta8-message-navigation"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "input",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "web-weight-scale"
       ]
     }
   ]
