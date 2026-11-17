@@ -1,6 +1,6 @@
 # Beta versioning and delivery
 
-Agents manage versioning completely, including release notes, synchronized files, validation and authorized delivery. The package name is always `@rightui/ui`. Releases currently use `0.x.y-beta.N` only, starting with `0.1.0-beta.1`. No stable release or npm `latest` channel is allowed without an explicit user request.
+Agents manage versioning completely, including release notes, synchronized files, validation and authorized delivery. The package name is always `@rightui/ui`. Releases currently use `0.x.y-beta.N` only, starting with `0.1.0-beta.1`. Every authorized npm delivery aligns `beta` and `latest` to the validated beta version. No stable version is allowed without an explicit user request.
 
 ## Choose the next version
 
@@ -32,10 +32,10 @@ The immutable `.tgz` and `.sha256` remain available for offline installation. Ke
 
 ## npm distribution
 
-Local archive delivery does not require npm publication. Never run `npm publish` without explicit session authorization to publish and verified ownership/access to the npm `@rightui` scope. The GitHub organization and npm scope are separate. Once authorized and verified, publish only a new beta version on the npm `beta` channel. Stable versions and `latest` remain forbidden unless explicitly requested. Publication is separate from version preparation, commits, tags and pushes.
+Local archive delivery does not require npm publication. Never run `npm publish` without explicit session authorization to publish and verified ownership/access to the npm `@rightui` scope. The GitHub organization and npm scope are separate. Once authorized and verified, publish a new beta version on the npm `beta` channel, verify its bytes, then align `latest` to that exact version. Stable versions remain forbidden unless explicitly requested. Publication is separate from version preparation, commits, tags and pushes.
 
 Publication runs only in `.github/workflows/publish-npm.yml`, through the configured npm trusted publisher and GitHub OIDC. The workflow downloads the locally validated GitHub release archive, checks its checksum and tagged source contents, and publishes those exact bytes on beta without rebuilding. Do not run npm publish locally or store an npm publishing token. Initial trusted-publisher setup may require interactive login/2FA, separately from subsequent automated publication. A successful upload may precede public registry availability; the engine verifies the exact archive before updating consumers.
 
 Run `bun tools/check-package.ts --registry` after the package becomes available. This creates an isolated app, installs the exact npm version, builds it and tests the Button interaction. Its temporary Bun configuration exempts only `@rightui/ui` from a developer's minimum-release-age rule; it does not change global settings or relax the rule for other dependencies.
 
-Check `npm dist-tag ls @rightui/ui` after publication. When explicitly authorized to make a beta the default installation, point `latest` to that exact published version with `npm dist-tag add @rightui/ui@<version> latest`, then verify both `latest` and `beta`. A `latest` tag does not change the prerelease version into a stable release. Fabio explicitly authorized making beta.5 the default on November 14, 2026. Do not remove an intentionally authorized `latest` tag.
+Since November 17, 2026, the standing delivery policy is to make every validated published beta the default installation. The npm workflow runs `npm dist-tag add @rightui/ui@<version> latest` after verifying the published archive, then requires both `latest` and `beta` to match. It refuses to roll a newer version back. A `latest` tag does not change the prerelease version into a stable version; GitHub releases remain prereleases. The npm trusted publisher must allow both direct publishing and dist-tag management. A `tags_only` workflow run can repair an existing beta's tags without publishing another package.

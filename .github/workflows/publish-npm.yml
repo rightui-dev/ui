@@ -16,6 +16,11 @@ on:
         description: SHA-256 of the locally validated release archive
         required: true
         type: string
+      tags_only:
+        description: Repair latest for an already published beta; never publish a new package
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -42,11 +47,12 @@ jobs:
         with:
           node-version: '22.23.4'
       - name: Install OIDC-capable npm
-        run: npm install --global npm@11.6.2 --ignore-scripts
+        run: npm install --global npm@11.21.2 --ignore-scripts
       - name: Verify and publish the existing archive
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_VERSION: ${{ inputs.version }}
           RELEASE_SOURCE_SHA: ${{ inputs.source_sha }}
           RELEASE_SHA256: ${{ inputs.sha256 }}
+          RELEASE_TAGS_ONLY: ${{ inputs.tags_only }}
         run: node tools/publish-npm.mjs

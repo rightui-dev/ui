@@ -28,4 +28,4 @@ After explicit publication authorization, from `packages/ui`:
 npm publish --access public --tag beta
 ```
 
-Keep releases on the beta channel. Do not publish `latest` or a stable version under the current policy. Consumers should pin a specific published beta and commit their lockfile. The beta channel can be used to discover the newest preview. Update the website's commands only after confirming the registry release.
+Keep version numbers in beta. Each validated npm release is selected by both `beta` and `latest`; the default installation therefore receives the current beta. This does not make it a stable version. Consumers should pin a specific published beta and commit their lockfile. Update the website's commands only after confirming the registry release and both tags.

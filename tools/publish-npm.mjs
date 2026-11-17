@@ -32,6 +32,18 @@ export function newerBeta(candidate, previous) {
   return false;
 }
 
+export async function alignLatest(version, { readTags, setLatest }) {
+  const before = await readTags();
+  if (before.beta !== version) throw new Error(`Refusing to promote ${version}: npm beta is ${before.beta}.`);
+  if (before.latest && before.latest !== version && (!betaPattern.test(before.latest) || newerBeta(before.latest, version))) {
+    throw new Error(`Refusing to replace a newer or stable latest tag (${before.latest}).`);
+  }
+  if (before.latest !== version) await setLatest(version);
+  const after = await readTags();
+  if (after.beta !== version || after.latest !== version) throw new Error('npm beta and latest must both match the validated release. Retry after checking npm state.');
+  return after;
+}
+
 export async function registry(path) {
   const response = await fetch(`https://registry.npmjs.org/@rightui%2Fui${path}`, {
     headers: { 'Cache-Control': 'no-cache' }, signal: AbortSignal.timeout(30000),
@@ -102,6 +114,7 @@ export async function main() {
   verifyArchive(archive, inputs, cwd);
   const before = await registry('');
   const existing = await registry(`/${inputs.version}`);
+  if (process.env.RELEASE_TAGS_ONLY === 'true' && !existing) throw new Error('Tag repair requires an already published version; no package was published.');
   if (existing) {
     await verifyPublished(existing, inputs.digest);
   } else {
@@ -117,10 +130,11 @@ export async function main() {
   }
   if (!published) throw new Error('npm publication is not visible yet; retry this workflow to reconcile.');
   await verifyPublished(published, inputs.digest);
-  const after = await registry('');
-  if (after?.['dist-tags']?.beta !== inputs.version) throw new Error('Published version is not the current beta; no dist-tag was overwritten.');
-  if (after?.['dist-tags']?.latest !== before?.['dist-tags']?.latest) throw new Error('The latest tag changed unexpectedly. Inspect npm before continuing.');
-  const summary = `Published @rightui/ui@${inputs.version} on beta.\n\nSource: ${inputs.source}\n\nSHA-256: ${inputs.digest}\n\nNo web/native build or deployment ran in GitHub Actions.\n`;
+  await alignLatest(inputs.version, {
+    readTags: async () => (await registry(''))?.['dist-tags'] ?? {},
+    setLatest: version => run(['npm', 'dist-tag', 'add', `@rightui/ui@${version}`, 'latest'], { stdio: 'inherit' }),
+  });
+  const summary = `Verified @rightui/ui@${inputs.version}; beta and latest both select this release.\n\nSource: ${inputs.source}\n\nSHA-256: ${inputs.digest}\n\nNo web/native build or deployment ran in GitHub Actions.\n`;
   if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
   console.log(summary);
 }
