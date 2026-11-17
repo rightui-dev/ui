@@ -70,7 +70,7 @@ component NavigationMenu
       if expanded
         for epoch in [openEpoch] key=epoch
           column id=(id + "-content") testId=(id + "-content") popover="auto" toggle=changed(epoch) key=keys
-            position-area="bottom" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline" margin="ui.space-4" width="25rem" max-width="calc(100vw - ui.space-32)" padding="ui.space-4" gap="ui.space-4" box-sizing="border-box"
+            position-area="bottom span-right" position-try-fallbacks="flip-inline, flip-block, flip-block flip-inline" margin="ui.space-4 0px" width="25rem" max-width="calc(100vw - ui.space-32)" padding="ui.space-4" gap="ui.space-4" box-sizing="border-box"
             border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" color="ui.foreground" box-shadow="ui.shadow-menu"
             animation=(reduced ? "none" : "uiPopupIn ui.duration-fast ui.easing both")
             -exact-exit-animation=(reduced ? "none" : "uiPopupOut ui.duration-fast ui.easing both")
@@ -92,6 +92,9 @@ shape NavigationMenuSection
   entries: NavigationMenuEntry[]
   layout: string
 
+shape NavigationMenuViewport
+  width: number
+
 component NavigationMenuSections
   props
     id: string
@@ -101,17 +104,43 @@ component NavigationMenuSections
   inject
     uiWeights: FontWeights
     uiFont: string
+  resource viewport = exactViewport() as shape NavigationMenuViewport
+  state triggerLeft = 0
+  state triggerRight = 0
+  derive availableWidth = max(viewport.width - triggerLeft, triggerRight)
+  state anchorX = 0
+  state anchorWidth = 0
+  state anchorHeight = 0
   state active = -1
   state openEpoch = 0
   state hoverOpened = false
+  state switching = false
+  action measureSection(index: number)
+    match sections.at(index)
+      case some(section)
+        let trigger = frame(id + "-" + section.id)
+        let container = frame(id)
+        if not trigger.unavailable and not trigger.provisional and not container.unavailable and not container.provisional
+          anchorX = trigger.x - container.x
+          anchorWidth = trigger.width
+          anchorHeight = container.height
+          triggerLeft = trigger.x
+          triggerRight = trigger.x + trigger.width
+      case none
+        triggerLeft = 0
+        triggerRight = 0
+  action resized(width: number, height: number)
+    measureSection(active)
   action open(index: number)
     match sections.at(index)
       case some(section)
         if section.entries.length > 0
+          measureSection(index)
+          switching = active >= 0
           if active < 0
             openEpoch = openEpoch + 1
+            showPopover(id + "-content", source=id + "-anchor")
           active = index
-          showPopover(id + "-content", source=id + "-" + section.id)
       case none
         active = -1
   action dismissMenu
@@ -183,7 +212,9 @@ component NavigationMenuSections
     else if k == "ArrowRight" or k == "ArrowLeft"
       triggerKeys(sectionIndex, k)
   view
-    row id=id testId=id role="navigation" aria-label=label align-items="center" flex-wrap="wrap" gap="ui.space-2" position="relative" max-width="100%"
+    row id=id testId=id resize=resized role="navigation" aria-label=label align-items="center" flex-wrap="wrap" gap="ui.space-2" position="relative" max-width="100%"
+      // A persistent anchor moves during layout, so the shared panel can slide without reopening.
+      view id=(id + "-anchor") aria-hidden=true pointer-events="none" position="absolute" left=anchorX top="0px" width=anchorWidth height=anchorHeight
       for section, i in sections key=section.id
         if section.entries.length > 0
           button id=(id + "-" + section.id) testId=(id + "-" + section.id) class=Control press=toggleSection(i) hover=triggerHover(i) key=triggerKeys(i) aria-expanded=(active == i) aria-controls=(id + "-content") aria-haspopup="true" popovertarget=(active >= 0 ? id + "-content" : "") popovertargetaction="show"
@@ -206,20 +237,21 @@ component NavigationMenuSections
       if active >= 0
         for epoch in [openEpoch] key=epoch
           column id=(id + "-content") testId=(id + "-content") role="region" aria-label=label popover="auto" toggle=changed(epoch) key=triggerKeys(active)
-            position-area="bottom span-right" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline" margin="ui.space-8 0px" width="calc(100% - ui.space-16)" max-width="min(36rem, calc(100vw - ui.space-32))" padding="ui.space-8" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" color="ui.foreground" box-shadow="ui.shadow-menu" overflow="hidden"
-            animation=(reduced ? "none" : "uiPopupIn ui.duration-fast ui.easing both")
-            -exact-exit-animation=(reduced ? "none" : "uiPopupOut ui.duration-fast ui.easing both")
+            position-area="bottom span-right" position-try-fallbacks="flip-inline, flip-block, flip-block flip-inline" margin="ui.space-8 0px" width="36rem" max-width=max(1, min(viewport.width - 32, availableWidth)) padding="0px" border="0" border-radius="0px" box-sizing="border-box" background-color="transparent" color="ui.foreground" box-shadow="none" overflow="visible"
+            animation=(reduced or switching ? "none" : "uiPopupIn ui.duration-fast ui.easing both")
             -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing")
-            for section, sectionIndex in sections key=section.id
-              if active == sectionIndex
-                row flex-wrap="wrap" gap="ui.space-4" min-width="0px" width="100%" -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing")
-                  for entry, entryIndex in section.entries key=entry.id
-                    link id=(id + "-" + section.id + "-" + entry.id) testId=(id + "-" + section.id + "-" + entry.id) href=entry.href key=linkKeys(sectionIndex, entryIndex)
-                      display="flex" flex-direction="column" flex=(section.layout == "grid" ? "1 1 15rem" : "1 1 100%") box-sizing="border-box" gap="ui.space-4" padding="ui.space-12" border-radius="ui.radius-item" color="ui.foreground" text-decoration="none" min-width="0px"
-                      :hover
-                        background-color="ui.muted"
-                      :focus-visible
-                        background-color="ui.muted"
-                        box-shadow="ui.shadow-focus"
-                      text entry.title font-size="ui.text-sm" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
-                      text entry.description font-size="ui.text-sm" line-height="ui.leading-snug" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            // Keep the resizing surface inside the top layer, including its transition paint.
+            column id=(id + "-surface") width="100%" min-width="0px" padding="ui.space-8" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" box-shadow="ui.shadow-menu" overflow="hidden" -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing")
+              for section, sectionIndex in sections key=section.id
+                if active == sectionIndex
+                  row flex-wrap="wrap" gap="ui.space-4" min-width="0px" width="100%" -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing")
+                    for entry, entryIndex in section.entries key=entry.id
+                      link id=(id + "-" + section.id + "-" + entry.id) testId=(id + "-" + section.id + "-" + entry.id) href=entry.href key=linkKeys(sectionIndex, entryIndex)
+                        display="flex" flex-direction="column" flex=(section.layout == "grid" ? "1 1 15rem" : "1 1 100%") box-sizing="border-box" gap="ui.space-4" padding="ui.space-12" border-radius="ui.radius-item" color="ui.foreground" text-decoration="none" min-width="0px"
+                        :hover
+                          background-color="ui.muted"
+                        :focus-visible
+                          background-color="ui.muted"
+                          box-shadow="ui.shadow-focus"
+                        text entry.title font-size="ui.text-sm" font-weight=uiWeights.medium font-family=uiFontFamily(uiFont) data-rightui-font="body"
+                        text entry.description font-size="ui.text-sm" line-height="ui.leading-snug" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

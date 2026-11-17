@@ -149,8 +149,8 @@ component AdvancedMenuPanel
     changed: action
   view
     column id=id testId=id popover="auto" toggle=changed key=panelKeys role="menu" aria-label=label tabindex=-1
-      position-area=(panel == "" ? "bottom" : "right span-bottom") position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
-      margin="ui.space-4" width="14rem" min-width="8rem" max-width="calc(100vw - ui.space-32)" max-height="min(28rem, 75vh)" overflow="auto" box-sizing="border-box"
+      position-area=(panel == "" ? "bottom span-right" : "right span-bottom") position-try-fallbacks="flip-inline, flip-block, flip-block flip-inline"
+      margin=(panel == "" ? "ui.space-4 0px" : "ui.space-4") width="14rem" min-width="8rem" max-width="calc(100vw - ui.space-32)" max-height="min(28rem, 75vh)" overflow="auto" box-sizing="border-box"
       padding="ui.space-4" gap="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" color="ui.foreground"
       box-shadow=(panel == "" ? "ui.shadow-menu" : "ui.shadow-panel")
       animation=(reduced ? "none" : panel == "" ? "uiPopupIn ui.duration-fast ui.easing both" : "advancedSubmenuIn ui.duration-fast ui.easing both")

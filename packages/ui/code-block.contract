@@ -172,7 +172,7 @@ component CodeBlockBody
     scroll id=(id + "-content") testId=(id + "-content") tabindex=0 role="region" aria-label=(heading + " code") overflow="auto" min-width="0px" max-height=max(64, maxHeight) padding=(compact ? "ui.space-6 0px ui.space-12" : "ui.space-8 0px ui.space-16")
       :focus-visible
         box-shadow="ui.shadow-focus-inset"
-      view display="grid" grid-template-columns=(wrapped ? "minmax(0, 1fr)" : "minmax(100%, max-content)") min-width="0px"
+      view display="grid" grid-template-columns=(wrapped ? "minmax(0, 1fr)" : "minmax(max-content, 1fr)") min-width="0px"
         for line, i in displayLines key=i
           row gap="ui.space-12" align-items="flex-start" position="relative" padding=(compact ? "0px ui.space-12" : "0px ui.space-16") min-width="0px" min-height=(compact ? "ui.space-20" : "ui.space-24") role="group" aria-label=("Line " + (lineStart + i).toString() + (line.variant == "added" ? ", added" : line.variant == "removed" ? ", removed" : line.variant == "highlighted" ? ", highlighted" : "")) background-color=(line.variant == "added" ? "ui.code-added-background" : line.variant == "removed" ? "ui.code-removed-background" : line.variant == "highlighted" ? "ui.code-highlight" : "transparent")
             if line.variant == "added" or line.variant == "removed"

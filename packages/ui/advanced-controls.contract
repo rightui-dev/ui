@@ -1,6 +1,7 @@
 use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use Control from "./styles.contract"
+use AccordionPanel from "./accordion-panel.contract"
 
 component CheckboxMixed
   props
@@ -168,12 +169,16 @@ component AccordionMultipleOptions
       for title, i in titles key=title
         column border-bottom-width=(i == titles.length - 1 ? "0px" : "ui.border-width") border-bottom-style=(i == titles.length - 1 ? "solid" : "solid") border-bottom-color=(i == titles.length - 1 ? "transparent" : "ui.border")
           button id=(id + "-trigger-" + i.toString()) testId=(id + "-trigger-" + i.toString()) class=Control font-weight=uiWeights.medium disabled=disabledItems.includes(i) aria-expanded=expanded.includes(i) aria-controls=(id + "-panel-" + i.toString()) press=toggle(i) key=keys(i) hover=hoverItem(i)
-            display="flex" align-items="flex-start" gap="ui.space-16" padding="ui.space-16 0px" border="0" background-color="transparent" color="ui.foreground"
+            display="flex" align-items="flex-start" gap="ui.space-16" padding="ui.space-16" border="0" background-color="transparent" color="ui.foreground"
+            :hover
+              background-color="transparent"
+            :active
+              background-color="transparent"
             text title font-size="ui.text-sm" font-weight=uiWeights.medium flex=1 min-width="0px" text-align="left" text-decoration=(hovered == i ? "underline" : "none") font-family=uiFontFamily(uiFont) data-rightui-font="body"
             svg width="ui.space-16" height="ui.space-16" margin-top="ui.space-2" flex-shrink=0 viewBox="0 0 24 24" fill="none" stroke="ui.muted-foreground" stroke-width="ui.stroke-standard" rotate=(expanded.includes(i) ? "180deg" : "0deg") transition=(reduced ? "none" : "rotate ui.duration-normal ui.easing") aria-hidden=true
               path d="m6 9 6 6 6-6"
-          column id=(id + "-panel-" + i.toString()) testId=(expanded.includes(i) ? id + "-panel-" + i.toString() : "") role="region" aria-labelledby=(id + "-trigger-" + i.toString()) aria-hidden=(not expanded.includes(i)) inert=(not expanded.includes(i)) height=(expanded.includes(i) ? "auto" : "0px") overflow="hidden" -exact-layout-transition=(reduced ? "none" : "ui.duration-normal ui.easing")
-            column padding="0px 0px ui.space-16" min-width="0px"
+          AccordionPanel(id=id + "-panel-" + i.toString(), labelledBy=id + "-trigger-" + i.toString(), open=expanded.includes(i), reduced=reduced)
+            column padding="0px ui.space-16 ui.space-16" min-width="0px" flex-shrink=0
               match descriptions.at(i)
                 case some(description)
                   text description font-size="ui.text-sm" line-height="ui.leading-normal" font-family=uiFontFamily(uiFont) data-rightui-font="body"

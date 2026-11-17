@@ -1,0 +1,17 @@
+component AccordionPanel
+  props
+    id: string
+    labelledBy: string
+    open: bool
+    reduced: bool
+  slot
+  state contentHeight = -1
+  action measured(width: number, height: number)
+    if height >= 0 and contentHeight != height
+      contentHeight = height
+  view
+    column id=id testId=(open ? id : "") role="region" aria-labelledby=labelledBy aria-hidden=(not open) inert=(not open)
+      height=(not open ? "0px" : contentHeight >= 0 ? contentHeight.toString() + "px" : "auto") min-height="0px" min-width="0px" overflow="hidden" box-sizing="border-box"
+      transition=(reduced ? "none" : "height ui.duration-normal ui.easing")
+      column min-width="0px" flex-shrink=0 resize=measured
+        children

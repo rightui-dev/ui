@@ -4,6 +4,9 @@
 surface, header and body. Copy feedback uses the root clipboard controller below.
 `CodeBlockAI` and `CodeBlockFrame` use the same controller.
 
+Highlighted and diff backgrounds span the full source width during horizontal
+scrolling. With wrapping enabled, lines stay within the viewport.
+
 ## Clipboard controller
 
 Exact timers belong to the application root. Add this state, provider, actions and

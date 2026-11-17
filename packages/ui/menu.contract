@@ -122,9 +122,9 @@ component ActionMenuTrigger
         for epoch in [openEpoch] key=epoch
           column id=(id + "-menu") testId=(id + "-menu") popover="auto" toggle=changed(epoch) keycapture=menuKeys
             role="menu" aria-label=label tabindex=-1
-            left="auto" top="auto" position-area="bottom" position-try-fallbacks="flip-block, flip-inline, flip-block flip-inline"
+            left="auto" top="auto" position-area=(contextual or circular ? "bottom" : "bottom span-right") position-try-fallbacks="flip-inline, flip-block, flip-block flip-inline"
             width=(circular ? "ui.avatar-menu-width" : "14rem") min-width="0px" max-width="calc(100vw - ui.space-32)" max-height="min(28rem, 70vh)" overflow="auto" box-sizing="border-box"
-            margin="ui.space-4" padding="ui.space-4" gap="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" box-shadow="ui.shadow-menu"
+            margin=(contextual or circular ? "ui.space-4" : "ui.space-4 0px") padding="ui.space-4" gap="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" box-shadow="ui.shadow-menu"
             animation=(reduced ? "none" : "uiPopupIn ui.duration-fast ui.easing both")
             -exact-exit-animation=(reduced ? "none" : "uiPopupOut ui.duration-fast ui.easing both")
             column role="none" align-items="stretch" gap="0px" min-width="0px"

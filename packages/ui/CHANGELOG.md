@@ -4,6 +4,14 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.4.0-beta.2] - 2026-11-17
+
+- Align Dropdown Menu, Navigation Menu and Popover with their triggers, prefer a horizontal flip when space is limited, and slide the shared navigation panel between triggers.
+- Remove Popover exit ghosts that briefly redraw lower in the page after dismissal.
+- Animate Accordion and AccordionMultiple with observed numeric heights in both directions, including Firefox, so content and following items close smoothly without relying on intrinsic-size interpolation; preserve reduced-motion behavior.
+- Keep Code Block highlighted and diff backgrounds across the full content width when scrolling horizontally.
+- Fix Accordion and AccordionMultiple trigger hover/press fills and restore matching horizontal insets for headings, content and chevrons.
+
 ## [0.4.0-beta.1] - 2026-11-17
 
 - Add the required `uiWeights` context with `FontWeights`, `defaultFontWeights` and `scaleFontWeights` for proportional semantic weights. Applications must add the provider; custom weight token overrides migrate into the base record. See `docs/MIGRATION-0.4.md`.

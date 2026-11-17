@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0-beta.1",
+  "version": "0.4.0-beta.2",
   "asOf": "2026-11-17",
   "exactRevision": "53426cf02bf986a5e781abc4f953d79989c6dc05",
   "platforms": [
@@ -177,7 +177,7 @@
     },
     {
       "id": "web-code-block",
-      "description": "A targeted web test in the 28-test website run checked tokenized text, wrap interaction, copy feedback and retained text after mobile resize. Browser checks confirmed wrapping without document overflow at 390px; the UTF-8 downloaded file matched the original 337-byte code passed to the clipboard. Clipboard write succeeded with browser write permission granted. No new native checks are claimed.",
+      "description": "A targeted web test in the 28-test website run checked tokenized text, wrap interaction, copy feedback and retained text after mobile resize. Browser checks confirmed wrapping without document overflow at 390px; the UTF-8 downloaded file matched the original 337-byte code passed to the clipboard. Clipboard write succeeded with browser write permission granted. No new native checks are claimed. The horizontal-scroll fix compiled in an isolated CodeBlockBody fixture. Browser CSS checks on the rendered demo verified full-width highlighted backgrounds at 240px, 510px and 900px, wrapping without horizontal overflow, and added/removed backgrounds at 240px. These checks applied the corrected grid rule to the existing demo; they do not establish a rebuilt website or native validation. The integrated compiled website also passed Firefox checks at three widths: highlighted backgrounds span the scrolled content and wrapped lines have no horizontal overflow.",
       "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
     },
     {
@@ -264,6 +264,26 @@
       "id": "web-weight-scale",
       "description": "Local 0.4 preview: computed font weights preserve body/title ratios at 25%, 110% and 112%. Six public Input fields inherit the scaled regular weight. Initial render and activation agree; continuous changes defer persistence and theme export until settlement. These are targeted web checks, not a frame-rate guarantee.",
       "url": "https://github.com/rightui-dev/website/blob/main/docs/VALIDATION.md"
+    },
+    {
+      "id": "accordion-spacing-compile",
+      "description": "Accordion single, multiple, disabled and card compositions compile with aligned horizontal insets and explicit transparent hover and press styles. Visual and interaction checks for this change remain pending.",
+      "url": "/docs/components/accordion"
+    },
+    {
+      "id": "accordion-height-motion-web",
+      "description": "Targeted browser checks passed for single and multiple Accordion opening and closing at desktop and narrow widths. Frame samples confirmed intermediate panel heights and continuous movement of following items. Reduced motion disabled the transitions; collapsed panels retained aria-hidden and inert. Native motion remains unverified.",
+      "url": "/docs/components/accordion"
+    },
+    {
+      "id": "menu-anchor-positioning",
+      "description": "Targeted browser checks cover Dropdown Menu variants, Navigation Menu and Popover edge alignment at desktop and mobile widths, a persistent sliding navigation panel, keyboard focus, reduced motion and Popover dismissal without exit ghosts. Native validation of these positioning changes is pending.",
+      "url": "https://github.com/rightui-dev/ui/blob/main/tools/check-menu-positioning.ts"
+    },
+    {
+      "id": "accordion-firefox-height-motion",
+      "description": "Firefox browser checks passed for single and multiple Accordion opening and closing at desktop and narrow widths. Observed numeric heights produce intermediate frames and move following items continuously without intrinsic-size interpolation. Reduced motion, aria-expanded and inert states passed. Native motion remains unverified.",
+      "url": "/docs/components/accordion"
     }
   ],
   "overrides": [
@@ -625,7 +645,7 @@
       "platform": "web",
       "status": "checked",
       "evidence": [
-        "popover-invoker-web"
+        "menu-anchor-positioning"
       ]
     },
     {
@@ -715,7 +735,10 @@
       "platform": "web",
       "status": "checked",
       "evidence": [
-        "beta5-web"
+        "beta5-web",
+        "accordion-spacing-compile",
+        "accordion-height-motion-web",
+        "accordion-firefox-height-motion"
       ]
     },
     {
@@ -724,7 +747,8 @@
       "platform": "ios",
       "status": "blocked",
       "evidence": [
-        "beta5-native-pending"
+        "beta5-native-pending",
+        "accordion-spacing-compile"
       ]
     },
     {
@@ -733,7 +757,8 @@
       "platform": "macos",
       "status": "blocked",
       "evidence": [
-        "beta5-native-pending"
+        "beta5-native-pending",
+        "accordion-spacing-compile"
       ]
     },
     {
@@ -1192,25 +1217,25 @@
       "platform": "web",
       "status": "checked",
       "evidence": [
-        "beta8-message-navigation"
+        "menu-anchor-positioning"
       ]
     },
     {
       "kind": "component",
       "slug": "navigation-menu",
       "platform": "ios",
-      "status": "built",
+      "status": "blocked",
       "evidence": [
-        "beta8-message-navigation"
+        "menu-anchor-positioning"
       ]
     },
     {
       "kind": "component",
       "slug": "navigation-menu",
       "platform": "macos",
-      "status": "built",
+      "status": "blocked",
       "evidence": [
-        "beta8-message-navigation"
+        "menu-anchor-positioning"
       ]
     },
     {
@@ -1220,6 +1245,51 @@
       "status": "checked",
       "evidence": [
         "web-weight-scale"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "dropdown-menu",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "menu-anchor-positioning"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "dropdown-menu",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "menu-anchor-positioning"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "dropdown-menu",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "menu-anchor-positioning"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "popover",
+      "platform": "ios",
+      "status": "blocked",
+      "evidence": [
+        "menu-anchor-positioning"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "popover",
+      "platform": "macos",
+      "status": "blocked",
+      "evidence": [
+        "menu-anchor-positioning"
       ]
     }
   ]
