@@ -9,6 +9,8 @@ Exact SDK is `../.tooling/exact`. Builds belong to the parent integration agent.
 
 ## Autonomous beta delivery
 
+Delivery uses the sibling website's local engine: `../landing/release npm` (or `bun run release:npm` here). See `../landing/docs/RELEASING.md`. GitHub Actions runs only `.github/workflows/publish-npm.yml`, which verifies and publishes the existing validated archive with OIDC. Never publish npm locally or add web/native builds to Actions. Keep setup/testing authority distinct from product-release authority. Resume the same recorded delivery after an interruption; never overwrite an existing archive or tag.
+
 Agents own versioning end to end. Follow `docs/VERSIONING.md` for every delivered batch; keep the package name `@rightui/ui`.
 Only `0.x.y-beta.N` releases are allowed now. Increment the beta serial for package behavior, API, tokens, assets or packaging changes. Breaking public contracts, imports, props or behavior require the next minor, patch zero, beta one and migration notes. Docs/site-only work needs no UI release unless redistribution is required.
 Use root `bun run version:ui <exact-version>` with nonempty `## Unreleased` notes in `packages/ui/CHANGELOG.md`. Keep the manifest, Bun lock, versioned changelog and installation docs aligned, with an exact Exact SDK pin.

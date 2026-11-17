@@ -1,0 +1,52 @@
+name: Publish validated npm archive
+run-name: npm ${{ inputs.version }} ${{ inputs.sha256 }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact beta version validated locally
+        required: true
+        type: string
+      source_sha:
+        description: Full library commit behind the annotated release tag
+        required: true
+        type: string
+      sha256:
+        description: SHA-256 of the locally validated release archive
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rightui-npm-publication
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main' && github.repository == 'rightui-dev/ui'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22.23.4'
+      - name: Install OIDC-capable npm
+        run: npm install --global npm@11.6.2 --ignore-scripts
+      - name: Verify and publish the existing archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_SOURCE_SHA: ${{ inputs.source_sha }}
+          RELEASE_SHA256: ${{ inputs.sha256 }}
+        run: node tools/publish-npm.mjs

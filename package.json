@@ -6,6 +6,8 @@
     "examples/native"
   ],
   "scripts": {
+    "release:npm": "../landing/release npm",
+    "test:publish": "node --test tools/publish-npm.test.mjs",
     "package:ui": "bun tools/package-ui.ts",
     "check:package": "bun tools/check-package.ts",
     "registry": "bun tools/registry.ts",
