@@ -4,6 +4,7 @@ import { appendFileSync, mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { setTimeout as delay } from 'node:timers/promises';
 
 export const betaPattern = /^0\.(0|[1-9]\d*)\.(0|[1-9]\d*)-beta\.[1-9]\d*$/;
 export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -32,16 +33,22 @@ export function newerBeta(candidate, previous) {
   return false;
 }
 
-export async function alignLatest(version, { readTags, setLatest }) {
+export async function alignLatest(version, { readTags, setLatest, wait = delay }) {
   const before = await readTags();
   if (before.beta !== version) throw new Error(`Refusing to promote ${version}: npm beta is ${before.beta}.`);
   if (before.latest && before.latest !== version && (!betaPattern.test(before.latest) || newerBeta(before.latest, version))) {
     throw new Error(`Refusing to replace a newer or stable latest tag (${before.latest}).`);
   }
   if (before.latest !== version) await setLatest(version);
-  const after = await readTags();
-  if (after.beta !== version || after.latest !== version) throw new Error('npm beta and latest must both match the validated release. Retry after checking npm state.');
-  return after;
+  for (let attempt = 0; attempt < 12; attempt++) {
+    const after = await readTags();
+    if (after.beta === version && after.latest === version) return after;
+    // npm can briefly serve the old tags after accepting the write. Only wait
+    // for that exact previous state; a concurrent release must still fail.
+    if (after.beta !== version || after.latest !== before.latest) break;
+    if (attempt < 11) await wait(5000);
+  }
+  throw new Error('npm beta and latest must both match the validated release. Retry after checking npm state.');
 }
 
 export async function registry(path) {

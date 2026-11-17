@@ -46,6 +46,33 @@ test('repair resumes after a rejected tag write, and never rolls a newer release
   }
   assert.equal(writes, 1);
 });
+test('tag verification tolerates stale registry reads without repeating the write', async () => {
+  let reads = 0, writes = 0, waits = 0;
+  const tags = await alignLatest(version, {
+    readTags: async () => ({ beta: version, latest: ++reads < 4 ? '0.2.0-beta.5' : version }),
+    setLatest: async () => { writes++; },
+    wait: async milliseconds => { assert.equal(milliseconds, 5000); waits++; },
+  });
+  assert.deepEqual(tags, { beta: version, latest: version });
+  assert.equal(writes, 1);
+  assert.equal(waits, 2);
+});
+test('tag verification is bounded and refuses a concurrently changed latest', async () => {
+  let writes = 0, waits = 0;
+  await assert.rejects(alignLatest(version, {
+    readTags: async () => ({ beta: version, latest: '0.2.0-beta.5' }),
+    setLatest: async () => { writes++; },
+    wait: async () => { waits++; },
+  }), /both match/);
+  assert.equal(writes, 1);
+  assert.equal(waits, 11);
+  let reads = 0;
+  await assert.rejects(alignLatest(version, {
+    readTags: async () => ({ beta: version, latest: ++reads === 1 ? '0.2.0-beta.5' : '0.5.0-beta.1' }),
+    setLatest: async () => {},
+    wait: async () => { assert.fail('Concurrent changes must fail immediately'); },
+  }), /both match/);
+});
 test('a concurrent beta change is reported after promotion instead of claiming success', async () => {
   let tags = { beta: version, latest: '0.2.0-beta.5' };
   await assert.rejects(alignLatest(version, { readTags: async () => ({ ...tags }), setLatest: async selected => {
