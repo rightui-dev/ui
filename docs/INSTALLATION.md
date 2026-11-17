@@ -94,7 +94,7 @@ Run the generated web app with `bun exact.mjs web`. See `integrations/typescript
 
 ## Validation and limits
 
-Maintainers can run `bun run check:package` from `components` to validate isolated package installation. Exact needs Chromium for its browser test; set `CHROME` to an existing executable if it is not in the default location. This does not establish native device behavior or exhaustive component coverage.
+Maintainers can run `bun run check:package` from `components` to validate isolated package installation. The default check compiles the isolated consumer without browser scenarios. Browser testing is opt-in with `--browser` on explicit request. This does not establish native device behavior or exhaustive component coverage.
 
 Targets are web, iOS and macOS. The documentation app has been built for both native platforms, with targeted simulator checks and installation on a physical iPhone. Full catalog and native accessibility validation remain incomplete. See [Native demo](NATIVE.md) for platform requirements. No 120 fps guarantee is made.
 

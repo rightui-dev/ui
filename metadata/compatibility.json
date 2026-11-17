@@ -278,7 +278,7 @@
     {
       "id": "menu-anchor-positioning",
       "description": "Targeted browser checks cover Dropdown Menu variants, Navigation Menu and Popover edge alignment at desktop and mobile widths, a persistent sliding navigation panel, keyboard focus, reduced motion and Popover dismissal without exit ghosts. Native validation of these positioning changes is pending.",
-      "url": "https://github.com/rightui-dev/ui/blob/main/tools/check-menu-positioning.ts"
+      "url": "https://github.com/rightui-dev/ui/blob/bac223c672064fc35856f14804214d7451247048/tools/check-menu-positioning.ts"
     },
     {
       "id": "accordion-firefox-height-motion",

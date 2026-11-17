@@ -19,8 +19,9 @@ if (archiveFlag >= 0) {
 const registry = options.includes('--registry');
 if (registry && archiveFlag >= 0) throw new Error('Choose --registry or --archive.');
 const checkFonts = options.includes('--fonts');
-if (new Set(options).size !== options.length || options.some(option => !['--registry', '--fonts'].includes(option))) {
-  throw new Error('Usage: bun tools/check-package.ts [--registry | --archive file] [--fonts]');
+const browser = options.includes('--browser');
+if (new Set(options).size !== options.length || options.some(option => !['--registry', '--fonts', '--browser'].includes(option))) {
+  throw new Error('Usage: bun tools/check-package.ts [--registry | --archive file] [--fonts] [--browser]');
 }
 
 function run(args: string[], cwd: string): void {
@@ -97,10 +98,10 @@ if (checkFonts) {
     writeFileSync(resolve(app, 'app.tamber'), createTheme({ font, interactive: false, includeFont: false }));
     console.log(`Checking imported ${font} configuration with the root uiFont="theme" provider.`);
     run([process.execPath, 'exact.mjs', 'web-build', '--out', `dist/${font}`], app);
-    run([process.execPath, 'exact.mjs', 'test', 'web'], app);
+    if (browser) run([process.execPath, 'exact.mjs', 'test', 'web'], app);
   }
 } else {
   run([process.execPath, 'exact.mjs', 'web-build', '--out', 'dist'], app);
-  run([process.execPath, 'exact.mjs', 'test', 'web'], app);
+  if (browser) run([process.execPath, 'exact.mjs', 'test', 'web'], app);
 }
-console.log(`Package installed from ${registry ? 'npm' : 'the archive'}, built and tested${checkFonts ? ' with all three imported font configurations' : ''}: ${app}`);
+console.log(`Package installed from ${registry ? 'npm' : 'the archive'}, built${browser ? ' and browser-tested' : ''}${checkFonts ? ' with all three imported font configurations' : ''}: ${app}`);

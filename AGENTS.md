@@ -18,3 +18,7 @@ Every library delivery includes updated documentation, a documentation build, me
 Never overwrite a released archive/tag or republish a version. Never run npm publish without explicit authorization and verified ownership of the npm `@rightui` scope; a GitHub organization proves no npm ownership. Every authorized npm delivery must set both `beta` and `latest` to the exact validated beta, through the npm-only GitHub Actions workflow. This standing latest policy was explicitly requested on November 17, 2026; do not ask again for each delivery. The version remains a prerelease; stable versions still require an explicit request. Keep GitHub releases marked prerelease and not GitHub latest.
 
 Keep `metadata/compatibility.json` tied to actual validation evidence. After changing platform behavior or checking a component, update the affected rows and run `bun run compatibility`; a build alone is never full compatibility. Keep Windows/Android marked unsupported until scope and validation change explicitly.
+
+## Fast checks
+
+Use only fast, useful checks by default: version/dependency consistency, archive integrity and representative HTTP routes. Keep compilation needed to produce deliverables. Do not add or run targeted browser scripts or long interaction suites unless the user explicitly requests them. Existing browser suites are opt-in and never release gates.
