@@ -227,13 +227,16 @@
   {
     "slug": "carousel",
     "title": "Carousel",
-    "description": "Carousel with accessible presentation and local state.",
-    "usage": "Import Carousel, CarouselAdvanced from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "description": "Browse cards by swiping, using the arrow keys or pressing the navigation buttons.",
+    "usage": "Use Carousel for text slides, or compose CarouselTrack and CarouselSlide around custom content. Set fullWidth to reach the edges of the parent. Set showControls to false to place CarouselControl anywhere, passing the track ID as target and sharing its selection and change action.",
     "keyboard": "",
     "source": "packages/ui/carousel.contract",
     "example": "examples/carousel.contract",
     "exports": [
       "Carousel",
+      "CarouselSlide",
+      "CarouselTrack",
+      "CarouselControl",
       "CarouselAdvanced",
       "CarouselFrameAdvanced",
       "CarouselItemAdvanced",
@@ -272,13 +275,14 @@
   {
     "slug": "checkbox",
     "title": "Checkbox",
-    "description": "Select all items with a controlled mixed state.",
-    "usage": "Import Checkbox for a labeled boolean control, CheckboxControl for a caller-composed label, or CheckboxMixed for checked=\"true\", \"false\" or \"mixed\". Keep state in the parent and update it through change(bool). Set disabled explicitly; compose descriptions and errors with the public Field parts.",
+    "description": "Select individual options or a group of items.",
+    "usage": "Import Checkbox for a labeled boolean control, CheckboxControl for a caller-composed label, or CheckboxMixed for checked=\"true\", \"false\" or \"mixed\". Keep state in the parent and update it through change(bool). Use CheckboxField to associate helper text or validation with the control, or make the entire option card selectable.",
     "keyboard": "",
     "source": "packages/ui/checkbox.contract",
     "example": "examples/checkbox.contract",
     "exports": [
       "Checkbox",
+      "CheckboxField",
       "CheckboxControl",
       "CheckboxMixed"
     ]
@@ -381,12 +385,13 @@
     "slug": "dialog",
     "title": "Dialog",
     "description": "Dialog with accessible presentation and local state.",
-    "usage": "Import Dialog from @rightui/ui. Store its value in state and update it through the provided action callback.",
+    "usage": "Use Dialog for a confirmation footer or DialogContent for custom actions. Set initialFocus, pass the tabbable control IDs in order, and restore focus to the trigger on dismissal.",
     "keyboard": "",
     "source": "packages/ui/dialog.contract",
     "example": "examples/dialog.contract",
     "exports": [
-      "Dialog"
+      "Dialog",
+      "DialogContent"
     ]
   },
   {

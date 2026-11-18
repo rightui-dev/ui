@@ -30,7 +30,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 | Button Group | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
 | Calendar | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Card | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
-| Carousel | ⚠️ Partial checks | ✅ Built only | ✅ Built only | ❌ Not supported | ❌ Not supported |
+| Carousel | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Chart | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Checkbox | ⚠️ Partial checks | ⚠️ Partial checks | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
 | Code Block | ⚠️ Partial checks | ✅ Built only | ✅ Partial checks | ❌ Not supported | ❌ Not supported |
@@ -207,5 +207,7 @@ iOS validation is incomplete. Windows and Android are not supported.
 - **accordion-height-motion-web:** Targeted browser checks passed for single and multiple Accordion opening and closing at desktop and narrow widths. Frame samples confirmed intermediate panel heights and continuous movement of following items. Reduced motion disabled the transitions; collapsed panels retained aria-hidden and inert. Native motion remains unverified. [Source](/docs/components/accordion)
 - **menu-anchor-positioning:** Targeted browser checks cover Dropdown Menu variants, Navigation Menu and Popover edge alignment at desktop and mobile widths, a persistent sliding navigation panel, keyboard focus, reduced motion and Popover dismissal without exit ghosts. Native validation of these positioning changes is pending. [Source](https://github.com/rightui-dev/ui/blob/bac223c672064fc35856f14804214d7451247048/tools/check-menu-positioning.ts)
 - **accordion-firefox-height-motion:** Firefox browser checks passed for single and multiple Accordion opening and closing at desktop and narrow widths. Observed numeric heights produce intermediate frames and move following items continuously without intrinsic-size interpolation. Reduced motion, aria-expanded and inert states passed. Native motion remains unverified. [Source](/docs/components/accordion)
+- **carousel-beta4-web:** Local beta.4 web preview verified responsive card widths, horizontal and vertical positioning, RTL order, and independent selection with the navigation buttons. [Source](/docs/components/carousel)
+- **checkbox-beta4-web:** Local beta.4 web preview verified that selecting all four table rows updates the selection count and that described checkbox cards render. [Source](/docs/components/checkbox)
 
 The machine-readable row-to-evidence mapping is in [metadata/compatibility.json](https://github.com/rightui-dev/ui/blob/main/metadata/compatibility.json). A successful build does not certify every interaction.

@@ -1,5 +1,6 @@
 use FontWeights from "@rightui/ui"
 use uiFontFamily, ControlStyle as Control, InputStyle as Field from "@rightui/ui"
+use Button, ButtonContent, FieldLabel, FieldDescription, FieldSeparator from "@rightui/ui"
 use Brand, BrandIcon from "./brand.contract"
 
 component AuthField
@@ -17,12 +18,12 @@ component AuthField
     uiFont: string
   view
     column gap="ui.space-12" min-width=0
-      text label id=(id + "-label") font-size="ui.text-sm" font-weight=uiWeights.medium line-height="ui.leading-label" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      FieldLabel(id=id + "-label", label=label, controlId=id, disabled=false)
       input id=id testId=id class=Field font-weight=uiWeights.regular type=kind value=value input=edit submit=submit placeholder=placeholder aria-labelledby=(id + "-label") aria-describedby=(id + "-hint") aria-required=true font-family=uiFontFamily(uiFont) data-rightui-font="body"
         ::placeholder
           color="ui.muted-foreground"
       if hint != ""
-        text hint id=(id + "-hint") font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        FieldDescription(id=id + "-hint", description=hint)
 
 component AuthForm
   props
@@ -72,13 +73,10 @@ component AuthForm
       if variant == 3 and not signup
         column gap="ui.space-12"
           for provider in ["Apple", "Google"] key=provider
-            button id=("auth-provider-" + provider) testId=("auth-provider-" + provider) class=Control font-weight=uiWeights.medium press=social(provider) border-width="ui.border-width" border-style="solid" border-color="ui.input" background-color="transparent" box-shadow="ui.shadow-control" display="flex" align-items="center" justify-content="center" gap="ui.space-8" padding="ui.space-6 ui.space-12"
+            ButtonContent(id="auth-provider-" + provider, label="Login with " + provider, variant="outline", size="default", disabled=false, press=social(provider))
               BrandIcon(name=provider.toLowerCase())
               text ("Login with " + provider) font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        row align-items="center" gap="ui.space-12" margin="ui.space-negative-8 ui.space-0"
-          view height="ui.border-width" flex=1 background-color="ui.border"
-          text "Or continue with" font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          view height="ui.border-width" flex=1 background-color="ui.border"
+        FieldSeparator(id="auth-provider-separator", label="Or continue with")
       if signup and variant < 4
         AuthField(id="auth-name", label="Full Name", kind="text", value=name, placeholder="John Doe", hint="", edit=setName, submit=submit)
       AuthField(id="auth-email", label="Email", kind="email", value=email, placeholder="m@example.com", hint=(signup and variant != 3 and variant != 5 ? "We’ll use this to contact you. We will not share your email with anyone else." : ""), edit=setEmail, submit=submit)
@@ -94,29 +92,25 @@ component AuthForm
         else
           column gap="ui.space-12"
             row justify-content="space-between" gap="ui.space-8" flex-wrap="wrap" align-items="center"
-              text "Password" id="auth-password-label" font-size="ui.text-sm" font-weight=uiWeights.medium line-height="ui.leading-label" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              FieldLabel(id="auth-password-label", label="Password", controlId="auth-password", disabled=false)
               button id="auth-recover" testId="auth-recover" appearance="none" press=recovery border="0" padding="ui.space-0" background-color="transparent" color="ui.foreground"
                 text "Forgot your password?" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             input id="auth-password" testId="auth-password" class=Field font-weight=uiWeights.regular type="password" value=password input=setPassword submit=submit aria-labelledby="auth-password-label" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               ::placeholder
                 color="ui.muted-foreground"
       column gap="ui.space-12"
-        button id="auth-submit" testId="auth-submit" class=Control font-weight=uiWeights.medium press=submit background-color="ui.primary" color="ui.primary-foreground" border="0" padding="ui.space-6 ui.space-16"
-          text (signup ? "Create Account" : "Login") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        Button(id="auth-submit", label=(signup ? "Create Account" : "Login"), variant="primary", disabled=false, press=submit)
         if variant == 1
-          button class=Control font-weight=uiWeights.medium press=social("Google") border-width="ui.border-width" border-style="solid" border-color="ui.input" background-color="transparent" padding="ui.space-6 ui.space-16"
-            text (signup ? "Sign up with Google" : "Login with Google") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          Button(id="auth-provider-Google", label=(signup ? "Sign up with Google" : "Login with Google"), variant="outline", disabled=false, press=social("Google"))
       if variant == 2 or variant == 4 or variant == 5
-        row align-items="center" gap="ui.space-12" margin="ui.space-negative-8 ui.space-0"
-          view height="ui.border-width" flex=1 background-color="ui.border"
-          text (variant == 5 ? "Or" : "Or continue with") font-size="ui.text-sm" color="ui.muted-foreground" width="100%" min-width=0 font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          view height="ui.border-width" flex=1 background-color="ui.border"
+        FieldSeparator(id="auth-provider-separator", label=(variant == 5 ? "Or" : "Or continue with"))
         row gap="ui.space-16" flex-wrap="wrap"
           for provider in (variant == 2 ? ["GitHub"] : variant == 4 ? ["Apple", "Google", "Meta"] : ["Apple", "Google"]) key=provider
-            button class=Control font-weight=uiWeights.medium aria-label=("Continue with " + provider) press=social(provider) flex="1 1 0px" border-width="ui.border-width" border-style="solid" border-color="ui.input" background-color="transparent" box-shadow="ui.shadow-control" display="flex" align-items="center" justify-content="center" gap="ui.space-8" padding="ui.space-6 ui.space-8"
-              BrandIcon(name=provider.toLowerCase())
-              if variant != 4
-                text (variant == 2 ? (signup ? "Sign up with GitHub" : "Login with GitHub") : "Continue with " + provider) font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            column flex="1 1 0px" min-width=0
+              ButtonContent(id="auth-provider-" + provider, label="Continue with " + provider, variant="outline", size="default", disabled=false, press=social(provider))
+                BrandIcon(name=provider.toLowerCase())
+                if variant != 4
+                  text (variant == 2 ? (signup ? "Sign up with GitHub" : "Login with GitHub") : "Continue with " + provider) font-family=uiFontFamily(uiFont) data-rightui-font="body"
       if variant != 5
         button margin-top="ui.space-negative-16" min-height=0 id="auth-switch" testId="auth-switch" class=Control font-weight=uiWeights.medium press=switchMode padding="ui.space-0" border="0" background-color="transparent" color="ui.muted-foreground"
           row justify-content="center" gap="ui.space-4" flex-wrap="wrap"
@@ -159,3 +153,15 @@ component AuthBlock
       if variant == 2 and not narrow
         view flex=1 position="relative" min-width=0 background-color="ui.muted"
           image "assets/image-placeholder.svg" alt="Image" width="100%" height="100%" position="absolute" inset=0 object-fit="cover"
+
+
+component AuthExample
+  props
+    variant: number
+    initialSignup: bool
+  state switched = false
+  action switchMode
+    switched = not switched
+  view
+    column width="100%"
+      AuthBlock(variant=variant, signup=(initialSignup != switched), narrow=false, switchMode=switchMode)

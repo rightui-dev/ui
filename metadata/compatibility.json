@@ -26,19 +26,19 @@
   ],
   "statuses": {
     "checked": {
-      "label": "\u2705 Partial checks",
+      "label": "✅ Partial checks",
       "description": "Targeted checks completed. Coverage varies by component."
     },
     "built": {
-      "label": "\u2705 Built only",
+      "label": "✅ Built only",
       "description": "Compiled successfully. Interactions have not been verified."
     },
     "blocked": {
-      "label": "\u26a0\ufe0f Partial checks",
+      "label": "⚠️ Partial checks",
       "description": "Validation incomplete for the current release."
     },
     "unsupported": {
-      "label": "\u274c Not supported",
+      "label": "❌ Not supported",
       "description": "Outside rightui support. The project targets web, iOS and macOS."
     }
   },
@@ -284,6 +284,16 @@
       "id": "accordion-firefox-height-motion",
       "description": "Firefox browser checks passed for single and multiple Accordion opening and closing at desktop and narrow widths. Observed numeric heights produce intermediate frames and move following items continuously without intrinsic-size interpolation. Reduced motion, aria-expanded and inert states passed. Native motion remains unverified.",
       "url": "/docs/components/accordion"
+    },
+    {
+      "id": "carousel-beta4-web",
+      "description": "Local beta.4 web preview verified responsive card widths, horizontal and vertical positioning, RTL order, and independent selection with the navigation buttons.",
+      "url": "/docs/components/carousel"
+    },
+    {
+      "id": "checkbox-beta4-web",
+      "description": "Local beta.4 web preview verified that selecting all four table rows updates the selection count and that described checkbox cards render.",
+      "url": "/docs/components/checkbox"
     }
   ],
   "overrides": [
@@ -767,7 +777,8 @@
       "platform": "web",
       "status": "checked",
       "evidence": [
-        "beta5-web"
+        "beta5-web",
+        "checkbox-beta4-web"
       ]
     },
     {
@@ -1290,6 +1301,15 @@
       "status": "blocked",
       "evidence": [
         "menu-anchor-positioning"
+      ]
+    },
+    {
+      "kind": "component",
+      "slug": "carousel",
+      "platform": "web",
+      "status": "checked",
+      "evidence": [
+        "carousel-beta4-web"
       ]
     }
   ]

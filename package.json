@@ -50,6 +50,7 @@
     "./blocks/signup-04": "./blocks/signup-04.contract",
     "./blocks/signup-05": "./blocks/signup-05.contract",
     "./blocks/login-01": "./blocks/login-01.contract",
+    "./blocks/dashboard-data": "./blocks/dashboard-data.contract",
     "./blocks/dashboard": "./blocks/dashboard.contract",
     "./blocks/sidebar-16": "./blocks/sidebar-16.contract",
     "./blocks/sidebar-01": "./blocks/sidebar-01.contract",

@@ -1,36 +1,59 @@
-use FontWeights from "@rightui/ui"
-use uiFontFamily, Button, Dialog from "@rightui/ui"
+use Button, DialogContent, Input, InputStyle, uiFontFamily from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
   inject
-    uiWeights: FontWeights
     uiFont: string
-  derive narrow = width < 600
-  state name = ""
-  state volume = 64
-  state preset = "Studio"
-  state dialog = false
-  derive reduce = reduced
-  action closeDialog
-    dialog = false
-    focus("dialog-open")
+  state active = ""
+  state name = "Charlie Cheever"
+  state username = "@ccheever"
+  state draftName = ""
+  state draftUsername = ""
+  derive labels = ["Open Dialog", "Share", "No Close Button", "Sticky Footer", "Scrollable Content", "فتح الحوار"]
+  derive variants = ["profile", "share", "plain", "sticky", "scroll", "rtl"]
+  derive rtl = active == "rtl"
+  derive profile = active == "profile" or rtl
+  derive longBody = active == "sticky" or active == "scroll"
+  derive title = rtl ? "تعديل الملف الشخصي" : profile ? "Edit profile" : active == "share" ? "Share link" : active == "plain" ? "No Close Button" : active == "sticky" ? "Sticky Footer" : "Scrollable Content"
+  derive description = rtl ? "حدّث بياناتك واحفظ التغييرات." : profile ? "Update your name and username, then save your changes." : active == "share" ? "Copy this link to share the installation guide." : active == "plain" ? "Press Escape or click outside to dismiss this dialog." : "Review the workspace guidelines below."
+  derive targets = profile ? ["dialog-name", "dialog-username", "dialog-cancel", "dialog-save"] : active == "share" ? ["dialog-link", "dialog-done"] : active == "sticky" ? ["dialog-body", "dialog-done"] : active == "scroll" ? ["dialog-body"] : []
+  action show(kind: string)
+    draftName = name
+    draftUsername = username
+    active = kind
+  action dismissExample
+    let trigger = "dialog-trigger-" + active
+    active = ""
+    focus(trigger)
+  action editName(value: string)
+    draftName = value
+  action editUsername(value: string)
+    draftUsername = value
   action save
-    saved = true
-    dialog = false
-    focus("dialog-open")
-  state saved = false
-  action openExample
-    dialog = true
+    name = draftName
+    username = draftUsername
+    dismissExample()
   view
-    column gap="ui.space-16" min-width=0 max-width="100%"
-      Button(id="dialog-open", label="Open dialog", variant="outline", disabled=false, press=openExample)
-      Dialog(id="save-dialog", open=dialog, reduced=reduce, title="Save your project?", description="Your preferences apply to this demo workspace.", confirmLabel="Save", focusIds=["save-dialog-cancel", "save-dialog-confirm"], dismiss=closeDialog, confirm=save)
-        column gap="ui.space-8" padding="ui.space-16" background-color="ui.muted" border-radius="ui.radius-md"
-          text (name.trim() == "" ? "Untitled project" : name) font-size="ui.text-sm" font-weight=uiWeights.medium color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          text (preset + " · Intensity " + volume.toFixed(0) + "%") font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        column id="dialog-long-content" max-height=180 overflow="auto" gap="ui.space-12"
-          for section in ["Overview", "Preferences", "Permissions", "Storage", "Notifications", "Accessibility", "Review"] key=section
-            text (section + ": review the project settings before continuing.") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    column gap="ui.space-16" min-width=0
+      row gap="ui.space-8" flex-wrap="wrap"
+        for kind, i in variants key=kind
+          Button(id="dialog-trigger-" + kind, label=(match labels.at(i) { case some(label) => label, case none => kind }), variant="outline", disabled=false, press=show(kind))
+      DialogContent(id="demo-dialog", open=(active != ""), reduced=reduced, title=title, description=description, showCloseButton=(active != "plain" and active != "share"), rtl=rtl, initialFocus=(profile ? "dialog-name" : active == "share" ? "dialog-link" : active == "plain" ? "demo-dialog" : "demo-dialog-close"), focusIds=targets, dismiss=dismissExample)
+        if profile
+          column gap="ui.space-16" min-height=0 overflow="auto" padding="ui.space-4"
+            Input(id="dialog-name", label=(rtl ? "الاسم" : "Name"), value=draftName, placeholder="", error="", disabled=false, edit=editName)
+            Input(id="dialog-username", label=(rtl ? "اسم المستخدم" : "Username"), value=draftUsername, placeholder="", error="", disabled=false, edit=editUsername)
+          row gap="ui.space-8" justify-content="flex-end" flex-wrap="wrap" flex-shrink=0
+            Button(id="dialog-cancel", label=(rtl ? "إلغاء" : "Cancel"), variant="outline", disabled=false, press=dismissExample)
+            Button(id="dialog-save", label=(rtl ? "حفظ التغييرات" : "Save changes"), variant="primary", disabled=false, press=save)
+        if active == "share"
+          input id="dialog-link" testId="dialog-link" class=InputStyle aria-label="Share link" readonly=true value="https://rightui.dev/docs/installation"
+        if longBody
+          column id="dialog-body" testId="dialog-body" tabindex=0 aria-label="Workspace guidelines" min-height=0 max-height="50vh" overflow="auto" gap="ui.space-16"
+            for paragraph in ["Choose a display name that teammates can recognize in shared projects.", "Use your workspace profile to keep contact information up to date.", "Review invitations before adding people to a private project.", "Assign editing access only to teammates who maintain the project.", "Keep project descriptions current so new members can find their way.", "Archive completed work to keep active projects easy to browse.", "Check notification preferences when joining a new team.", "Review shared links periodically and remove access when a project closes.", "Document decisions where everyone working on the project can find them.", "Contact the workspace owner when you need additional permissions."] key=paragraph
+              text paragraph font-family=uiFontFamily(uiFont) data-rightui-font="body" line-height="ui.leading-normal"
+        if active == "sticky" or active == "share"
+          row justify-content="flex-end" flex-shrink=0
+            Button(id="dialog-done", label="Close", variant="outline", disabled=false, press=dismissExample)

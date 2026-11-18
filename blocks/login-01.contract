@@ -1,9 +1,5 @@
-use AuthBlock from "@rightui/registry/blocks/auth"
+use AuthExample from "@rightui/registry/blocks/auth"
 
 component Demo
-  state signup = false
-  action switchMode
-    signup = not signup
   view
-    column width="100%"
-      AuthBlock(variant=1, signup=signup, narrow=false, switchMode=switchMode)
+    AuthExample(variant=1, initialSignup=false)

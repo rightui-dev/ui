@@ -1,46 +1,62 @@
-use FontWeights from "@rightui/ui"
-use uiFontFamily, Checkbox, CheckboxMixed, FieldFrame, FieldContent, FieldDescription, FieldError from "@rightui/ui"
+use Checkbox, CheckboxField, CheckboxMixed, FontWeights, uiFontFamily from "@rightui/ui"
 
 component Demo
   props
     width: number
     reduced: bool
   inject
-    uiWeights: FontWeights
     uiFont: string
-  derive narrow = width < 600
-  state checked = "mixed"
-  action setChecked(value: bool)
-    checked = value ? "true" : "false"
+    uiWeights: FontWeights
   state terms = false
+  state described = true
+  state alerts = false
+  state required = false
+  state desktop = ["External disks"]
+  state members = ["Sam Lee"]
+  state arabic = false
+  derive names = ["Sam Lee", "Alex Morgan", "Priya Shah", "Jules Roy"]
+  derive selection = members.length == 0 ? "false" : members.length == names.length ? "true" : "mixed"
   action setTerms(value: bool)
     terms = value
-  state item0 = false
-  action setItem0(value: bool)
-    item0 = value
-  state item1 = false
-  action setItem1(value: bool)
-    item1 = value
-  state item2 = false
-  action setItem2(value: bool)
-    item2 = value
+  action setDescribed(value: bool)
+    described = value
+  action setAlerts(value: bool)
+    alerts = value
+  action setRequired(value: bool)
+    required = value
+  action setArabic(value: bool)
+    arabic = value
+  action selectDesktop(name: string, value: bool)
+    desktop = value ? desktop.concat([name]) : desktop.filter(item => item != name)
+  action selectMember(name: string, value: bool)
+    members = value ? members.concat([name]) : members.filter(item => item != name)
+  action selectAll(value: bool)
+    members = value ? names : []
   view
-    column gap="ui.space-16" min-width=0 max-width="100%"
-      CheckboxMixed(id="advanced-mixed", label="Select all items", labelVisible=true, checked=checked, disabled=false, change=setChecked)
-      text ("Selection: " + checked) testId="checkbox-selection" role="status" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      text "Controlled and disabled" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      CheckboxMixed(id="checkbox-controlled", label="Controlled selection", labelVisible=true, checked=checked, disabled=false, change=setChecked)
-      CheckboxMixed(id="checkbox-disabled", label="Disabled selection", labelVisible=true, checked="true", disabled=true, change=setChecked)
-      FieldFrame(id="checkbox-description-field", labelId="", descriptionId="checkbox-description", invalid=false, orientation="horizontal")
-        FieldContent(id="checkbox-description-content")
-          Checkbox(id="checkbox-basic", label="Accept terms and conditions", checked=terms, disabled=false, change=setTerms)
-          FieldDescription(id="checkbox-description", description="By selecting this checkbox, you agree to the terms and conditions.")
-      FieldFrame(id="checkbox-invalid-field", labelId="", descriptionId="checkbox-error", invalid=not terms, orientation="vertical")
-        Checkbox(id="checkbox-invalid", label="Accept required terms", checked=terms, disabled=false, change=setTerms)
-        if not terms
-          FieldError(id="checkbox-error", messages=["Accept the terms to continue."])
-      text "Desktop items" font-family=uiFontFamily(uiFont) data-rightui-font="body" font-weight=uiWeights.semibold
-      Checkbox(id="checkbox-list-0", label="Hard disks", checked=item0, disabled=false, change=setItem0)
-      Checkbox(id="checkbox-list-1", label="External disks", checked=item1, disabled=false, change=setItem1)
-      Checkbox(id="checkbox-list-2", label="Connected servers", checked=item2, disabled=false, change=setItem2)
-      text ((item0 ? 1 : 0) + (item1 ? 1 : 0) + (item2 ? 1 : 0)).toString() testId="checkbox-group-count" role="status" aria-label="Selected desktop items" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    column width="100%" max-width="28rem" min-width=0 gap="ui.space-32"
+      column gap="ui.space-12"
+        Checkbox(id="checkbox-basic", label="Accept terms and conditions", checked=terms, disabled=false, change=setTerms)
+        CheckboxField(id="checkbox-description", label="Accept terms and conditions", description="I agree to the terms for this workspace.", checked=described, disabled=false, change=setDescribed, showLabel=true, card=false, invalid=false)
+        Checkbox(id="checkbox-disabled", label="Enable notifications", checked=false, disabled=true, change=setAlerts)
+        CheckboxField(id="checkbox-card", label="Enable notifications", description="Receive an alert when a teammate shares an update.", checked=alerts, disabled=false, change=setAlerts, showLabel=true, card=true, invalid=false)
+      column gap="ui.space-8" role="group" aria-label="Desktop items"
+        text "Show on the desktop" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        for name, i in ["Hard disks", "External disks", "CDs and DVDs", "Connected servers"] key=name
+          Checkbox(id="checkbox-list-" + i.toString(), label=name, checked=desktop.includes(name), disabled=false, change=selectDesktop(name))
+      column gap="ui.space-4" role="group" aria-label="Required field"
+        CheckboxField(id="checkbox-invalid", label="Accept the workspace policy", description=(required ? "" : "Required to continue."), checked=required, disabled=false, change=setRequired, showLabel=true, card=false, invalid=not required)
+      column role="table" aria-label="Workspace members" min-width=0
+        row role="row" align-items="center" gap="ui.space-12" border-bottom="1px solid ui.border"
+          view role="columnheader"
+            CheckboxMixed(id="advanced-mixed", label="Select all members", labelVisible=false, checked=selection, disabled=false, change=selectAll)
+          text "Name" role="columnheader" flex=1 font-weight=uiWeights.medium
+          text "Role" role="columnheader" width=68 font-weight=uiWeights.medium
+        for name, i in names key=name
+          row role="row" align-items="center" gap="ui.space-12" border-bottom="1px solid ui.border" background-color=(members.includes(name) ? "ui.muted" : "transparent")
+            view role="cell"
+              CheckboxMixed(id="checkbox-member-" + i.toString(), label="Select " + name, labelVisible=false, checked=(members.includes(name) ? "true" : "false"), disabled=false, change=selectMember(name))
+            text name role="cell" flex=1 font-size="ui.text-sm"
+            text (i == 0 ? "Admin" : i == 3 ? "Editor" : "Member") role="cell" width=68 font-size="ui.text-sm" color="ui.muted-foreground"
+      text (members.length.toString() + " of " + names.length.toString() + " selected") testId="checkbox-selection" role="status" color="ui.muted-foreground" font-size="ui.text-sm"
+      column direction="rtl" lang="ar" align-items="flex-start"
+        Checkbox(id="checkbox-rtl", label="قبول الشروط والأحكام", checked=arabic, disabled=false, change=setArabic)

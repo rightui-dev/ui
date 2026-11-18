@@ -592,7 +592,7 @@
     {
       "slug": "carousel",
       "demoSource": "examples/carousel.contract",
-      "demoSha256": "34dd1f56969fa20d6ea5f63b7193c3af7d1a5d52b67366a6569bdec0e61c8107",
+      "demoSha256": "9a7951ca1697a320024f81dc2635b9c0195d1f144ea3431fe7b7206630d13b9d",
       "upstreamNamedExamples": [
         "carousel-api",
         "carousel-demo",
@@ -615,12 +615,36 @@
       ],
       "demonstratedVariations": [
         {
-          "name": "Vertical without looping",
+          "name": "Basic",
+          "id": "carousel-basic"
+        },
+        {
+          "name": "Sizes",
+          "id": "carousel-sizes"
+        },
+        {
+          "name": "Spacing",
+          "id": "carousel-spacing"
+        },
+        {
+          "name": "Vertical",
           "id": "carousel-vertical"
         },
         {
-          "name": "Custom slide content",
-          "id": "carousel-custom"
+          "name": "Current slide",
+          "id": "carousel-api"
+        },
+        {
+          "name": "Autoplay",
+          "id": "carousel-autoplay"
+        },
+        {
+          "name": "Right to left",
+          "id": "carousel-rtl"
+        },
+        {
+          "name": "Full width with external controls",
+          "id": "carousel-full-width"
         }
       ],
       "remainingApiVariations": [],
@@ -629,13 +653,14 @@
       ],
       "coverageStatus": "partial",
       "demoIds": [
-        "workspace",
-        "typography",
-        "theme",
-        "layout-images",
+        "carousel-basic",
+        "carousel-sizes",
+        "carousel-spacing",
         "carousel-vertical",
-        "carousel-custom",
-        "carousel-note-"
+        "carousel-api",
+        "carousel-autoplay",
+        "carousel-rtl",
+        "carousel-full-width"
       ]
     },
     {
@@ -704,7 +729,7 @@
     {
       "slug": "checkbox",
       "demoSource": "examples/checkbox.contract",
-      "demoSha256": "c6e52d36b27942aa372edf6b01621b6d755bd8af52ed455fc79310d8e1d06583",
+      "demoSha256": "992f072841460ae97ff25abbfab41a3357dcfd1b6c044869eaec185f4b8ab5c7",
       "upstreamNamedExamples": [
         "checkbox-basic",
         "checkbox-demo",
@@ -724,19 +749,50 @@
       ],
       "demonstratedVariations": [
         {
-          "name": "Controlled and disabled",
-          "id": "checkbox-controlled"
+          "name": "Basic",
+          "id": "checkbox-basic"
+        },
+        {
+          "name": "Description",
+          "id": "checkbox-description"
+        },
+        {
+          "name": "Disabled",
+          "id": "checkbox-disabled"
+        },
+        {
+          "name": "Selectable card",
+          "id": "checkbox-card"
+        },
+        {
+          "name": "Invalid",
+          "id": "checkbox-invalid"
+        },
+        {
+          "name": "Group",
+          "id": "checkbox-list-"
+        },
+        {
+          "name": "Table",
+          "id": "checkbox-member-"
+        },
+        {
+          "name": "Right to left",
+          "id": "checkbox-rtl"
         }
       ],
-      "remainingApiVariations": [
-        "Invalid state"
-      ],
+      "remainingApiVariations": [],
       "frameworkSpecificDifferences": [],
       "coverageStatus": "partial",
       "demoIds": [
-        "advanced-mixed",
-        "checkbox-controlled",
-        "checkbox-disabled"
+        "checkbox-basic",
+        "checkbox-description",
+        "checkbox-disabled",
+        "checkbox-card",
+        "checkbox-invalid",
+        "checkbox-list-",
+        "checkbox-member-",
+        "checkbox-rtl"
       ]
     },
     {
@@ -1046,7 +1102,7 @@
     {
       "slug": "dialog",
       "demoSource": "examples/dialog.contract",
-      "demoSha256": "bde3d4100509d55e2692f62c7fbe583ef511e854dafba3d10cc23af49676a1cf",
+      "demoSha256": "44dd5e1c948a0a2a37e51683db811035043ab51404a18534a09a49f0f6250bde",
       "upstreamNamedExamples": [
         "dialog-close-button",
         "dialog-demo",
@@ -1064,21 +1120,40 @@
       ],
       "demonstratedVariations": [
         {
-          "name": "Scrollable content",
-          "id": "dialog-long-content"
+          "name": "Open Dialog",
+          "id": "dialog-trigger-profile"
+        },
+        {
+          "name": "Share",
+          "id": "dialog-trigger-share"
+        },
+        {
+          "name": "No Close Button",
+          "id": "dialog-trigger-plain"
+        },
+        {
+          "name": "Sticky Footer",
+          "id": "dialog-trigger-sticky"
+        },
+        {
+          "name": "Scrollable Content",
+          "id": "dialog-trigger-scroll"
+        },
+        {
+          "name": "RTL",
+          "id": "dialog-trigger-rtl"
         }
       ],
-      "remainingApiVariations": [
-        "Hide close",
-        "custom close",
-        "sticky footer"
-      ],
+      "remainingApiVariations": [],
       "frameworkSpecificDifferences": [],
       "coverageStatus": "partial",
       "demoIds": [
-        "dialog-open",
-        "save-dialog",
-        "dialog-long-content"
+        "dialog-trigger-profile",
+        "dialog-trigger-share",
+        "dialog-trigger-plain",
+        "dialog-trigger-sticky",
+        "dialog-trigger-scroll",
+        "dialog-trigger-rtl"
       ]
     },
     {

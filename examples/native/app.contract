@@ -24,6 +24,7 @@ component Native
   resource viewport = exactViewport() as shape Viewport
   state query = ""
   state theme = "light" persist
+  state carouselTick = 0
   state demoTime = 0
   state demoUntil = 0
   state copiedId = ""
@@ -34,6 +35,7 @@ component Native
   provide
     uiFont = "theme"
     uiWeights = defaultFontWeights()
+    carouselTick = carouselTick
     rightuiDemoTime = demoTime
     rightuiRunDemo = runDemo
     uiCopiedId = copiedId
@@ -61,6 +63,10 @@ component Native
     change(syncTheme)
   action syncTheme
     setScheme(theme)
+  action advanceCarousel
+    carouselTick = carouselTick + 1
+  task carouselClock when top(nav).name == "demo" and top(nav).params.id == "component-carousel" and not viewport.prefersReducedMotion
+    every(2000, advanceCarousel)
   action runDemo(duration: number)
     demoUntil = max(demoUntil, demoTime + duration)
   action tickDemo

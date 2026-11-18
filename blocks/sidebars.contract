@@ -63,6 +63,20 @@ component SidebarSettings
                 view height=140 border-radius="ui.radius-card" background-color="ui.muted"
 
 
+component SidebarExample
+  props
+    variant: number
+  state settings = false
+  action openSettings
+    settings = true
+  action closeSettings
+    settings = false
+  view
+    column width="100%"
+      SidebarBlock(variant=variant, narrow=false, reduced=false, openSettings=openSettings)
+      if settings
+        SidebarSettings(id="example-settings", narrow=false, dismiss=closeSettings)
+
 component SidebarBlock
   props
     variant: number

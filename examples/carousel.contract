@@ -1,26 +1,79 @@
-use FontWeights from "@rightui/ui"
-use uiFontFamily, CarouselFrameAdvanced, CarouselItemAdvanced from "@rightui/ui"
-use CarouselAdvanced, CarouselSlideData from "@rightui/ui"
+use CarouselControl, CarouselTrack, CarouselSlide, CardStyle, FontWeights, uiFontFamily from "@rightui/ui"
+
+component NumberedCarousel
+  props
+    id: string
+    label: string
+    width: number
+    visible: number
+    spacing: number
+    vertical: bool
+    rtl: bool
+    autoplay: bool
+    fullWidth: bool
+    externalControls: bool
+    showPosition: bool
+    reduced: bool
+  inject
+    uiFont: string
+    uiWeights: FontWeights
+    carouselTick: number
+  state selected = 0
+  state stopped = false
+  state hovered = false
+  state pausedAt = 0
+  state resumedAt = 0
+  derive playing = autoplay and not reduced and not stopped
+  derive position = playing ? (pausedAt + (hovered ? 0 : carouselTick - resumedAt)) % 5 : selected
+  derive axis = vertical ? "vertical" : "horizontal"
+  derive viewportWidth = max(48, min(width - (vertical ? 0 : 96), width < 320 ? 192 : visible > 1 ? 384 : 320))
+  derive height = vertical ? 270 : viewportWidth / visible
+  action select(i: number)
+    selected = i
+    stopped = true
+  action hover(active: bool)
+    if playing and hovered != active
+      if active
+        pausedAt = position
+      else
+        resumedAt = carouselTick
+      hovered = active
+  view
+    column width="100%" align-items="center"
+      column width=(fullWidth ? "100%" : (viewportWidth + (vertical ? 0 : 96)).toString() + "px") max-width="100%" min-width=0 hover=hover
+        if externalControls
+          row align-items="center" gap="ui.space-8" padding-bottom="ui.space-12"
+            text label flex=1 role="heading" aria-level=3 font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            for prev in [true, false] key=prev
+              CarouselControl(target=id, previous=prev, value=position, count=5, visible=visible, loop=autoplay, orientation=axis, rtl=rtl, change=select)
+        CarouselTrack(id=id, label=label, value=position, count=5, orientation=axis, height=height, visible=visible, rtl=rtl, showPosition=showPosition, fullWidth=fullWidth, showControls=not externalControls, loop=autoplay, reduced=reduced, change=select)
+          for n, i in [1, 2, 3, 4, 5] key=n
+            CarouselSlide(id=id + "-slide-" + n.toString(), label="Card " + n.toString(), index=i, value=position, count=5, orientation=axis, height=height, reduced=reduced, rtl=rtl, visible=visible)
+              column padding=spacing height="100%" width="100%" box-sizing="border-box"
+                column class=CardStyle padding=0 flex=1 min-height=0 align-items="center" justify-content="center"
+                  text n.toString() font-size=(visible == 1 ? "ui.text-display" : "ui.text-2xl") font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
 
 component Demo
   props
     width: number
     reduced: bool
   inject
-    uiWeights: FontWeights
     uiFont: string
-  derive narrow = width < 600
-  state horizontal = 0
-  action changeHorizontal(value: number)
-    horizontal = value
-  derive images = [CarouselSlideData(id="workspace", title="Workspace", description="Compose an interface around your content.", src="assets/image-placeholder.svg"), CarouselSlideData(id="typography", title="Typography", description="A clear hierarchy for text and images.", src="assets/image-placeholder.svg"), CarouselSlideData(id="theme", title="Theme", description="One palette across the interface.", src="assets/image-placeholder.svg")]
+    uiWeights: FontWeights
+  derive perPage = width >= 500 ? 3 : 2
   view
-    column gap="ui.space-16" min-width=0 max-width="100%"
-      CarouselAdvanced(id="layout-images", label="Interface images", slides=images, value=horizontal, orientation="horizontal", height=320, imageRatio=1.7778, loop=true, reduced=reduced, change=changeHorizontal)
-      text "Vertical without looping" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      CarouselAdvanced(id="carousel-vertical", label="Vertical images", slides=images, value=horizontal, orientation="vertical", height=320, imageRatio=1.7778, loop=false, reduced=reduced, change=changeHorizontal)
-      text "Custom slide content" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      CarouselFrameAdvanced(id="carousel-custom", label="Project notes", value=horizontal, count=3, orientation="horizontal", height=200, loop=false, reduced=reduced, change=changeHorizontal)
-        for title, i in ["Plan", "Create", "Review"] key=title
-          CarouselItemAdvanced(id="carousel-note-" + i.toString(), label=title, index=i, value=horizontal, count=3, orientation="horizontal", height=200, reduced=reduced)
-            text title font-family=uiFontFamily(uiFont) data-rightui-font="body"
+    column gap="ui.space-32" width="100%" min-width=0
+      NumberedCarousel(id="carousel-basic", label="Featured cards", width=width, fullWidth=false, externalControls=false, visible=1, spacing=4, vertical=false, rtl=false, autoplay=false, showPosition=false, reduced=reduced)
+      NumberedCarousel(id="carousel-full-width", label="Full width", width=width, fullWidth=true, externalControls=true, visible=1, spacing=0, vertical=false, rtl=false, autoplay=false, showPosition=false, reduced=reduced)
+      text "Sizes" role="heading" aria-level=3 font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      NumberedCarousel(id="carousel-sizes", label="Sizes", width=width, fullWidth=false, externalControls=false, visible=perPage, spacing=8, vertical=false, rtl=false, autoplay=false, showPosition=false, reduced=reduced)
+      text "Spacing" role="heading" aria-level=3 font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      NumberedCarousel(id="carousel-spacing", label="Spacing", width=width, fullWidth=false, externalControls=false, visible=perPage, spacing=3, vertical=false, rtl=false, autoplay=false, showPosition=false, reduced=reduced)
+      text "Vertical" role="heading" aria-level=3 font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      NumberedCarousel(id="carousel-vertical", label="Vertical", width=width, fullWidth=false, externalControls=false, visible=2, spacing=4, vertical=true, rtl=false, autoplay=false, showPosition=false, reduced=reduced)
+      text "Current slide" role="heading" aria-level=3 font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      NumberedCarousel(id="carousel-api", label="Current slide", width=width, fullWidth=false, externalControls=false, visible=1, spacing=4, vertical=false, rtl=false, autoplay=false, showPosition=true, reduced=reduced)
+      text "Autoplay" role="heading" aria-level=3 font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      NumberedCarousel(id="carousel-autoplay", label="Autoplay", width=width, fullWidth=false, externalControls=false, visible=1, spacing=4, vertical=false, rtl=false, autoplay=true, showPosition=false, reduced=reduced)
+      text "Right to left" role="heading" aria-level=3 font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      NumberedCarousel(id="carousel-rtl", label="Right to left", width=width, fullWidth=false, externalControls=false, visible=1, spacing=4, vertical=false, rtl=true, autoplay=false, showPosition=false, reduced=reduced)

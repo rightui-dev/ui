@@ -1,3 +1,4 @@
+use Button from "@rightui/ui"
 use FontWeights from "@rightui/ui"
 use uiFontFamily, ControlStyle as Control, InputStyle as Field from "@rightui/ui"
 use Calendar from "@rightui/ui"
@@ -147,7 +148,6 @@ component SidebarCalendar
       column padding="ui.space-8" gap="ui.space-8" border-top-width="ui.border-width" border-top-style="solid" border-top-color="ui.border"
         if adding
           input id=(id + "-new-name") testId=(id + "-new-name") class=Field font-weight=uiWeights.regular value=draft input=editName submit=addCalendar placeholder="Calendar name" aria-label="Calendar name" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          button id=(id + "-add-calendar") testId=(id + "-add-calendar") class=Control font-weight=uiWeights.medium press=addCalendar padding="ui.space-6 ui.space-8" border-width="ui.border-width" border-style="solid" border-color="ui.border" background-color="ui.surface" color="ui.foreground"
-            text "Add calendar" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          Button(id=id + "-add-calendar", label="Add calendar", variant="outline", disabled=false, press=addCalendar)
         else
           SidebarLink(id=id + "-new", label="New Calendar", icon="Plus", selected=false, compact=false, badge="", choose=startAdding)

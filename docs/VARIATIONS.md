@@ -33,9 +33,9 @@ Demos include Button sizes/icons/loading, Calendar range/multiple/disabled, stat
 | button-group | Separated nested groups | Vertical orientation |
 | calendar | Multiple selection, Single with constraints, Range, Disabled | Multi-month view; Week numbers; Custom day rendering and size; Time selection |
 | card | Image content | Small size and configurable spacing |
-| carousel | Vertical without looping, Custom slide content | No additional gap identified in this scoped review |
+| carousel | Numbered cards, responsive sizes, spacing, vertical, position, autoplay, RTL | Exact controls the selected index and root timer. |
 | chart | Explicit maximum without legend | No additional gap identified in this scoped review |
-| checkbox | Controlled and disabled | Invalid state |
+| checkbox | Basic, description, disabled, selectable card, invalid, group, table, RTL | Mixed selection is demonstrated by the table header. |
 | code-block | Tokenized source; light/dark syntax colors; line numbers and start line; highlighted and diff lines; wrap; max-height; copy; optional file export | ANSI parsing; Markdown rendering; file tabs; collapse; arbitrary action slots |
 | collapsible | Settings and nested files | No additional gap identified in this scoped review |
 | combobox | Disabled | Multiple selection; groups; clear button; custom items; invalid; auto highlight |
@@ -43,7 +43,7 @@ Demos include Button sizes/icons/loading, Calendar range/multiple/disabled, stat
 | context-menu | Destructive action | Icons |
 | data-table | Existing examples retained | No additional gap identified in this scoped review |
 | date-picker | Single date | Time picker; natural-language parsing; date-of-birth selectors |
-| dialog | Scrollable content | Hide close; custom close; sticky footer |
+| dialog | Edit profile, share link, hidden close, sticky footer, scrollable content, RTL | Custom actions use DialogContent. |
 | direction | Nested direction | No additional gap identified in this scoped review |
 | drawer | Scrollable content, Responsive dialog | Side selection |
 | dropdown-menu | Existing examples retained | Entry icons; avatar/custom trigger |

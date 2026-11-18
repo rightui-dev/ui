@@ -1,6 +1,7 @@
+use CarouselTrack, CarouselSlide from "./layout-advanced.contract"
 use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
-use Control from "./styles.contract"
+use Control, CardStyle from "./styles.contract"
 component Carousel
   props
     id: string
@@ -11,65 +12,20 @@ component Carousel
     uiWeights: FontWeights
     uiFont: string
   state index = 0
-  state pointer = -1
-  state start = 0
-  state distance = 0
-  state swiped = false
   derive total = slides.length
   derive currentIndex = max(0, min(total - 1, index))
-  action move(delta: number)
-    if total > 0
-      index = loop ? (currentIndex + delta + total) % total : max(0, min(total - 1, currentIndex + delta))
   action choose(i: number)
     index = i
-  action keys(k: string)
-    if k == "ArrowLeft" or k == "ArrowRight" or k == "Home" or k == "End"
-      preventDefault()
-      if k == "Home" or k == "End"
-        index = k == "Home" ? 0 : max(0, total - 1)
-      else
-        move(k == "ArrowLeft" ? -1 : 1)
-  action begin(e: PointerEvent)
-    if e.button == 0
-      pointer = e.pointerId
-      start = e.clientX
-      distance = 0
-      swiped = false
-  action drag(dx: number, dy: number)
-    let next = distance + dx
-    distance = next
-    if not swiped and max(next, -next) > 40 and max(next, -next) > max(dy, -dy)
-      swiped = true
-      move(next < 0 ? 1 : -1)
-  action end(e: PointerEvent)
-    if e.pointerId == pointer
-      pointer = -1
-      if not swiped and max(e.clientX - start, start - e.clientX) > 40
-        move(e.clientX < start ? 1 : -1)
   view
-    column id=id testId=id role="region" aria-label="Featured slides" tabindex=0 key=keys gap="ui.space-16" min-width="0px"
-      :focus-visible
-        box-shadow="ui.shadow-focus"
-      view overflow="hidden" min-width="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" touch-action="pan-y" pointerdown=begin pointerup=end pan=drag user-select="none"
-        if total == 0
-          text "No slides." padding="ui.space-48" text-align="center" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        view display="grid" grid-template-columns="minmax(0, 1fr)" width="100%" min-width="0px"
-          for slide, i in slides key=i
-            column testId=(id + "-slide-" + i.toString()) role="group" aria-label=((i + 1).toString() + " of " + total.toString()) aria-hidden=(i != currentIndex)
-              grid-column="1" grid-row="1" width="100%" min-width="0px" box-sizing="border-box" min-height="13.75rem" padding="ui.space-32"
-              translate=(((i - currentIndex) * 100).toString() + "% 0px") transition=(reduced ? "none" : "translate ui.duration-normal ui.easing") align-items="center" justify-content="center" gap="ui.space-12" background-color="transparent" color="ui.foreground"
+    column min-width=0 gap="ui.space-8"
+      CarouselTrack(id=id, label="Featured slides", value=currentIndex, count=total, orientation="horizontal", height=220, loop=loop, reduced=reduced, change=choose, visible=1, rtl=false, showPosition=true, fullWidth=false, showControls=true)
+        for slide, i in slides key=i
+          CarouselSlide(id=id + "-slide-" + i.toString(), label=slide, index=i, value=currentIndex, count=total, orientation="horizontal", height=220, reduced=reduced, visible=1, rtl=false)
+            column class=CardStyle height="100%" align-items="center" justify-content="center"
               text (i + 1).toString() font-size="ui.text-display" font-weight=uiWeights.semibold font-family=uiFontFamily(uiFont) data-rightui-font="body"
-              text slide font-size="ui.text-base" text-align="center" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-      row justify-content="space-between" align-items="center" gap="ui.space-12" flex-wrap="wrap"
-        button id=(id + "-previous") testId=(id + "-previous") class=Control font-weight=uiWeights.medium press=move(-1) disabled=(total == 0 or (not loop and currentIndex == 0)) aria-label="Previous slide" width="ui.space-36" height="ui.space-36" min-height="ui.space-36" padding="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-full" background-color="ui.surface" color="ui.foreground"
-          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.stroke-standard" aria-hidden=true
-            path d="M19 12H5m7-7-7 7 7 7"
-        row gap="ui.space-8" align-items="center" flex-wrap="wrap" flex="1 1 7rem" justify-content="center"
-          for slide, i in slides key=i
-            button class=Control font-weight=uiWeights.medium id=(id + "-dot-" + i.toString()) testId=(id + "-dot-" + i.toString()) press=choose(i) aria-label=("Go to slide " + (i + 1).toString()) aria-pressed=(currentIndex == i)
-              padding="0px" width="ui.space-24" height="ui.space-24" min-height="ui.space-24" border="0" background-color="transparent" display="flex" align-items="center" justify-content="center"
-              view width="ui.space-8" height="ui.space-8" border-radius="ui.radius-full" background-color=(currentIndex == i ? "ui.primary" : "ui.border")
-        button id=(id + "-next") testId=(id + "-next") class=Control font-weight=uiWeights.medium press=move(1) disabled=(total == 0 or (not loop and currentIndex >= total - 1)) aria-label="Next slide" width="ui.space-36" height="ui.space-36" min-height="ui.space-36" padding="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-full" background-color="ui.surface" color="ui.foreground"
-          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="ui.foreground" stroke-width="ui.stroke-standard" aria-hidden=true
-            path d="M5 12h14m-7-7 7 7-7 7"
-      text (total == 0 ? "0 slides" : "Slide " + (currentIndex + 1).toString() + " of " + total.toString()) testId=(id + "-position") aria-live="polite" font-size="ui.text-xs" color="ui.muted-foreground" text-align="center" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+              text slide font-size="ui.text-base" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      row gap="ui.space-8" align-items="center" flex-wrap="wrap" justify-content="center"
+        for slide, i in slides key=i
+          button class=Control font-weight=uiWeights.medium id=(id + "-dot-" + i.toString()) testId=(id + "-dot-" + i.toString()) press=choose(i) aria-label=("Go to slide " + (i + 1).toString()) aria-pressed=(currentIndex == i)
+            padding="0px" width="ui.space-24" height="ui.space-24" min-height="ui.space-24" border="0" background-color="transparent" display="flex" align-items="center" justify-content="center"
+            view width="ui.space-8" height="ui.space-8" border-radius="ui.radius-full" background-color=(currentIndex == i ? "ui.primary" : "ui.border")

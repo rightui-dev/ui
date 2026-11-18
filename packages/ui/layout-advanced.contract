@@ -20,10 +20,32 @@ component CarouselItemAdvanced
     reduced: bool
   slot
   view
-    column id=id testId=(index == value ? id : "") role="group" aria-description="Slide" aria-label=(label + ", " + (index + 1).toString() + " of " + count.toString())
-      aria-hidden=(index != value) inert=(index != value) pointer-events=(index == value ? "auto" : "none")
-      grid-column="1" grid-row="1" width="100%" min-width="0px" height=height min-height="0px" box-sizing="border-box"
-      translate=(orientation == "vertical" ? "0px" + ((index - value) * 100).toString() + "%" : ((index - value) * 100).toString() + "% 0px")
+    CarouselSlide(id=id, label=label, index=index, value=value, count=count, orientation=orientation, height=height, reduced=reduced, visible=1, rtl=false)
+      children
+
+component CarouselSlide
+  props
+    id: string
+    label: string
+    index: number
+    value: number
+    count: number
+    orientation: string
+    height: number
+    reduced: bool
+    visible: number
+    rtl: bool
+  slot
+  derive vertical = orientation == "vertical"
+  derive slots = max(1, visible)
+  derive first = max(0, min(count - slots, value))
+  derive active = index >= first and index < first + slots
+  derive offset = (index - first) * 100
+  view
+    column id=id testId=(active ? id : "") role="group" aria-description="Slide" aria-label=(label + ", " + (index + 1).toString() + " of " + count.toString())
+      aria-hidden=(not active) inert=(not active) pointer-events=(active ? "auto" : "none")
+      grid-column="1" grid-row="1" width=(vertical ? "100%" : (100 / slots).toString() + "%") min-width="0px" height=(vertical ? height / slots : height) min-height="0px" box-sizing="border-box"
+      translate=(vertical ? "0px " + offset.toString() + "%" : (rtl ? (slots - 1) * 100 - offset : offset).toString() + "% 0px")
       transition=(reduced ? "none" : "translate ui.duration-normal ui.easing")
       children
 
@@ -38,6 +60,27 @@ component CarouselFrameAdvanced
     loop: bool
     reduced: bool
     change: action
+  slot
+  view
+    CarouselTrack(id=id, label=label, value=value, count=count, orientation=orientation, height=height, loop=loop, reduced=reduced, change=change, visible=1, rtl=false, showPosition=true, fullWidth=false, showControls=true)
+      children
+
+component CarouselTrack
+  props
+    id: string
+    label: string
+    value: number
+    count: number
+    orientation: string
+    height: number
+    loop: bool
+    reduced: bool
+    change: action
+    visible: number
+    rtl: bool
+    showPosition: bool
+    fullWidth: bool
+    showControls: bool
   inject
     uiWeights: FontWeights
     uiFont: string
@@ -47,19 +90,20 @@ component CarouselFrameAdvanced
   state crossDistance = 0
   state dragging = false
   derive vertical = orientation == "vertical"
-  derive current = max(0, min(count - 1, value))
+  derive last = max(0, count - max(1, visible))
+  derive current = max(0, min(last, value))
   action move(delta: number)
-    if count > 0
-      change(loop ? (current + delta + count) % count : max(0, min(count - 1, current + delta)))
+    if last > 0
+      change(carouselDestination(current, delta, last, loop))
   action keys(k: string, e: KeyboardEvent)
     if not e.isComposing and not e.ctrlKey and not e.metaKey and not e.altKey
       if k == "ArrowLeft" or k == "ArrowRight" or (vertical and (k == "ArrowUp" or k == "ArrowDown"))
         preventDefault()
-        move(k == "ArrowLeft" or k == "ArrowUp" ? -1 : 1)
+        move(k == "ArrowUp" or (rtl ? k == "ArrowRight" : k == "ArrowLeft") ? -1 : 1)
       else if k == "Home" or k == "End"
         preventDefault()
         if count > 0
-          change(k == "Home" ? 0 : count - 1)
+          change(k == "Home" ? 0 : last)
   action begin(e: PointerEvent)
     if e.button == 0
       let box = frame(id + "-viewport")
@@ -78,7 +122,7 @@ component CarouselFrameAdvanced
     let traveled = max(distance, -distance)
     let cross = max(crossDistance, -crossDistance)
     if traveled > cross and (traveled > 40 or max(velocity, -velocity) > 0.35)
-      move(distance < 0 ? 1 : -1)
+      move((rtl and not vertical ? distance > 0 : distance < 0) ? 1 : -1)
     distance = 0
     crossDistance = 0
     dragging = false
@@ -86,31 +130,53 @@ component CarouselFrameAdvanced
     column id=id testId=id role="region" aria-label=label aria-description="Carousel" tabindex=0 key=keys min-width="0px" gap="ui.space-12"
       :focus-visible
         box-shadow="ui.shadow-focus"
-      column position="relative" min-width="0px" padding=(vertical ? "ui.space-48 0px" : "0px ui.space-48") box-sizing="border-box"
+      column position="relative" min-width="0px" padding=(fullWidth ? "0px" : vertical ? "ui.space-48 0px" : "0px ui.space-48") box-sizing="border-box"
         view id=(id + "-viewport") testId=(id + "-viewport") height=height min-height="0px" min-width="0px" overflow="hidden" touch-action=(vertical ? "pan-x" : "pan-y") pointerdown=begin pan=dragPan panrelease=releasePan
           if count == 0
             text "No slides." role="status" padding="ui.space-24" color="ui.muted-foreground" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           view id=(id + "-track") display="grid" grid-template-columns="minmax(0, 1fr)" width="100%" height=height min-width="0px" min-height="0px"
-            translate=(vertical ? "0px" + distance.toString() + "px" : distance.toString() + "px 0px")
+            translate=(vertical ? "0px " + distance.toString() + "px" : distance.toString() + "px 0px")
             transition=(reduced or dragging ? "none" : "translate ui.duration-normal ui.easing")
             children
-        button id=(id + "-previous") testId=(id + "-previous") class=Control font-weight=uiWeights.medium press=move(-1) disabled=(count == 0 or (not loop and current == 0)) aria-label="Previous slide"
-          position="absolute" left=(vertical ? "50%" : "0px") top=(vertical ? "0px" : "50%") translate=(vertical ? "-50% 0px" : "0px -50%")
-          width="ui.space-32" height="ui.space-32" min-height="ui.space-32" padding="0px" border-width="ui.border-width" border-style="solid" border-color="ui.input" border-radius="ui.radius-full" background-color="ui.outline" color="ui.foreground" display="flex" align-items="center" justify-content="center"
-          box-shadow="ui.shadow-control"
-          :hover
-            background-color="ui.outline-hover"
-          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" rotate=(vertical ? "90deg" : "0deg") aria-hidden=true
-            path d="M19 12H5m7-7-7 7 7 7"
-        button id=(id + "-next") testId=(id + "-next") class=Control font-weight=uiWeights.medium press=move(1) disabled=(count == 0 or (not loop and current >= count - 1)) aria-label="Next slide"
-          position="absolute" right=(vertical ? "auto" : "0px") bottom=(vertical ? "0px" : "auto") left=(vertical ? "50%" : "auto") top=(vertical ? "auto" : "50%") translate=(vertical ? "-50% 0px" : "0px -50%")
-          width="ui.space-32" height="ui.space-32" min-height="ui.space-32" padding="0px" border-width="ui.border-width" border-style="solid" border-color="ui.input" border-radius="ui.radius-full" background-color="ui.outline" color="ui.foreground" display="flex" align-items="center" justify-content="center"
-          box-shadow="ui.shadow-control"
-          :hover
-            background-color="ui.outline-hover"
-          svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" rotate=(vertical ? "90deg" : "0deg") aria-hidden=true
-            path d="M5 12h14m-7-7 7 7-7 7"
-      text (count == 0 ? "0 slides" : "Slide " + (current + 1).toString() + " of " + count.toString()) testId=(id + "-position") aria-live="polite" font-size="ui.text-sm" color="ui.muted-foreground" text-align="center" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        if showControls
+          view position="absolute" right=(rtl and not vertical ? "0px" : "auto") left=(vertical ? "50%" : rtl ? "auto" : "0px") top=(vertical ? "0px" : "50%") translate=(vertical ? "-50% 0px" : "0px -50%")
+            CarouselControl(target=id, previous=true, value=current, count=count, visible=visible, loop=loop, orientation=orientation, rtl=rtl, change=change)
+          view position="absolute" right=(vertical or rtl ? "auto" : "0px") bottom=(vertical ? "0px" : "auto") left=(vertical ? "50%" : rtl ? "0px" : "auto") top=(vertical ? "auto" : "50%") translate=(vertical ? "-50% 0px" : "0px -50%")
+            CarouselControl(target=id, previous=false, value=current, count=count, visible=visible, loop=loop, orientation=orientation, rtl=rtl, change=change)
+      if showPosition
+        text (count == 0 ? "0 slides" : "Slide " + (current + 1).toString() + " of " + count.toString()) testId=(id + "-position") aria-live="polite" font-size="ui.text-sm" color="ui.muted-foreground" text-align="center" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+
+fn carouselDestination(current: number, delta: number, last: number, loop: bool): number = loop ? (current + delta + last + 1) % (last + 1) : max(0, min(last, current + delta))
+
+component CarouselControl
+  props
+    target: string
+    previous: bool
+    value: number
+    count: number
+    visible: number
+    loop: bool
+    orientation: string
+    rtl: bool
+    change: action
+  inject
+    uiWeights: FontWeights
+  derive last = max(0, count - max(1, visible))
+  derive current = max(0, min(last, value))
+  derive vertical = orientation == "vertical"
+  derive id = target + (previous ? "-previous" : "-next")
+  derive disabled = last == 0 or (not loop and (previous ? current == 0 : current == last))
+  action select
+    if not disabled
+      change(carouselDestination(current, previous ? -1 : 1, last, loop))
+  view
+    button id=id testId=id class=Control font-weight=uiWeights.medium press=select disabled=disabled aria-controls=(target + "-viewport") aria-label=(previous ? "Previous slide" : "Next slide")
+      width="ui.space-32" height="ui.space-32" min-height="ui.space-32" padding="0px" border-width="ui.border-width" border-style="solid" border-color="ui.input" border-radius="ui.radius-full" background-color="ui.outline" color="ui.foreground" display="flex" align-items="center" justify-content="center"
+      box-shadow="ui.shadow-control"
+      :hover
+        background-color="ui.outline-hover"
+      svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" rotate=(vertical ? "90deg" : rtl ? "180deg" : "0deg") aria-hidden=true
+        path d=(previous ? "M19 12H5m7-7-7 7 7 7" : "M5 12h14m-7-7 7 7-7 7")
 
 component CarouselImageAdvanced
   props

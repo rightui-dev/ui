@@ -4,6 +4,13 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.4.0-beta.4] - 2026-11-18
+
+- Add configurable DialogContent with optional close control and right-to-left layout.
+- Support full-width carousel tracks and independently placed previous and next controls.
+- Add responsive multi-slide and right-to-left carousel layouts. Correct vertical slide and swipe positioning.
+- Add described, invalid and selectable card checkbox fields with a single focus target.
+
 ## [0.4.0-beta.3] - 2026-11-18
 
 - Share the themed focus ring across editable fields, including OTP, grouped inputs and native selects.

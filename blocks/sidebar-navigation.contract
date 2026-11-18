@@ -1,3 +1,4 @@
+use ButtonContent from "@rightui/ui"
 use FontWeights from "@rightui/ui"
 use uiFontFamily, ControlStyle as Control, InputStyle as Field from "@rightui/ui"
 use DropdownMenu, MenuEntry from "@rightui/ui"
@@ -78,7 +79,7 @@ component SidebarDocs
           text "Subscribe to our newsletter" font-size="ui.text-sm" font-weight=uiWeights.semibold color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           text "Opt-in to receive updates and news about the sidebar." font-size="ui.text-sm" color="ui.muted-foreground" line-height="ui.leading-snug" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           input id=(id + "-email") testId=(id + "-email") class=Field font-weight=uiWeights.regular type="email" value=email input=editEmail placeholder="Email" aria-label="Email" min-height="ui.space-32" padding="ui.space-6 ui.space-8" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          button id=(id + "-subscribe") testId=(id + "-subscribe") class=Control font-weight=uiWeights.medium press=subscribe min-height="ui.space-32" padding="ui.space-6 ui.space-8" border="0" background-color="ui.primary" color="ui.primary-foreground"
+          ButtonContent(id=id + "-subscribe", label=(subscribed ? "Subscribed" : "Subscribe"), variant="primary", size="sm", disabled=false, press=subscribe)
             text (subscribed ? "Subscribed" : "Subscribe") font-family=uiFontFamily(uiFont) data-rightui-font="body"
           if email != "" and not subscribed and not email.includes("@")
             text "Enter a valid email address." role="status" font-size="ui.text-xs" color="ui.danger" font-family=uiFontFamily(uiFont) data-rightui-font="body"
