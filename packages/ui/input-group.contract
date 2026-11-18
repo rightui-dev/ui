@@ -1,3 +1,4 @@
+use FieldFocus from "./styles.contract"
 use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use ButtonContent from "./button.contract"
@@ -23,10 +24,8 @@ component InputGroup
         min-height="ui.space-36" padding="0px ui.space-6 0px ui.space-12" box-sizing="border-box" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-control" background-color="ui.surface" color="ui.foreground"
         if prefix != ""
           text prefix font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
-        input id=id testId=id value=value input=edit submit=submit placeholder=placeholder disabled=disabled aria-labelledby=(id + "-label") font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        input class=FieldFocus id=id testId=id value=value input=edit submit=submit placeholder=placeholder disabled=disabled aria-labelledby=(id + "-label") font-family=uiFontFamily(uiFont) data-rightui-font="body"
           appearance="none" flex=1 min-width="0px" height="ui.space-34" padding="0px" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm"
-          :focus-visible
-            box-shadow="ui.shadow-focus"
         if suffix != ""
           text suffix font-size="ui.text-sm" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         if buttonLabel != ""

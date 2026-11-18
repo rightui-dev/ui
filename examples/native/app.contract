@@ -1,3 +1,4 @@
+use FieldFocus from "@rightui/ui"
 use defaultFontWeights from "@rightui/ui"
 font "Geist"
   100 900 = "assets/fonts/Geist.ttf"
@@ -76,7 +77,7 @@ component Native
               if top(nav).name == "catalog"
                 button press=toggleTheme aria-label="Toggle theme" testId="native-theme"
                   image (theme == "dark" ? "symbol:sf/sun.max" : "symbol:moon")
-              input type="search" value=query input=search placeholder=("Search " + entries.length.toString() + " examples") aria-label="Search examples" testId="native-search" width="100%" font-family=uiFontFamily("theme") data-rightui-font="body"
+              input class=FieldFocus type="search" value=query input=search placeholder=("Search " + entries.length.toString() + " examples") aria-label="Search examples" testId="native-search" width="100%" font-family=uiFontFamily("theme") data-rightui-font="body"
             list id="native-catalog" appearance="auto" listStyle="plain" flex=1 min-height=0
               for group in ["Components", "AI Elements", "Blocks", "Charts"] key=group
                 if shown.filter(e => e.group == group).length > 0

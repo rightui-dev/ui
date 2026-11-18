@@ -9,6 +9,8 @@ Exact SDK is `../.tooling/exact`. Builds belong to the parent integration agent.
 
 ## Autonomous beta delivery
 
+For a full "tout deployer" / "push partout" request, run `../landing/deploy` (workspace root: `./deploy`). The T3 action invokes this same command. It prepares ordinary beta increments for changed package files, aligns dependencies, commits/pushes all non-ignored changes in both repositories and runs the full local delivery, with npm-only Actions. Finish the intended batch and write meaningful Unreleased notes first; prepare a next-minor beta and migration notes for breaking changes. The full-delivery request authorizes all these stages. Repeat the command to resume after an interruption; do not reconstruct the release steps manually. Setup/testing alone does not authorize an immediate product deployment.
+
 Delivery uses the sibling website's local engine: `../landing/release npm` (or `bun run release:npm` here). See `../landing/docs/RELEASING.md`. GitHub Actions runs only `.github/workflows/publish-npm.yml`, which verifies and publishes the existing validated archive with OIDC. Never publish npm locally or add web/native builds to Actions. Keep setup/testing authority distinct from product-release authority. Resume the same recorded delivery after an interruption; never overwrite an existing archive or tag.
 
 Agents own versioning end to end. Follow `docs/VERSIONING.md` for every delivered batch; keep the package name `@rightui/ui`.

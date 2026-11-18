@@ -238,11 +238,11 @@ component DrawerSurface
                   view width="ui.drawer-handle-width" height="ui.drawer-handle-height" border-radius="ui.radius-full" background-color="ui.muted-foreground" opacity=0.4 pointer-events="none"
               else
                 view height="ui.space-12" flex-shrink=0
-              column gap="ui.space-6" padding="ui.space-8 ui.space-48 ui.space-12" text-align="center"
+              column gap="ui.space-6" padding="ui.space-8 ui.space-48 ui.space-8" text-align="center"
                 text title id=(id + "-title") role="heading" aria-level=2 font-size="ui.text-lg" font-weight=uiWeights.semibold color="ui.foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
                 text description id=(id + "-description") font-size="ui.text-sm" line-height="ui.leading-normal" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"
               if options.showCloseButton
-                button id=(id + "-close") testId=(id + "-close") top=headerInset margin-top="ui.space-4" appearance="none" press=requestClose aria-label="Close drawer" position="absolute" right="ui.space-8" width="ui.space-44" height="ui.space-44" display="flex" justify-content="center" align-items="center" border="none" border-radius="ui.radius-control" background-color="transparent" color="ui.foreground"
+                button id=(id + "-close") testId=(id + "-close") top=headerInset margin-top="ui.space-8" appearance="none" press=requestClose aria-label="Close drawer" position="absolute" right="ui.space-8" width="ui.space-44" height="ui.space-44" display="flex" justify-content="center" align-items="center" border="none" border-radius="ui.radius-control" background-color="transparent" color="ui.foreground"
                   svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
                     path d="m6 6 12 12M6 18 18 6"
             column min-width="0px" min-height="0px" flex="1 1 auto" padding-bottom=(safeBottom and not options.detached and not options.scrollable ? "env(safe-area-inset-bottom, 0px)" : "0px")
@@ -290,7 +290,7 @@ component DrawerBodySurface
   view
     scroll id=id testId=id flex="1 1 auto" min-height="0px" min-width="0px" overscroll-behavior="contain" scroll=moved scrolldragstart=beginScroll scrolldragend=endScroll wheel=wheeled
       column min-width="0px" width="100%" box-sizing="border-box" padding-bottom=(safeBottom ? "env(safe-area-inset-bottom, 0px)" : "0px")
-        DrawerInset(compact=compact)
+        column min-width="0px" width="100%" box-sizing="border-box" padding=(compact ? "0px ui.drawer-floating-content-inset ui.drawer-floating-content-inset" : "0px ui.drawer-content-inset ui.drawer-content-inset") gap="ui.space-12"
           children
 
 component DrawerInset

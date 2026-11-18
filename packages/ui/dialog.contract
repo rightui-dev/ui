@@ -13,6 +13,21 @@ component DialogFrame
     description: string
     focusIds: string[]
     dismiss: action
+  slot
+  view
+    DialogFrameWithFocus(id=id, open=open, reduced=reduced, title=title, description=description, focusIds=focusIds, initialFocus=id + "-close", dismiss=dismiss)
+      children
+
+component DialogFrameWithFocus
+  props
+    id: string
+    open: bool
+    reduced: bool
+    title: string
+    description: string
+    focusIds: string[]
+    initialFocus: string
+    dismiss: action
   inject
     uiWeights: FontWeights
     uiFont: string
@@ -42,7 +57,7 @@ component DialogFrame
       preventDefault()
   view
     if open
-      OverlayLayer(id=id, modal=true, initialFocus=id + "-close", reduced=reduced)
+      OverlayLayer(id=id, modal=true, initialFocus=initialFocus, reduced=reduced)
         column position="absolute" inset=0 z-index=110 pointer-events="none" align-items="center" justify-content="center" padding="ui.space-16" box-sizing="border-box"
           if open
             view id=(id + "-backdrop") testId=(id + "-backdrop") position="absolute" inset=0 background-color="ui.overlay" pointer-events="auto" aria-hidden=true press=dismiss wheel=blockScroll touch-action="none"
@@ -54,7 +69,7 @@ component DialogFrame
               background-color="ui.surface" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-panel" padding="ui.space-24" gap="ui.space-16" box-shadow="ui.shadow-panel"
               animation=(reduced ? "none" : "uiModalZoomIn ui.duration-normal ui.easing both")
               -exact-exit-animation=(reduced ? "none" : "uiModalZoomOut ui.duration-normal ui.easing both")
-              button id=(id + "-close") testId=(id + "-close") class=Control font-weight=uiWeights.medium autofocus=true press=dismiss aria-label="Close" position="absolute" top="ui.space-16" right="ui.space-16" width="ui.space-16" height="ui.space-16" min-height="ui.space-16" padding="0px" border="none" background-color="transparent" color="ui.foreground" opacity="ui.opacity-soft"
+              button id=(id + "-close") testId=(id + "-close") class=Control font-weight=uiWeights.medium autofocus=(initialFocus == id + "-close") press=dismiss aria-label="Close" position="absolute" top="ui.space-16" right="ui.space-16" width="ui.space-16" height="ui.space-16" min-height="ui.space-16" padding="0px" border="none" background-color="transparent" color="ui.foreground" opacity="ui.opacity-soft"
                 svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
                   path d="m6 6 12 12M6 18 18 6"
               column gap="ui.space-8" padding-right="ui.space-24" flex-shrink=0

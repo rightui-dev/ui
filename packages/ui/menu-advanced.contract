@@ -133,6 +133,9 @@ component AdvancedMenuLine
 
 component AdvancedMenuPanel
   props
+    switching: bool
+    bar: bool
+    firstGroup: bool
     id: string
     prefix: string
     label: string
@@ -148,14 +151,18 @@ component AdvancedMenuPanel
     panelKeys: action
     changed: action
   view
-    column id=id testId=id popover="auto" toggle=changed key=panelKeys role="menu" aria-label=label tabindex=-1
+    column id=id testId=(panel == "" ? prefix + "-menu" : id) popover="auto" toggle=changed key=panelKeys role="menu" aria-label=label tabindex=-1
       position-area=(panel == "" ? "bottom span-right" : "right span-bottom") position-try-fallbacks="flip-inline, flip-block, flip-block flip-inline"
-      margin=(panel == "" ? "ui.space-4 0px" : "ui.space-4") width="14rem" min-width="8rem" max-width="calc(100vw - ui.space-32)" max-height="min(28rem, 75vh)" overflow="auto" box-sizing="border-box"
-      padding="ui.space-4" gap="0px" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" color="ui.foreground"
-      box-shadow=(panel == "" ? "ui.shadow-menu" : "ui.shadow-panel")
-      animation=(reduced ? "none" : panel == "" ? "uiPopupIn ui.duration-fast ui.easing both" : "advancedSubmenuIn ui.duration-fast ui.easing both")
+      margin-top=(bar and panel == "" ? "ui.space-9" : "ui.space-4") margin-bottom=(bar and panel == "" ? "ui.space-9" : "ui.space-4")
+      margin-left=(firstGroup ? "ui.space-negative-5" : panel == "" ? "0px" : bar ? "ui.space-9" : "ui.space-4") margin-right=(panel == "" ? "0px" : bar ? "ui.space-9" : "ui.space-4") width="14rem" min-width="8rem" max-width="calc(100vw - ui.space-32)" overflow="visible" box-sizing="border-box"
+      padding="0px" border="0" border-radius="0px" background-color="transparent" box-shadow="none" color="ui.foreground"
+      -exact-layout-transition=(bar and panel == "" and not reduced ? "ui.duration-normal ui.easing" : "none")
+      animation=(reduced or switching ? "none" : panel == "" ? "uiPopupIn ui.duration-fast ui.easing both" : "advancedSubmenuIn ui.duration-fast ui.easing both")
       -exact-exit-animation=(reduced ? "none" : "uiPopupOut ui.duration-fast ui.easing both")
-      column role="none" align-items="stretch" gap="0px" min-width="0px"
+      // Keep the animated border and bottom inset inside the popover’s top layer.
+      column role="none" align-items="stretch" gap="0px" min-width="0px" width="100%" max-height="min(28rem, 75vh)" overflow="auto" box-sizing="border-box"
+        padding="ui.space-4" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.radius-menu" background-color="ui.surface" box-shadow=(panel == "" ? "ui.shadow-menu" : "ui.shadow-panel")
+        -exact-layout-transition=(bar and panel == "" and not reduced ? "ui.duration-normal ui.easing" : "none")
         for entry in entries.filter(item => item.parent == panel) key=entry.id
           if entry.kind == "group"
             column role="group" aria-label=entry.label gap="0px" min-width="0px"
@@ -187,25 +194,52 @@ component AdvancedMenuRoot
   state contextFocus = false
   state branch: AdvancedMenuBranch[] = []
   state openParents: string[] = []
+  derive currentLabel = match menus.at(active) { case some(menu) => menu.label, case none => label }
   derive current = match menus.at(active) { case some(menu) => menu.entries, case none => [] }
   derive prefix = match menus.at(active) { case some(menu) => advancedMenuPrefix(id, bar, menu.id), case none => id }
+  state anchorX = 0
+  state anchorY = 0
+  state anchorHeight = 0
+  state anchorWidth = 0
+  state switching = false
+  state hoverSwitched = false
+  action measureAnchor(index: number)
+    match menus.at(index)
+      case some(group)
+        let trigger = frame(id + "-" + group.id)
+        let container = frame(id)
+        if not trigger.unavailable and not container.unavailable and not trigger.provisional and not container.provisional
+          anchorX = trigger.x - container.x
+          anchorY = trigger.y - container.y
+          anchorHeight = trigger.height
+          anchorWidth = trigger.width
+      case none
+        anchorWidth = 0
+  action resized(width: number, height: number)
+    if expanded and bar
+      measureAnchor(active)
   action openGroup(index: number, lastItem: bool)
+    hoverSwitched = false
     contextFocus = false
     match menus.at(index)
       case some(menu)
         let root = advancedMenuPrefix(id, bar, menu.id)
+        if bar
+          measureAnchor(index)
+        switching = expanded
+        if not expanded
+          opening = opening + 1
+          showPopover(id + "-menu", source=(bar ? id + "-anchor" : id))
         active = index
-        opening = opening + 1
         expanded = true
         branch = []
         openParents = []
-        showPopover(root + "-menu", source=root)
         let enabled = advancedMenuRows(menu.entries, "")
         match enabled.at(lastItem ? enabled.length - 1 : 0)
           case some(entry)
             focus(root + "-item-" + entry.id)
           case none
-            focus(root + "-menu")
+            focus(id + "-menu")
       case none
         expanded = false
   action closeRoot
@@ -218,6 +252,11 @@ component AdvancedMenuRoot
       closeRoot()
     else
       openGroup(index, false)
+  action pressTrigger(index: number)
+    if hoverSwitched and expanded and active == index
+      hoverSwitched = false
+    else
+      toggle(index)
   action context(index: number)
     if contextual
       active = index
@@ -226,8 +265,8 @@ component AdvancedMenuRoot
       branch = []
       openParents = []
       contextFocus = true
-  action rootChanged(index: number, epoch: number, e: ToggleEvent)
-    if index == active and epoch == opening
+  action rootChanged(epoch: number, e: ToggleEvent)
+    if epoch == opening
       expanded = e.newState == "open"
       if e.newState == "closed"
         branch = []
@@ -258,6 +297,7 @@ component AdvancedMenuRoot
   action hoverTrigger(index: number, inside: bool)
     if bar and expanded and inside and active != index
       openGroup(index, false)
+      hoverSwitched = true
   action triggerKeys(index: number, k: string, e: KeyboardEvent)
     if not e.isComposing
       if k == "Enter" or k == " "
@@ -366,21 +406,23 @@ component AdvancedMenuRoot
     else if k == "Tab"
       closeRoot()
   view
-    row id=(bar ? id : id + "-container") testId=(bar ? id : id + "-container") role=(bar ? "menubar" : "group") aria-label=label
+    row id=(bar ? id : id + "-container") testId=(bar ? id : id + "-container") position="relative" resize=resized role=(bar ? "menubar" : "group") aria-label=label
       gap="ui.space-4" align-items="center" flex-wrap="wrap" padding=(bar ? "ui.space-4" : "0px") border-width=(bar ? "ui.border-width" : "0px") border-style=(bar ? "solid" : "solid") border-color=(bar ? "ui.border" : "transparent") border-radius="ui.radius-menu" background-color=(bar ? "ui.surface" : "transparent")
+      if bar
+        view id=(id + "-anchor") aria-hidden=true pointer-events="none" position="absolute" left=anchorX top=anchorY width=anchorWidth height=anchorHeight margin-top="calc(0px - ui.border-width)" margin-left="calc(0px - ui.border-width)"
       for menu, index in menus key=menu.id
         column align-items="flex-start"
           button id=advancedMenuPrefix(id, bar, menu.id) testId=advancedMenuPrefix(id, bar, menu.id) class=Control role=(bar ? "menuitem" : "button")
-            press=toggle(index) hover=hoverTrigger(index) contextmenu=context(index) key=triggerKeys(index) contextPopover=(contextual ? advancedMenuPrefix(id, bar, menu.id) + "-menu" : "") tabindex=(not bar or active == index ? 0 : -1)
-            aria-haspopup="menu" aria-expanded=(expanded and active == index) aria-controls=(advancedMenuPrefix(id, bar, menu.id) + "-menu")
+            press=pressTrigger(index) hover=hoverTrigger(index) contextmenu=context(index) key=triggerKeys(index) contextPopover=(contextual ? advancedMenuPrefix(id, bar, menu.id) + "-menu" : "") tabindex=(not bar or active == index ? 0 : -1)
+            aria-haspopup="menu" aria-expanded=(expanded and active == index) aria-controls=(id + "-menu") popovertarget=(bar and expanded ? id + "-menu" : "") popovertargetaction="show"
             padding=(contextual ? "ui.space-24 ui.space-32" : bar ? "ui.space-4 ui.space-8" : "ui.space-8 ui.space-16") min-height=(bar ? "ui.space-28" : "ui.space-36")
             border-width=(contextual ? "ui.border-width" : bar ? "0px" : "ui.border-width") border-style=(contextual ? "dashed" : bar ? "solid" : "solid") border-color=(contextual ? "ui.border" : bar ? "transparent" : "ui.border") border-radius=(bar ? "ui.radius-sm" : "ui.radius-control") background-color=(bar and expanded and active == index ? "ui.muted" : "ui.surface") color="ui.foreground" font-size="ui.text-sm" font-weight=(bar ? uiWeights.medium : uiWeights.medium)
             text menu.label font-family=uiFontFamily(uiFont) data-rightui-font="body"
-          if expanded and active == index
-            for epoch in [opening] key=epoch
-              AdvancedMenuPanel(id=advancedMenuPrefix(id, bar, menu.id) + "-menu", prefix=advancedMenuPrefix(id, bar, menu.id), label=menu.label, panel="", entries=menu.entries, checks=checks, radios=radios, openParents=openParents, reduced=reduced, activate=activate, hover=hoverEntry, keys=rowKeys, panelKeys=panelKeys(""), changed=rootChanged(index, epoch))
-              for opened in branch key=opened.epoch
-                AdvancedMenuPanel(id=advancedMenuPrefix(id, bar, menu.id) + "-sub-" + opened.parent, prefix=advancedMenuPrefix(id, bar, menu.id), label=(match first(menu.entries.filter(entry => entry.id == opened.parent)) { case some(entry) => entry.label, case none => menu.label }), panel=opened.parent, entries=menu.entries, checks=checks, radios=radios, openParents=openParents, reduced=reduced, activate=activate, hover=hoverEntry, keys=rowKeys, panelKeys=panelKeys(opened.parent), changed=subChanged(opened.parent, opened.epoch))
+      if expanded
+        for epoch in [opening] key=epoch
+          AdvancedMenuPanel(id=id + "-menu", prefix=prefix, label=currentLabel, panel="", switching=switching, bar=bar, firstGroup=(bar and active == 0), entries=current, checks=checks, radios=radios, openParents=openParents, reduced=reduced, activate=activate, hover=hoverEntry, keys=rowKeys, panelKeys=panelKeys(""), changed=rootChanged(epoch))
+          for opened in branch key=opened.epoch
+            AdvancedMenuPanel(id=prefix + "-sub-" + opened.parent, prefix=prefix, label=(match first(current.filter(entry => entry.id == opened.parent)) { case some(entry) => entry.label, case none => currentLabel }), panel=opened.parent, switching=false, bar=bar, firstGroup=false, entries=current, checks=checks, radios=radios, openParents=openParents, reduced=reduced, activate=activate, hover=hoverEntry, keys=rowKeys, panelKeys=panelKeys(opened.parent), changed=subChanged(opened.parent, opened.epoch))
 
 component DropdownMenuAdvanced
   props

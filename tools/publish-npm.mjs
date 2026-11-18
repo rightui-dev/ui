@@ -130,7 +130,9 @@ export async function main() {
     run(['npm', 'publish', archive, '--tag', 'beta', '--access', 'public', '--ignore-scripts', '--provenance'], { stdio: 'inherit' });
   }
   let published;
-  for (let attempt = 0; attempt < 18; attempt++) {
+  // npm may accept a publish, then process it asynchronously for several minutes.
+  // Read only during propagation: never issue a second publish in this wait.
+  for (let attempt = 0; attempt < 120; attempt++) {
     published = await registry(`/${inputs.version}`);
     if (published) break;
     await new Promise(resolve => setTimeout(resolve, 5000));

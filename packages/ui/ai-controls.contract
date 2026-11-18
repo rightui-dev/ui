@@ -1,3 +1,4 @@
+use FieldFocus from "./styles.contract"
 use FontWeights from "./typography-context.contract"
 use uiFontFamily from "./typography-context.contract"
 use AdvancedMenuEntry, AdvancedMenuSelection, AdvancedMenuLine from "./menu-advanced.contract"
@@ -108,7 +109,7 @@ component Composer
                 ButtonContent(id=id + "-remove-" + file.id.toString(), label="Remove " + file.name, variant="ghost", size="icon-xs", disabled=false, press=remove(file.id))
                   svg width="ui.space-14" height="ui.space-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true
                     path d="m6 6 12 12M6 18 18 6"
-        textarea id=(id + "-field") testId=(id + "-field") value=textValue input=edit key=keys placeholder="Ask the agent to change your code..." aria-label="Message" appearance="none" outline="none" box-shadow="none" min-height="ui.space-80" padding="ui.space-12" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+        textarea class=FieldFocus id=(id + "-field") testId=(id + "-field") value=textValue input=edit key=keys placeholder="Ask the agent to change your code..." aria-label="Message" appearance="none" box-shadow="none" min-height="ui.space-80" padding="ui.space-12" border="0" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
         InputGroupAddon(id=id + "-toolbar")
           ButtonControl(id=id + "-attach", label="Attach files", variant="outline", size="icon", disabled=false, pressed=none, describedBy="", press=attach)
             svg width="ui.space-16" height="ui.space-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="ui.stroke-standard" aria-hidden=true

@@ -18,6 +18,11 @@ style Control
 style Pressable
   cursor="pointer"
 
+style FieldFocus
+  outline="none"
+  :focus-visible
+    box-shadow="ui.shadow-focus"
+
 style Field
   box-sizing="border-box"
   appearance="none"

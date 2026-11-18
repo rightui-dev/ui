@@ -1,3 +1,4 @@
+use FieldFocus from "@rightui/ui"
 use FontWeights from "@rightui/ui"
 use uiFontFamily, MessageFrame, MessageContent, BubbleFrame, MessageIcon from "@rightui/ui"
 use TraceFrame, TraceLine, TraceDisclosure, TraceCollapsible, CodeBlockContent from "@rightui/ui"
@@ -139,7 +140,7 @@ component Demo
                   path d="M12 5v14m-6-6 6 6 6-6"
       column padding="ui.space-0 ui.space-32 ui.space-32" gap="ui.space-8"
         InputGroupFrame(id="ai-chat-composer")
-          textarea id="ai-chat-thread-draft" testId="ai-chat-thread-draft" value=draft input=edit key=keys aria-label="Message" placeholder="Ask the agent..." min-height="ui.space-56" border="0" padding="ui.space-12" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+          textarea class=FieldFocus id="ai-chat-thread-draft" testId="ai-chat-thread-draft" value=draft input=edit key=keys aria-label="Message" placeholder="Ask the agent..." min-height="ui.space-56" border="0" padding="ui.space-12" background-color="transparent" color="ui.foreground" font-size="ui.text-sm" font-family=uiFontFamily(uiFont) data-rightui-font="body"
           InputGroupAddon(id="ai-chat-toolbar")
             CompactAiMenu(id="ai-chat-context", label="Add context", prefix="Context", entries=[AdvancedMenuEntry(id="files", parent="", label="Add Photos & Files", kind="item", shortcut="", disabled=false, group="effort", value="Add Photos & Files"), AdvancedMenuEntry(id="separator", parent="", label="", kind="separator", shortcut="", disabled=false, group="", value=""), AdvancedMenuEntry(id="research", parent="", label="Deep Research", kind="item", shortcut="", disabled=false, group="effort", value="Deep Research"), AdvancedMenuEntry(id="web", parent="", label="Web Search", kind="item", shortcut="", disabled=false, group="effort", value="Web Search")], value=selectedContext, reduced=reduced, radio=chooseContext)
             view flex=1

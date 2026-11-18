@@ -4,6 +4,22 @@ rightui is in beta. No stable version has been released. Versions and their Git 
 
 ## Unreleased
 
+## [0.4.0-beta.3] - 2026-11-18
+
+- Share the themed focus ring across editable fields, including OTP, grouped inputs and native selects.
+
+- Use a 1px default focus ring and support disabling it in theme exports. Add DialogFrameWithFocus for dialogs that open directly on a field.
+
+- Slide and resize the open Menubar panel through its full padded height between groups, with immediate switching when reduced motion is enabled.
+
+- Keep overlay backdrops square and viewport-sized, balance drawer close-button insets and reduce space above drawer content.
+
+- Align the first Menubar panel with the outer bar edge and add a small gap below the bar and beside submenus.
+
+- Draw rounded borders on the outer Input OTP cells so the corners stay continuous.
+
+- Menubar now uses the Dropdown Menu panel for trigger alignment, item layout and scrolling.
+
 ## [0.4.0-beta.2] - 2026-11-17
 
 - Align Dropdown Menu, Navigation Menu and Popover with their triggers, prefer a horizontal flip when space is limited, and slide the shared navigation panel between triggers.

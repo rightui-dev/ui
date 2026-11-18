@@ -1,3 +1,4 @@
+use FieldFocus from "@rightui/ui"
 use FontWeights from "@rightui/ui"
 use uiFontFamily, ContentMessage, MessageScrollerViewport, MessageScrollerTranscriptStart, CardFrameOptions, CardHeaderOptions, CardTitle, CardDescription, CardAction, Button, ButtonControl, MessageIcon, InputGroupFrame, InputGroupAddon, Spinner from "@rightui/ui"
 
@@ -87,7 +88,7 @@ component Demo
           MessageScrollerViewport(id="content-scroller", messages=thread, height="21rem", busy=busy, reduced=reduced, latest=latest)
         column padding="ui.space-16 ui.space-24 ui.space-24" gap="ui.space-8" min-width=0
           InputGroupFrame(id="scroller-composer")
-            textarea id="content-scroller-draft" testId="content-scroller-draft" value=draft input=edit key=keys aria-label="Your message" disabled=(busy or paused) rows=2 appearance="none" border="0" outline="none" resize="none" background-color="transparent" color="ui.foreground" padding="ui.space-12" min-width=0 box-sizing="border-box" font-size="ui.text-sm" line-height="ui.leading-snug" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+            textarea class=FieldFocus id="content-scroller-draft" testId="content-scroller-draft" value=draft input=edit key=keys aria-label="Your message" disabled=(busy or paused) rows=2 appearance="none" border="0" resize="none" background-color="transparent" color="ui.foreground" padding="ui.space-12" min-width=0 box-sizing="border-box" font-size="ui.text-sm" line-height="ui.leading-snug" font-family=uiFontFamily(uiFont) data-rightui-font="body"
             InputGroupAddon(id="scroller-composer-actions")
               row width="100%" align-items="center" justify-content="space-between" gap="ui.space-8"
                 text (busy ? "Replying…" : paused ? "Reply paused" : "Local demo") testId="scroller-status" role="status" font-size="ui.text-xs" color="ui.muted-foreground" font-family=uiFontFamily(uiFont) data-rightui-font="body"

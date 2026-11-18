@@ -10,6 +10,8 @@ Agents manage versioning completely, including release notes, synchronized files
 
 ## Release procedure
 
+For complete authorized delivery, use `../landing/deploy` (or the workspace's `./deploy` / T3 **Tout déployer** action). It automates ordinary beta increments, dependency alignment, both source commits/pushes and the complete release engine. Keep meaningful Unreleased notes while implementing changes; breaking changes require an explicitly prepared next-minor beta and migration notes before invoking it. Repository/site-only changes reuse the existing immutable npm release. Re-run the same command to resume after a failure. See the website runbook for exact effects.
+
 The delivery implementation is the sibling website's local engine: `../landing/release npm` or `../landing/release all`, as authorized. See `../landing/docs/RELEASING.md`. Prepare and commit/push the source version first. The engine then performs local validation, tags, immutable GitHub prereleases and the npm-only GitHub Actions dispatch. Website/native builds and uploads never run on GitHub. The numbered procedure below describes the invariants; do not duplicate completed engine steps manually.
 
 1. Fetch remote tags with `git fetch origin --tags`, then record meaningful changes in nonempty `## Unreleased` notes in `packages/ui/CHANGELOG.md`. Describe affected behavior and any migration. From the components repository root, run `bun run version:ui <exact-version>` with the chosen exact beta version. It consumes those notes into a version entry, updates the manifest, Bun lock and current version in `README.md`, `docs/INSTALLATION.md` and `packages/ui/README.md`, and validates prerelease monotonicity. It does not commit, tag, push or publish.

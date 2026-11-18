@@ -310,3 +310,5 @@ validation, nor replace validation of the consuming application's migration.
 ## Proportional weights
 
 Provide `uiWeights = scaleFontWeights(defaultFontWeights(), 100)` at the root. 110 scales regular 400 to 440 and semibold 600 to 660. Custom base weights use a `FontWeights` record. Apply the regular field to the app root and the appropriate field to custom text. Stay within the font’s supported range. See [Migration to 0.4](MIGRATION-0.4.md).
+
+RightUI focus rings use `ui.foundation-focus-width` (1px by default). Use `createTheme({ focusRing: false })` to export a theme with rings disabled.

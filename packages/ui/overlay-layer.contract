@@ -17,5 +17,5 @@ component OverlayLayer
         focus(initialFocus)
   view
     view position="absolute" width="1px" height="1px" opacity=0 pointer-events="none" aria-hidden=true resize=present
-    column id=((modal ? "rightui-modal-" : "rightui-toast-") + id + "-layer") testId=(id + "-layer") popover="manual" position="absolute" position-try-fallbacks="none" top="0px" left="0px" right="auto" bottom="auto" margin="0px" padding="0px" width="100vw" height="100vh" max-width="none" max-height="none" border="none" background-color="transparent" overflow="clip" box-sizing="border-box" pointer-events="none" aria-modal=modal
+    column id=((modal ? "rightui-modal-" : "rightui-toast-") + id + "-layer") testId=(id + "-layer") popover="manual" position="absolute" position-try-fallbacks="none" top="0px" left="0px" right="auto" bottom="auto" margin="0px" padding="0px" width="100vw" height="100vh" max-width="none" max-height="none" border="none" border-radius="0px" box-shadow="none" background-color="transparent" overflow="clip" box-sizing="border-box" pointer-events="none" aria-modal=modal
       children

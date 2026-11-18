@@ -1,3 +1,4 @@
+use FieldFocus from "./styles.contract"
 use uiFontFamily from "./typography-context.contract"
 use ButtonControl, ButtonContent from "./button.contract"
 
@@ -93,6 +94,6 @@ component MessageEditor
     uiFont: string
   view
     column gap="ui.space-8" width="100%"
-      textarea id=id testId=id value=value input=edit aria-label="Edit message" min-height="ui.space-80" padding="ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.ai-radius-control" font-family=uiFontFamily(uiFont) data-rightui-font="body"
+      textarea class=FieldFocus id=id testId=id value=value input=edit aria-label="Edit message" min-height="ui.space-80" padding="ui.space-12" border-width="ui.border-width" border-style="solid" border-color="ui.border" border-radius="ui.ai-radius-control" font-family=uiFontFamily(uiFont) data-rightui-font="body"
       ButtonContent(id=id + "-save", label="Save", variant="default", size="sm", disabled=(value.trim() == ""), press=save)
         text "Save" font-family=uiFontFamily(uiFont) data-rightui-font="body"
