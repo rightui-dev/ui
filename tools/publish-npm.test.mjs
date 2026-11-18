@@ -4,10 +4,29 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
-import { alignLatest, assertArchiveIdentity, main, newerBeta, sha256, validateInputs, verifyArchive } from './publish-npm.mjs';
+import { alignLatest, assertArchiveIdentity, main, newerBeta, sha256, validateInputs, verifyArchive, verifyPublished } from './publish-npm.mjs';
 
 const version = '0.4.0-beta.1';
 const manifest = { name: '@rightui/ui', version, publishConfig: { tag: 'beta', access: 'public', registry: 'https://registry.npmjs.org' }, repository: { url: 'https://github.com/rightui-dev/ui.git' } };
+test('archive propagation retries reads but rejects changed bytes and permanent errors immediately', async () => {
+  const published = { dist: { tarball: 'https://registry.npmjs.org/@rightui/ui/-/ui-test.tgz' } };
+  let reads = 0, waits = 0;
+  await verifyPublished(published, sha256('exact archive'), {
+    request: async () => ++reads < 3 ? new Response(null, { status: 404 }) : new Response('exact archive'),
+    wait: async () => { waits++; },
+  });
+  assert.equal(reads, 3); assert.equal(waits, 2);
+  for (const response of [new Response('wrong bytes'), new Response(null, { status: 403 })]) {
+    await assert.rejects(verifyPublished(published, sha256('exact archive'), {
+      request: async () => response, wait: async () => { assert.fail('Permanent failures must not retry'); },
+    }), /differs|HTTP 403/);
+  }
+  waits = 0;
+  await assert.rejects(verifyPublished(published, sha256('exact archive'), {
+    request: async () => new Response(null, { status: 404 }), wait: async () => { waits++; },
+  }), /not available yet/);
+  assert.equal(waits, 119);
+});
 test('publication inputs reject injection, unstable versions and abbreviated commits', () => {
   for (const bad of ['0.4.0', '1.0.0-beta.1', '0.4.0-beta.0', '0.4.0-beta.1; echo unsafe']) {
     assert.throws(() => validateInputs({ version: bad, source: 'a'.repeat(40), digest: 'b'.repeat(64) }));

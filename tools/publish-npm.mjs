@@ -60,13 +60,22 @@ export async function registry(path) {
   return response.json();
 }
 
-export async function verifyPublished(manifest, digest) {
+export async function verifyPublished(manifest, digest, { request = fetch, wait = delay } = {}) {
   const url = new URL(manifest.dist.tarball);
   if (url.origin !== 'https://registry.npmjs.org') throw new Error('Unexpected npm archive origin.');
-  const response = await fetch(url, { signal: AbortSignal.timeout(60000) });
-  if (!response.ok || sha256(Buffer.from(await response.arrayBuffer())) !== digest) {
-    throw new Error('Published archive differs from the locally validated archive.');
+  // Version metadata can arrive before the archive reaches the registry CDN.
+  // Retry reads only; never publish again or relax the exact byte comparison.
+  for (let attempt = 0; attempt < 120; attempt++) {
+    const response = await request(url, { headers: { 'Cache-Control': 'no-cache' }, signal: AbortSignal.timeout(60000) });
+    if (response.ok) {
+      if (sha256(Buffer.from(await response.arrayBuffer())) !== digest) throw new Error('Published archive differs from the locally validated archive.');
+      return;
+    }
+    await response.body?.cancel();
+    if (![404, 429, 502, 503, 504].includes(response.status)) throw new Error(`npm archive returned HTTP ${response.status}.`);
+    if (attempt < 119) await wait(5000);
   }
+  throw new Error('npm archive is not available yet; retry this workflow to reconcile the existing publication.');
 }
 
 export function verifyArchive(archive, { version, source, digest }, cwd) {
